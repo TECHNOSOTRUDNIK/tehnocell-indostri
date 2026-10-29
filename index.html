@@ -14,33 +14,18 @@
         }
         header {
             background-color: #ffffff;
-            padding: 60px 20px;
+            padding: 50px 20px;
             text-align: center;
             border-bottom: 1px solid #e5e5e5;
         }
-        /* Имитация вашего крутого шестиугольного логотипа в CSS */
-        .logo-placeholder {
-            width: 100px;
-            height: 55px;
-            background-color: transparent;
-            border-left: 3px solid #111111;
-            border-right: 3px solid #111111;
-            position: relative;
-            margin: 0 auto 20px auto;
+        .company-logo {
+            max-width: 180px;
+            height: auto;
+            display: block;
+            margin: 0 auto 15px auto;
         }
-        .logo-placeholder:before, .logo-placeholder:after {
-            content: "";
-            position: absolute;
-            left: -3px;
-            width: 100px;
-            height: 3px;
-            background-color: #111111;
-        }
-        .logo-placeholder:before { top: -15px; transform: skewY(25deg); }
-        .logo-placeholder:after { bottom: -15px; transform: skewY(-25deg); }
-
         header h1 {
-            margin: 15px 0 0 0;
+            margin: 10px 0 0 0;
             font-size: 2.2em;
             font-weight: 300;
             letter-spacing: 4px;
@@ -53,28 +38,9 @@
             letter-spacing: 1px;
         }
         .container {
-            max-width: 900px;
-            margin: 40px auto;
+            max-width: 800px;
+            margin: 50px auto;
             padding: 0 20px;
-        }
-        .mission-box {
-            text-align: center;
-            padding: 30px;
-            background: #ffffff;
-            border: 1px solid #e5e5e5;
-            border-radius: 0px;
-            margin-bottom: 40px;
-        }
-        .mission-box h2 {
-            font-weight: 400;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 0;
-        }
-        .mission-box p {
-            color: #444444;
-            line-height: 1.6;
-            font-size: 1.1em;
         }
         .sections-grid {
             display: grid;
@@ -87,11 +53,9 @@
             padding: 25px;
             border: 1px solid #e5e5e5;
             transition: all 0.3s ease;
-            position: relative;
         }
         .section-card:hover {
             border-color: #111111;
-            transform: translateY(-2px);
         }
         .section-card h3 {
             margin: 0 0 10px 0;
@@ -152,38 +116,31 @@
 <body>
 
     <header>
-        <div class="logo-placeholder"></div>
+        <img src="logo.png" alt="TEHNOCELL Логотип" class="company-logo">
         <h1>TEHNOCELL INDOSTRI</h1>
-        <p>Технологии на благо человечества</p>
+        <p>Технологические решения и перспективные разработки</p>
     </header>
 
     <div class="container">
         
-        <div class="mission-box">
-            <h2>Наша миссия</h2>
-            <p>Мы — команда TEHNOCELL INDOSTRI. Наша главная цель — создавать полезные технологии, программы и технику, которые будут помогать людям в повседневной жизни и делать мир лучше. Мы верим, что технологии должны служить на благо общества.</p>
-        </div>
-
-        <h2 style="font-weight: 300; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; text-align: center;">Разделы компании</h2>
-
         <div class="sections-grid">
             
             <div class="section-card">
-                <h3>Софт и Программы</h3>
-                <p>Разработка полезных приложений, утилит и небольших IT-продуктов для облегчения работы и учебы.</p>
-                <span class="status-badge status-development">В планах</span>
+                <h3>Программные продукты</h3>
+                <p>Разработка кроссплатформенного софта, утилит и цифровых сервисов для оптимизации повседневных задач.</p>
+                <span class="status-badge status-development">Проектирование</span>
             </div>
 
             <div class="section-card">
-                <h3>Транспорт будущего</h3>
-                <p>Проектирование концептов и чертежей автомобилей нашей собственной будущей марки.</p>
-                <span class="status-badge status-development">Идеи</span>
+                <h3>Транспортные системы</h3>
+                <p>Исследование и моделирование концептов высокотехнологичных автомобилей будущего.</p>
+                <span class="status-badge status-development">Концепт</span>
             </div>
 
             <div class="section-card">
-                <h3>О нашей команде</h3>
-                <p>История создания бренда TEHNOCELL INDOSTRI и список участников Совета директоров.</p>
-                <span class="status-badge">Скоро открытие</span>
+                <h3>О корпорации</h3>
+                <p>Официальные данные о структуре бренда, ценностях компании и составе Совета директоров.</p>
+                <span class="status-badge">В разработке</span>
             </div>
 
         </div>
@@ -195,7 +152,7 @@
     </div>
 
     <footer>
-        &copy; 2026 TEHNOCELL INDOSTRI. Все права защищены. Разработано в 13 лет на пути к большой мечте.
+        &copy; 2026 TEHNOCELL INDOSTRI. Все права защищены. Развитие глобальных технологических решений.
     </footer>
 
 </body>
