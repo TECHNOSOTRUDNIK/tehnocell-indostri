@@ -6,25 +6,26 @@
 <title>TEHNOCELL WEATHER</title>
 <style>
 :root {
-  --bg:#eeede8;
-  --card:rgba(255,255,255,.68);
-  --text:#292b2d;
-  --muted:#858681;
-  --line:rgba(70,70,65,.10);
-  --accent:#b39b78;
+  --bg:#08090b;
+  --card:rgba(30,32,36,.72);
+  --text:#ffffff;
+  --muted:#a0a2a8;
+  --line:rgba(255,255,255,.09);
+  --accent:#c5c5c5;
 }
 * {
   box-sizing:border-box;
   margin:0;
   padding:0;
 }
-body {
-  min-height:100vh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  overflow-x:hidden;
-  transition:background 1s;
+body.sun,
+body.cloud,
+body.rain,
+body.storm,
+body.snow,
+body.fog {
+  background:#08090b;
+}
 }
 body.sun {background:linear-gradient(145deg,#f2eee2,#e9e5d9);}
 body.cloud {background:linear-gradient(145deg,#e9e9e5,#dcdedc);}
@@ -120,7 +121,7 @@ button:active {transform:scale(.97);}
 }
 .temperature {
   font-size:76px;
-  font-weight:300;
+  font-weight:600;
   letter-spacing:-5px;
   line-height:1.1;
 }
