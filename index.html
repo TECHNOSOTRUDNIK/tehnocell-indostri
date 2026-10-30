@@ -1,160 +1,720 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-    <meta name="yandex-verification" content="2eda6662c50412a2" />
+    <meta name="yandex-verification" content="2eda6662c50412a2">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEHNOCELL INDOSTRI</title>
+
+    <meta name="description" content="TEHNOCELL INDOSTRI — технологическая компания, объединяющая разработку программного обеспечения, игр, цифровых сервисов и перспективных проектов.">
+
+    <meta name="theme-color" content="#111111">
+
+    <title>TEHNOCELL INDOSTRI — Technology & Development</title>
+
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            font-family: 'Segoe UI', -apple-system,
+            BlinkMacSystemFont, Arial, sans-serif;
+
             margin: 0;
             padding: 0;
-            background-color: #fbfbfb;
+
+            background: #fbfbfb;
             color: #111111;
         }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* HEADER */
+
         header {
-            background-color: #ffffff;
-            padding: 50px 20px;
-            text-align: center;
+            background: #ffffff;
             border-bottom: 1px solid #e5e5e5;
         }
-        .company-logo {
-            max-width: 180px;
-            height: auto;
-            display: block;
-            margin: 0 auto 15px auto;
+
+        .header-inner {
+            max-width: 1150px;
+            margin: auto;
+            padding: 25px 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
         }
-        header h1 {
-            margin: 10px 0 0 0;
-            font-size: 2.2em;
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-transform: uppercase;
+
+        .brand {
+            font-size: 17px;
+            letter-spacing: 3px;
+            font-weight: 500;
         }
-        header p {
-            margin: 10px 0 0 0;
-            font-size: 1em;
-            color: #666666;
-            letter-spacing: 1px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
-        .sections-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+        nav {
+            display: flex;
             gap: 25px;
-            margin-bottom: 40px;
+            flex-wrap: wrap;
         }
-        .section-card {
-            background: #ffffff;
-            padding: 25px;
-            border: 1px solid #e5e5e5;
-            transition: all 0.3s ease;
+
+        nav a {
+            font-size: 13px;
+            color: #666;
+            transition: 0.2s;
         }
-        .section-card:hover {
-            border-color: #111111;
+
+        nav a:hover {
+            color: #000;
         }
-        .section-card h3 {
-            margin: 0 0 10px 0;
-            font-weight: 400;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        .section-card p {
-            color: #666666;
-            font-size: 0.95em;
-            line-height: 1.5;
-            margin: 0 0 15px 0;
-        }
-        .status-badge {
-            display: inline-block;
-            font-size: 0.75em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: #f0f0f0;
-            padding: 4px 10px;
-            font-weight: bold;
-        }
-        .status-development {
-            background: #111111;
-            color: #ffffff;
-        }
-        .btn-container {
+
+        /* HERO */
+
+        .hero {
             text-align: center;
-            margin: 50px 0;
+            padding: 100px 20px 110px;
+
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
         }
-        .btn {
+
+        .hero-label {
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 6vw, 58px);
+            font-weight: 300;
+            letter-spacing: 5px;
+
+            margin: 25px 0 15px;
+        }
+
+        .hero p {
+            max-width: 620px;
+            margin: auto;
+
+            color: #777;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            margin-top: 35px;
+
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button {
             display: inline-block;
-            background-color: #111111;
-            color: #ffffff;
-            padding: 15px 40px;
-            text-decoration: none;
+            padding: 15px 30px;
+
+            background: #111;
+            color: white;
+
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            font-size: 0.9em;
-            transition: background 0.3s;
-            border: 1px solid #111111;
+
+            border: 1px solid #111;
+            transition: 0.25s;
         }
-        .btn:hover {
-            background-color: #ffffff;
-            color: #111111;
+
+        .button:hover {
+            background: white;
+            color: #111;
         }
-        footer {
+
+        .button-light {
+            background: white;
+            color: #111;
+        }
+
+        .button-light:hover {
+            background: #111;
+            color: white;
+        }
+
+        /* GENERAL SECTIONS */
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            padding: 0 25px;
+        }
+
+        .section {
+            padding: 85px 0;
+        }
+
+        .section-heading {
             text-align: center;
-            padding: 40px 20px;
-            color: #999999;
-            font-size: 0.85em;
-            border-top: 1px solid #e5e5e5;
+            margin-bottom: 45px;
+        }
+
+        .section-heading h2 {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+
+            margin: 0 0 15px;
+        }
+
+        .section-heading p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* DIVISIONS */
+
+        .divisions-grid {
+            display: grid;
+
+            grid-template-columns:
+            repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 20px;
+        }
+
+        .division-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+
+            padding: 30px;
+            min-height: 220px;
+
+            transition: 0.25s;
+        }
+
+        .division-card:hover {
+            border-color: #111;
+            transform: translateY(-4px);
+        }
+
+        .division-number {
+            font-size: 11px;
+            color: #aaa;
+            letter-spacing: 2px;
+        }
+
+        .division-card h3 {
+            margin: 25px 0 12px;
+
+            font-size: 17px;
+            font-weight: 500;
             letter-spacing: 1px;
         }
+
+        .division-card p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+
+            margin-bottom: 20px;
+        }
+
+        .status {
+            display: inline-block;
+
+            background: #f0f0f0;
+            color: #555;
+
+            padding: 6px 11px;
+
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .status-main {
+            background: #111;
+            color: white;
+        }
+
+        /* PROJECTS */
+
+        .projects {
+            background: #111;
+            color: white;
+        }
+
+        .projects .section-heading p {
+            color: #999;
+        }
+
+        .project-box {
+            border: 1px solid #444;
+            padding: 35px;
+
+            text-align: center;
+        }
+
+        .project-box h3 {
+            font-weight: 400;
+            letter-spacing: 2px;
+            font-size: 21px;
+        }
+
+        .project-box p {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .project-box .status {
+            background: #333;
+            color: white;
+        }
+
+        /* ABOUT */
+
+        .about-content {
+            max-width: 750px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            color: #666;
+            font-size: 15px;
+            line-height: 2;
+        }
+
+        .about-name {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #999;
+            margin-top: 35px;
+        }
+
+        /* CONTACT */
+
+        .contact {
+            background: #f1f1f1;
+            text-align: center;
+        }
+
+        .contact p {
+            color: #777;
+            line-height: 1.8;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #111;
+            color: #999;
+
+            text-align: center;
+            padding: 35px 20px;
+
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        footer .footer-brand {
+            color: white;
+            font-size: 14px;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+
+        footer p {
+            line-height: 1.8;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+
+            .header-inner {
+                flex-direction: column;
+                padding: 22px 15px;
+            }
+
+            nav {
+                justify-content: center;
+                gap: 15px;
+            }
+
+            nav a {
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 75px 20px;
+            }
+
+            .hero h1 {
+                letter-spacing: 3px;
+            }
+
+            .section {
+                padding: 65px 0;
+            }
+
+            .section-heading h2 {
+                font-size: 23px;
+            }
+
+            .division-card {
+                padding: 25px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 <body>
 
+    <!-- HEADER -->
+
     <header>
-        <img src="https://ibb.co" alt="TEHNOCELL Логотип" class="company-logo">
-        <h1>TEHNOCELL INDOSTRI</h1>
-        <p>Технологические решения и перспективные разработки</p>
+
+        <div class="header-inner">
+
+            <div class="brand">
+                TEHNOCELL INDOSTRI
+            </div>
+
+            <nav>
+                <a href="#home">Главная</a>
+                <a href="#divisions">Подразделения</a>
+                <a href="#projects">Проекты</a>
+                <a href="#about">О компании</a>
+                <a href="#contact">Контакты</a>
+            </nav>
+
+        </div>
+
     </header>
 
-    <div class="container">
-        
-        <div class="sections-grid">
-            
-            <div class="section-card">
-                <h3>Программные продукты</h3>
-                <p>Разработка кроссплатформенного софта, утилит и цифровых сервисов для оптимизации повседневных задач.</p>
-                <span class="status-badge status-development">Проектирование</span>
+
+    <!-- HERO -->
+
+    <section class="hero" id="home">
+
+        <div class="hero-label">
+            Independent Technology Company
+        </div>
+
+        <h1>TEHNOCELL INDOSTRI</h1>
+
+        <p>
+            Технологические решения, программные продукты
+            и перспективные разработки.
+            Создаём собственные проекты и развиваем
+            технологии для будущего.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#divisions" class="button">
+                Направления
+            </a>
+
+            <a href="#about" class="button button-light">
+                О компании
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- DIVISIONS -->
+
+    <section class="section" id="divisions">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>Наши направления</h2>
+
+                <p>
+                    Подразделения и технологические направления
+                    TEHNOCELL INDOSTRI.
+                </p>
+
             </div>
 
-            <div class="section-card">
-                <h3>Транспортные системы</h3>
-                <p>Исследование и моделирование концептов высокотехнологичных автомобилей будущего.</p>
-                <span class="status-badge status-development">Концепт</span>
-            </div>
 
-            <div class="section-card">
-                <h3>О корпорации</h3>
-                <p>Официальные данные о структуре бренда, ценностях компании и составе Совета директоров.</p>
-                <span class="status-badge">В разработке</span>
+            <div class="divisions-grid">
+
+
+                <div class="division-card">
+
+                    <span class="division-number">01 / SOFTWARE</span>
+
+                    <h3>TEHNOCELLSOFT</h3>
+
+                    <p>
+                        Разработка полезных программ,
+                        приложений, утилит и цифровых сервисов.
+                    </p>
+
+                    <span class="status status-main">
+                        В разработке
+                    </span>
+
+                </div>
+
+
+                <div class="division-card">
+
+                    <span class="division-number">02 / GAMES</span>
+
+                    <h3>TEHNOCELLGAME</h3>
+
+                    <p>
+                        Создание собственных видеоигр,
+                        игровых проектов и цифровых развлечений.
+                    </p>
+
+                    <span class="status">
+                        Планируется
+                    </span>
+
+                </div>
+
+
+                <div class="division-card">
+
+                    <span class="division-number">03 / RADIO</span>
+
+                    <h3>TEHNOCELLFM</h3>
+
+                    <p>
+                        Собственное интернет-радио,
+                        музыкальные трансляции и программы.
+                    </p>
+
+                    <span class="status">
+                        Планируется
+                    </span>
+
+                </div>
+
+
+                <div class="division-card">
+
+                    <span class="division-number">04 / TRANSPORT</span>
+
+                    <h3>TEHNOCELLCAR</h3>
+
+                    <p>
+                        Разработка концептов автомобилей,
+                        транспортных систем и перспективных решений.
+                    </p>
+
+                    <span class="status">
+                        Концепт
+                    </span>
+
+                </div>
+
+
+                <div class="division-card">
+
+                    <span class="division-number">05 / COMMUNICATION</span>
+
+                    <h3>TEHNOCELLMESSENGER</h3>
+
+                    <p>
+                        Разработка собственного сервиса
+                        общения и обмена сообщениями.
+                    </p>
+
+                    <span class="status">
+                        В планах
+                    </span>
+
+                </div>
+
+
+                <div class="division-card">
+
+                    <span class="division-number">06 / SECURITY</span>
+
+                    <h3>TEHNOCELLVPN</h3>
+
+                    <p>
+                        Перспективное направление сетевых
+                        технологий и защиты соединений.
+                    </p>
+
+                    <span class="status">
+                        В планах
+                    </span>
+
+                </div>
+
+
             </div>
 
         </div>
 
-        <div class="btn-container">
-            <a href="mailto:tehnocellindostri@gmail.com" class="btn">Связаться с нами</a>
+    </section>
+
+
+    <!-- PROJECTS -->
+
+    <section class="section projects" id="projects">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>Наши проекты</h2>
+
+                <p>
+                    Разработки и инициативы TEHNOCELL INDOSTRI.
+                </p>
+
+            </div>
+
+
+            <div class="project-box">
+
+                <h3>НОВЫЕ ПРОЕКТЫ</h3>
+
+                <p>
+                    В этом разделе будут представлены
+                    программные продукты, игры и другие
+                    разработки нашей команды.
+                </p>
+
+                <span class="status">
+                    Скоро
+                </span>
+
+            </div>
+
         </div>
 
-    </div>
+    </section>
+
+
+    <!-- ABOUT -->
+
+    <section class="section" id="about">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>О компании</h2>
+
+            </div>
+
+
+            <div class="about-content">
+
+                <p>
+                    TEHNOCELL INDOSTRI — технологическая
+                    компания, объединяющая различные направления
+                    разработки и перспективные проекты.
+
+                    Наша концепция заключается в создании
+                    собственной экосистемы продуктов,
+                    сервисов и технологических решений.
+                </p>
+
+                <p>
+                    Каждое направление компании получает
+                    возможность развиваться самостоятельно,
+                    сохраняя общую принадлежность
+                    к TEHNOCELL INDOSTRI.
+                </p>
+
+                <div class="about-name">
+                    TECHNOLOGY · DEVELOPMENT · FUTURE
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CONTACT -->
+
+    <section class="section contact" id="contact">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <h2>Связаться с нами</h2>
+
+                <p>
+                    Есть предложение, идея или желание
+                    сотрудничать с нашей командой?
+                </p>
+
+            </div>
+
+
+            <a
+                href="mailto:tehnocellindostri@gmail.com"
+                class="button"
+            >
+                Написать нам
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
 
     <footer>
-        &copy; 2026 TEHNOCELL INDOSTRI. Все права защищены. Развитие глобальных технологических решений.
+
+        <div class="footer-brand">
+            TEHNOCELL INDOSTRI
+        </div>
+
+        <p>
+            Independent Technology Company
+        </p>
+
+        <p>
+            &copy; 2026 TEHNOCELL INDOSTRI.
+            Все права защищены.
+        </p>
+
+        <p>
+            Technology · Development · Future
+        </p>
+
     </footer>
 
+
 </body>
+
 </html>
