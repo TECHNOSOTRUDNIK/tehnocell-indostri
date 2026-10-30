@@ -1,308 +1,357 @@
-<!DOCTYPE html><html lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI.">
-    <title>TEHNOCELLGAME | TEHNOCELL INDOSTRI</title><style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI.">
+<title>TEHNOCELLGAME | TEHNOCELL INDOSTRI</title>
 
-    html {
-        scroll-behavior: smooth;
-    }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: #ffffff;
-        color: #111111;
-        line-height: 1.6;
-    }
+html {
+    scroll-behavior: smooth;
+}
 
-    a {
-        color: inherit;
-        text-decoration: none;
-    }
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #ffffff;
+    color: #111111;
+    line-height: 1.6;
+}
 
-    .container {
-        max-width: 1050px;
-        margin: auto;
-        padding: 0 24px;
-    }
+a {
+    color: inherit;
+    text-decoration: none;
+}
 
-    header {
-        border-bottom: 1px solid #e8e8e8;
-        padding: 22px 0;
-    }
+.container {
+    max-width: 1050px;
+    margin: auto;
+    padding: 0 24px;
+}
 
-    .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
+header {
+    border-bottom: 1px solid #e8e8e8;
+    padding: 22px 0;
+}
 
-    .brand {
-        font-size: 20px;
-        font-weight: 800;
-        letter-spacing: 1px;
-    }
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
 
-    .brand span {
-        color: #777777;
-    }
+.brand {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
 
-    nav {
-        display: flex;
-        gap: 24px;
-        flex-wrap: wrap;
-    }
+.brand span {
+    color: #777777;
+}
 
-    nav a {
-        font-size: 14px;
-        color: #555555;
-        transition: 0.2s;
-    }
+nav {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
 
-    nav a:hover {
-        color: #000000;
-    }
+nav a {
+    font-size: 14px;
+    color: #555555;
+    transition: 0.2s;
+}
 
+nav a:hover {
+    color: #000000;
+}
+
+.hero {
+    padding: 95px 0 85px;
+    text-align: center;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #777777;
+    margin-bottom: 18px;
+}
+
+h1 {
+    font-size: clamp(38px, 7vw, 65px);
+    letter-spacing: -2px;
+    line-height: 1.15;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    max-width: 620px;
+    margin: auto;
+    color: #666666;
+    font-size: 17px;
+}
+
+.section {
+    padding: 70px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.section-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.section-description {
+    color: #777777;
+    margin-bottom: 32px;
+}
+
+/* GAME CARD */
+
+.game-link {
+    display: block;
+    border-radius: 14px;
+    outline-offset: 5px;
+}
+
+.game-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: 0.3s;
+    background: #ffffff;
+}
+
+.game-link:hover .game-card {
+    border-color: #999999;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+
+.game-link:focus-visible {
+    outline: 2px solid #111111;
+}
+
+.game-cover {
+    min-height: 250px;
+    background:
+        radial-gradient(circle at 50% 50%, #333333, transparent 65%),
+        linear-gradient(135deg, #090909, #24202b);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+}
+
+.game-cover h3 {
+    font-size: clamp(27px, 5vw, 42px);
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.game-cover span {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: #aaaaaa;
+    margin-bottom: 15px;
+}
+
+.game-info {
+    padding: 30px;
+}
+
+.game-info h3 {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.developer {
+    color: #888888;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.game-description {
+    color: #555555;
+    margin-bottom: 25px;
+}
+
+.status {
+    display: inline-block;
+    padding: 7px 13px;
+    border: 1px solid #222222;
+    border-radius: 30px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.detail {
+    background: #f7f7f7;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.detail small {
+    display: block;
+    color: #888888;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.detail strong {
+    font-size: 14px;
+}
+
+.download-area {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 23px;
+    background: #111111;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.button.disabled {
+    background: #eeeeee;
+    color: #888888;
+    cursor: not-allowed;
+}
+
+.game-open {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 20px;
+    background: #111111;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.game-link:hover .game-open {
+    background: #444444;
+}
+
+.placeholder {
+    background: #f7f7f7;
+    border: 1px dashed #cccccc;
+    border-radius: 10px;
+    padding: 35px 20px;
+    text-align: center;
+    color: #888888;
+}
+
+.placeholder strong {
+    display: block;
+    color: #555555;
+    margin-bottom: 7px;
+}
+
+.about-text {
+    max-width: 750px;
+    color: #666666;
+}
+
+footer {
+    padding: 30px 0;
+    text-align: center;
+    color: #999999;
+    font-size: 12px;
+}
+
+footer a {
+    color: #555555;
+}
+
+@media (max-width: 650px) {
     .hero {
-        padding: 95px 0 85px;
-        text-align: center;
-        border-bottom: 1px solid #eeeeee;
-    }
-
-    .eyebrow {
-        font-size: 12px;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        color: #777777;
-        margin-bottom: 18px;
-    }
-
-    h1 {
-        font-size: clamp(38px, 7vw, 65px);
-        letter-spacing: -2px;
-        line-height: 1.15;
-        margin-bottom: 20px;
-    }
-
-    .hero p {
-        max-width: 620px;
-        margin: auto;
-        color: #666666;
-        font-size: 17px;
-    }
-
-    .section {
         padding: 70px 0;
-        border-bottom: 1px solid #eeeeee;
-    }
-
-    .section-title {
-        font-size: 28px;
-        margin-bottom: 12px;
-    }
-
-    .section-description {
-        color: #777777;
-        margin-bottom: 32px;
-    }
-
-    .game-card {
-        border: 1px solid #e5e5e5;
-        border-radius: 14px;
-        overflow: hidden;
-        transition: 0.25s;
-    }
-
-    .game-card:hover {
-        border-color: #999999;
-        transform: translateY(-3px);
-    }
-
-    .game-cover {
-        min-height: 250px;
-        background: #111111;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 30px;
-    }
-
-    .game-cover h3 {
-        font-size: clamp(27px, 5vw, 42px);
-        letter-spacing: 1px;
-        line-height: 1.2;
-    }
-
-    .game-cover span {
-        display: block;
-        font-size: 12px;
-        letter-spacing: 4px;
-        color: #aaaaaa;
-        margin-bottom: 15px;
-    }
-
-    .game-info {
-        padding: 30px;
-    }
-
-    .game-info h3 {
-        font-size: 25px;
-        margin-bottom: 8px;
-    }
-
-    .developer {
-        color: #888888;
-        font-size: 13px;
-        margin-bottom: 20px;
-    }
-
-    .game-description {
-        color: #555555;
-        margin-bottom: 25px;
-    }
-
-    .status {
-        display: inline-block;
-        padding: 7px 13px;
-        border: 1px solid #222222;
-        border-radius: 30px;
-        font-size: 11px;
-        letter-spacing: 1px;
-        font-weight: 700;
-        margin-bottom: 25px;
     }
 
     .details {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: 1fr;
+    }
+
+    .game-info {
+        padding: 22px;
+    }
+
+    nav {
         gap: 15px;
-        margin: 25px 0;
     }
 
-    .detail {
-        background: #f7f7f7;
-        padding: 15px;
-        border-radius: 8px;
+    .section {
+        padding: 50px 0;
     }
-
-    .detail small {
-        display: block;
-        color: #888888;
-        font-size: 11px;
-        margin-bottom: 5px;
-    }
-
-    .detail strong {
-        font-size: 14px;
-    }
-
-    .download-area {
-        margin-top: 30px;
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .button {
-        display: inline-block;
-        padding: 12px 23px;
-        background: #111111;
-        color: #ffffff;
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .button.disabled {
-        background: #eeeeee;
-        color: #888888;
-        cursor: not-allowed;
-    }
-
-    .placeholder {
-        background: #f7f7f7;
-        border: 1px dashed #cccccc;
-        border-radius: 10px;
-        padding: 35px 20px;
-        text-align: center;
-        color: #888888;
-    }
-
-    .placeholder strong {
-        display: block;
-        color: #555555;
-        margin-bottom: 7px;
-    }
-
-    .about-text {
-        max-width: 750px;
-        color: #666666;
-    }
-
-    footer {
-        padding: 30px 0;
-        text-align: center;
-        color: #999999;
-        font-size: 12px;
-    }
-
-    footer a {
-        color: #555555;
-    }
-
-    @media (max-width: 650px) {
-        .hero {
-            padding: 70px 0;
-        }
-
-        .details {
-            grid-template-columns: 1fr;
-        }
-
-        .game-info {
-            padding: 22px;
-        }
-
-        nav {
-            gap: 15px;
-        }
-
-        .section {
-            padding: 50px 0;
-        }
-    }
+}
 </style>
+</head>
 
-</head><body><header>
+<body>
+
+<header>
     <div class="container header-content">
+
         <a href="index.html" class="brand">
             TEHNOCELL<span>GAME</span>
-        </a>    <nav>
-        <a href="index.html">Главная</a>
-        <a href="#games">Игры</a>
-        <a href="#about">О подразделении</a>
-    </nav>
-</div>
+        </a>
 
-</header><main><section class="hero">
+        <nav>
+            <a href="index.html">Главная</a>
+            <a href="#games">Игры</a>
+            <a href="#about">О подразделении</a>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+
+<section class="hero">
     <div class="container">
+
         <div class="eyebrow">TEHNOCELL INDOSTRI DIVISION</div>
+
         <h1>TEHNOCELLGAME</h1>
+
         <p>
             Игровое подразделение TEHNOCELL INDOSTRI.
             Создаём игровые миры, необычные механики
             и проекты, в которые хочется возвращаться.
         </p>
+
     </div>
 </section>
 
@@ -310,81 +359,97 @@
     <div class="container">
 
         <h2 class="section-title">Наши игры</h2>
+
         <p class="section-description">
             Игровые проекты TEHNOCELLGAME.
         </p>
 
-        <article class="game-card">
+        <!-- КАРТОЧКА ИГРЫ: НАЖМИ ДЛЯ ПЕРЕХОДА -->
 
-            <div class="game-cover">
-                <div>
-                    <span>TEHNOCELLGAME PRESENTS</span>
-                    <h3>STAND ASCENSION<br>THE TOWER</h3>
-                </div>
-            </div>
+        <a href="stand-ascension.html"
+           class="game-link"
+           aria-label="Открыть страницу Stand Ascension: The Tower">
 
-            <div class="game-info">
+            <article class="game-card">
 
-                <h3>Stand Ascension: The Tower</h3>
-
-                <div class="developer">
-                    Разработчик: Stand Ascension
+                <div class="game-cover">
+                    <div>
+                        <span>TEHNOCELLGAME PRESENTS</span>
+                        <h3>STAND ASCENSION<br>THE TOWER</h3>
+                    </div>
                 </div>
 
-                <div class="status">
-                    BETA — COMING SOON
-                </div>
+                <div class="game-info">
 
-                <p class="game-description">
-                    Stand Ascension: The Tower — пиксельная 2D-игра,
-                    вдохновлённая JoJo’s Bizarre Adventure.
+                    <h3>Stand Ascension: The Tower</h3>
 
-                    Сражайся с врагами, используй уникальные
-                    способности стендов и покоряй 100 этажей
-                    загадочной башни. Становись сильнее, открывай
-                    новые умения и побеждай могущественных боссов.
-
-                    Тебя ждут динамичные битвы, необычные способности
-                    и разнообразные испытания. В игре появятся как
-                    знакомые стенды из JoJo, так и оригинальные
-                    персонажи с собственными силами.
-                </p>
-
-                <div class="details">
-
-                    <div class="detail">
-                        <small>ПЛАТФОРМЫ</small>
-                        <strong>Android / Windows</strong>
+                    <div class="developer">
+                        Разработчик: Stand Ascension
                     </div>
 
-                    <div class="detail">
-                        <small>ЖАНР</small>
-                        <strong>2D Action</strong>
+                    <div class="status">
+                        BETA — COMING SOON
                     </div>
 
-                    <div class="detail">
-                        <small>РЕЛИЗ БЕТЫ</small>
-                        <strong>Ноябрь 2026*</strong>
+                    <p class="game-description">
+                        Stand Ascension: The Tower — пиксельная 2D-игра,
+                        вдохновлённая JoJo’s Bizarre Adventure.
+
+                        Сражайся с врагами, используй уникальные
+                        способности стендов и покоряй 100 этажей
+                        загадочной башни. Становись сильнее, открывай
+                        новые умения и побеждай могущественных боссов.
+
+                        Тебя ждут динамичные битвы, необычные способности
+                        и разнообразные испытания. В игре появятся как
+                        знакомые стенды из JoJo, так и оригинальные
+                        персонажи с собственными силами.
+                    </p>
+
+                    <div class="details">
+
+                        <div class="detail">
+                            <small>ПЛАТФОРМЫ</small>
+                            <strong>Android / Windows</strong>
+                        </div>
+
+                        <div class="detail">
+                            <small>ЖАНР</small>
+                            <strong>2D Action</strong>
+                        </div>
+
+                        <div class="detail">
+                            <small>РЕЛИЗ БЕТЫ</small>
+                            <strong>Ноябрь 2026*</strong>
+                        </div>
+
                     </div>
 
-                </div>
+                    <div class="download-area">
 
-                <div class="download-area">
-                    <span class="button disabled">
-                        Android — скоро
+                        <span class="button disabled">
+                            Android — скоро
+                        </span>
+
+                        <span class="button disabled">
+                            Windows — скоро
+                        </span>
+
+                    </div>
+
+                    <p style="font-size: 11px; color: #999999; margin-top: 15px;">
+                        *Ориентировочная дата. Может измениться.
+                    </p>
+
+                    <span class="game-open">
+                        Подробнее об игре →
                     </span>
 
-                    <span class="button disabled">
-                        Windows — скоро
-                    </span>
                 </div>
 
-                <p style="font-size: 11px; color: #999999; margin-top: 15px;">
-                    *Ориентировочная дата. Может измениться.
-                </p>
+            </article>
 
-            </div>
-        </article>
+        </a>
 
     </div>
 </section>
@@ -399,8 +464,11 @@
         </p>
 
         <div class="placeholder">
+
             <strong>Скриншоты скоро появятся</strong>
+
             Галерея находится в разработке.
+
         </div>
 
     </div>
@@ -424,12 +492,20 @@
     </div>
 </section>
 
-</main><footer>
+</main>
+
+<footer>
     <div class="container">
+
         © 2026 TEHNOCELL INDOSTRI.
+
         <br>
+
         <a href="index.html">TEHNOCELL INDOSTRI</a>
         — официальный сайт.
+
     </div>
-</footer></body>
+</footer>
+
+</body>
 </html>
