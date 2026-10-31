@@ -1,62 +1,51 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b12">
-
-<title>TEHNOCELL WEATHER — Download</title>
-
-<style>
+<meta name="theme-color" content="#050505"><title>TEHNOCELL WEATHER — Official App</title><style>
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #080b12;
-    color: #fff;
-    min-height: 100vh;
+    background: #050505;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
 }
 
-body::before {
-    content: "";
-    position: fixed;
-    width: 500px;
-    height: 500px;
-    background: #2874ff;
-    filter: blur(180px);
-    opacity: .15;
-    top: -180px;
-    right: -150px;
-    pointer-events: none;
+a {
+    color: inherit;
+    text-decoration: none;
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    width: 400px;
-    height: 400px;
-    background: #00c8ff;
-    filter: blur(180px);
-    opacity: .10;
-    bottom: -150px;
-    left: -150px;
-    pointer-events: none;
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
 }
 
-header {
+/* NAVIGATION */
+
+nav {
     width: 100%;
-    padding: 25px 7%;
+    padding: 25px 0;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.nav-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-    position: relative;
-    z-index: 2;
 }
 
 .logo {
@@ -66,308 +55,548 @@ header {
 }
 
 .logo span {
-    color: #62a5ff;
+    color: #888;
 }
 
-.back {
-    color: #aaa;
-    text-decoration: none;
-    font-size: 14px;
+.nav-links {
+    display: flex;
+    gap: 30px;
 }
 
-.back:hover {
+.nav-links a {
+    color: #999;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
     color: white;
 }
 
-main {
-    max-width: 1000px;
-    margin: auto;
-    padding: 75px 20px;
-    position: relative;
-    z-index: 1;
-}
+/* HERO */
 
-.app {
-    text-align: center;
-}
-
-.app-icon {
-    width: 125px;
-    height: 125px;
-    border-radius: 30px;
-    background: linear-gradient(145deg, #182b4d, #0b1425);
-    border: 1px solid rgba(255,255,255,.15);
-    box-shadow: 0 15px 60px rgba(40,116,255,.2);
+.hero {
+    min-height: 750px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 0 auto 30px;
-    font-size: 58px;
+    position: relative;
+    overflow: hidden;
+    padding: 150px 0 100px;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    right: -200px;
+    top: 50px;
+    background: radial-gradient(circle, rgba(255,255,255,0.09), transparent 70%);
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 750px;
+    animation: heroEnter 1.2s ease forwards;
 }
 
 .label {
+    color: #999;
+    font-size: 12px;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+}
+
+.hero h1 {
+    font-size: clamp(45px, 8vw, 95px);
+    line-height: 0.95;
+    letter-spacing: -5px;
+    font-weight: 900;
+}
+
+.hero h1 span {
+    color: #777;
+}
+
+.hero-description {
+    color: #999;
+    max-width: 520px;
+    line-height: 1.8;
+    margin-top: 30px;
+    font-size: 16px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.button {
+    padding: 17px 30px;
+    border: 1px solid white;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: 0.3s;
     display: inline-block;
-    color: #77b5ff;
-    background: rgba(50,130,255,.12);
-    border: 1px solid rgba(80,150,255,.2);
-    padding: 8px 16px;
-    border-radius: 30px;
+}
+
+.button.primary {
+    background: white;
+    color: black;
+}
+
+.button:hover {
+    background: #777;
+    border-color: #777;
+    color: white;
+    transform: translateY(-4px);
+}
+
+.hero-bottom {
+    position: absolute;
+    bottom: 35px;
+    left: 5%;
+    color: #555;
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+/* SECTIONS */
+
+section {
+    padding: 110px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.section-label {
+    color: #777;
     font-size: 11px;
-    letter-spacing: 2px;
+    letter-spacing: 4px;
     margin-bottom: 20px;
 }
 
-h1 {
-    font-size: clamp(35px, 7vw, 58px);
-    letter-spacing: 2px;
-    margin-bottom: 15px;
+.section-title {
+    font-size: clamp(35px, 5vw, 58px);
+    letter-spacing: -2px;
+    margin-bottom: 25px;
 }
 
-h1 span {
-    color: #65aaff;
-}
-
-.subtitle {
-    color: #929baa;
-    font-size: 16px;
-    line-height: 1.7;
-    max-width: 550px;
-    margin: 0 auto;
-}
-
-.download-card {
-    max-width: 560px;
-    margin: 45px auto 0;
-    padding: 30px;
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 22px;
-    backdrop-filter: blur(20px);
-}
-
-.info {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 13px 0;
-    border-bottom: 1px solid rgba(255,255,255,.07);
-    font-size: 14px;
-}
-
-.info span:first-child {
-    color: #8993a4;
-}
-
-.info span:last-child {
-    font-weight: 600;
-}
-
-.download {
-    display: block;
-    width: 100%;
-    margin-top: 27px;
-    padding: 18px;
-    border-radius: 13px;
-    background: linear-gradient(100deg, #287aff, #3c9bff);
-    color: white;
-    text-decoration: none;
-    font-weight: 800;
-    letter-spacing: 1px;
-    transition: .25s;
-    box-shadow: 0 8px 30px rgba(40,122,255,.22);
-}
-
-.download:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(40,122,255,.4);
-}
-
-.note {
-    margin-top: 17px;
-    color: #778294;
-    font-size: 12px;
-    line-height: 1.6;
-}
-
-.features {
-    margin-top: 75px;
-    text-align: center;
-}
-
-.features h2 {
-    font-size: 25px;
-    margin-bottom: 30px;
-}
-
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-}
-
-.feature {
-    padding: 25px 15px;
-    background: rgba(255,255,255,.035);
-    border: 1px solid rgba(255,255,255,.07);
-    border-radius: 17px;
-}
-
-.feature .emoji {
-    font-size: 27px;
-    margin-bottom: 14px;
-}
-
-.feature h3 {
-    font-size: 15px;
-    margin-bottom: 9px;
-}
-
-.feature p {
-    font-size: 12px;
-    color: #8993a4;
-    line-height: 1.6;
-}
-
-.web-version {
-    margin-top: 45px;
-    text-align: center;
-    color: #929baa;
-    font-size: 14px;
-}
-
-.web-version a {
-    color: #65aaff;
-    text-decoration: none;
-}
-
-footer {
-    margin-top: 80px;
-    padding: 25px;
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,.07);
-    color: #626d7e;
-    font-size: 12px;
+.section-description {
+    color: #888;
+    max-width: 600px;
     line-height: 1.8;
 }
 
-@media(max-width:650px) {
-    main {
-        padding-top: 55px;
+/* PREVIEW */
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 55px;
+}
+
+.gallery-item {
+    background: #111;
+    border: 1px solid #252525;
+    padding: 12px;
+    overflow: hidden;
+    transition: 0.4s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px);
+    border-color: #777;
+}
+
+.gallery-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    background: #080808;
+}
+
+.gallery-caption {
+    color: #777;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 17px 5px 7px;
+}
+
+/* FEATURES */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 50px;
+}
+
+.feature {
+    background: #0c0c0c;
+    border: 1px solid #222;
+    padding: 35px 28px;
+    transition: 0.3s;
+}
+
+.feature:hover {
+    background: #151515;
+    transform: translateY(-5px);
+}
+
+.feature-number {
+    color: #666;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+
+.feature h3 {
+    font-size: 20px;
+    margin: 25px 0 15px;
+}
+
+.feature p {
+    color: #888;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+/* DOWNLOAD */
+
+.download-box {
+    border: 1px solid #333;
+    background: linear-gradient(135deg, #151515, #080808);
+    padding: 65px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 35px;
+}
+
+.download-info h2 {
+    font-size: clamp(30px, 5vw, 48px);
+    margin-bottom: 15px;
+}
+
+.download-info p {
+    color: #888;
+    line-height: 1.7;
+}
+
+.download-meta {
+    display: flex;
+    gap: 25px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    color: #777;
+    font-size: 12px;
+}
+
+.meta-item strong {
+    display: block;
+    color: white;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.download-action {
+    flex-shrink: 0;
+}
+
+/* FOOTER */
+
+footer {
+    padding: 40px 0;
+    border-top: 1px solid #222;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    color: #666;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.footer-content a:hover {
+    color: white;
+}
+
+/* ANIMATIONS */
+
+@keyframes heroEnter {
+    from {
+        opacity: 0;
+        transform: translateY(35px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+    .nav-links {
+        gap: 13px;
     }
 
-    .feature-grid {
+    .nav-links a {
+        font-size: 9px;
+    }
+
+    .gallery {
+        grid-template-columns: 1fr;
+        max-width: 430px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .features {
         grid-template-columns: 1fr;
     }
 
-    .download-card {
-        padding: 22px;
+    .download-box {
+        padding: 35px 25px;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    header {
-        padding: 20px;
+    .hero {
+        min-height: 680px;
+    }
+
+    .hero h1 {
+        letter-spacing: -3px;
     }
 }
-</style>
-</head>
 
-<body>
+@media (max-width: 420px) {
+    .logo {
+        font-size: 14px;
+    }
 
-<header>
-    <div class="logo">TEHNOCELL <span>INDOSTRI</span></div>
-    <a class="back" href="index.html">← Главная</a>
-</header>
+    .nav-links {
+        gap: 9px;
+    }
 
-<main>
+    .nav-links a {
+        font-size: 8px;
+    }
 
-<section class="app">
-
-    <div class="app-icon">🌤️</div>
-
-    <div class="label">TEHNOCELLSOFT PRODUCT</div>
-
-    <h1>TEHNOCELL <span>WEATHER</span></h1>
-
-    <p class="subtitle">
-        Погода, прогнозы и атмосферные условия —
-        всё необходимое в одном приложении.
-    </p>
-
-    <div class="download-card">
-
-        <div class="info">
-            <span>Версия</span>
-            <span>1.0.0</span>
-        </div>
-
-        <div class="info">
-            <span>Платформа</span>
-            <span>Android</span>
-        </div>
-
-        <div class="info">
-            <span>Размер</span>
-            <span>6.14 MB</span>
-        </div>
-
-        <div class="info">
-            <span>Формат</span>
-            <span>APK</span>
-        </div>
-
-        <a class="download"
-           href="https://github.com/technosotrudnik/tehnocell-indostri/releases/latest/download/TEHNOCELL-WEATHER.apk">
-            ↓ &nbsp; DOWNLOAD APK
-        </a>
-
-        <p class="note">
-            Для установки может потребоваться разрешить
-            установку приложений из неизвестных источников.
-        </p>
-
+    .button {
+        padding: 15px 20px;
+    }
+}
+</style></head><body><nav>
+    <div class="container nav-content">
+        <a href="index.html" class="logo">TEHNOCELL<span>.</span></a>    <div class="nav-links">
+        <a href="#about">ABOUT</a>
+        <a href="#preview">PREVIEW</a>
+        <a href="#features">FEATURES</a>
+        <a href="#download">DOWNLOAD</a>
     </div>
-
-</section>
-
-<section class="features">
-
-    <h2>Возможности приложения</h2>
-
-    <div class="feature-grid">
-
-        <div class="feature">
-            <div class="emoji">🌦️</div>
-            <h3>Прогноз погоды</h3>
-            <p>Информация о текущей погоде и прогноз на ближайшие дни.</p>
-        </div>
-
-        <div class="feature">
-            <div class="emoji">🌍</div>
-            <h3>Города мира</h3>
-            <p>Поиск городов и получение погодной информации.</p>
-        </div>
-
-        <div class="feature">
-            <div class="emoji">📊</div>
-            <h3>Weather Intelligence</h3>
-            <p>Дополнительные погодные показатели и полезные советы.</p>
-        </div>
-
-    </div>
-
-</section>
-
-<div class="web-version">
-    Хотите попробовать без установки?
-    <a href="weather.html">Открыть веб-версию →</a>
 </div>
 
-</main>
+</nav><!-- HERO --><header class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="label">TEHNOCELLSOFT / OFFICIAL PRODUCT</div>        <h1>
+            TEHNOCELL<br>
+            <span>WEATHER.</span>
+        </h1>
 
-<footer>
-    <strong>TEHNOCELL INDOSTRI</strong><br>
-    TEHNOCELLSOFT — Software Division<br>
-    © 2026 TEHNOCELL INDOSTRI. All rights reserved.
-</footer>
+        <p class="hero-description">
+            A modern weather experience designed for clarity,
+            precision and simplicity. Everything you need to
+            understand the weather, presented in one place.
+        </p>
 
-</body>
+        <div class="hero-buttons">
+            <a href="#download" class="button primary">DOWNLOAD APP ↗</a>
+            <a href="weather.html" class="button">OPEN WEB VERSION</a>
+        </div>
+    </div>
+</div>
+
+<div class="hero-bottom">BUILT BY TEHNOCELLSOFT</div>
+
+</header><!-- ABOUT --><section id="about">
+    <div class="container reveal">
+        <div class="section-label">01 / ABOUT THE PRODUCT</div>    <h2 class="section-title">Weather. Without<br>unnecessary noise.</h2>
+
+    <p class="section-description">
+        TEHNOCELL WEATHER is a weather application focused on
+        useful information and a clean interface. Check current
+        conditions, explore forecasts and monitor important
+        atmospheric data without unnecessary distractions.
+    </p>
+</div>
+
+</section><!-- PREVIEW --><section id="preview">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label">02 / APPLICATION PREVIEW</div>
+            <h2 class="section-title">Take a closer look.</h2>        <p class="section-description">
+            A look inside the TEHNOCELL WEATHER application.
+            Minimal design, useful information and a monochrome interface.
+        </p>
+    </div>
+
+    <div class="gallery reveal">
+
+        <div class="gallery-item">
+            <img
+                src="images/Screenshot_20261030-222459%20%281%29.jpg"
+                alt="TEHNOCELL WEATHER screenshot 1"
+                loading="lazy">
+            <div class="gallery-caption">01 / WEATHER INTERFACE</div>
+        </div>
+
+        <div class="gallery-item">
+            <img
+                src="images/Screenshot_20261030-222507%20%281%29.jpg"
+                alt="TEHNOCELL WEATHER screenshot 2"
+                loading="lazy">
+            <div class="gallery-caption">02 / FORECAST</div>
+        </div>
+
+        <div class="gallery-item">
+            <img
+                src="images/Screenshot_20261030-222510%20%281%29.jpg"
+                alt="TEHNOCELL WEATHER screenshot 3"
+                loading="lazy">
+            <div class="gallery-caption">03 / WEATHER DETAILS</div>
+        </div>
+
+    </div>
+</div>
+
+</section><!-- FEATURES --><section id="features">
+    <div class="container">
+        <div class="reveal">
+            <div class="section-label">03 / FEATURES</div>
+            <h2 class="section-title">More than just<br>a forecast.</h2>
+        </div>    <div class="features">
+
+        <div class="feature reveal">
+            <div class="feature-number">01 / FORECAST</div>
+            <h3>Weather Forecast</h3>
+            <p>
+                Check current weather conditions and explore
+                upcoming hourly and daily forecasts.
+            </p>
+        </div>
+
+        <div class="feature reveal">
+            <div class="feature-number">02 / ATMOSPHERE</div>
+            <h3>Atmospheric Data</h3>
+            <p>
+                Explore temperature, humidity, wind, pressure,
+                visibility and other important weather indicators.
+            </p>
+        </div>
+
+        <div class="feature reveal">
+            <div class="feature-number">03 / INTELLIGENCE</div>
+            <h3>Weather Intelligence</h3>
+            <p>
+                Get additional environmental information,
+                including air quality and other useful indicators.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+</section><!-- DOWNLOAD --><section id="download">
+    <div class="container reveal">    <div class="section-label">04 / GET THE APPLICATION</div>
+
+    <div class="download-box">
+
+        <div class="download-info">
+            <h2>Ready to experience it?</h2>
+
+            <p>
+                Download TEHNOCELL WEATHER for Android
+                and explore a new way to check the weather.
+            </p>
+
+            <div class="download-meta">
+                <div class="meta-item">
+                    VERSION
+                    <strong>1.0.0</strong>
+                </div>
+
+                <div class="meta-item">
+                    PLATFORM
+                    <strong>Android</strong>
+                </div>
+
+                <div class="meta-item">
+                    FILE SIZE
+                    <strong>6.14 MB</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-action">
+            <a
+                href="https://github.com/technosotrudnik/tehnocell-indostri/releases/latest/download/TEHNOCELL-WEATHER.apk"
+                class="button primary"
+                download>
+                DOWNLOAD APK ↓
+            </a>
+        </div>
+
+    </div>
+</div>
+
+</section><!-- FOOTER --><footer>
+    <div class="container footer-content">
+        <div>© 2026 TEHNOCELL INDOSTRI</div>    <div>DEVELOPED BY TEHNOCELLSOFT</div>
+
+    <a href="index.html">BACK TO MAIN WEBSITE ↑</a>
+</div>
+
+</footer><script>
+const revealElements = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.12
+});
+
+revealElements.forEach((element) => {
+    observer.observe(element);
+});
+</script></body>
 </html>
