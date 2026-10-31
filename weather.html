@@ -54,23 +54,41 @@ button {
 
 .light-orb {
   position:absolute;
-  width:280px;
-  height:280px;
+  width:350px;
+  height:350px;
   border-radius:50%;
-  background:rgba(255,255,255,.045);
-  opacity:.35;
+  background:rgba(255,255,255,.12);
+  filter:blur(110px);
+  opacity:.5;
+  animation:floatLight 24s ease-in-out infinite alternate;
 }
 
 .light-orb:nth-child(2) {
-  width:230px;
-  height:230px;
-  opacity:.25;
+  width:280px;
+  height:280px;
+  opacity:.35;
+  animation-duration:30s;
+  animation-delay:-9s;
 }
 
 .light-orb:nth-child(3) {
-  width:300px;
-  height:300px;
-  opacity:.18;
+  width:400px;
+  height:400px;
+  opacity:.25;
+  animation-duration:35s;
+  animation-delay:-17s;
+}
+
+@keyframes floatLight {
+  0% {
+    transform:translate(-10vw,-5vh);
+  }
+  50% {
+    transform:translate(45vw,25vh);
+  }
+  100% {
+    transform:translate(5vw,65vh);
+  }
 }
 
 /* MAIN APP */
@@ -182,10 +200,12 @@ header {
   min-width:0;
   padding:15px 17px;
   color:white;
-  background:rgba(22,22,27,.94);
+  background:var(--card);
   border:1px solid var(--line);
   border-radius:16px;
   outline:none;
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
 }
 
 .search input::placeholder {
@@ -220,13 +240,20 @@ header {
 .card {
   position:relative;
   overflow:hidden;
-  background:rgba(22,22,27,.94);
+  background:rgba(255,255,255,.035);
   border:1px solid rgba(255,255,255,.075);
   border-radius:25px;
   padding:21px;
   margin-bottom:14px;
-  box-shadow:0 5px 20px rgba(0,0,0,.10);
-  transition:border-color .25s;
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  box-shadow:
+    0 10px 45px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.035);
+  transition:
+    background .4s,
+    border-color .4s,
+    transform .4s;
 }
 
 .section-title {
@@ -396,8 +423,7 @@ header {
   font-size:10px;
   margin-top:6px;
 }
-
-/* SUN TIMES */
+  /* SUN TIMES */
 
 .sun-times {
   display:grid;
@@ -557,51 +583,112 @@ footer {
 }
 </style>
 </head>
-  <div class="metric-value" id="humidity">--%</div>
-  <div class="metric-extra">Относительная влажность</div>
+
+<body>
+
+<div id="weatherEffects">
+  <div class="light-orb"></div>
+  <div class="light-orb"></div>
+  <div class="light-orb"></div>
+</div>
+
+<main class="app">
+
+<header>
+  <div class="logo">
+    TEHNOCELL
+    <span>WEATHER</span>
+  </div>
+
+  <div class="header-right">
+    <div class="header-time" id="clock">--:--</div>
+    <div class="header-date" id="date">Загрузка...</div>
+  </div>
+</header>
+
+<div class="search">
+  <input id="cityInput" type="text" placeholder="Введите город..." />
+  <button onclick="searchCity()">Найти</button>
+  <button class="location" onclick="useLocation()" title="Моё местоположение">⌖</button>
+</div>
+
+<div class="status" id="status">Загрузка погоды...</div>
+
+<section class="card">
+  <div class="place" id="cityName">Москва</div>
+
+  <div class="current">
+    <div>
+      <div class="temperature" id="temperature">--°</div>
+      <div class="description" id="description">Загрузка...</div>
+      <div class="feels" id="feels">Ощущается как --°</div>
+    </div>
+
+    <div class="weather-art" id="weatherIcon"></div>
+  </div>
+
+  <div class="updated" id="updated">Ожидание данных...</div>
 </section>
 
-<section class="card metric">
-  <div class="metric-label">Ветер</div>
-  <div class="metric-value" id="wind">--</div>
-  <div class="metric-extra" id="windDirection">Скорость ветра</div>
+<section class="card">
+  <div class="section-title">Почасовой прогноз</div>
+  <div class="hourly" id="hourly"></div>
 </section>
 
-<section class="card metric">
-  <div class="metric-label">Давление</div>
-  <div class="metric-value" id="pressure">--</div>
-  <div class="metric-extra">Гектопаскали</div>
+<section class="card">
+  <div class="section-title">Прогноз на 7 дней</div>
+  <div class="days" id="days"></div>
 </section>
 
-<section class="card metric">
-  <div class="metric-label">Видимость</div>
-  <div class="metric-value" id="visibility">--</div>
-  <div class="metric-extra">Километры</div>
-</section>
+<div class="grid">
 
-<section class="card metric">
-  <div class="metric-label">УФ-индекс</div>
-  <div class="metric-value" id="uv">--</div>
-  <div class="metric-extra" id="uvText">Ультрафиолет</div>
-</section>
+  <section class="card metric">
+    <div class="metric-label">Влажность</div>
+    <div class="metric-value" id="humidity">--%</div>
+    <div class="metric-extra">Относительная влажность</div>
+  </section>
 
-<section class="card metric">
-  <div class="metric-label">Вероятность осадков</div>
-  <div class="metric-value" id="precip">--%</div>
-  <div class="metric-extra">В ближайший час</div>
-</section>
+  <section class="card metric">
+    <div class="metric-label">Ветер</div>
+    <div class="metric-value" id="wind">--</div>
+    <div class="metric-extra" id="windDirection">Скорость ветра</div>
+  </section>
 
-<section class="card metric">
-  <div class="metric-label">Точка росы</div>
-  <div class="metric-value" id="dew">--°</div>
-  <div class="metric-extra">Температура точки росы</div>
-</section>
+  <section class="card metric">
+    <div class="metric-label">Давление</div>
+    <div class="metric-value" id="pressure">--</div>
+    <div class="metric-extra">Гектопаскали</div>
+  </section>
 
-<section class="card metric">
-  <div class="metric-label">Осадки</div>
-  <div class="metric-value" id="rainAmount">--</div>
-  <div class="metric-extra">Миллиметры в час</div>
-</section>
+  <section class="card metric">
+    <div class="metric-label">Видимость</div>
+    <div class="metric-value" id="visibility">--</div>
+    <div class="metric-extra">Километры</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">УФ-индекс</div>
+    <div class="metric-value" id="uv">--</div>
+    <div class="metric-extra" id="uvText">Ультрафиолет</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Вероятность осадков</div>
+    <div class="metric-value" id="precip">--%</div>
+    <div class="metric-extra">В ближайший час</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Точка росы</div>
+    <div class="metric-value" id="dew">--°</div>
+    <div class="metric-extra">Температура точки росы</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Осадки</div>
+    <div class="metric-value" id="rainAmount">--</div>
+    <div class="metric-extra">Миллиметры в час</div>
+  </section>
 
 </div>
 
@@ -646,8 +733,8 @@ footer {
 </footer>
 
 </main>
-
 <script>
+
 const $ = id => document.getElementById(id);
 
 let latitude = 55.7558;
@@ -769,7 +856,7 @@ function effects(type) {
   box.querySelectorAll(".rain-drop,.fog-layer").forEach(el => el.remove());
 
   if (type === "rain" || type === "storm") {
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 35; i++) {
       const drop = document.createElement("div");
       drop.className = "rain-drop";
       drop.style.left = Math.random() * 100 + "%";
@@ -838,7 +925,7 @@ function showWeather(data) {
   $("dew").textContent = Math.round(c.dew_point_2m) + "°";
 
   $("rainAmount").textContent = Number(c.precipitation).toFixed(1);
-
+  
   const now = new Date(c.time).getTime();
   let nextHour = h.time.findIndex(t => new Date(t).getTime() >= now);
 
@@ -902,8 +989,7 @@ function showDays(data) {
       </div>`;
   }
 }
-
-async function loadAirQuality() {
+  async function loadAirQuality() {
   try {
     const url = airURL +
       `?latitude=${latitude}&longitude=${longitude}` +
@@ -1105,4 +1191,4 @@ setInterval(loadWeather,15 * 60 * 1000);
 
 </script>
 </body>
-    </html>
+</html>
