@@ -1,12 +1,21 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!DOCTYPE html><html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI.">
-<title>TEHNOCELLGAME | TEHNOCELL INDOSTRI</title>
+<meta name="theme-color" content="#08080c">
+<title>TEHNOCELLGAME | TEHNOCELL INDOSTRI</title><style>
+:root {
+    --bg: #08080c;
+    --surface: #101016;
+    --surface-light: #171720;
+    --text: #f5f5f7;
+    --muted: #92929e;
+    --purple: #a855f7;
+    --red: #ef4444;
+    --border: rgba(255,255,255,0.09);
+}
 
-<style>
 * {
     margin: 0;
     padding: 0;
@@ -15,13 +24,26 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 90px;
 }
 
 body {
     font-family: "Segoe UI", Arial, sans-serif;
-    background: #ffffff;
-    color: #111111;
-    line-height: 1.6;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(168,85,247,0.10), transparent 40%),
+        radial-gradient(ellipse at 90% 40%, rgba(239,68,68,0.07), transparent 38%);
 }
 
 a {
@@ -30,455 +52,666 @@ a {
 }
 
 .container {
-    max-width: 1050px;
+    max-width: 1100px;
     margin: auto;
-    padding: 0 24px;
+    padding: 0 25px;
 }
 
+/* HEADER */
+
 header {
-    border-bottom: 1px solid #e8e8e8;
-    padding: 22px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,12,0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
 }
 
 .header-content {
+    min-height: 76px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-    flex-wrap: wrap;
 }
 
 .brand {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: 1px;
+    font-size: 19px;
+    font-weight: 850;
+    letter-spacing: 1.2px;
 }
 
 .brand span {
-    color: #777777;
+    color: #a78bfa;
 }
 
 nav {
     display: flex;
-    gap: 24px;
+    gap: 28px;
     flex-wrap: wrap;
 }
 
 nav a {
-    font-size: 14px;
-    color: #555555;
-    transition: 0.2s;
+    color: #a5a5b0;
+    font-size: 13px;
+    transition: 0.25s;
 }
 
 nav a:hover {
-    color: #000000;
+    color: white;
 }
 
+/* HERO */
+
 .hero {
-    padding: 95px 0 85px;
+    min-height: 510px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    border-bottom: 1px solid #eeeeee;
+    padding: 110px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    background: rgba(124,58,237,0.13);
+    filter: blur(100px);
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
 }
 
 .eyebrow {
-    font-size: 12px;
-    letter-spacing: 3px;
+    color: #b78aff;
+    font-size: 11px;
+    letter-spacing: 4px;
     text-transform: uppercase;
-    color: #777777;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
+    font-weight: 700;
 }
 
 h1 {
-    font-size: clamp(38px, 7vw, 65px);
-    letter-spacing: -2px;
-    line-height: 1.15;
-    margin-bottom: 20px;
+    font-size: clamp(42px, 8vw, 82px);
+    letter-spacing: -3px;
+    line-height: 1.08;
+    margin-bottom: 25px;
+    font-weight: 850;
+    background: linear-gradient(100deg, #ffffff 25%, #c4a0ff 60%, #ef7777);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .hero p {
-    max-width: 620px;
+    max-width: 650px;
     margin: auto;
-    color: #666666;
+    color: #a5a5b0;
     font-size: 17px;
 }
 
+.hero-line {
+    width: 65px;
+    height: 3px;
+    margin: 35px auto 0;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--purple), var(--red));
+}
+
+/* SECTIONS */
+
 .section {
-    padding: 70px 0;
-    border-bottom: 1px solid #eeeeee;
+    padding: 85px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-heading {
+    margin-bottom: 38px;
+}
+
+.section-label {
+    color: #b78aff;
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
 .section-title {
-    font-size: 28px;
-    margin-bottom: 12px;
+    font-size: clamp(27px, 4vw, 37px);
+    letter-spacing: -1px;
+    margin-bottom: 10px;
 }
 
 .section-description {
-    color: #777777;
-    margin-bottom: 32px;
+    color: var(--muted);
+    font-size: 15px;
 }
 
 /* GAME CARD */
 
 .game-link {
     display: block;
-    border-radius: 14px;
+    border-radius: 17px;
     outline-offset: 5px;
 }
 
+.game-link:focus-visible {
+    outline: 2px solid var(--purple);
+}
+
 .game-card {
-    border: 1px solid #e5e5e5;
-    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 17px;
     overflow: hidden;
-    transition: 0.3s;
-    background: #ffffff;
+    transition: 0.35s;
 }
 
 .game-link:hover .game-card {
-    border-color: #999999;
-    transform: translateY(-5px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
-}
-
-.game-link:focus-visible {
-    outline: 2px solid #111111;
+    transform: translateY(-7px);
+    border-color: rgba(168,85,247,0.55);
+    box-shadow: 0 20px 65px rgba(124,58,237,0.12);
 }
 
 .game-cover {
-    min-height: 250px;
-    background:
-        radial-gradient(circle at 50% 50%, #333333, transparent 65%),
-        linear-gradient(135deg, #090909, #24202b);
-    color: #ffffff;
+    min-height: 290px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 30px;
+    padding: 35px 20px;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.30), transparent 55%),
+        radial-gradient(ellipse at 85% 20%, rgba(239,68,68,0.13), transparent 45%),
+        linear-gradient(135deg, #100c1a, #0b0b12 60%, #180d16);
 }
 
-.game-cover h3 {
-    font-size: clamp(27px, 5vw, 42px);
-    letter-spacing: 1px;
-    line-height: 1.2;
+.game-cover::before,
+.game-cover::after {
+    content: "";
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 50%;
+}
+
+.game-cover::before {
+    width: 330px;
+    height: 330px;
+}
+
+.game-cover::after {
+    width: 430px;
+    height: 430px;
+}
+
+.cover-content {
+    position: relative;
+    z-index: 1;
 }
 
 .game-cover span {
     display: block;
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: #aaaaaa;
-    margin-bottom: 15px;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #b99af4;
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+
+.game-cover h3 {
+    font-size: clamp(30px, 6vw, 55px);
+    line-height: 1.12;
+    letter-spacing: 1px;
+    font-weight: 900;
+    text-shadow: 0 0 35px rgba(168,85,247,0.3);
+}
+
+.cover-subtitle {
+    margin-top: 18px;
+    color: #a3a0ae;
+    font-size: 11px;
+    letter-spacing: 3px;
 }
 
 .game-info {
-    padding: 30px;
+    padding: 35px;
 }
 
 .game-info h3 {
-    font-size: 25px;
-    margin-bottom: 8px;
+    font-size: 27px;
+    margin-bottom: 5px;
 }
 
 .developer {
-    color: #888888;
+    color: #888895;
     font-size: 13px;
-    margin-bottom: 20px;
-}
-
-.game-description {
-    color: #555555;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 }
 
 .status {
     display: inline-block;
-    padding: 7px 13px;
-    border: 1px solid #222222;
+    padding: 7px 14px;
+    border: 1px solid rgba(168,85,247,0.45);
     border-radius: 30px;
-    font-size: 11px;
-    letter-spacing: 1px;
-    font-weight: 700;
-    margin-bottom: 25px;
+    color: #c5a2ff;
+    background: rgba(168,85,247,0.08);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    margin-bottom: 23px;
 }
+
+.game-description {
+    color: #a4a4af;
+    font-size: 14px;
+    line-height: 1.9;
+    max-width: 850px;
+    margin-bottom: 28px;
+}
+
+/* DETAILS */
 
 .details {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin: 25px 0;
+    gap: 13px;
+    margin: 28px 0;
 }
 
 .detail {
-    background: #f7f7f7;
-    padding: 15px;
-    border-radius: 8px;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    padding: 19px;
+    border-radius: 10px;
+    transition: 0.25s;
+}
+
+.detail:hover {
+    border-color: rgba(168,85,247,0.4);
 }
 
 .detail small {
     display: block;
-    color: #888888;
-    font-size: 11px;
-    margin-bottom: 5px;
+    color: #858591;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 7px;
 }
 
 .detail strong {
     font-size: 14px;
+    color: #eeeeF4;
 }
 
+/* BUTTONS */
+
 .download-area {
-    margin-top: 30px;
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    margin-top: 28px;
 }
 
 .button {
     display: inline-block;
-    padding: 12px 23px;
-    background: #111111;
-    color: #ffffff;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.button.disabled {
-    background: #eeeeee;
-    color: #888888;
-    cursor: not-allowed;
+    padding: 11px 20px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.04);
+    color: #92929e;
+    border: 1px solid var(--border);
 }
 
 .game-open {
-    display: inline-block;
-    margin-top: 25px;
-    padding: 12px 20px;
-    background: #111111;
-    color: #ffffff;
-    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 28px;
+    padding: 13px 23px;
+    border-radius: 7px;
+    background: linear-gradient(100deg, #7936c9, #a33e80);
+    color: white;
     font-size: 13px;
-    font-weight: 600;
-    transition: 0.25s;
+    font-weight: 700;
+    transition: 0.3s;
+    box-shadow: 0 5px 25px rgba(124,58,237,0.17);
 }
 
 .game-link:hover .game-open {
-    background: #444444;
+    transform: translateX(5px);
+    box-shadow: 0 5px 30px rgba(168,85,247,0.3);
 }
 
+.note {
+    font-size: 11px;
+    color: #777783;
+    margin-top: 17px;
+}
+
+/* SCREENSHOTS */
+
 .placeholder {
-    background: #f7f7f7;
-    border: 1px dashed #cccccc;
-    border-radius: 10px;
-    padding: 35px 20px;
+    min-height: 190px;
+    background:
+        radial-gradient(ellipse at center, rgba(124,58,237,0.08), transparent 70%),
+        var(--surface);
+    border: 1px dashed rgba(168,85,247,0.3);
+    border-radius: 13px;
+    padding: 45px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    color: #888888;
+    color: #888895;
+    font-size: 13px;
 }
 
 .placeholder strong {
     display: block;
-    color: #555555;
-    margin-bottom: 7px;
+    color: #dedee7;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+/* ABOUT */
+
+.about-box {
+    max-width: 800px;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(239,68,68,0.035));
+    border: 1px solid var(--border);
+    border-radius: 12px;
 }
 
 .about-text {
-    max-width: 750px;
-    color: #666666;
+    color: #a5a5b0;
+    font-size: 15px;
+    line-height: 2;
 }
 
+/* FOOTER */
+
 footer {
-    padding: 30px 0;
+    padding: 35px 0;
     text-align: center;
-    color: #999999;
+    color: #777783;
     font-size: 12px;
 }
 
 footer a {
-    color: #555555;
+    color: #b99af4;
+    transition: 0.2s;
 }
 
+footer a:hover {
+    color: white;
+}
+
+/* ANIMATIONS */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* MOBILE */
+
 @media (max-width: 650px) {
+    .container {
+        padding: 0 19px;
+    }
+
+    .header-content {
+        padding-top: 15px;
+        padding-bottom: 15px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    nav {
+        gap: 19px;
+    }
+
+    nav a {
+        font-size: 12px;
+    }
+
     .hero {
-        padding: 70px 0;
+        min-height: 420px;
+        padding: 80px 0;
+    }
+
+    h1 {
+        letter-spacing: -2px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .section {
+        padding: 60px 0;
+    }
+
+    .game-cover {
+        min-height: 230px;
+    }
+
+    .game-info {
+        padding: 23px;
+    }
+
+    .game-info h3 {
+        font-size: 23px;
     }
 
     .details {
         grid-template-columns: 1fr;
     }
 
-    .game-info {
+    .detail {
+        padding: 15px;
+    }
+
+    .about-box {
         padding: 22px;
     }
-
-    nav {
-        gap: 15px;
-    }
-
-    .section {
-        padding: 50px 0;
-    }
 }
-</style>
-</head>
+</style></head><body><header>
+    <div class="container header-content">    <a href="index.html" class="brand">
+        TEHNOCELL<span>GAME</span>
+    </a>
 
-<body>
+    <nav>
+        <a href="index.html">Главная</a>
+        <a href="#games">Игры</a>
+        <a href="#about">О подразделении</a>
+    </nav>
 
-<header>
-    <div class="container header-content">
+</div>
 
-        <a href="index.html" class="brand">
-            TEHNOCELL<span>GAME</span>
-        </a>
+</header><main><section class="hero">
+    <div class="container hero-content">    <div class="eyebrow">TEHNOCELL INDOSTRI DIVISION</div>
 
-        <nav>
-            <a href="index.html">Главная</a>
-            <a href="#games">Игры</a>
-            <a href="#about">О подразделении</a>
-        </nav>
+    <h1>TEHNOCELLGAME</h1>
 
-    </div>
-</header>
+    <p>
+        Игровое подразделение TEHNOCELL INDOSTRI.
+        Создаём игровые миры, необычные механики
+        и проекты, в которые хочется возвращаться.
+    </p>
 
-<main>
+    <div class="hero-line"></div>
 
-<section class="hero">
-    <div class="container">
+</div>
 
-        <div class="eyebrow">TEHNOCELL INDOSTRI DIVISION</div>
-
-        <h1>TEHNOCELLGAME</h1>
-
-        <p>
-            Игровое подразделение TEHNOCELL INDOSTRI.
-            Создаём игровые миры, необычные механики
-            и проекты, в которые хочется возвращаться.
-        </p>
-
-    </div>
-</section>
-
-<section class="section" id="games">
-    <div class="container">
-
+</section><section class="section" id="games">
+    <div class="container">    <div class="section-heading reveal">
+        <div class="section-label">OUR PROJECTS</div>
         <h2 class="section-title">Наши игры</h2>
-
         <p class="section-description">
             Игровые проекты TEHNOCELLGAME.
         </p>
+    </div>
 
-        <!-- КАРТОЧКА ИГРЫ: НАЖМИ ДЛЯ ПЕРЕХОДА -->
+    <a href="stand-ascension.html"
+       class="game-link reveal"
+       aria-label="Открыть страницу Stand Ascension: The Tower">
 
-        <a href="stand-ascension.html"
-           class="game-link"
-           aria-label="Открыть страницу Stand Ascension: The Tower">
+        <article class="game-card">
 
-            <article class="game-card">
+            <div class="game-cover">
+                <div class="cover-content">
+                    <span>TEHNOCELLGAME PRESENTS</span>
+                    <h3>STAND ASCENSION<br>THE TOWER</h3>
+                    <div class="cover-subtitle">YOUR ASCENSION BEGINS HERE</div>
+                </div>
+            </div>
 
-                <div class="game-cover">
-                    <div>
-                        <span>TEHNOCELLGAME PRESENTS</span>
-                        <h3>STAND ASCENSION<br>THE TOWER</h3>
-                    </div>
+            <div class="game-info">
+
+                <h3>Stand Ascension: The Tower</h3>
+
+                <div class="developer">
+                    Разработчик: Stand Ascension
                 </div>
 
-                <div class="game-info">
+                <div class="status">
+                    BETA — COMING SOON
+                </div>
 
-                    <h3>Stand Ascension: The Tower</h3>
+                <p class="game-description">
+                    Stand Ascension: The Tower — пиксельная 2D-игра,
+                    вдохновлённая JoJo’s Bizarre Adventure.
 
-                    <div class="developer">
-                        Разработчик: Stand Ascension
+                    Сражайся с врагами, используй уникальные
+                    способности стендов и покоряй 100 этажей
+                    загадочной башни. Становись сильнее, открывай
+                    новые умения и побеждай могущественных боссов.
+
+                    Тебя ждут динамичные битвы, необычные способности
+                    и разнообразные испытания. В игре появятся как
+                    знакомые стенды из JoJo, так и оригинальные
+                    персонажи с собственными силами.
+                </p>
+
+                <div class="details">
+
+                    <div class="detail">
+                        <small>ПЛАТФОРМЫ</small>
+                        <strong>Android / Windows</strong>
                     </div>
 
-                    <div class="status">
-                        BETA — COMING SOON
+                    <div class="detail">
+                        <small>ЖАНР</small>
+                        <strong>2D Action</strong>
                     </div>
 
-                    <p class="game-description">
-                        Stand Ascension: The Tower — пиксельная 2D-игра,
-                        вдохновлённая JoJo’s Bizarre Adventure.
-
-                        Сражайся с врагами, используй уникальные
-                        способности стендов и покоряй 100 этажей
-                        загадочной башни. Становись сильнее, открывай
-                        новые умения и побеждай могущественных боссов.
-
-                        Тебя ждут динамичные битвы, необычные способности
-                        и разнообразные испытания. В игре появятся как
-                        знакомые стенды из JoJo, так и оригинальные
-                        персонажи с собственными силами.
-                    </p>
-
-                    <div class="details">
-
-                        <div class="detail">
-                            <small>ПЛАТФОРМЫ</small>
-                            <strong>Android / Windows</strong>
-                        </div>
-
-                        <div class="detail">
-                            <small>ЖАНР</small>
-                            <strong>2D Action</strong>
-                        </div>
-
-                        <div class="detail">
-                            <small>РЕЛИЗ БЕТЫ</small>
-                            <strong>Ноябрь 2026*</strong>
-                        </div>
-
+                    <div class="detail">
+                        <small>РЕЛИЗ БЕТЫ</small>
+                        <strong>Ноябрь 2026*</strong>
                     </div>
 
-                    <div class="download-area">
+                </div>
 
-                        <span class="button disabled">
-                            Android — скоро
-                        </span>
+                <div class="download-area">
 
-                        <span class="button disabled">
-                            Windows — скоро
-                        </span>
+                    <span class="button">
+                        Android — скоро
+                    </span>
 
-                    </div>
-
-                    <p style="font-size: 11px; color: #999999; margin-top: 15px;">
-                        *Ориентировочная дата. Может измениться.
-                    </p>
-
-                    <span class="game-open">
-                        Подробнее об игре →
+                    <span class="button">
+                        Windows — скоро
                     </span>
 
                 </div>
 
-            </article>
+                <p class="note">
+                    *Ориентировочная дата. Может измениться.
+                </p>
 
-        </a>
+                <span class="game-open">
+                    Подробнее об игре →
+                </span>
 
-    </div>
-</section>
+            </div>
 
-<section class="section">
-    <div class="container">
+        </article>
 
+    </a>
+
+</div>
+
+</section><section class="section">
+    <div class="container">    <div class="section-heading reveal">
+        <div class="section-label">GAME PREVIEW</div>
         <h2 class="section-title">Скриншоты игры</h2>
-
         <p class="section-description">
-            Здесь появятся настоящие кадры игрового процесса.
+            Взгляни на игровой мир Stand Ascension.
         </p>
+    </div>
 
-        <div class="placeholder">
+    <div class="placeholder reveal">
 
-            <strong>Скриншоты скоро появятся</strong>
+        <strong>Скриншоты скоро появятся</strong>
 
-            Галерея находится в разработке.
-
-        </div>
+        Галерея находится в разработке.
 
     </div>
-</section>
 
-<section class="section" id="about">
-    <div class="container">
+</div>
 
+</section><section class="section" id="about">
+    <div class="container">    <div class="section-heading reveal">
+        <div class="section-label">WHO WE ARE</div>
         <h2 class="section-title">О TEHNOCELLGAME</h2>
+    </div>
 
+    <div class="about-box reveal">
         <p class="about-text">
             TEHNOCELLGAME — игровое подразделение
             TEHNOCELL INDOSTRI, занимающееся разработкой
@@ -488,24 +721,34 @@ footer a {
             экспериментировать с механиками и предлагать
             игрокам новые впечатления.
         </p>
-
     </div>
-</section>
 
-</main>
+</div>
 
-<footer>
-    <div class="container">
+</section></main><footer>
+    <div class="container">    © 2026 TEHNOCELL INDOSTRI.
 
-        © 2026 TEHNOCELL INDOSTRI.
+    <br>
 
-        <br>
+    <a href="index.html">TEHNOCELL INDOSTRI</a>
+    — официальный сайт.
 
-        <a href="index.html">TEHNOCELL INDOSTRI</a>
-        — официальный сайт.
+</div>
 
-    </div>
-</footer>
+</footer><script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.12
+});
 
-</body>
+document.querySelectorAll(".reveal").forEach(element => {
+    observer.observe(element);
+});
+</script></body>
 </html>
