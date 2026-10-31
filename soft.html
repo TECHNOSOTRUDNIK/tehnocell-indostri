@@ -1,0 +1,471 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>TEHNOCELLSOFT — TEHNOCELL INDOSTRI</title><style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #080808;
+    color: #f5f5f5;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 76px;
+    padding: 0 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(8,8,8,0.85);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid #222;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #888;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: #aaa;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    transition: .3s;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.hero {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(255,255,255,.08), transparent 70%);
+    animation: glow 6s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes glow {
+    from { transform: scale(.8); opacity: .4; }
+    to { transform: scale(1.2); opacity: .9; }
+}
+
+.hero-label {
+    color: #888;
+    font-size: 11px;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+    animation: appear 1s ease both;
+}
+
+.hero h1 {
+    font-size: clamp(45px, 9vw, 100px);
+    line-height: 1;
+    letter-spacing: -4px;
+    font-weight: 900;
+    animation: appear 1s ease .15s both;
+}
+
+.hero h1 span {
+    color: #777;
+}
+
+.hero-description {
+    max-width: 550px;
+    color: #999;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-top: 30px;
+    animation: appear 1s ease .3s both;
+}
+
+.hero-button {
+    display: inline-block;
+    margin-top: 40px;
+    padding: 15px 27px;
+    border: 1px solid white;
+    background: white;
+    color: black;
+    font-size: 11px;
+    letter-spacing: 2px;
+    transition: .3s;
+    animation: appear 1s ease .45s both;
+}
+
+.hero-button:hover {
+    background: #888;
+    border-color: #888;
+    transform: translateY(-3px);
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background: #222;
+}
+
+section {
+    padding: 110px 10%;
+}
+
+.section-label {
+    color: #777;
+    font-size: 11px;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: clamp(32px, 5vw, 55px);
+    letter-spacing: -2px;
+    margin-bottom: 25px;
+}
+
+.section-text {
+    max-width: 680px;
+    color: #999;
+    font-size: 15px;
+    line-height: 1.9;
+}
+
+.about {
+    background: #0d0d0d;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.about-symbol {
+    text-align: center;
+    font-size: clamp(90px, 15vw, 180px);
+    font-weight: 900;
+    color: #171717;
+    letter-spacing: -10px;
+}
+
+.products {
+    text-align: center;
+}
+
+.products .section-text {
+    margin: 0 auto;
+}
+
+.product-card {
+    max-width: 900px;
+    margin: 60px auto 0;
+    padding: 45px;
+    border: 1px solid #292929;
+    background: #0d0d0d;
+    text-align: left;
+    transition: .4s;
+    display: block;
+}
+
+.product-card:hover {
+    border-color: #777;
+    transform: translateY(-7px);
+    background: #121212;
+}
+
+.product-tag {
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+}
+
+.product-card h3 {
+    font-size: clamp(28px, 5vw, 48px);
+    letter-spacing: -2px;
+    margin-bottom: 18px;
+}
+
+.product-card p {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 600px;
+}
+
+.product-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid #292929;
+}
+
+.product-type {
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.product-open {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: white;
+    transition: .3s;
+}
+
+.product-card:hover .product-open {
+    color: #aaa;
+    transform: translateX(5px);
+}
+
+.more {
+    background: #0d0d0d;
+    text-align: center;
+}
+
+.more .section-text {
+    margin: 0 auto;
+}
+
+footer {
+    border-top: 1px solid #222;
+    padding: 35px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+footer p,
+footer a {
+    color: #666;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+footer a:hover {
+    color: white;
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity .8s ease, transform .8s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media(max-width: 800px) {
+    nav {
+        height: 65px;
+        padding: 0 5%;
+    }
+
+    .logo {
+        font-size: 14px;
+    }
+
+    .nav-links {
+        gap: 13px;
+    }
+
+    .nav-links a {
+        font-size: 9px;
+        letter-spacing: .5px;
+    }
+
+    section {
+        padding: 80px 7%;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .about-symbol {
+        font-size: 100px;
+    }
+
+    .product-card {
+        padding: 28px;
+    }
+}
+
+@media(max-width: 480px) {
+    .nav-links {
+        gap: 9px;
+    }
+
+    .nav-links a {
+        font-size: 8px;
+    }
+
+    .hero h1 {
+        letter-spacing: -2px;
+    }
+
+    .hero-description {
+        font-size: 13px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style></head><body><nav>
+    <a href="index.html" class="logo">TEHNOCELL<span>.</span></a><div class="nav-links">
+    <a href="#about">О НАС</a>
+    <a href="#products">ПРОДУКТЫ</a>
+    <a href="index.html">ГЛАВНАЯ</a>
+</div>
+
+</nav><header class="hero">
+    <div class="hero-label">SOFTWARE DEVELOPMENT DIVISION</div><h1>TEHNOCELL<br><span>SOFT</span></h1>
+
+<p class="hero-description">
+    Подразделение TEHNOCELL INDOSTRI,
+    занимающееся разработкой программного обеспечения,
+    приложений и цифровых продуктов.
+</p>
+
+<a href="#products" class="hero-button">НАШИ ПРОДУКТЫ</a>
+
+</header><div class="line"></div><section class="about" id="about">
+    <div class="about-grid">
+        <div class="reveal">
+            <div class="section-label">01 / О ПОДРАЗДЕЛЕНИИ</div>        <h2 class="section-title">
+            Создаём<br>цифровые решения.
+        </h2>
+
+        <p class="section-text">
+            TEHNOCELLSOFT — программное подразделение
+            TEHNOCELL INDOSTRI.
+            <br><br>
+            Наша деятельность направлена на создание
+            приложений, программных продуктов и
+            цифровых инструментов.
+            <br><br>
+            Каждый проект — это возможность
+            воплотить новую идею в реальность.
+        </p>
+    </div>
+
+    <div class="about-symbol reveal">TS.</div>
+</div>
+
+</section><div class="line"></div><section class="products" id="products">
+    <div class="reveal">
+        <div class="section-label">02 / НАШИ ПРОДУКТЫ</div>    <h2 class="section-title">Разработки TEHNOCELLSOFT</h2>
+
+    <p class="section-text">
+        Ознакомьтесь с нашими программными продуктами
+        и проектами.
+    </p>
+</div>
+
+<a href="weather-app.html" class="product-card reveal">
+    <div class="product-tag">ANDROID APPLICATION · 01</div>
+
+    <h3>TEHNOCELL WEATHER</h3>
+
+    <p>
+        Современное приложение для наблюдения за погодой.
+        Текущие условия, почасовой прогноз, прогноз на 7 дней,
+        атмосферные показатели и качество воздуха —
+        всё в одном приложении.
+    </p>
+
+    <div class="product-bottom">
+        <span class="product-type">WEATHER APPLICATION</span>
+        <span class="product-open">ОТКРЫТЬ ПРОЕКТ →</span>
+    </div>
+</a>
+
+</section><div class="line"></div><section class="more">
+    <div class="reveal">
+        <div class="section-label">03 / TEHNOCELL INDOSTRI</div>    <h2 class="section-title">Технологии.<br>Идеи. Разработка.</h2>
+
+    <p class="section-text">
+        TEHNOCELLSOFT продолжает развиваться,
+        создавая новые программные продукты
+        в рамках TEHNOCELL INDOSTRI.
+    </p>
+</div>
+
+</section><footer>
+    <p>© 2026 TEHNOCELL INDOSTRI</p>
+    <a href="index.html">ГЛАВНАЯ СТРАНИЦА</a>
+    <p>TEHNOCELLSOFT</p>
+</footer><script>
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+        }
+    });
+}, {
+    threshold: 0.12
+});
+
+document.querySelectorAll(".reveal").forEach(element => {
+    observer.observe(element);
+});
+</script></body>
+  </html>
