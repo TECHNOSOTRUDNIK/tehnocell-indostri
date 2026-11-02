@@ -8,9 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -31,6 +29,7 @@ body {
     background: #080808;
     border-radius: 18px;
     border: 1px solid #222;
+    box-shadow: 0 0 25px rgba(0,0,0,.12);
 }
 
 .logo {
@@ -38,10 +37,15 @@ body {
     font-size: 27px;
     font-weight: 800;
     letter-spacing: 2px;
+    color: #fff;
+    text-shadow: 0 0 7px rgba(255,255,255,.65),
+                 0 0 18px rgba(255,255,255,.25);
 }
 
 .logo span {
     color: #a5e6bd;
+    text-shadow: 0 0 8px rgba(165,230,189,.8),
+                 0 0 20px rgba(165,230,189,.4);
 }
 
 .subtitle {
@@ -55,6 +59,7 @@ body {
 h2 {
     font-size: 23px;
     margin-bottom: 25px;
+    text-shadow: 0 0 12px rgba(255,255,255,.25);
 }
 
 label {
@@ -62,6 +67,10 @@ label {
     font-size: 14px;
     color: #ddd;
     margin: 17px 0 8px;
+}
+
+.input-wrap {
+    position: relative;
 }
 
 input {
@@ -77,9 +86,37 @@ input {
 
 input:focus {
     border-color: #a5e6bd;
+    box-shadow: 0 0 10px rgba(165,230,189,.15);
 }
 
-button {
+.password-input {
+    padding-right: 48px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    color: #aaa;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password:hover {
+    color: #a5e6bd;
+}
+
+button[type="submit"] {
     width: 100%;
     padding: 15px;
     margin-top: 27px;
@@ -90,6 +127,11 @@ button {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
+    transition: .2s;
+}
+
+button[type="submit"]:hover {
+    box-shadow: 0 0 18px rgba(165,230,189,.35);
 }
 
 button:disabled {
@@ -113,6 +155,7 @@ button:disabled {
 a {
     color: #a5e6bd;
     text-decoration: none;
+    text-shadow: 0 0 8px rgba(165,230,189,.25);
 }
 
 a:hover {
@@ -149,13 +192,21 @@ a:hover {
         placeholder="example@mail.com" required>
 
         <label for="password">Пароль</label>
-        <input id="password" type="password"
-        placeholder="Минимум 8 символов"
-        minlength="8" required>
+        <div class="input-wrap">
+            <input id="password" class="password-input"
+            type="password" placeholder="Минимум 8 символов"
+            minlength="8" required>
+            <button class="toggle-password" type="button"
+            data-target="password" aria-label="Показать пароль">👁</button>
+        </div>
 
         <label for="confirmPassword">Повторите пароль</label>
-        <input id="confirmPassword" type="password"
-        placeholder="Повторите пароль" required>
+        <div class="input-wrap">
+            <input id="confirmPassword" class="password-input"
+            type="password" placeholder="Повторите пароль" required>
+            <button class="toggle-password" type="button"
+            data-target="confirmPassword" aria-label="Показать пароль">👁</button>
+        </div>
 
         <button id="submitButton" type="submit">
             Создать аккаунт
@@ -185,9 +236,24 @@ const client = window.supabase.createClient(
     SUPABASE_KEY
 );
 
+// Показать или скрыть пароль
+document.querySelectorAll(".toggle-password").forEach(button => {
+    button.addEventListener("click", () => {
+        const input = document.getElementById(button.dataset.target);
+        const visible = input.type === "password";
+
+        input.type = visible ? "text" : "password";
+        button.textContent = visible ? "🙈" : "👁";
+        button.setAttribute(
+            "aria-label",
+            visible ? "Скрыть пароль" : "Показать пароль"
+        );
+    });
+});
+
 const form = document.getElementById("registerForm");
 const message = document.getElementById("message");
-const button = document.getElementById("submitButton");
+const submitButton = document.getElementById("submitButton");
 
 form.addEventListener("submit", async function(event) {
     event.preventDefault();
@@ -215,8 +281,8 @@ form.addEventListener("submit", async function(event) {
         return;
     }
 
-    button.disabled = true;
-    button.textContent = "Создаём аккаунт...";
+    submitButton.disabled = true;
+    submitButton.textContent = "Создаём аккаунт...";
     message.textContent = "";
 
     try {
@@ -224,9 +290,7 @@ form.addEventListener("submit", async function(event) {
             email,
             password,
             options: {
-                data: {
-                    display_name: name
-                },
+                data: { display_name: name },
                 emailRedirectTo:
                 "https://technosotrudnik.github.io/tehnocell-indostri/account.html"
             }
@@ -245,8 +309,8 @@ form.addEventListener("submit", async function(event) {
         message.textContent = error.message;
 
     } finally {
-        button.disabled = false;
-        button.textContent = "Создать аккаунт";
+        submitButton.disabled = false;
+        submitButton.textContent = "Создать аккаунт";
     }
 });
 </script>
