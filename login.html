@@ -12,82 +12,113 @@
 
 body {
   min-height: 100vh;
-  background: #f3f5f4;
-  color: #171b19;
+  background: #f1f1f1;
+  color: #111;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 22px;
 }
 
 .container {
   width: 100%;
-  max-width: 420px;
+  max-width: 430px;
   background: #fff;
-  border-radius: 20px;
-  padding: 35px 28px;
-  box-shadow: 0 10px 40px rgba(0,0,0,.06);
+  border: 1px solid #e5e5e5;
+  border-radius: 18px;
+  padding: 38px 30px;
+  box-shadow: 0 12px 45px rgba(0,0,0,.045);
 }
 
 .logo {
+  text-align: center;
   font-size: 21px;
   font-weight: 800;
-  letter-spacing: 1px;
-  margin-bottom: 35px;
+  letter-spacing: 2px;
+  margin-bottom: 43px;
+  color: #111;
 }
 
 .logo span {
-  color: #79c99b;
+  font-weight: 400;
+  color: #777;
+}
+
+.logo-line {
+  width: 35px;
+  height: 2px;
+  background: #111;
+  margin: 15px auto 0;
 }
 
 h1 {
+  text-align: center;
   font-size: 27px;
-  margin-bottom: 9px;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  margin-bottom: 10px;
 }
 
 .subtitle {
-  color: #858d88;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 28px;
+  text-align: center;
+  color: #858585;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 32px;
 }
 
 label {
   display: block;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 700;
   margin-bottom: 9px;
+  color: #333;
 }
 
 input {
   width: 100%;
   padding: 15px;
-  border: 1px solid #e1e7e3;
-  border-radius: 10px;
-  font-size: 15px;
-  margin-bottom: 20px;
+  border: 1px solid #dedede;
+  border-radius: 9px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111;
+  margin-bottom: 21px;
   outline: none;
+  transition: .2s;
 }
 
 input:focus {
-  border-color: #79c99b;
+  border-color: #111;
+  background: #fff;
+}
+
+input::placeholder {
+  color: #aaa;
 }
 
 button {
   width: 100%;
   padding: 15px;
-  border: none;
-  border-radius: 10px;
-  background: #171b19;
-  color: white;
-  font-size: 15px;
-  font-weight: bold;
+  border: 1px solid #111;
+  border-radius: 9px;
+  background: #111;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
+  transition: .2s;
+}
+
+button:active {
+  transform: scale(.985);
+  background: #333;
 }
 
 button:disabled {
   opacity: .6;
+  cursor: wait;
 }
 
 .message {
@@ -100,27 +131,46 @@ button:disabled {
 
 .register {
   text-align: center;
-  color: #858d88;
+  color: #888;
   font-size: 13px;
-  margin-top: 25px;
+  margin-top: 27px;
 }
 
 a {
-  color: #347a4c;
+  color: #111;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 700;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 2px;
+}
+
+a:active {
+  color: #666;
 }
 
 .footer {
   text-align: center;
-  color: #a0a7a2;
-  font-size: 11px;
-  margin-top: 35px;
-  letter-spacing: 1px;
+  color: #aaa;
+  font-size: 10px;
+  margin-top: 42px;
+  letter-spacing: 1.5px;
 }
-</style></head><body><div class="container">  <div class="logo">TEHNOCELL <span>ID</span></div>  <h1>С возвращением</h1>
-  <p class="subtitle">
-    Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL.
+
+@media(max-width: 400px) {
+  .container {
+    padding: 32px 22px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+}
+</style></head><body><div class="container">  <div class="logo">
+    TEHNOCELL <span>ID</span>
+    <div class="logo-line"></div>
+  </div>  <h1>С возвращением</h1>  <p class="subtitle">
+    Войдите в свой аккаунт, чтобы продолжить
+    пользоваться экосистемой TEHNOCELL.
   </p>  <form id="loginForm"><label for="email">Электронная почта</label>
 <input
   id="email"
@@ -139,17 +189,22 @@ a {
   required
 >
 
-<button id="loginButton" type="submit">Войти в аккаунт</button>
+<button id="loginButton" type="submit">
+  Войти в аккаунт
+</button>
 
 <div class="message" id="message" role="status"></div>
 
   </form>  <div class="register">
     Ещё нет аккаунта?
     <a href="register.html">Зарегистрироваться</a>
-  </div>  <div class="footer">TEHNOCELL INDOSTRI © 2026</div></div><script>
+  </div>  <div class="footer">
+    TEHNOCELL INDOSTRI © 2026
+  </div></div><script>
 const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
 
-// Используй Publishable key, не Secret key.
+// Используй свой Publishable key.
+// Никогда не вставляй сюда Secret key.
 const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 
 const db = window.supabase.createClient(
@@ -169,7 +224,8 @@ form.addEventListener("submit", async function(event) {
 
   button.disabled = true;
   button.textContent = "Выполняется вход...";
-  message.style.color = "#858d88";
+
+  message.style.color = "#777";
   message.textContent = "Проверяем данные аккаунта...";
 
   const { data, error } = await db.auth.signInWithPassword({
@@ -178,8 +234,10 @@ form.addEventListener("submit", async function(event) {
   });
 
   if (error) {
-    message.style.color = "#c34b4b";
-    message.textContent = "Не удалось войти. Проверьте почту и пароль.";
+    message.style.color = "#b3261e";
+    message.textContent =
+      "Не удалось войти. Проверьте почту и пароль.";
+
     button.disabled = false;
     button.textContent = "Войти в аккаунт";
     return;
@@ -187,15 +245,18 @@ form.addEventListener("submit", async function(event) {
 
   if (!data.user.email_confirmed_at) {
     await db.auth.signOut();
-    message.style.color = "#c34b4b";
-    message.textContent = "Сначала подтвердите свою электронную почту.";
+
+    message.style.color = "#b3261e";
+    message.textContent =
+      "Сначала подтвердите электронную почту.";
+
     button.disabled = false;
     button.textContent = "Войти в аккаунт";
     return;
   }
 
-  message.style.color = "#347a4c";
-  message.textContent = "Вход выполнен! Открываем кабинет...";
+  message.style.color = "#333";
+  message.textContent = "Вход выполнен. Открываем кабинет...";
 
   window.location.href = "account.html";
 });
