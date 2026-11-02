@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEHNOCELL ID — Регистрация</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 25px 16px;
+    background: #f4f4f4;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+    padding: 36px 28px;
+    background: #080808;
+    border-radius: 18px;
+    border: 1px solid #222;
+}
+
+.logo {
+    text-align: center;
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: #a5e6bd;
+}
+
+.subtitle {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    margin-top: 9px;
+    margin-bottom: 34px;
+}
+
+h2 {
+    font-size: 23px;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    color: #ddd;
+    margin: 17px 0 8px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    background: #171717;
+    border: 1px solid #383838;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #a5e6bd;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 27px;
+    background: #a5e6bd;
+    color: #080808;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: .6;
+}
+
+.message {
+    margin-top: 17px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.links {
+    text-align: center;
+    margin-top: 25px;
+    color: #aaa;
+    font-size: 14px;
+}
+
+a {
+    color: #a5e6bd;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 27px;
+    color: #666;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">TEHNOCELL <span>ID</span></div>
+    <div class="subtitle">Единый аккаунт экосистемы TEHNOCELL</div>
+
+    <h2>Создание аккаунта</h2>
+
+    <form id="registerForm">
+
+        <label for="name">Имя пользователя</label>
+        <input id="name" type="text"
+        placeholder="Как к вам обращаться" required>
+
+        <label for="email">Электронная почта</label>
+        <input id="email" type="email"
+        placeholder="example@mail.com" required>
+
+        <label for="password">Пароль</label>
+        <input id="password" type="password"
+        placeholder="Минимум 8 символов"
+        minlength="8" required>
+
+        <label for="confirmPassword">Повторите пароль</label>
+        <input id="confirmPassword" type="password"
+        placeholder="Повторите пароль" required>
+
+        <button id="submitButton" type="submit">
+            Создать аккаунт
+        </button>
+
+    </form>
+
+    <div class="message" id="message" aria-live="polite"></div>
+
+    <div class="links">
+        Уже есть аккаунт?
+        <a href="login.html">Войти</a>
+    </div>
+
+    <div class="footer">
+        TEHNOCELL INDOSTRI © 2026
+    </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = "ВСТАВЬ_API_URL";
+const SUPABASE_KEY = "ВСТАВЬ_PUBLISHABLE_KEY";
+
+const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const form = document.getElementById("registerForm");
+const message = document.getElementById("message");
+const button = document.getElementById("submitButton");
+
+form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    message.style.color = "#ff7777";
+
+    if (name.length < 2) {
+        message.textContent = "Имя должно содержать минимум 2 символа.";
+        return;
+    }
+
+    if (password.length < 8) {
+        message.textContent = "Пароль должен содержать минимум 8 символов.";
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        message.textContent = "Пароли не совпадают.";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Создаём аккаунт...";
+    message.textContent = "";
+
+    try {
+        const { error } = await client.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    display_name: name
+                },
+                emailRedirectTo:
+                "https://technosotrudnik.github.io/tehnocell-indostri/account.html"
+            }
+        });
+
+        if (error) throw error;
+
+        message.style.color = "#a5e6bd";
+        message.textContent =
+            "Регистрация почти завершена! Проверьте почту и подтвердите адрес.";
+
+        form.reset();
+
+    } catch (error) {
+        message.style.color = "#ff7777";
+        message.textContent = error.message;
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "Создать аккаунт";
+    }
+});
+</script>
+
+</body>
+</html>
