@@ -58,25 +58,23 @@ button {
   height:350px;
   border-radius:50%;
   background:rgba(255,255,255,.12);
-  filter:blur(110px);
-  opacity:.5;
-  animation:floatLight 24s ease-in-out infinite alternate;
+  filter:blur(65px);
+  opacity:.38;
+  animation:none;
 }
 
 .light-orb:nth-child(2) {
   width:280px;
   height:280px;
-  opacity:.35;
-  animation-duration:30s;
-  animation-delay:-9s;
+  opacity:.28;
+  animation:none;
 }
 
 .light-orb:nth-child(3) {
   width:400px;
   height:400px;
-  opacity:.25;
-  animation-duration:35s;
-  animation-delay:-17s;
+  opacity:.20;
+  animation:none;
 }
 
 @keyframes floatLight {
@@ -204,8 +202,7 @@ header {
   border:1px solid var(--line);
   border-radius:16px;
   outline:none;
-  backdrop-filter:blur(25px);
-  -webkit-backdrop-filter:blur(25px);
+  /* Backdrop blur removed for smoother mobile scrolling */
 }
 
 .search input::placeholder {
@@ -245,8 +242,7 @@ header {
   border-radius:25px;
   padding:21px;
   margin-bottom:14px;
-  backdrop-filter:blur(30px);
-  -webkit-backdrop-filter:blur(30px);
+  /* Backdrop blur removed for smoother mobile scrolling */
   box-shadow:
     0 10px 45px rgba(0,0,0,.12),
     inset 0 1px 0 rgba(255,255,255,.035);
@@ -520,9 +516,9 @@ header {
   height:220px;
   left:-25%;
   background:rgba(210,215,225,.045);
-  filter:blur(45px);
+  filter:blur(25px);
   border-radius:50%;
-  animation:fogmove 20s ease-in-out infinite alternate;
+  animation:none;
 }
 
 @keyframes fogmove {
@@ -734,8 +730,7 @@ footer {
 
 </main>
 <script>
-
-const $ = id => document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
 let latitude = 55.7558;
 let longitude = 37.6173;
@@ -856,7 +851,7 @@ function effects(type) {
   box.querySelectorAll(".rain-drop,.fog-layer").forEach(el => el.remove());
 
   if (type === "rain" || type === "storm") {
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 18; i++) {
       const drop = document.createElement("div");
       drop.className = "rain-drop";
       drop.style.left = Math.random() * 100 + "%";
@@ -925,7 +920,7 @@ function showWeather(data) {
   $("dew").textContent = Math.round(c.dew_point_2m) + "°";
 
   $("rainAmount").textContent = Number(c.precipitation).toFixed(1);
-  
+
   const now = new Date(c.time).getTime();
   let nextHour = h.time.findIndex(t => new Date(t).getTime() >= now);
 
@@ -989,7 +984,8 @@ function showDays(data) {
       </div>`;
   }
 }
-  async function loadAirQuality() {
+
+async function loadAirQuality() {
   try {
     const url = airURL +
       `?latitude=${latitude}&longitude=${longitude}` +
