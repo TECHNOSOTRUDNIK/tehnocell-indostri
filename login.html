@@ -1,0 +1,203 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вход — TEHNOCELL ID</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #f3f5f4;
+  color: #171b19;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 35px 28px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.06);
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 35px;
+}
+
+.logo span {
+  color: #79c99b;
+}
+
+h1 {
+  font-size: 27px;
+  margin-bottom: 9px;
+}
+
+.subtitle {
+  color: #858d88;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 9px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #e1e7e3;
+  border-radius: 10px;
+  font-size: 15px;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #79c99b;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #171b19;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+}
+
+.message {
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 15px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.register {
+  text-align: center;
+  color: #858d88;
+  font-size: 13px;
+  margin-top: 25px;
+}
+
+a {
+  color: #347a4c;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer {
+  text-align: center;
+  color: #a0a7a2;
+  font-size: 11px;
+  margin-top: 35px;
+  letter-spacing: 1px;
+}
+</style></head><body><div class="container">  <div class="logo">TEHNOCELL <span>ID</span></div>  <h1>С возвращением</h1>
+  <p class="subtitle">
+    Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL.
+  </p>  <form id="loginForm"><label for="email">Электронная почта</label>
+<input
+  id="email"
+  type="email"
+  placeholder="name@example.com"
+  autocomplete="email"
+  required
+>
+
+<label for="password">Пароль</label>
+<input
+  id="password"
+  type="password"
+  placeholder="Введите пароль"
+  autocomplete="current-password"
+  required
+>
+
+<button id="loginButton" type="submit">Войти в аккаунт</button>
+
+<div class="message" id="message" role="status"></div>
+
+  </form>  <div class="register">
+    Ещё нет аккаунта?
+    <a href="register.html">Зарегистрироваться</a>
+  </div>  <div class="footer">TEHNOCELL INDOSTRI © 2026</div></div><script>
+const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
+
+// Используй Publishable key, не Secret key.
+const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const form = document.getElementById("loginForm");
+const button = document.getElementById("loginButton");
+const message = document.getElementById("message");
+
+form.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  button.disabled = true;
+  button.textContent = "Выполняется вход...";
+  message.style.color = "#858d88";
+  message.textContent = "Проверяем данные аккаунта...";
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    message.style.color = "#c34b4b";
+    message.textContent = "Не удалось войти. Проверьте почту и пароль.";
+    button.disabled = false;
+    button.textContent = "Войти в аккаунт";
+    return;
+  }
+
+  if (!data.user.email_confirmed_at) {
+    await db.auth.signOut();
+    message.style.color = "#c34b4b";
+    message.textContent = "Сначала подтвердите свою электронную почту.";
+    button.disabled = false;
+    button.textContent = "Войти в аккаунт";
+    return;
+  }
+
+  message.style.color = "#347a4c";
+  message.textContent = "Вход выполнен! Открываем кабинет...";
+
+  window.location.href = "account.html";
+});
+</script></body>
+</html>
