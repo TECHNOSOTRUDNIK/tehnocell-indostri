@@ -468,7 +468,7 @@ header {
 .air-progress {
   height:100%;
   width:0;
-  background:#d9dde5;
+    background:#d9dde5;
   border-radius:10px;
   transition:width 1s ease;
 }
@@ -544,6 +544,77 @@ footer {
   min-height:15px;
 }
 
+
+/* FAVORITE CITIES */
+.favorites {
+  margin-bottom:18px;
+}
+.favorites-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.favorite-title {
+  font-size:13px;
+  font-weight:650;
+}
+.favorite-add {
+  border:1px solid var(--line);
+  background:var(--card2);
+  color:white;
+  padding:9px 13px;
+  border-radius:12px;
+  font-size:11px;
+}
+.favorite-list {
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding-bottom:3px;
+}
+.favorite-list::-webkit-scrollbar {
+  display:none;
+}
+.favorite-city {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-shrink:0;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  background:var(--card);
+  border-radius:13px;
+  color:white;
+}
+.favorite-city.active {
+  border-color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.09);
+}
+.favorite-city-name {
+  font-size:12px;
+  max-width:150px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.favorite-city button {
+  border:0;
+  background:transparent;
+  color:#aeb2bd;
+  font-size:15px;
+  padding:3px;
+  min-width:24px;
+  min-height:24px;
+}
+.favorite-empty {
+  color:var(--muted);
+  font-size:11px;
+  padding:8px 2px;
+}
+
 /* MOBILE */
 
 @media(max-width:480px) {
@@ -607,6 +678,18 @@ footer {
   <button onclick="searchCity()">Найти</button>
   <button class="location" onclick="useLocation()" title="Моё местоположение">⌖</button>
 </div>
+
+<section class="favorites">
+  <div class="favorites-header">
+    <div class="favorite-title">Избранные города</div>
+    <button class="favorite-add" id="favoriteAdd" type="button">
+      + В избранное
+    </button>
+  </div>
+  <div class="favorite-list" id="favoriteList">
+    <div class="favorite-empty">Пока нет сохранённых городов</div>
+  </div>
+</section>
 
 <div class="status" id="status">Загрузка погоды...</div>
 
@@ -730,7 +813,8 @@ footer {
 
 </main>
 <script>
-  const $ = id => document.getElementById(id);
+
+const $ = id => document.getElementById(id);
 
 let latitude = 55.7558;
 let longitude = 37.6173;
@@ -843,9 +927,8 @@ function formatTime(value) {
 function windDirection(degrees) {
   const directions = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
   return directions[Math.round(degrees / 45) % 8];
-}
-
-function effects(type) {
+  }
+  function effects(type) {
   const box = $("weatherEffects");
 
   box.querySelectorAll(".rain-drop,.fog-layer").forEach(el => el.remove());
@@ -920,7 +1003,7 @@ function showWeather(data) {
   $("dew").textContent = Math.round(c.dew_point_2m) + "°";
 
   $("rainAmount").textContent = Number(c.precipitation).toFixed(1);
-
+  
   const now = new Date(c.time).getTime();
   let nextHour = h.time.findIndex(t => new Date(t).getTime() >= now);
 
@@ -984,8 +1067,7 @@ function showDays(data) {
       </div>`;
   }
 }
-
-async function loadAirQuality() {
+  async function loadAirQuality() {
   try {
     const url = airURL +
       `?latitude=${latitude}&longitude=${longitude}` +
@@ -1088,6 +1170,128 @@ function showAdvice(c,d) {
   });
 }
 
+/* FAVORITE CITIES */
+
+const FAVORITES_KEY = "tehnocell_weather_favorite_cities";
+const MAX_FAVORITES = 10;
+let favoriteCities = [];
+
+function readFavorites() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    if (!Array.isArray(saved)) return [];
+    return saved.filter(city =>
+      city &&
+      typeof city.name === "string" &&
+      Number.isFinite(Number(city.latitude)) &&
+      Number.isFinite(Number(city.longitude))
+    ).slice(0, MAX_FAVORITES);
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveFavorites() {
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoriteCities));
+    return true;
+  } catch (error) {
+    $("status").textContent = "Не удалось сохранить избранное на этом устройстве";
+    return false;
+  }
+}
+
+function renderFavorites() {
+  const box = $("favoriteList");
+  box.innerHTML = "";
+
+  if (favoriteCities.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "favorite-empty";
+    empty.textContent = "Пока нет сохранённых городов";
+    box.appendChild(empty);
+    return;
+  }
+
+  favoriteCities.forEach((city, index) => {
+    const item = document.createElement("div");
+    item.className = "favorite-city";
+
+    if (
+      Math.abs(Number(city.latitude) - latitude) < 0.0001 &&
+      Math.abs(Number(city.longitude) - longitude) < 0.0001
+    ) {
+      item.classList.add("active");
+    }
+
+    const name = document.createElement("span");
+    name.className = "favorite-city-name";
+    name.textContent = city.name;
+
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.textContent = "↗";
+    openButton.title = "Показать погоду";
+    openButton.setAttribute("aria-label", "Показать погоду: " + city.name);
+    openButton.addEventListener("click", async () => {
+      latitude = Number(city.latitude);
+      longitude = Number(city.longitude);
+      currentCity = city.name;
+      renderFavorites();
+      await loadWeather();
+    });
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.textContent = "×";
+    removeButton.title = "Удалить из избранного";
+    removeButton.setAttribute("aria-label", "Удалить " + city.name);
+    removeButton.addEventListener("click", () => {
+      favoriteCities.splice(index, 1);
+      saveFavorites();
+      renderFavorites();
+    });
+
+    item.appendChild(name);
+    item.appendChild(openButton);
+    item.appendChild(removeButton);
+    box.appendChild(item);
+  });
+}
+
+function addFavoriteCity() {
+  const alreadySaved = favoriteCities.some(city =>
+    Math.abs(Number(city.latitude) - latitude) < 0.0001 &&
+    Math.abs(Number(city.longitude) - longitude) < 0.0001
+  );
+
+  if (alreadySaved) {
+    $("status").textContent = "Этот город уже есть в избранном";
+    return;
+  }
+
+  if (favoriteCities.length >= MAX_FAVORITES) {
+    $("status").textContent = "Можно сохранить не больше " + MAX_FAVORITES + " городов";
+    return;
+  }
+
+  favoriteCities.push({
+    name: currentCity,
+    latitude: Number(latitude),
+    longitude: Number(longitude)
+  });
+
+  if (saveFavorites()) {
+    renderFavorites();
+    $("status").textContent = "Город добавлен в избранное";
+  }
+}
+
+favoriteCities = readFavorites();
+renderFavorites();
+
+$("favoriteAdd").addEventListener("click", addFavoriteCity);
+
 async function searchCity() {
   const input = $("cityInput").value.trim();
 
@@ -1119,6 +1323,7 @@ async function searchCity() {
       currentCity += ", " + city.country;
     }
 
+    renderFavorites();
     $("cityInput").blur();
 
     await loadWeather();
@@ -1145,6 +1350,7 @@ function useLocation() {
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
       currentCity = "Моё местоположение";
+      renderFavorites();
 
       await loadWeather();
     },
