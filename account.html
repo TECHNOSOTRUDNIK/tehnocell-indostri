@@ -658,8 +658,10 @@ const db = window.supabase.createClient(
 
 // UID основателя TEHNOCELL INDOSTRI
 
-const VERIFIED_FOUNDER_ID =
-"1762dd53-22ee-4f97-a9e4-1914e7b7f2d4";
+const VERIFIED_USERS = [
+  "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
+  "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a"
+];
 
 let currentUser = null;
 
@@ -751,7 +753,7 @@ async function loadAccount() {
   // VERIFIED STATUS
 
   const isVerifiedFounder =
-    currentUser.id === VERIFIED_FOUNDER_ID;
+  VERIFIED_USERS.includes(currentUser.id);
 
   $("welcomeBadge").style.display =
     isVerifiedFounder ? "inline-block" : "none";
