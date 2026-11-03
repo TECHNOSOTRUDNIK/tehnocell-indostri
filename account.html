@@ -1,1559 +1,1872 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!DOCTYPE html><html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f5f6fa">
-
-<title>TEHNOCELL ID</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>TEHNOCELL ID — Личный кабинет</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 :root {
-  --bg: #f4f6fa;
-  --surface: #ffffff;
-  --surface2: #f0f2f7;
-  --text: #171923;
-  --muted: #858b9b;
-  --border: #e8eaf0;
-  --accent: #3478f6;
-  --accent-light: #e9f1ff;
-  --green: #22c55e;
-  --danger: #ef4444;
-  --shadow: 0 8px 30px rgba(20,30,60,.06);
+    --background: #f2f2f2;
+    --surface: #ffffff;
+    --text: #111111;
+    --muted: #777777;
+    --border: #e5e5e5;
+    --input: #ffffff;
+    --accent: #111111;
+    --accent-text: #ffffff;
 }
 
-:root[data-theme="dark"] {
-  --bg: #101116;
-  --surface: #191b23;
-  --surface2: #222530;
-  --text: #f4f5f8;
-  --muted: #969baa;
-  --border: #2b2e39;
-  --accent: #5590ff;
-  --accent-light: #202e49;
-  --green: #22c55e;
-  --danger: #ff6262;
-  --shadow: 0 8px 30px rgba(0,0,0,.2);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+body.dark-theme {
+    --background: #111111;
+    --surface: #1c1c1c;
+    --text: #f5f5f5;
+    --muted: #999999;
+    --border: #333333;
+    --input: #252525;
+    --accent: #f5f5f5;
+    --accent-text: #111111;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  transition: background .25s, color .25s;
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    transition: background .2s, color .2s;
 }
 
-button, input, textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
+/* HEADER */
 
 .header {
-  height: 70px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7%;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+    min-height: 72px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 6%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
-  font-size: 19px;
-  font-weight: 800;
-  letter-spacing: 1px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
 }
 
 .logo span {
-  color: var(--accent);
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .home-button {
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  color: var(--text);
-  padding: 10px 17px;
-  border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    padding: 10px 15px;
+    border-radius: 8px;
 }
+
+/* NAVIGATION */
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav button {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.nav button.active {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.nav button.logout {
+    color: var(--muted);
+}
+
+/* MAIN */
 
 .main {
-  max-width: 1050px;
-  margin: auto;
-  padding: 35px 20px 60px;
+    max-width: 1100px;
+    margin: auto;
+    padding: 38px 25px 60px;
 }
 
-.navigation {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 25px;
-  overflow-x: auto;
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.nav-button {
-  border: none;
-  background: var(--surface);
-  color: var(--muted);
-  padding: 12px 19px;
-  border-radius: 12px;
-  white-space: nowrap;
+.heading h1 {
+    font-size: 26px;
+    font-weight: 700;
 }
 
-.nav-button.active {
-  background: var(--accent);
-  color: white;
+.heading p {
+    color: var(--muted);
+    font-size: 14px;
 }
 
-.page {
-  display: none;
-}
-
-.page.active {
-  display: block;
-}
-
-.welcome {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(120deg,#2464dc,#5595ff);
-  color: white;
-  padding: 35px;
-  border-radius: 23px;
-  margin-bottom: 25px;
-  box-shadow: var(--shadow);
-}
-
-.welcome::after {
-  content: "";
-  position: absolute;
-  width: 230px;
-  height: 230px;
-  border: 35px solid rgba(255,255,255,.13);
-  border-radius: 50%;
-  right: -85px;
-  top: -110px;
-}
-
-.welcome h1 {
-  font-size: 27px;
-  margin-bottom: 10px;
-  position: relative;
-  z-index: 1;
-}
-
-.welcome p {
-  opacity: .85;
-  position: relative;
-  z-index: 1;
-}
-
-.welcome-badge {
-  display: none;
-  margin-left: 7px;
-  font-size: 19px;
-}
+/* PROFILE */
 
 .profile-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 25px;
-  box-shadow: var(--shadow);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    margin-bottom: 25px;
+}
+
+.avatar,
+.profile-photo {
+    background: #111;
+    color: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
 }
 
 .profile-photo {
-  width: 95px;
-  height: 95px;
-  min-width: 95px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: visible;
+    width: 105px;
+    height: 105px;
+    font-size: 30px;
 }
 
+.avatar img,
 .profile-photo img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  display: none;
-  position: absolute;
-  inset: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    position: absolute;
+    inset: 0;
 }
 
-.profile-initial {
-  font-size: 35px;
-  font-weight: bold;
-  color: var(--accent);
+.presence-dot {
+    display: none;
+    width: 17px;
+    height: 17px;
+    background: #22c55e;
+    border: 3px solid var(--surface);
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
 }
 
-.presence {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--green);
-  border: 3px solid var(--surface);
-  position: absolute;
-  right: 2px;
-  bottom: 3px;
-  display: none;
-  z-index: 2;
+.avatar .presence-dot {
+    width: 14px;
+    height: 14px;
 }
 
 .profile-info {
-  min-width: 0;
+    min-width: 0;
 }
 
 .profile-info h2 {
-  font-size: 21px;
-  margin-bottom: 7px;
-  overflow-wrap: anywhere;
+    font-size: 21px;
+    margin-bottom: 7px;
 }
 
-.profile-info p {
-  color: var(--muted);
-  font-size: 14px;
-  overflow-wrap: anywhere;
+.profile-bio {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.verified-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .verified-badge {
-  color: #3478f6;
-  display: none;
-  font-size: 17px;
+    display: none;
+    width: 17px;
+    height: 17px;
+    background: #1685e8;
+    color: white;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
 }
+
+/* WELCOME */
+
+.welcome {
+    background: #111;
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome::after {
+    content: "";
+    width: 190px;
+    height: 190px;
+    border: 1px solid #444;
+    border-radius: 50%;
+    position: absolute;
+    right: -65px;
+    top: -95px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 2;
+}
+
+.welcome small {
+    color: #aaa;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.welcome h2 {
+    font-size: 27px;
+    margin: 13px 0 9px;
+}
+
+.welcome p {
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* TITLES */
+
+.section-title {
+    font-size: 19px;
+    margin-bottom: 17px;
+}
+
+/* GRID AND CARDS */
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(2,1fr);
-  gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
 }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 21px;
-  border-radius: 17px;
+.card,
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 22px;
 }
 
-.card h3 {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 12px;
-  font-weight: normal;
+.card-label {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 10px;
 }
 
-.card p {
-  font-size: 16px;
-  overflow-wrap: anywhere;
+.card-value {
+    font-size: 18px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
 }
 
-.settings-title {
-  font-size: 25px;
-  margin-bottom: 20px;
+.card-description {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 7px;
 }
 
-.category {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 17px;
-  margin-bottom: 13px;
-  overflow: hidden;
+/* SETTINGS */
+
+.settings-category {
+    margin-bottom: 25px;
 }
 
-.category summary {
-  padding: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  list-style: none;
+.settings-category-title {
+    font-size: 18px;
+    margin-bottom: 13px;
 }
 
-.category summary::-webkit-details-marker {
-  display: none;
+.panel {
+    margin-bottom: 15px;
 }
 
-.category summary::after {
-  content: "⌄";
-  float: right;
-  color: var(--muted);
+.panel h3 {
+    font-size: 16px;
+    margin-bottom: 17px;
 }
 
-.category[open] summary::after {
-  content: "⌃";
+.panel label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--muted);
 }
 
-.category-content {
-  padding: 0 20px 20px;
+.panel input,
+.panel textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--input);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 15px;
 }
 
-.field {
-  margin-top: 17px;
+.panel textarea {
+    resize: vertical;
+    min-height: 85px;
 }
 
-.field label {
-  display: block;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 8px;
+.panel input:focus,
+.panel textarea:focus {
+    border-color: var(--muted);
 }
 
-.field input,
-.field textarea {
-  width: 100%;
-  padding: 13px;
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  outline: none;
-}
-
-.field input:focus,
-.field textarea:focus {
-  border-color: var(--accent);
-}
-
-.field textarea {
-  min-height: 90px;
-  resize: vertical;
-}
+/* BUTTONS */
 
 .action {
-  border: none;
-  background: var(--accent);
-  color: white;
-  padding: 12px 18px;
-  border-radius: 11px;
-  margin-top: 15px;
+    background: var(--accent);
+    color: var(--accent-text);
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
 }
 
-.secondary {
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
+.action.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
 }
 
-.danger {
-  background: var(--danger);
-  color: white;
+.action:disabled {
+    opacity: .5;
+    cursor: not-allowed;
 }
 
-.photo-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.action.danger {
+    background: #d93636;
+    color: white;
 }
 
-.theme-options {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+/* EXTRA */
 
-.theme-choice {
-  background: var(--surface2);
-  color: var(--text);
-  border: 2px solid var(--border);
-  padding: 13px 20px;
-  border-radius: 12px;
-}
-
-.theme-choice.selected {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.switch-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  padding: 13px 0;
-}
-
-.switch {
-  width: 45px;
-  height: 25px;
-  accent-color: var(--accent);
-}
-
-.info-text {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-  margin-top: 12px;
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 22px 0;
 }
 
 .message {
-  margin-top: 15px;
-  font-size: 14px;
-  color: var(--green);
+    font-size: 13px;
+    margin-top: 12px;
+    color: var(--muted);
 }
 
-@media(max-width:650px) {
-
-  .header {
-    padding: 0 18px;
-  }
-
-  .main {
-    padding: 22px 14px 45px;
-  }
-
-  .welcome {
-    padding: 27px 22px;
-  }
-
-  .profile-card {
-    padding: 18px;
-  }
-
-  .profile-photo {
-    width: 75px;
-    height: 75px;
-    min-width: 75px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
+.photo-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
 }
 
-</style>
-</head>
-<body>
+.photo-note {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 12px;
+    line-height: 1.5;
+}
 
-<header class="header">
+.photo-input {
+    display: none;
+}
 
-  <div class="logo">
+/* THEME OPTIONS */
+
+.theme-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.theme-option {
+    padding: 13px 20px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.theme-option.active {
+    border-color: var(--text);
+    font-weight: bold;
+}
+
+/* NOTIFICATIONS */
+
+.notification-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.notification-options button {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.notification-options button.active {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+/* PAGES */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+    .header {
+        padding: 13px 5%;
+        flex-wrap: wrap;
+        gap: 13px;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav {
+        gap: 3px;
+    }
+
+    .nav button {
+        padding: 9px 11px;
+        font-size: 13px;
+    }
+
+    .main {
+        padding: 28px 16px 45px;
+    }
+
+    .heading h1 {
+        font-size: 23px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card {
+        padding: 18px;
+        gap: 15px;
+    }
+
+    .profile-photo {
+        width: 80px;
+        height: 80px;
+        font-size: 25px;
+    }
+
+    .profile-info h2 {
+        font-size: 18px;
+    }
+
+    .welcome {
+        padding: 25px;
+    }
+
+    .welcome h2 {
+        font-size: 23px;
+    }
+}
+</style></head>
+<body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
-  </div>
+</div>
 
-  <button class="home-button"
-    onclick="location.href='index.html'">
-    На главную
-  </button>
+<div class="header-actions">
 
-</header>
+    <a href="index.html" class="home-button">
+        ← На главную
+    </a>
 
-<main class="main">
+    <nav class="nav">
+        <button class="active" data-page="home">
+            Обзор
+        </button>
 
-  <nav class="navigation">
+        <button data-page="settings">
+            Настройки
+        </button>
 
-    <button class="nav-button active"
-      data-page="overview">
-      Обзор
-    </button>
+        <button class="logout" id="logoutButton">
+            Выйти ↗
+        </button>
+    </nav>
 
-    <button class="nav-button"
-      data-page="settings">
-      Настройки
-    </button>
+</div>
 
-    <button class="nav-button"
-      id="logoutButton">
-      Выйти
-    </button>
-
-  </nav>
-
-
-  <!-- ОБЗОР -->
-
-  <section class="page active" id="overview">
-
-    <div class="welcome" id="welcome">
-
-      <h1>
-        Добро пожаловать,
-        <span id="welcomeName">пользователь</span>
-        <span class="welcome-badge" id="welcomeBadge">✔</span>
-      </h1>
-
-      <p>Рады видеть тебя в TEHNOCELL ID.</p>
-
+</header><main class="main"><div class="heading">
+    <div>
+        <h1 id="pageTitle">Обзор аккаунта</h1>
+        <p>Центр управления TEHNOCELL INDOSTRI</p>
     </div>
+</div>
 
+
+<!-- ОБЗОР АККАУНТА -->
+
+<section id="home" class="page active">
 
     <div class="profile-card">
 
-      <div class="profile-photo">
+        <div class="profile-photo" id="profilePhoto">
 
-        <span class="profile-initial"
-          id="profileInitial">T</span>
+            <span id="profileInitial">T</span>
 
-        <img id="profileImage" alt="Аватар">
+            <img id="profileImage" alt="Аватар">
 
-        <span class="presence"
-          id="profilePresence"></span>
+            <span class="presence-dot" id="profilePresence"></span>
 
-      </div>
+        </div>
 
+        <div class="profile-info">
 
-      <div class="profile-info">
+            <h2 class="verified-name">
 
-        <h2>
+                <span id="profileDisplayName">
+                    Пользователь
+                </span>
 
-          <span id="profileDisplayName">
-            Пользователь
-          </span>
+                <span class="verified-badge" id="profileBadge">
+                    ✓
+                </span>
 
-          <span class="verified-badge"
-            id="profileBadge">✔</span>
+            </h2>
 
-        </h2>
+            <p class="profile-bio" id="profileBio">
+                Добро пожаловать в TEHNOCELL.
+            </p>
 
-        <p id="profileBio">
-          Пользователь TEHNOCELL
-        </p>
-
-      </div>
+        </div>
 
     </div>
+
+
+    <!-- ПРИВЕТСТВИЕ ПРИ ПЕРВОМ ПОСЕЩЕНИИ -->
+
+    <div class="welcome" id="welcomeBlock">
+
+        <div class="welcome-content">
+
+            <small>TEHNOCELL ID / PERSONAL ACCOUNT</small>
+
+            <h2 class="verified-name">
+
+                Добро пожаловать,
+                <span id="welcomeName">Пользователь</span>
+
+                <span class="verified-badge" id="welcomeBadge">
+                    ✓
+                </span>
+
+            </h2>
+
+            <p>
+                Ваш единый аккаунт в экосистеме TEHNOCELL.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <h2 class="section-title">
+        Информация об аккаунте
+    </h2>
 
 
     <div class="grid">
 
-      <div class="card">
+        <div class="card">
 
-        <h3>Электронная почта</h3>
+            <div class="card-label">
+                Идентификатор аккаунта
+            </div>
 
-        <p id="userEmail">Загрузка...</p>
+            <div class="card-value" id="userId">
+                Загрузка...
+            </div>
 
-      </div>
+            <div class="card-description">
+                Ваш уникальный TEHNOCELL ID
+            </div>
 
-
-      <div class="card">
-
-        <h3>ID аккаунта</h3>
-
-        <p id="userId">Загрузка...</p>
-
-      </div>
-
-
-      <div class="card">
-
-        <h3>Дата регистрации</h3>
-
-        <p id="createdAt">Загрузка...</p>
-
-      </div>
+        </div>
 
 
-      <div class="card">
+        <div class="card">
 
-        <h3>Статус</h3>
+            <div class="card-label">
+                Электронная почта
+            </div>
 
-        <p>Аккаунт TEHNOCELL ID</p>
+            <div class="card-value" id="userEmail">
+                Загрузка...
+            </div>
 
-      </div>
+            <div class="card-description">
+                Почта вашего аккаунта
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-label">
+                Дата регистрации
+            </div>
+
+            <div class="card-value" id="createdAt">
+                Загрузка...
+            </div>
+
+            <div class="card-description">
+                Дата создания TEHNOCELL ID
+            </div>
+
+        </div>
 
     </div>
 
-  </section>
+</section>
 
 
 
-  <!-- НАСТРОЙКИ -->
+<!-- НАСТРОЙКИ -->
 
-  <section class="page" id="settings">
-
-    <h1 class="settings-title">
-      Настройки
-    </h1>
+<section id="settings" class="page">
 
 
     <!-- ПРОФИЛЬ -->
 
-    <details class="category" open>
+    <div class="settings-category">
 
-      <summary>Профиль</summary>
+        <h2 class="settings-category-title">
+            Профиль
+        </h2>
 
-      <div class="category-content">
 
         <div class="profile-card">
 
-          <div class="profile-photo">
+            <div class="profile-photo" id="settingsPhoto">
 
-            <span class="profile-initial"
-              id="settingsInitial">T</span>
+                <span id="settingsInitial">T</span>
 
-            <img id="settingsImage" alt="Аватар">
+                <img id="settingsImage" alt="Аватар">
 
-          </div>
+            </div>
 
-          <div class="profile-info">
 
-            <h2 id="settingsDisplayName">
-              Пользователь
-            </h2>
+            <div class="profile-info">
 
-            <p>Настройки личного профиля</p>
+                <h2 class="verified-name">
 
-          </div>
+                    <span id="settingsDisplayName">
+                        Пользователь
+                    </span>
+
+                    <span class="verified-badge" id="settingsBadge">
+                        ✓
+                    </span>
+
+                </h2>
+
+                <p class="profile-bio">
+                    Ваша фотография профиля TEHNOCELL ID.
+                </p>
+
+
+                <div class="photo-actions">
+
+                    <button class="action" id="choosePhoto">
+                        Изменить фото
+                    </button>
+
+                    <button class="action secondary" id="removePhoto">
+                        Удалить фото
+                    </button>
+
+                </div>
+
+                <p class="photo-note">
+                    Поддерживаются JPG, PNG и WEBP.
+                    Максимальный размер — 5 МБ.
+                </p>
+
+            </div>
 
         </div>
 
 
-        <div class="photo-actions">
-
-          <input type="file"
+        <input
+            type="file"
             id="photoInput"
-            accept="image/*"
-            hidden>
+            class="photo-input"
+            accept="image/jpeg,image/png,image/webp"
+        >
 
-          <button class="action"
-            id="choosePhoto">
-            Изменить фотографию
-          </button>
 
-          <button class="action secondary"
-            id="removePhoto">
-            Удалить
-          </button>
+        <div class="panel">
+
+            <h3>Личные данные</h3>
+
+            <label for="nameInput">
+                Отображаемое имя
+            </label>
+
+            <input
+                type="text"
+                id="nameInput"
+                placeholder="Введите имя"
+                maxlength="40"
+            >
+
+
+            <label for="bioInput">
+                О себе
+            </label>
+
+            <textarea
+                id="bioInput"
+                placeholder="Расскажите немного о себе..."
+                maxlength="160"
+            ></textarea>
+
+
+            <button class="action" id="saveProfile">
+                Сохранить изменения
+            </button>
 
         </div>
 
-
-        <div class="field">
-
-          <label>Отображаемое имя</label>
-
-          <input id="nameInput"
-            maxlength="40"
-            placeholder="Твоё имя">
-
-        </div>
-
-
-        <div class="field">
-
-          <label>О себе</label>
-
-          <textarea id="bioInput"
-            maxlength="200"
-            placeholder="Расскажи немного о себе"></textarea>
-
-        </div>
-
-
-        <button class="action"
-          id="saveProfile">
-          Сохранить изменения
-        </button>
-
-      </div>
-
-    </details>
+    </div>
 
 
 
     <!-- ВНЕШНИЙ ВИД -->
 
-    <details class="category">
+    <div class="settings-category">
 
-      <summary>Внешний вид</summary>
+        <h2 class="settings-category-title">
+            Внешний вид
+        </h2>
 
-      <div class="category-content">
+        <div class="panel">
 
-        <p class="info-text">
-          Выбери оформление личного кабинета.
-        </p>
+            <h3>Тема оформления</h3>
 
-        <div class="theme-options">
+            <p class="photo-note" style="margin-bottom:15px;">
+                Выберите оформление личного кабинета.
+            </p>
 
-          <button class="theme-choice"
-            id="lightTheme"
-            data-theme-choice="light">
-            ☀ Дневная
-          </button>
+            <div class="theme-options">
 
-          <button class="theme-choice"
-            id="darkTheme"
-            data-theme-choice="dark">
-            ☾ Ночная
-          </button>
+                <button
+                    class="theme-option active"
+                    id="lightTheme"
+                    data-theme="light"
+                >
+                    ☀ Дневная
+                </button>
+
+                <button
+                    class="theme-option"
+                    id="darkTheme"
+                    data-theme="dark"
+                >
+                    ☾ Ночная
+                </button>
+
+            </div>
 
         </div>
 
-      </div>
-
-    </details>
+    </div>
 
 
 
     <!-- УВЕДОМЛЕНИЯ -->
 
-    <details class="category">
+    <div class="settings-category">
 
-      <summary>Уведомления</summary>
+        <h2 class="settings-category-title">
+            Уведомления
+        </h2>
 
-      <div class="category-content">
+        <div class="panel">
 
-        <div class="switch-row">
+            <h3>Управление уведомлениями</h3>
 
-          <span>Отключить уведомления</span>
+            <p class="photo-note" style="margin-bottom:15px;">
+                Управляйте настройками уведомлений.
+            </p>
 
-          <input type="checkbox"
-            class="switch"
-            id="muteNotifications">
+            <div class="notification-options">
 
-        </div>
+                <button id="notificationsOn">
+                    Включить
+                </button>
 
+                <button id="notificationsOff">
+                    Выключить
+                </button>
 
-        <p class="info-text"
-          id="notificationStatus">
-          Уведомления включены.
-        </p>
+                <button id="pause1">
+                    Пауза 1 час
+                </button>
 
+                <button id="pause8">
+                    Пауза 8 часов
+                </button>
 
-        <p class="info-text">
-          Временная пауза:
-        </p>
+                <button id="pause24">
+                    Пауза 24 часа
+                </button>
 
+            </div>
 
-        <div class="theme-options">
-
-          <button class="theme-choice mute-time"
-            data-hours="1">
-            1 час
-          </button>
-
-          <button class="theme-choice mute-time"
-            data-hours="8">
-            8 часов
-          </button>
-
-          <button class="theme-choice mute-time"
-            data-hours="24">
-            24 часа
-          </button>
+            <p class="message" id="notificationMessage">
+                Уведомления включены.
+            </p>
 
         </div>
 
-
-        <button class="action secondary"
-          id="unmuteNotifications">
-          Включить уведомления
-        </button>
-
-      </div>
-
-    </details>
+    </div>
 
 
 
     <!-- БЕЗОПАСНОСТЬ -->
 
-    <details class="category">
+    <div class="settings-category">
 
-      <summary>Безопасность</summary>
+        <h2 class="settings-category-title">
+            Безопасность
+        </h2>
 
-      <div class="category-content">
+        <div class="panel">
 
-        <div class="field">
+            <h3>Изменение пароля</h3>
 
-          <label>Новый пароль</label>
+            <label for="passwordInput">
+                Новый пароль
+            </label>
 
-          <input type="password"
-            id="passwordInput"
-            minlength="6"
-            placeholder="Минимум 6 символов">
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Введите новый пароль"
+            >
+
+            <button class="action" id="changePassword">
+                Изменить пароль
+            </button>
 
         </div>
 
-
-        <button class="action"
-          id="changePassword">
-          Изменить пароль
-        </button>
-
-
-        <p class="info-text">
-          Используй надёжный пароль, который
-          не применяешь на других сайтах.
-        </p>
-
-      </div>
-
-    </details>
+    </div>
 
 
 
     <!-- АККАУНТ -->
 
-    <details class="category">
+    <div class="settings-category">
 
-      <summary>Аккаунт</summary>
+        <h2 class="settings-category-title">
+            Аккаунт
+        </h2>
 
-      <div class="category-content">
+        <div class="panel">
 
-        <div class="field">
+            <h3>Информация об аккаунте</h3>
 
-          <label>Электронная почта</label>
+            <label>
+                Электронная почта
+            </label>
 
-          <input id="settingsEmail" readonly>
+            <input
+                type="text"
+                id="settingsEmail"
+                readonly
+            >
+
+            <label>
+                TEHNOCELL ID
+            </label>
+
+            <input
+                type="text"
+                id="settingsUserId"
+                readonly
+            >
+
+            <div class="divider"></div>
+
+            <button class="action danger" id="settingsLogout">
+                Выйти из аккаунта
+            </button>
 
         </div>
 
-
-        <div class="field">
-
-          <label>ID пользователя</label>
-
-          <input id="settingsUserId" readonly>
-
-        </div>
+    </div>
 
 
-        <button class="action danger"
-          id="settingsLogout">
-          Выйти из аккаунта
-        </button>
+    <div class="message" id="settingsMessage"></div>
 
-      </div>
-
-    </details>
-
-
-    <p class="message" id="settingsMessage"></p>
-
-  </section>
+</section>
 
 </main>
 <script>
-
-/* =================================
+/* =====================================
    SUPABASE
-================================= */
+===================================== */
 
-const SUPABASE_URL =
-  "https://jvagiuiregvlrfooxdao.supabase.co";
+const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
 
-const SUPABASE_KEY =
-  "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 
-const BUCKET = "profile-avatars";
+const AVATAR_BUCKET = "profile-avatars";
 
 const VERIFIED_USERS = [
-  "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
-  "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a",
-  "bfac130b-376b-471a-a342-e5839fbefaa0"
+    "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
+    "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a",
+    "bfac130b-376b-471a-a342-e5839fbefaa0"
 ];
 
 const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+    SUPABASE_URL,
+    SUPABASE_KEY
 );
-
-const $ = id => document.getElementById(id);
 
 let currentUser = null;
 let presenceChannel = null;
 
 
-/* =================================
-   СООБЩЕНИЯ
-================================= */
+/* =====================================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+===================================== */
 
-function showMessage(message, error = false) {
+const $ = id => document.getElementById(id);
 
-  const element = $("settingsMessage");
+function showMessage(message, color = "") {
+    const element = $("settingsMessage");
 
-  element.textContent = message;
+    element.textContent = message;
+    element.style.color = color || "var(--muted)";
+}
 
-  element.style.color =
-    error ? "var(--danger)" : "var(--green)";
-
+function getInitial(name) {
+    return (name || "T").trim().charAt(0).toUpperCase();
 }
 
 
-/* =================================
-   ТЕМА
-================================= */
+/* =====================================
+   ТЕМЫ
+===================================== */
 
 function applyTheme(theme) {
 
-  if (theme !== "light" && theme !== "dark") {
-    theme = "light";
-  }
+    document.body.classList.toggle(
+        "dark-theme",
+        theme === "dark"
+    );
 
-  document.documentElement.dataset.theme = theme;
+    $("lightTheme").classList.toggle(
+        "active",
+        theme === "light"
+    );
 
-  localStorage.setItem("tehnocell_theme", theme);
+    $("darkTheme").classList.toggle(
+        "active",
+        theme === "dark"
+    );
 
-  document.querySelectorAll("[data-theme-choice]")
-    .forEach(button => {
-
-      button.classList.toggle(
-        "selected",
-        button.dataset.themeChoice === theme
-      );
-
-    });
-
+    localStorage.setItem("tehnocell_theme", theme);
 }
 
-applyTheme(
-  localStorage.getItem("tehnocell_theme") || "light"
-);
+const savedTheme =
+    localStorage.getItem("tehnocell_theme") || "light";
 
-$("lightTheme").onclick = () => applyTheme("light");
+applyTheme(savedTheme);
 
-$("darkTheme").onclick = () => applyTheme("dark");
+$("lightTheme").addEventListener("click", () => {
+    applyTheme("light");
+});
 
-
-/* =================================
-   НАВИГАЦИЯ
-================================= */
-
-document.querySelectorAll(".nav-button")
-  .forEach(button => {
-
-    if (button.id === "logoutButton") return;
-
-    button.addEventListener("click", () => {
-
-      const page = button.dataset.page;
-
-      document.querySelectorAll(".page")
-        .forEach(element => {
-          element.classList.remove("active");
-        });
-
-      document.querySelectorAll(".nav-button")
-        .forEach(element => {
-          element.classList.remove("active");
-        });
-
-      $(page).classList.add("active");
-
-      button.classList.add("active");
-
-    });
-
-  });
+$("darkTheme").addEventListener("click", () => {
+    applyTheme("dark");
+});
 
 
-/* =================================
-   АВАТАР
-================================= */
+/* =====================================
+   ПРИВЕТСТВИЕ ПРИ ПЕРВОМ ПОСЕЩЕНИИ
+===================================== */
 
-function setAvatar(initial, url) {
+function updateWelcome(user) {
 
-  const initials = [
-    $("profileInitial"),
-    $("settingsInitial")
-  ];
+    const key = "tehnocell_welcome_seen_" + user.id;
 
-  const images = [
-    $("profileImage"),
-    $("settingsImage")
-  ];
+    if (localStorage.getItem(key)) {
 
-  initials.forEach(element => {
-    element.textContent = initial || "T";
-    element.style.display = "block";
-  });
-
-  images.forEach(image => {
-
-    if (url) {
-
-      image.src = url;
-      image.style.display = "block";
+        $("welcomeBlock").style.display = "none";
 
     } else {
 
-      image.removeAttribute("src");
-      image.style.display = "none";
+        $("welcomeBlock").style.display = "block";
+
+        localStorage.setItem(key, "true");
 
     }
-
-  });
-
 }
 
 
-/* =================================
-   ГАЛОЧКА РАЗРАБОТЧИКА
-================================= */
+/* =====================================
+   ГАЛОЧКИ РАЗРАБОТЧИКОВ
+===================================== */
 
 function updateVerifiedStatus(user) {
 
-  const verified = VERIFIED_USERS.includes(user.id);
+    const verified = VERIFIED_USERS.includes(user.id);
 
-  $("profileBadge").style.display =
-    verified ? "inline" : "none";
+    const badges = [
+        "profileBadge",
+        "settingsBadge",
+        "welcomeBadge"
+    ];
 
-  $("welcomeBadge").style.display =
-    verified ? "inline" : "none";
+    badges.forEach(id => {
 
+        $(id).style.display = verified
+            ? "inline-flex"
+            : "none";
+
+    });
 }
 
 
-/* =================================
-   ПРИВЕТСТВИЕ
-================================= */
+/* =====================================
+   ОНЛАЙН-СТАТУС
+===================================== */
 
-function setupWelcome(user) {
+function setOnlineStatus(online) {
 
-  const key = "tehnocell_welcome_seen_" + user.id;
-
-  const alreadySeen =
-    localStorage.getItem(key);
-
-  if (alreadySeen) {
-
-    $("welcome").style.display = "none";
-
-  } else {
-
-    $("welcome").style.display = "block";
-
-    localStorage.setItem(key, "1");
-
-  }
+    $("profilePresence").style.display =
+        online ? "block" : "none";
 
 }
-
-
-/* =================================
-   ONLINE PRESENCE
-================================= */
 
 async function startPresence(user) {
 
-  if (presenceChannel) return;
-
-  presenceChannel = db.channel("tehnocell-online", {
-    config: {
-      presence: {
-        key: user.id
-      }
-    }
-  });
-
-  presenceChannel.subscribe(async status => {
-
-    if (status === "SUBSCRIBED") {
-
-      await presenceChannel.track({
-        display_name:
-          user.user_metadata?.display_name || "Пользователь",
-        online_at: new Date().toISOString()
-      });
-
-      $("profilePresence").style.display = "block";
-
+    if (presenceChannel) {
+        await db.removeChannel(presenceChannel);
     }
 
-  });
+    presenceChannel = db.channel("tehnocell-online", {
+        config: {
+            presence: {
+                key: user.id
+            }
+        }
+    });
 
-}
+    presenceChannel.subscribe(async status => {
 
+        if (status === "SUBSCRIBED") {
 
-/* =================================
-   ЗАГРУЗКА АККАУНТА
-================================= */
+            await presenceChannel.track({
 
-async function loadAccount() {
+                user_id: user.id,
 
-  const { data, error } =
-    await db.auth.getSession();
+                display_name:
+                    user.user_metadata?.display_name || "Пользователь",
 
-  if (error) throw error;
+                online_at: new Date().toISOString()
 
-  const session = data.session;
+            });
 
-  if (!session) {
+            setOnlineStatus(true);
 
-    location.replace("login.html");
-    return;
+        }
 
-  }
+        if (
+            status === "CHANNEL_ERROR" ||
+            status === "TIMED_OUT" ||
+            status === "CLOSED"
+        ) {
 
-  currentUser = session.user;
+            setOnlineStatus(false);
 
-  if (!currentUser.email_confirmed_at) {
-
-    await db.auth.signOut();
-
-    location.replace("login.html");
-    return;
-
-  }
-
-  const metadata = currentUser.user_metadata || {};
-
-  const name =
-    metadata.display_name || "Пользователь";
-
-  const bio =
-    metadata.bio || "Пользователь TEHNOCELL";
-
-  const avatarPath =
-    metadata.avatar_path || "";
-
-  $("profileDisplayName").textContent = name;
-
-  $("settingsDisplayName").textContent = name;
-
-  $("welcomeName").textContent = name;
-
-  $("profileBio").textContent = bio;
-
-  $("nameInput").value = name;
-
-  $("bioInput").value = metadata.bio || "";
-
-  $("userEmail").textContent = currentUser.email;
-
-  $("settingsEmail").value = currentUser.email;
-
-  $("userId").textContent = currentUser.id;
-
-  $("settingsUserId").value = currentUser.id;
-
-  $("createdAt").textContent =
-    new Date(currentUser.created_at).toLocaleDateString("ru-RU");
-
-  setAvatar(name.charAt(0).toUpperCase(), null);
-
-  if (avatarPath) {
-
-    const { data: imageData } =
-      db.storage.from(BUCKET).getPublicUrl(avatarPath);
-
-    setAvatar(
-      name.charAt(0).toUpperCase(),
-      imageData.publicUrl
-    );
-
-  }
-
-  updateVerifiedStatus(currentUser);
-
-  setupWelcome(currentUser);
-
-  await startPresence(currentUser);
-
-}
-
-
-/* =================================
-   СОХРАНЕНИЕ ПРОФИЛЯ
-================================= */
-
-$("saveProfile").onclick = async () => {
-
-  const button = $("saveProfile");
-
-  const name = $("nameInput").value.trim();
-
-  const bio = $("bioInput").value.trim();
-
-  if (!name) {
-
-    showMessage("Введите отображаемое имя.", true);
-    return;
-
-  }
-
-  button.disabled = true;
-
-  try {
-
-    const { error } = await db.auth.updateUser({
-
-      data: {
-        display_name: name,
-        bio: bio
-      }
+        }
 
     });
 
-    if (error) throw error;
+}
 
-    showMessage("Изменения сохранены.");
+
+/* =====================================
+   АВАТАРКИ
+===================================== */
+
+function setAvatar(initial, url = null) {
+
+    const photos = [
+        {
+            initial: $("profileInitial"),
+            image: $("profileImage")
+        },
+        {
+            initial: $("settingsInitial"),
+            image: $("settingsImage")
+        }
+    ];
+
+    photos.forEach(item => {
+
+        item.initial.textContent = initial;
+
+        if (url) {
+
+            item.image.src = url;
+            item.image.style.display = "block";
+            item.initial.style.display = "none";
+
+        } else {
+
+            item.image.removeAttribute("src");
+            item.image.style.display = "none";
+            item.initial.style.display = "block";
+
+        }
+
+    });
+
+}
+
+
+/* =====================================
+   ЗАГРУЗКА АККАУНТА
+===================================== */
+
+async function loadAccount() {
+
+    const {
+        data: { session },
+        error
+    } = await db.auth.getSession();
+
+    if (error || !session) {
+
+        location.href = "login.html";
+        return;
+
+    }
+
+    currentUser = session.user;
+
+    if (!currentUser.email_confirmed_at) {
+
+        await db.auth.signOut();
+
+        location.href = "login.html";
+        return;
+
+    }
+
+    const metadata = currentUser.user_metadata || {};
+
+    const displayName =
+        metadata.display_name || "Пользователь";
+
+    const bio =
+        metadata.bio || "";
+
+    const avatarPath =
+        metadata.avatar_path || null;
+
+
+    /* ИМЯ И BIO */
+
+    $("profileDisplayName").textContent = displayName;
+
+    $("settingsDisplayName").textContent = displayName;
+
+    $("welcomeName").textContent = displayName;
+
+    $("profileBio").textContent =
+        bio || "Добро пожаловать в TEHNOCELL.";
+
+
+    $("nameInput").value = displayName;
+
+    $("bioInput").value = bio;
+
+
+    /* ID И ПОЧТА */
+
+    const accountID =
+        "TC-" +
+        currentUser.id
+            .replace(/-/g, "")
+            .substring(0, 10)
+            .toUpperCase();
+
+    $("userId").textContent = accountID;
+
+    $("settingsUserId").value = accountID;
+
+    $("userEmail").textContent =
+        currentUser.email || "Не указана";
+
+    $("settingsEmail").value =
+        currentUser.email || "";
+
+
+    /* ДАТА РЕГИСТРАЦИИ */
+
+    $("createdAt").textContent =
+        new Date(currentUser.created_at)
+            .toLocaleDateString("ru-RU", {
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+
+
+    /* ГАЛОЧКИ */
+
+    updateVerifiedStatus(currentUser);
+
+
+    /* ПРИВЕТСТВИЕ */
+
+    updateWelcome(currentUser);
+
+
+    /* АВАТАРКА */
+
+    let avatarURL = null;
+
+    if (avatarPath) {
+
+        const {
+            data,
+            error: avatarError
+        } = db.storage
+            .from(AVATAR_BUCKET)
+            .getPublicUrl(avatarPath);
+
+        if (!avatarError) {
+            avatarURL = data.publicUrl;
+        }
+
+    }
+
+    setAvatar(getInitial(displayName), avatarURL);
+
+
+    /* ОНЛАЙН */
+
+    startPresence(currentUser);
+
+}
+
+
+/* =====================================
+   НАВИГАЦИЯ
+===================================== */
+
+document.querySelectorAll("[data-page]").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const pageName = button.dataset.page;
+
+        document.querySelectorAll(".page").forEach(page => {
+            page.classList.remove("active");
+        });
+
+        document.querySelectorAll("[data-page]").forEach(nav => {
+            nav.classList.remove("active");
+        });
+
+        $(pageName).classList.add("active");
+
+        button.classList.add("active");
+
+        $("pageTitle").textContent =
+            pageName === "home"
+                ? "Обзор аккаунта"
+                : "Настройки аккаунта";
+
+    });
+
+});
+
+
+/* =====================================
+   СОХРАНЕНИЕ ПРОФИЛЯ
+===================================== */
+
+$("saveProfile").addEventListener("click", async () => {
+
+    if (!currentUser) return;
+
+    const name = $("nameInput").value.trim();
+
+    const bio = $("bioInput").value.trim();
+
+    if (name.length < 2) {
+
+        showMessage("Имя должно содержать минимум 2 символа.");
+        return;
+
+    }
+
+    $("saveProfile").disabled = true;
+
+    showMessage("Сохранение...");
+
+    const { error } = await db.auth.updateUser({
+
+        data: {
+            display_name: name,
+            bio: bio
+        }
+
+    });
+
+    $("saveProfile").disabled = false;
+
+    if (error) {
+
+        showMessage("Ошибка: " + error.message);
+        return;
+
+    }
+
+    showMessage("Изменения сохранены.", "#22a06b");
 
     await loadAccount();
 
-  } catch (error) {
-
-    showMessage(error.message, true);
-
-  } finally {
-
-    button.disabled = false;
-
-  }
-
-};
+});
 
 
-/* =================================
+/* =====================================
    СМЕНА ПАРОЛЯ
-================================= */
+===================================== */
 
-$("changePassword").onclick = async () => {
+$("changePassword").addEventListener("click", async () => {
 
-  const button = $("changePassword");
+    const password = $("passwordInput").value;
 
-  const password = $("passwordInput").value;
+    if (password.length < 6) {
 
-  if (password.length < 6) {
+        showMessage("Пароль должен содержать минимум 6 символов.");
+        return;
 
-    showMessage("Пароль должен содержать минимум 6 символов.", true);
-    return;
+    }
 
-  }
+    $("changePassword").disabled = true;
 
-  button.disabled = true;
+    const { error } = await db.auth.updateUser({
 
-  try {
-
-    const { error } =
-      await db.auth.updateUser({
         password: password
-      });
 
-    if (error) throw error;
+    });
+
+    $("changePassword").disabled = false;
+
+    if (error) {
+
+        showMessage("Ошибка: " + error.message);
+        return;
+
+    }
 
     $("passwordInput").value = "";
 
-    showMessage("Пароль успешно изменён.");
+    showMessage("Пароль успешно изменён.", "#22a06b");
 
-  } catch (error) {
-
-    showMessage(error.message, true);
-
-  } finally {
-
-    button.disabled = false;
-
-  }
-
-};
+});
 
 
-/* =================================
+/* =====================================
    ВЫБОР ФОТОГРАФИИ
-================================= */
+===================================== */
 
-$("choosePhoto").onclick = () => {
-  $("photoInput").click();
-};
+$("choosePhoto").addEventListener("click", () => {
+
+    $("photoInput").click();
+
+});
 
 
-$("photoInput").onchange = async event => {
+/* =====================================
+   ЗАГРУЗКА ФОТОГРАФИИ
+===================================== */
 
-  const file = event.target.files[0];
+$("photoInput").addEventListener("change", async event => {
 
-  if (!file) return;
+    const file = event.target.files[0];
 
-  if (!file.type.startsWith("image/")) {
+    if (!file || !currentUser) return;
 
-    showMessage("Выберите изображение.", true);
-    return;
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
 
-  }
+    if (!allowedTypes.includes(file.type)) {
 
-  if (file.size > 5 * 1024 * 1024) {
+        showMessage("Поддерживаются только JPG, PNG и WEBP.");
+        event.target.value = "";
+        return;
 
-    showMessage("Максимальный размер фотографии — 5 МБ.", true);
-    return;
+    }
 
-  }
+    if (file.size > 5 * 1024 * 1024) {
 
-  const button = $("choosePhoto");
+        showMessage("Размер фотографии не должен превышать 5 МБ.");
+        event.target.value = "";
+        return;
 
-  button.disabled = true;
+    }
 
-  try {
+    $("choosePhoto").disabled = true;
 
-    const extension =
-      file.name.split(".").pop().toLowerCase();
+    showMessage("Загрузка фотографии...");
+
+    const extension = file.name.split(".").pop().toLowerCase();
 
     const path =
-      currentUser.id + "/avatar-" +
-      Date.now() + "." + extension;
+        currentUser.id +
+        "/avatar-" +
+        Date.now() +
+        "." +
+        extension;
 
-    const { error: uploadError } =
-      await db.storage
-        .from(BUCKET)
+
+    const { error: uploadError } = await db.storage
+        .from(AVATAR_BUCKET)
         .upload(path, file, {
-          upsert: true
+            upsert: false,
+            contentType: file.type
         });
 
-    if (uploadError) throw uploadError;
+
+    if (uploadError) {
+
+        $("choosePhoto").disabled = false;
+
+        showMessage("Ошибка загрузки: " + uploadError.message);
+
+        event.target.value = "";
+
+        return;
+
+    }
+
 
     const oldPath =
-      currentUser.user_metadata?.avatar_path;
+        currentUser.user_metadata?.avatar_path;
 
-    const { error } =
-      await db.auth.updateUser({
+
+    const { error: updateError } = await db.auth.updateUser({
+
         data: {
-          avatar_path: path
+            avatar_path: path
         }
-      });
 
-    if (error) throw error;
+    });
+
+
+    if (updateError) {
+
+        await db.storage
+            .from(AVATAR_BUCKET)
+            .remove([path]);
+
+        $("choosePhoto").disabled = false;
+
+        showMessage("Ошибка сохранения фотографии.");
+
+        event.target.value = "";
+
+        return;
+
+    }
+
 
     if (oldPath && oldPath.startsWith(currentUser.id + "/")) {
 
-      await db.storage.from(BUCKET).remove([oldPath]);
+        await db.storage
+            .from(AVATAR_BUCKET)
+            .remove([oldPath]);
 
     }
 
+
+    $("choosePhoto").disabled = false;
+
+    event.target.value = "";
+
+    showMessage("Фотография обновлена.", "#22a06b");
+
     await loadAccount();
 
-    showMessage("Фотография обновлена.");
-
-  } catch (error) {
-
-    showMessage("Ошибка загрузки: " + error.message, true);
-
-  } finally {
-
-    button.disabled = false;
-
-    $("photoInput").value = "";
-
-  }
-
-};
+});
 
 
-/* =================================
+/* =====================================
    УДАЛЕНИЕ ФОТОГРАФИИ
-================================= */
+===================================== */
 
-$("removePhoto").onclick = async () => {
+$("removePhoto").addEventListener("click", async () => {
 
-  const button = $("removePhoto");
+    if (!currentUser) return;
 
-  const oldPath =
-    currentUser.user_metadata?.avatar_path;
+    const oldPath =
+        currentUser.user_metadata?.avatar_path;
 
-  if (!oldPath) {
+    if (!oldPath) {
 
-    showMessage("Фотография уже отсутствует.", true);
-    return;
+        showMessage("У вас уже нет фотографии.");
+        return;
 
-  }
+    }
 
-  button.disabled = true;
+    $("removePhoto").disabled = true;
 
-  try {
+    const { error } = await db.auth.updateUser({
 
-    const { error } =
-      await db.auth.updateUser({
         data: {
-          avatar_path: null
+            avatar_path: null
         }
-      });
 
-    if (error) throw error;
+    });
+
+
+    if (error) {
+
+        $("removePhoto").disabled = false;
+
+        showMessage("Не удалось удалить фотографию.");
+
+        return;
+
+    }
+
 
     if (oldPath.startsWith(currentUser.id + "/")) {
 
-      await db.storage.from(BUCKET).remove([oldPath]);
+        await db.storage
+            .from(AVATAR_BUCKET)
+            .remove([oldPath]);
 
     }
+
+
+    $("removePhoto").disabled = false;
+
+    showMessage("Фотография удалена.", "#22a06b");
 
     await loadAccount();
 
-    showMessage("Фотография удалена.");
-
-  } catch (error) {
-
-    showMessage(
-      "Ошибка удаления: " + error.message,
-      true
-    );
-
-  } finally {
-
-    button.disabled = false;
-
-  }
-
-};
+});
 
 
-/* =================================
+/* =====================================
    УВЕДОМЛЕНИЯ
-================================= */
+   ЛОКАЛЬНЫЕ НАСТРОЙКИ
+===================================== */
 
-function getNotificationState() {
+function notificationKey() {
 
-  const muted =
-    localStorage.getItem("tc_notifications_muted") === "1";
-
-  const mutedUntil =
-    Number(localStorage.getItem("tc_notifications_muted_until") || 0);
-
-  return {
-    muted,
-    mutedUntil
-  };
+    return "tehnocell_notifications_" + currentUser.id;
 
 }
 
 
-function updateNotificationStatus() {
+function getNotificationSettings() {
 
-  const state = getNotificationState();
+    const saved = localStorage.getItem(notificationKey());
 
-  $("muteNotifications").checked = state.muted;
+    if (!saved) {
 
-  if (state.muted) {
-
-    $("notificationStatus").textContent =
-      "Уведомления отключены.";
-
-  } else if (state.mutedUntil > Date.now()) {
-
-    $("notificationStatus").textContent =
-      "Пауза активна до окончания выбранного времени.";
-
-  } else {
-
-    $("notificationStatus").textContent =
-      "Уведомления включены.";
-
-  }
-
-}
-
-
-$("muteNotifications").onchange = event => {
-
-  localStorage.setItem(
-    "tc_notifications_muted",
-    event.target.checked ? "1" : "0"
-  );
-
-  if (event.target.checked) {
-
-    localStorage.removeItem("tc_notifications_muted_until");
-
-  }
-
-  updateNotificationStatus();
-
-};
-
-
-document.querySelectorAll(".mute-time")
-  .forEach(button => {
-
-    button.onclick = () => {
-
-      const hours = Number(button.dataset.hours);
-
-      localStorage.setItem("tc_notifications_muted", "0");
-
-      localStorage.setItem(
-        "tc_notifications_muted_until",
-        String(Date.now() + hours * 3600000)
-      );
-
-      updateNotificationStatus();
-
-    };
-
-  });
-
-
-$("unmuteNotifications").onclick = () => {
-
-  localStorage.setItem("tc_notifications_muted", "0");
-
-  localStorage.removeItem("tc_notifications_muted_until");
-
-  updateNotificationStatus();
-
-};
-
-updateNotificationStatus();
-
-
-/* =================================
-   ВЫХОД
-================================= */
-
-async function logoutAccount() {
-
-  try {
-
-    if (presenceChannel) {
-
-      await presenceChannel.untrack();
-
-      await db.removeChannel(presenceChannel);
-
-      presenceChannel = null;
+        return {
+            enabled: true,
+            pauseUntil: 0
+        };
 
     }
 
-    const { error } = await db.auth.signOut();
+    try {
 
-    if (error) throw error;
+        return JSON.parse(saved);
 
-    location.replace("login.html");
+    } catch {
 
-  } catch (error) {
+        return {
+            enabled: true,
+            pauseUntil: 0
+        };
 
-    alert("Ошибка выхода: " + error.message);
-
-  }
+    }
 
 }
 
 
-$("logoutButton").onclick = logoutAccount;
+function saveNotificationSettings(settings) {
 
-$("settingsLogout").onclick = logoutAccount;
+    localStorage.setItem(
+        notificationKey(),
+        JSON.stringify(settings)
+    );
+
+    updateNotificationInterface();
+
+}
 
 
-/* =================================
-   ЗАПУСК
-================================= */
+function updateNotificationInterface() {
 
-loadAccount().catch(error => {
+    if (!currentUser) return;
 
-  console.error("TEHNOCELL ID:", error);
+    const settings = getNotificationSettings();
 
-  alert(
-    "Ошибка загрузки аккаунта: " + error.message
-  );
+    const now = Date.now();
+
+    let message = "";
+
+    if (settings.pauseUntil > now) {
+
+        const remaining = Math.ceil(
+            (settings.pauseUntil - now) / 60000
+        );
+
+        message = "Уведомления на паузе. Осталось примерно " +
+            remaining + " мин.";
+
+    } else if (settings.enabled) {
+
+        message = "Уведомления включены.";
+
+    } else {
+
+        message = "Уведомления выключены.";
+
+    }
+
+    $("notificationMessage").textContent = message;
+
+    const buttons = [
+        "notificationsOn",
+        "notificationsOff",
+        "pause1",
+        "pause8",
+        "pause24"
+    ];
+
+    buttons.forEach(id => {
+        $(id).classList.remove("active");
+    });
+
+    if (settings.pauseUntil > now) {
+
+        const remaining = settings.pauseUntil - now;
+
+        if (remaining <= 60 * 60 * 1000 + 1000) {
+            $("pause1").classList.add("active");
+        } else if (remaining <= 8 * 60 * 60 * 1000 + 1000) {
+            $("pause8").classList.add("active");
+        } else {
+            $("pause24").classList.add("active");
+        }
+
+    } else if (settings.enabled) {
+
+        $("notificationsOn").classList.add("active");
+
+    } else {
+
+        $("notificationsOff").classList.add("active");
+
+    }
+
+}
+
+
+$("notificationsOn").addEventListener("click", () => {
+
+    saveNotificationSettings({
+        enabled: true,
+        pauseUntil: 0
+    });
 
 });
+
+
+$("notificationsOff").addEventListener("click", () => {
+
+    saveNotificationSettings({
+        enabled: false,
+        pauseUntil: 0
+    });
+
+});
+
+
+function pauseNotifications(hours) {
+
+    saveNotificationSettings({
+
+        enabled: false,
+
+        pauseUntil: Date.now() + hours * 60 * 60 * 1000
+
+    });
+
+}
+
+
+$("pause1").addEventListener("click", () => {
+    pauseNotifications(1);
+});
+
+$("pause8").addEventListener("click", () => {
+    pauseNotifications(8);
+});
+
+$("pause24").addEventListener("click", () => {
+    pauseNotifications(24);
+});
+
+
+/* =====================================
+   ВЫХОД ИЗ АККАУНТА
+===================================== */
+
+async function logout() {
+
+    if (presenceChannel) {
+
+        await presenceChannel.untrack();
+
+        await db.removeChannel(presenceChannel);
+
+        presenceChannel = null;
+
+    }
+
+    setOnlineStatus(false);
+
+    await db.auth.signOut();
+
+    location.href = "login.html";
+
+}
+
+
+$("logoutButton").addEventListener("click", logout);
+
+$("settingsLogout").addEventListener("click", logout);
+
+
+/* =====================================
+   ЗАПУСК
+===================================== */
+
+async function startAccount() {
+
+    await loadAccount();
+
+    if (currentUser) {
+
+        updateNotificationInterface();
+
+    }
+
+}
+
+startAccount();
 
 </script>
 
