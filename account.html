@@ -1,284 +1,1076 @@
-<!DOCTYPE html><html lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TEHNOCELL ID — Личный кабинет</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#f2f2f2;color:#111;font-family:Arial,sans-serif}
-button,input{font:inherit}
-.header{
-  height:72px;background:#fff;border-bottom:1px solid #e5e5e5;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 6%;position:sticky;top:0;z-index:5
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-.logo{font-size:19px;font-weight:800;letter-spacing:1.5px}
-.logo span{color:#888;font-weight:400}
-.nav{display:flex;align-items:center;gap:8px}
-.nav button{
-  border:0;background:transparent;padding:11px 15px;
-  color:#777;font-size:13px;cursor:pointer;border-radius:7px
+
+body {
+  background: #f2f2f2;
+  color: #111;
+  font-family: Arial, sans-serif;
 }
-.nav button.active{background:#111;color:#fff}
-.avatar{
-  width:38px;height:38px;border-radius:50%;background:#111;
-  color:#fff;display:grid;place-items:center;font-weight:bold
+
+button, input {
+  font: inherit;
 }
-.main{max-width:1100px;margin:auto;padding:38px 25px 60px}
-.heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:27px;gap:15px}
-.heading h1{font-size:26px}
-.heading p{font-size:13px;color:#888;margin-top:7px}
-.welcome{
-  background:#111;color:#fff;border-radius:15px;padding:30px;
-  margin-bottom:28px;position:relative;overflow:hidden
+
+button {
+  cursor: pointer;
 }
-.welcome:after{
-  content:"";position:absolute;width:190px;height:190px;
-  border:1px solid #444;border-radius:50%;right:-65px;top:-95px
+
+.header {
+  min-height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6%;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
-.welcome small{font-size:10px;letter-spacing:2px;color:#aaa}
-.welcome h2{font-size:26px;margin:17px 0 9px}
-.welcome p{font-size:13px;color:#aaa}
-.section-title{font-size:17px;margin:30px 0 15px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card,.product,.panel{
-  background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:21px
+
+.logo {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
 }
-.card-label{font-size:12px;color:#888;margin-bottom:12px}
-.card-value{font-size:16px;font-weight:bold;overflow-wrap:anywhere}
-.card-description{font-size:11px;color:#aaa;margin-top:8px}
-.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.product{transition:.2s}
-.product:hover{border-color:#aaa}
-.product-icon{
-  width:38px;height:38px;border:1px solid #ddd;border-radius:9px;
-  display:grid;place-items:center;font-size:12px;font-weight:bold;margin-bottom:15px
+
+.logo span {
+  color: #888;
+  font-weight: 400;
 }
-.product h3{font-size:14px}
-.product p{font-size:12px;color:#888;margin-top:7px}
-.product-status{font-size:10px;color:#999;margin-top:17px;letter-spacing:1px}
-.panel{margin-top:18px}
-.panel label{display:block;font-size:12px;font-weight:bold;margin:17px 0 8px}
-.panel input{
-  width:100%;padding:13px;border:1px solid #ddd;border-radius:8px;
-  background:#fafafa;outline:none
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.panel input:focus{border-color:#111}
-.action{
-  border:1px solid #111;background:#111;color:#fff;
-  border-radius:8px;padding:12px 17px;margin-top:13px;
-  font-size:12px;font-weight:bold;cursor:pointer
+
+.nav button {
+  border: 0;
+  background: transparent;
+  padding: 11px 15px;
+  color: #777;
+  font-size: 13px;
+  border-radius: 7px;
 }
-.action.secondary{background:#fff;color:#111}
-.divider{border:0;border-top:1px solid #eee;margin:25px 0}
-.message{font-size:13px;margin-top:13px;overflow-wrap:anywhere}
-.page{display:none}
-.page.active{display:block}
-.logout{color:#777!important}
-@media(max-width:650px){
-  .header{height:auto;min-height:68px;padding:13px 16px;flex-wrap:wrap;gap:12px}
-  .logo{font-size:16px}
-  .nav{width:100%;justify-content:space-between}
-  .nav button{padding:10px 12px;font-size:12px}
-  .main{padding:25px 15px 45px}
-  .heading h1{font-size:22px}
-  .welcome{padding:24px}
-  .welcome h2{font-size:22px}
-  .grid,.products{grid-template-columns:1fr}
+
+.nav button.active {
+  background: #111;
+  color: #fff;
+}
+
+.logout {
+  color: #777 !important;
+}
+
+.main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 38px 25px 60px;
+}
+
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 27px;
+  gap: 15px;
+}
+
+.heading h1 {
+  font-size: 26px;
+}
+
+.heading p {
+  font-size: 13px;
+  color: #888;
+  margin-top: 7px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  font-size: 17px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.welcome {
+  background: #111;
+  color: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome:after {
+  content: "";
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border: 1px solid #444;
+  border-radius: 50%;
+  right: -65px;
+  top: -95px;
+}
+
+.welcome small {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #aaa;
+}
+
+.welcome h2 {
+  font-size: 26px;
+  margin: 17px 0 9px;
+}
+
+.welcome p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.section-title {
+  font-size: 17px;
+  margin: 30px 0 15px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card, .product, .panel {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 21px;
+}
+
+.card-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.card-value {
+  font-size: 16px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.card-description {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 8px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.product {
+  transition: .2s;
+}
+
+.product:hover {
+  border-color: #aaa;
+}
+
+.product-icon {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.product h3 {
+  font-size: 14px;
+}
+
+.product p {
+  font-size: 12px;
+  color: #888;
+  margin-top: 7px;
+}
+
+.product-status {
+  font-size: 10px;
+  color: #999;
+  margin-top: 17px;
+  letter-spacing: 1px;
+}
+
+.panel {
+  margin-top: 18px;
+}
+
+.panel label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 17px 0 8px;
+}
+
+.panel input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  outline: none;
+}
+
+.panel input:focus {
+  border-color: #111;
+}
+
+.action {
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  padding: 12px 17px;
+  margin-top: 13px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.action.secondary {
+  background: #fff;
+  color: #111;
+}
+
+.action:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 25px 0;
+}
+
+.message {
+  font-size: 13px;
+  margin-top: 13px;
+  overflow-wrap: anywhere;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+/* PROFILE */
+
+.profile-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 23px;
+  flex-wrap: wrap;
+}
+
+.profile-photo {
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  font-weight: bold;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 180px;
+}
+
+.profile-info h3 {
+  font-size: 18px;
+  margin-bottom: 7px;
+}
+
+.profile-info p {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.5;
+}
+
+.photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.photo-actions .action {
+  margin-top: 0;
+}
+
+.photo-input {
+  display: none;
+}
+
+.photo-note {
+  font-size: 11px;
+  color: #999;
+  margin-top: 13px;
+  line-height: 1.5;
+}
+
+@media(max-width:650px) {
+  .header {
+    min-height: 68px;
+    padding: 13px 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 2px;
+  }
+
+  .nav button {
+    padding: 10px 9px;
+    font-size: 11px;
+  }
+
+  .main {
+    padding: 25px 15px 45px;
+  }
+
+  .heading h1 {
+    font-size: 22px;
+  }
+
+  .welcome {
+    padding: 24px;
+  }
+
+  .welcome h2 {
+    font-size: 22px;
+  }
+
+  .grid, .products {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
 }
 </style>
 </head>
-<body><header class="header">
+
+<body>
+
+<header class="header">
   <div class="logo">TEHNOCELL <span>ID</span></div>
+
   <nav class="nav">
     <button class="active" data-page="home">Обзор</button>
     <button data-page="products">Продукты</button>
     <button data-page="settings">Настройки</button>
     <button class="logout" id="logoutButton">Выйти ↗</button>
   </nav>
-</header><main class="main">
+</header>
+
+<main class="main">
+
   <div class="heading">
     <div>
       <h1 id="pageTitle">Обзор аккаунта</h1>
       <p>Центр управления TEHNOCELL INDOSTRI</p>
     </div>
-    <div class="avatar" id="avatar">T</div>
-  </div>  <section class="page active" id="home">
+
+    <div class="avatar" id="avatar">
+      <span id="avatarInitial">T</span>
+      <img id="avatarImage" alt="Фото профиля">
+    </div>
+  </div>
+
+  <!-- HOME -->
+
+  <section class="page active" id="home">
+
     <div class="welcome">
       <small>TEHNOCELL ID / PERSONAL ACCOUNT</small>
-      <h2>Добро пожаловать, <span id="welcomeName">Пользователь</span></h2>
+
+      <h2>
+        Добро пожаловать,
+        <span id="welcomeName">Пользователь</span>
+      </h2>
+
       <p>Ваш единый аккаунт в экосистеме TEHNOCELL.</p>
-    </div><h2 class="section-title">Информация об аккаунте</h2>
-<div class="grid">
-  <div class="card">
-    <div class="card-label">TEHNOCELL ID</div>
-    <div class="card-value" id="userId">Загрузка...</div>
-    <div class="card-description">Уникальный идентификатор</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Электронная почта</div>
-    <div class="card-value" id="userEmail">Загрузка...</div>
-    <div class="card-description">Почта вашего аккаунта</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Имя пользователя</div>
-    <div class="card-value" id="userName">Загрузка...</div>
-    <div class="card-description">Ваше отображаемое имя</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Дата регистрации</div>
-    <div class="card-value" id="createdAt">Загрузка...</div>
-    <div class="card-description">Дата создания аккаунта</div>
-  </div>
-</div>
-
-<h2 class="section-title">Экосистема TEHNOCELL</h2>
-<div class="products">
-  <div class="product"><div class="product-icon">FM</div><h3>TEHNOCELLFM</h3><p>Музыка и аудио</p><div class="product-status">ПРОДУКТ КОМПАНИИ</div></div>
-  <div class="product"><div class="product-icon">GM</div><h3>TEHNOCELLGAME</h3><p>Игры и развлечения</p><div class="product-status">ПРОДУКТ КОМПАНИИ</div></div>
-  <div class="product"><div class="product-icon">CR</div><h3>TEHNOCELLCAR</h3><p>Автомобильные проекты</p><div class="product-status">ПРОДУКТ КОМПАНИИ</div></div>
-  <div class="product"><div class="product-icon">SO</div><h3>TEHNOCELLSOFT</h3><p>Приложения и технологии</p><div class="product-status">ПРОДУКТ КОМПАНИИ</div></div>
-</div>
-
-  </section>  <section class="page" id="products">
-    <h2 class="section-title">Все продукты</h2>
-    <div class="products">
-      <div class="product"><div class="product-icon">FM</div><h3>TEHNOCELLFM</h3><p>Музыкальная платформа</p></div>
-      <div class="product"><div class="product-icon">GM</div><h3>TEHNOCELLGAME</h3><p>Игровое направление</p></div>
-      <div class="product"><div class="product-icon">CR</div><h3>TEHNOCELLCAR</h3><p>Автомобильные проекты</p></div>
-      <div class="product"><div class="product-icon">SO</div><h3>TEHNOCELLSOFT</h3><p>Программное обеспечение</p></div>
     </div>
-  </section>  <section class="page" id="settings">
-    <h2 class="section-title">Настройки профиля</h2>
-    <div class="panel">
-      <h3>Личные данные</h3>
-      <label for="nameInput">Отображаемое имя</label>
-      <input id="nameInput" type="text" placeholder="Ваше имя">
-      <button class="action" id="saveName">Сохранить изменения</button>  <hr class="divider">
 
-  <h3>Безопасность</h3>
-  <label for="passwordInput">Новый пароль</label>
-  <input id="passwordInput" type="password" placeholder="Минимум 6 символов">
-  <button class="action secondary" id="changePassword">Изменить пароль</button>
-  <div class="message" id="settingsMessage" role="status"></div>
-</div>
+    <h2 class="section-title">Информация об аккаунте</h2>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-label">TEHNOCELL ID</div>
+        <div class="card-value" id="userId">Загрузка...</div>
+        <div class="card-description">Уникальный идентификатор</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Электронная почта</div>
+        <div class="card-value" id="userEmail">Загрузка...</div>
+        <div class="card-description">Почта вашего аккаунта</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Имя пользователя</div>
+        <div class="card-value" id="userName">Загрузка...</div>
+        <div class="card-description">Ваше отображаемое имя</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Дата регистрации</div>
+        <div class="card-value" id="createdAt">Загрузка...</div>
+        <div class="card-description">Дата создания аккаунта</div>
+      </div>
+
+    </div>
+
+    <h2 class="section-title">Экосистема TEHNOCELL</h2>
+
+    <div class="products">
+
+      <div class="product">
+        <div class="product-icon">FM</div>
+        <h3>TEHNOCELLFM</h3>
+        <p>Музыка и аудио</p>
+        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
+      </div>
+
+      <div class="product">
+        <div class="product-icon">GM</div>
+        <h3>TEHNOCELLGAME</h3>
+        <p>Игры и развлечения</p>
+        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
+      </div>
+
+      <div class="product">
+        <div class="product-icon">CR</div>
+        <h3>TEHNOCELLCAR</h3>
+        <p>Автомобильные проекты</p>
+        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
+      </div>
+
+      <div class="product">
+        <div class="product-icon">SO</div>
+        <h3>TEHNOCELLSOFT</h3>
+        <p>Приложения и технологии</p>
+        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
+      </div>
+
+    </div>
 
   </section>
-</main><script>
-const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
-const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let currentUser=null;
+  <!-- PRODUCTS -->
 
-async function loadAccount(){
-  const {data,error}=await db.auth.getSession();
+  <section class="page" id="products">
 
-  if(error||!data.session){
+    <h2 class="section-title">Все продукты</h2>
+
+    <div class="products">
+
+      <div class="product">
+        <div class="product-icon">FM</div>
+        <h3>TEHNOCELLFM</h3>
+        <p>Музыкальная платформа</p>
+      </div>
+
+      <div class="product">
+        <div class="product-icon">GM</div>
+        <h3>TEHNOCELLGAME</h3>
+        <p>Игровое направление</p>
+      </div>
+
+      <div class="product">
+        <div class="product-icon">CR</div>
+        <h3>TEHNOCELLCAR</h3>
+        <p>Автомобильные проекты</p>
+      </div>
+
+      <div class="product">
+        <div class="product-icon">SO</div>
+        <h3>TEHNOCELLSOFT</h3>
+        <p>Программное обеспечение</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SETTINGS -->
+
+  <section class="page" id="settings">
+
+    <h2 class="section-title">Фотография профиля</h2>
+
+    <div class="profile-card">
+
+      <div class="profile-photo" id="profilePhoto">
+        <span id="profileInitial">T</span>
+        <img id="profileImage" alt="Фотография профиля">
+      </div>
+
+      <div class="profile-info">
+
+        <h3 id="profileDisplayName">Пользователь</h3>
+
+        <p>
+          Ваша фотография будет отображаться
+          в TEHNOCELL ID и на сайте компании.
+        </p>
+
+        <div class="photo-actions">
+
+          <button class="action" id="choosePhoto">
+            Изменить фотографию
+          </button>
+
+          <button class="action secondary" id="removePhoto">
+            Удалить
+          </button>
+
+        </div>
+
+        <p class="photo-note">
+          JPG, PNG или WEBP. Максимальный размер — 5 МБ.
+          На телефоне можно выбрать галерею или камеру,
+          если браузер предлагает такой вариант.
+        </p>
+
+      </div>
+
+    </div>
+
+    <input
+      type="file"
+      id="photoInput"
+      class="photo-input"
+      accept="image/*"
+    >
+
+    <h2 class="section-title">Настройки профиля</h2>
+
+    <div class="panel">
+
+      <h3>Личные данные</h3>
+
+      <label for="nameInput">Отображаемое имя</label>
+
+      <input
+        id="nameInput"
+        type="text"
+        placeholder="Ваше имя"
+        maxlength="40"
+      >
+
+      <button class="action" id="saveName">
+        Сохранить изменения
+      </button>
+
+      <hr class="divider">
+
+      <h3>Безопасность</h3>
+
+      <label for="passwordInput">Новый пароль</label>
+
+      <input
+        id="passwordInput"
+        type="password"
+        placeholder="Минимум 6 символов"
+      >
+
+      <button class="action secondary" id="changePassword">
+        Изменить пароль
+      </button>
+
+      <div class="message" id="settingsMessage" role="status"></div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+
+const SUPABASE_URL =
+"https://jvagiuiregvlrfooxdao.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+
+const BUCKET = "profile-avatars";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentUser = null;
+
+const $ = id => document.getElementById(id);
+
+function showMessage(text, error = false) {
+  const message = $("settingsMessage");
+
+  message.textContent = text;
+  message.style.color = error ? "#b3261e" : "#222";
+}
+
+function setAvatar(initial, url) {
+
+  const images = [
+    $("avatarImage"),
+    $("profileImage")
+  ];
+
+  const initials = [
+    $("avatarInitial"),
+    $("profileInitial")
+  ];
+
+  const photos = [
+    $("avatar"),
+    $("profilePhoto")
+  ];
+
+  initials.forEach(item => {
+    item.textContent = initial || "T";
+    item.style.display = url ? "none" : "block";
+  });
+
+  images.forEach(item => {
+    if (url) {
+      item.src = url;
+      item.style.display = "block";
+    } else {
+      item.removeAttribute("src");
+      item.style.display = "none";
+    }
+  });
+
+}
+
+async function loadAccount() {
+
+  const { data, error } = await db.auth.getSession();
+
+  if (error || !data.session) {
     location.replace("login.html");
     return;
   }
 
-  currentUser=data.session.user;
+  currentUser = data.session.user;
 
-  if(!currentUser.email_confirmed_at){
+  if (!currentUser.email_confirmed_at) {
     await db.auth.signOut();
     location.replace("login.html");
     return;
   }
 
-  const name=currentUser.user_metadata?.display_name||"Пользователь";
-  const initials=name.trim().charAt(0).toUpperCase()||"T";
+  const name =
+    currentUser.user_metadata?.display_name || "Пользователь";
 
-  document.getElementById("welcomeName").textContent=name;
-  document.getElementById("userName").textContent=name;
-  document.getElementById("userEmail").textContent=currentUser.email||"—";
-  document.getElementById("avatar").textContent=initials;
+  const initial =
+    name.trim().charAt(0).toUpperCase() || "T";
 
-  document.getElementById("userId").textContent=
-    "TC-"+currentUser.id.replace(/-/g,"").slice(0,10).toUpperCase();
+  $("welcomeName").textContent = name;
+  $("userName").textContent = name;
+  $("userEmail").textContent = currentUser.email || "—";
 
-  document.getElementById("createdAt").textContent=
+  $("userId").textContent =
+    "TC-" +
+    currentUser.id.replace(/-/g, "").slice(0, 10).toUpperCase();
+
+  $("createdAt").textContent =
     new Date(currentUser.created_at).toLocaleDateString("ru-RU");
 
-  document.getElementById("nameInput").value=
-    currentUser.user_metadata?.display_name||"";
+  $("nameInput").value =
+    currentUser.user_metadata?.display_name || "";
+
+  $("profileDisplayName").textContent = name;
+
+  const avatarPath = currentUser.user_metadata?.avatar_path;
+
+  let avatarUrl = null;
+
+  if (avatarPath) {
+    const { data } = db.storage
+      .from(BUCKET)
+      .getPublicUrl(avatarPath);
+
+    avatarUrl = data.publicUrl;
+  }
+
+  setAvatar(initial, avatarUrl);
+
 }
 
-document.querySelectorAll(".nav button[data-page]").forEach(button=>{
-  button.addEventListener("click",()=>{
-    const target=button.dataset.page;
 
-    document.querySelectorAll(".page").forEach(page=>page.classList.remove("active"));
-    document.getElementById(target).classList.add("active");
+// NAVIGATION
 
-    document.querySelectorAll(".nav button[data-page]").forEach(item=>item.classList.remove("active"));
+document.querySelectorAll(".nav button[data-page]")
+.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    const target = button.dataset.page;
+
+    document.querySelectorAll(".page")
+      .forEach(page => page.classList.remove("active"));
+
+    $(target).classList.add("active");
+
+    document.querySelectorAll(".nav button[data-page]")
+      .forEach(item => item.classList.remove("active"));
+
     button.classList.add("active");
 
-    document.getElementById("pageTitle").textContent={
-      home:"Обзор аккаунта",
-      products:"Продукты TEHNOCELL",
-      settings:"Настройки аккаунта"
+    $("pageTitle").textContent = {
+      home: "Обзор аккаунта",
+      products: "Продукты TEHNOCELL",
+      settings: "Настройки аккаунта"
     }[target];
+
   });
+
 });
 
-document.getElementById("saveName").addEventListener("click",async()=>{
-  const name=document.getElementById("nameInput").value.trim();
-  const message=document.getElementById("settingsMessage");
 
-  if(name.length<2){
-    message.textContent="Имя должно содержать минимум 2 символа.";
-    message.style.color="#b3261e";
+// SAVE NAME
+
+$("saveName").addEventListener("click", async () => {
+
+  const name = $("nameInput").value.trim();
+
+  if (name.length < 2) {
+    showMessage("Имя должно содержать минимум 2 символа.", true);
     return;
   }
 
-  const {error}=await db.auth.updateUser({data:{display_name:name}});
+  const { error } = await db.auth.updateUser({
+    data: { display_name: name }
+  });
 
-  if(error){
-    message.textContent="Ошибка: "+error.message;
-    message.style.color="#b3261e";
+  if (error) {
+    showMessage("Ошибка: " + error.message, true);
     return;
   }
 
-  message.textContent="Имя успешно обновлено.";
-  message.style.color="#222";
+  showMessage("Имя успешно обновлено.");
+
   await loadAccount();
+
 });
 
-document.getElementById("changePassword").addEventListener("click",async()=>{
-  const password=document.getElementById("passwordInput").value;
-  const message=document.getElementById("settingsMessage");
 
-  if(password.length<6){
-    message.textContent="Пароль должен содержать минимум 6 символов.";
-    message.style.color="#b3261e";
+// CHANGE PASSWORD
+
+$("changePassword").addEventListener("click", async () => {
+
+  const password = $("passwordInput").value;
+
+  if (password.length < 6) {
+    showMessage("Пароль должен содержать минимум 6 символов.", true);
     return;
   }
 
-  const {error}=await db.auth.updateUser({password});
+  const { error } = await db.auth.updateUser({
+    password: password
+  });
 
-  if(error){
-    message.textContent="Ошибка: "+error.message;
-    message.style.color="#b3261e";
+  if (error) {
+    showMessage("Ошибка: " + error.message, true);
     return;
   }
 
-  document.getElementById("passwordInput").value="";
-  message.textContent="Пароль успешно изменён.";
-  message.style.color="#222";
+  $("passwordInput").value = "";
+
+  showMessage("Пароль успешно изменён.");
+
 });
 
-document.getElementById("logoutButton").addEventListener("click",async()=>{
-  const {error}=await db.auth.signOut();
-  if(error){
+
+// OPEN PHOTO SELECTOR
+
+$("choosePhoto").addEventListener("click", () => {
+  $("photoInput").click();
+});
+
+
+// UPLOAD PHOTO
+
+$("photoInput").addEventListener("change", async event => {
+
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  if (!currentUser) {
+    showMessage("Аккаунт ещё загружается.", true);
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    showMessage("Выбери фотографию JPG, PNG или WEBP.", true);
+    event.target.value = "";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    showMessage("Фотография слишком большая. Максимум 5 МБ.", true);
+    event.target.value = "";
+    return;
+  }
+
+  const button = $("choosePhoto");
+
+  button.disabled = true;
+  button.textContent = "Загрузка...";
+
+  let uploadedPath = null;
+
+  try {
+
+    const extension = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp"
+    }[file.type];
+
+    const fileName =
+      currentUser.id +
+      "/avatar-" +
+      Date.now() +
+      "." +
+      extension;
+
+    const oldPath = currentUser.user_metadata?.avatar_path;
+
+    const { data, error } = await db.storage
+      .from(BUCKET)
+      .upload(fileName, file, {
+        contentType: file.type,
+        cacheControl: "3600",
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    uploadedPath = data.path;
+
+    const { error: updateError } = await db.auth.updateUser({
+      data: {
+        avatar_path: uploadedPath
+      }
+    });
+
+    if (updateError) {
+      await db.storage.from(BUCKET).remove([uploadedPath]);
+      throw updateError;
+    }
+
+    if (
+      oldPath &&
+      oldPath !== uploadedPath &&
+      oldPath.startsWith(currentUser.id + "/")
+    ) {
+      const { error: removeError } = await db.storage
+        .from(BUCKET)
+        .remove([oldPath]);
+
+      if (removeError) {
+        console.warn("Не удалось удалить старую фотографию:", removeError);
+      }
+    }
+
+    await loadAccount();
+
+    showMessage("Фотография профиля успешно обновлена!");
+
+  } catch (error) {
+
+    console.error(error);
+
+    if (uploadedPath) {
+      await db.storage.from(BUCKET).remove([uploadedPath]);
+    }
+
+    showMessage(
+      "Не удалось загрузить фотографию: " + error.message,
+      true
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Изменить фотографию";
+    event.target.value = "";
+
+  }
+
+});
+
+
+// REMOVE PHOTO
+
+$("removePhoto").addEventListener("click", async () => {
+
+  if (!currentUser) return;
+
+  const oldPath = currentUser.user_metadata?.avatar_path;
+
+  if (!oldPath) {
+    showMessage("Фотография профиля ещё не установлена.");
+    return;
+  }
+
+  const button = $("removePhoto");
+
+  button.disabled = true;
+  button.textContent = "Удаление...";
+
+  try {
+
+    const { error: updateError } = await db.auth.updateUser({
+      data: {
+        avatar_path: null
+      }
+    });
+
+    if (updateError) throw updateError;
+
+    if (oldPath.startsWith(currentUser.id + "/")) {
+
+      const { error: removeError } = await db.storage
+        .from(BUCKET)
+        .remove([oldPath]);
+
+      if (removeError) {
+        console.warn("Не удалось удалить старый файл:", removeError);
+      }
+
+    }
+
+    await loadAccount();
+
+    showMessage("Фотография профиля удалена.");
+
+  } catch (error) {
+
+    showMessage(
+      "Не удалось удалить фотографию: " + error.message,
+      true
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Удалить";
+
+  }
+
+});
+
+
+// LOGOUT
+
+$("logoutButton").addEventListener("click", async () => {
+
+  const { error } = await db.auth.signOut();
+
+  if (error) {
     alert("Не удалось выйти из аккаунта.");
     return;
   }
+
   location.replace("login.html");
+
 });
 
+
+// START
+
 loadAccount();
-</script></body>
+
+</script>
+
+</body>
 </html>
