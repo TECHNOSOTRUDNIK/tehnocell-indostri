@@ -9,16 +9,46 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+/* ОСНОВА */
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+:root {
+  --page-bg: #f3f4f6;
+  --surface: #ffffff;
+  --surface-secondary: #f8f9fb;
+  --text: #171717;
+  --muted: #858585;
+  --border: #e7e7e7;
+  --accent: #171717;
+  --accent-text: #ffffff;
+  --input-bg: #fafafa;
+  --shadow: 0 4px 20px rgba(0,0,0,.035);
+}
+
+html[data-theme="dark"] {
+  --page-bg: #101114;
+  --surface: #191b20;
+  --surface-secondary: #22252c;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --border: #30323a;
+  --accent: #f4f4f5;
+  --accent-text: #111111;
+  --input-bg: #22252c;
+  --shadow: 0 4px 20px rgba(0,0,0,.15);
+}
+
 body {
-  background: #f2f2f2;
-  color: #111;
+  background: var(--page-bg);
+  color: var(--text);
   font-family: Arial, sans-serif;
+  transition: background .25s, color .25s;
 }
 
 button, input, textarea {
@@ -29,28 +59,32 @@ button {
   cursor: pointer;
 }
 
+/* ШАПКА */
+
 .header {
   min-height: 72px;
-  background: #fff;
-  border-bottom: 1px solid #e5e5e5;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 6%;
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 10;
   gap: 15px;
+  transition: background .25s;
 }
 
 .logo {
   font-size: 19px;
   font-weight: 800;
   letter-spacing: 1.5px;
+  white-space: nowrap;
 }
 
 .logo span {
-  color: #888;
+  color: var(--muted);
   font-weight: 400;
 }
 
@@ -61,9 +95,9 @@ button {
 }
 
 .home-button {
-  border: 1px solid #e5e5e5;
-  background: #fff;
-  color: #333;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   padding: 10px 14px;
   border-radius: 8px;
   text-decoration: none;
@@ -71,33 +105,31 @@ button {
   font-weight: bold;
 }
 
-.home-button:hover {
-  background: #f2f2f2;
-}
-
 .nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .nav button {
   border: 0;
   background: transparent;
   padding: 11px 15px;
-  color: #777;
+  color: var(--muted);
   font-size: 13px;
   border-radius: 7px;
 }
 
 .nav button.active {
-  background: #111;
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-text);
 }
 
 .logout {
-  color: #777 !important;
+  color: #e05252 !important;
 }
+
+/* ОСНОВНАЯ ОБЛАСТЬ */
 
 .main {
   max-width: 1100px;
@@ -118,297 +150,11 @@ button {
 
 .heading p {
   font-size: 13px;
-  color: #888;
+  color: var(--muted);
   margin-top: 7px;
 }
 
-/* AVATARS */
-
-.avatar,
-.profile-photo {
-  position: relative;
-  border-radius: 50%;
-  background: #111;
-  color: #fff;
-  display: grid;
-  place-items: center;
-  overflow: visible;
-  flex-shrink: 0;
-}
-
-.avatar {
-  width: 48px;
-  height: 48px;
-  font-size: 17px;
-}
-
-.profile-photo {
-  width: 105px;
-  height: 105px;
-  font-size: 34px;
-}
-
-.avatar img,
-.profile-photo img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  display: none;
-}
-
-.presence-dot {
-  display: none;
-  position: absolute;
-  width: 17px;
-  height: 17px;
-  background: #22c55e;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-}
-
-.avatar .presence-dot {
-  width: 14px;
-  height: 14px;
-}
-
-/* VERIFIED */
-
-.verified-name {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.verified-badge {
-  display: none;
-  width: 19px;
-  height: 19px;
-  border-radius: 50%;
-  background: #1685f8;
-  color: #fff;
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 19px;
-  text-align: center;
-  flex-shrink: 0;
-}
-
-/* PROFILE */
-
-.profile-card {
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 14px;
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  gap: 23px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
-}
-
-.profile-info {
-  flex: 1;
-  min-width: 180px;
-}
-
-.profile-info h2 {
-  font-size: 21px;
-  margin-bottom: 9px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.profile-bio {
-  color: #888;
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-
-.online-label {
-  font-size: 11px;
-  color: #22a653;
-  margin-top: 10px;
-  display: none;
-}
-
-/* WELCOME */
-
-.welcome {
-  background: #111;
-  color: #fff;
-  border-radius: 15px;
-  padding: 30px;
-  margin-bottom: 28px;
-  position: relative;
-  overflow: hidden;
-}
-
-.welcome:after {
-  content: "";
-  position: absolute;
-  width: 190px;
-  height: 190px;
-  border: 1px solid #444;
-  border-radius: 50%;
-  right: -65px;
-  top: -95px;
-}
-
-.welcome small {
-  font-size: 10px;
-  letter-spacing: 2px;
-  color: #aaa;
-}
-
-.welcome h2 {
-  font-size: 25px;
-  margin: 17px 0 9px;
-}
-
-.welcome p {
-  font-size: 13px;
-  color: #aaa;
-}
-
-/* CARDS */
-
-.section-title {
-  font-size: 17px;
-  margin: 30px 0 15px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.card,
-.panel {
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 12px;
-  padding: 21px;
-}
-
-.card-label {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 12px;
-}
-
-.card-value {
-  font-size: 16px;
-  font-weight: bold;
-  overflow-wrap: anywhere;
-}
-
-.card-description {
-  font-size: 11px;
-  color: #aaa;
-  margin-top: 8px;
-}
-
-/* SETTINGS */
-
-.panel {
-  margin-top: 18px;
-}
-
-.panel h3 {
-  font-size: 15px;
-}
-
-.panel label {
-  display: block;
-  font-size: 12px;
-  font-weight: bold;
-  margin: 17px 0 8px;
-}
-
-.panel input,
-.panel textarea {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fafafa;
-  outline: none;
-}
-
-.panel textarea {
-  resize: vertical;
-  min-height: 90px;
-}
-
-.panel input:focus,
-.panel textarea:focus {
-  border-color: #111;
-}
-
-.action {
-  border: 1px solid #111;
-  background: #111;
-  color: #fff;
-  border-radius: 8px;
-  padding: 12px 17px;
-  margin-top: 13px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.action.secondary {
-  background: #fff;
-  color: #111;
-}
-
-.action:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-.divider {
-  border: 0;
-  border-top: 1px solid #eee;
-  margin: 25px 0;
-}
-
-.message {
-  font-size: 13px;
-  margin-top: 13px;
-  overflow-wrap: anywhere;
-}
-
-.photo-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 13px;
-}
-
-.photo-actions .action {
-  margin-top: 0;
-}
-
-.photo-input {
-  display: none;
-}
-
-.photo-note {
-  font-size: 11px;
-  color: #999;
-  margin-top: 13px;
-  line-height: 1.5;
-}
+/* СТРАНИЦЫ */
 
 .page {
   display: none;
@@ -416,9 +162,47 @@ button {
 
 .page.active {
   display: block;
+  animation: fadeUp .3s ease;
 }
 
-/* MOBILE */
+/* АНИМАЦИИ */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card,
+.panel,
+.profile-card,
+.settings-category {
+  transition:
+    background .25s,
+    border-color .25s,
+    transform .2s,
+    box-shadow .2s;
+}
+
+/* ЗАГОЛОВКИ */
+
+.section-title {
+  font-size: 17px;
+  margin: 30px 0 15px;
+}
+
+/* АДАПТИВНОСТЬ */
 
 @media(max-width:650px) {
 
@@ -460,31 +244,28 @@ button {
     font-size: 22px;
   }
 
-  .welcome {
-    padding: 24px;
-  }
-
-  .welcome h2 {
-    font-size: 21px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-card {
-    padding: 20px;
-  }
-
 }
+
+@media(prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 </style>
 </head>
-
 <body>
+
+<!-- ШАПКА -->
 
 <header class="header">
 
-  <div class="logo">TEHNOCELL <span>ID</span></div>
+  <div class="logo">
+    TEHNOCELL <span>ID</span>
+  </div>
 
   <div class="header-actions">
 
@@ -512,18 +293,30 @@ button {
 
 </header>
 
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+
 <main class="main">
 
   <div class="heading">
 
     <div>
       <h1 id="pageTitle">Обзор аккаунта</h1>
-      <p>Центр управления TEHNOCELL INDOSTRI</p>
+
+      <p>
+        Центр управления TEHNOCELL INDOSTRI
+      </p>
     </div>
 
   </div>
 
+
+  <!-- ОБЗОР -->
+
   <section class="page active" id="home">
+
+
+    <!-- ПРОФИЛЬ -->
 
     <div class="profile-card">
 
@@ -533,132 +326,203 @@ button {
 
         <img id="profileImage" alt="Аватар">
 
-        <span class="presence-dot" id="profilePresence"></span>
+        <span
+          class="presence-dot"
+          id="profilePresence"
+        ></span>
 
       </div>
+
 
       <div class="profile-info">
 
         <h2 class="verified-name">
 
-          <span id="profileDisplayName">Пользователь</span>
+          <span id="profileDisplayName">
+            Пользователь
+          </span>
 
-          <span class="verified-badge" id="profileBadge"
-          title="Подтверждённый аккаунт">✓</span>
+          <span
+            class="verified-badge"
+            id="profileBadge"
+            title="Подтверждённый аккаунт"
+          >✓</span>
 
         </h2>
 
-        <p class="profile-bio" id="profileBio">
+        <p
+          class="profile-bio"
+          id="profileBio"
+        >
           Пока ничего не написано.
         </p>
-
-        <div class="online-label" id="onlineLabel">
-          В сети
-        </div>
 
       </div>
 
     </div>
 
-    <div class="welcome">
 
-      <small>TEHNOCELL ID / PERSONAL ACCOUNT</small>
+    <!-- ПРИВЕТСТВИЕ -->
+
+    <div class="welcome" id="welcome">
+
+      <small>
+        TEHNOCELL ID / PERSONAL ACCOUNT
+      </small>
 
       <h2>
+
         Добро пожаловать,
-        <span id="welcomeName">Пользователь</span>
+
+        <span class="verified-name">
+
+          <span id="welcomeName">
+            Пользователь
+          </span>
+
+          <span
+            class="verified-badge"
+            id="welcomeBadge"
+            title="Подтверждённый аккаунт"
+          >✓</span>
+
+        </span>
+
       </h2>
 
-      <p>Ваш единый аккаунт в экосистеме TEHNOCELL.</p>
+      <p>
+        Ваш единый аккаунт в экосистеме TEHNOCELL.
+      </p>
 
     </div>
 
-    <h2 class="section-title">Информация об аккаунте</h2>
+
+    <!-- ИНФОРМАЦИЯ -->
+
+    <h2 class="section-title">
+      Информация об аккаунте
+    </h2>
 
     <div class="grid">
 
       <div class="card">
-        <div class="card-label">TEHNOCELL ID</div>
-        <div class="card-value" id="userId">Загрузка...</div>
-        <div class="card-description">Уникальный идентификатор</div>
+
+        <div class="card-label">
+          TEHNOCELL ID
+        </div>
+
+        <div class="card-value" id="userId">
+          Загрузка...
+        </div>
+
+        <div class="card-description">
+          Уникальный идентификатор
+        </div>
+
       </div>
 
-      <div class="card">
-        <div class="card-label">Электронная почта</div>
-        <div class="card-value" id="userEmail">Загрузка...</div>
-        <div class="card-description">Почта аккаунта</div>
-      </div>
 
       <div class="card">
-        <div class="card-label">Дата регистрации</div>
-        <div class="card-value" id="createdAt">Загрузка...</div>
-        <div class="card-description">Дата создания аккаунта</div>
+
+        <div class="card-label">
+          Электронная почта
+        </div>
+
+        <div class="card-value" id="userEmail">
+          Загрузка...
+        </div>
+
+        <div class="card-description">
+          Почта аккаунта
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-label">
+          Дата регистрации
+        </div>
+
+        <div class="card-value" id="createdAt">
+          Загрузка...
+        </div>
+
+        <div class="card-description">
+          Дата создания аккаунта
+        </div>
+
       </div>
 
     </div>
 
   </section>
+  <!-- НАСТРОЙКИ -->
 
-  <section class="page" id="settings">
+<section class="page" id="settings">
 
-    <h2 class="section-title">Фотография профиля</h2>
+  <div class="settings-intro">
+    <h2>Настройки аккаунта</h2>
+    <p>Управляйте своим профилем и параметрами TEHNOCELL ID.</p>
+  </div>
 
-    <div class="profile-card">
 
-      <div class="profile-photo" id="settingsPhoto">
+  <!-- ПРОФИЛЬ -->
 
-        <span id="settingsInitial">T</span>
+  <details class="settings-category" open>
 
-        <img id="settingsImage" alt="Фотография профиля">
+    <summary>
+      <span class="category-icon">👤</span>
 
-      </div>
+      <span class="category-info">
+        <strong>Профиль</strong>
+        <small>Личные данные и фотография</small>
+      </span>
 
-      <div class="profile-info">
+      <span class="category-arrow">⌄</span>
+    </summary>
 
-        <h2 class="verified-name">
+    <div class="category-content">
 
-          <span id="settingsDisplayName">Пользователь</span>
+      <div class="settings-profile">
 
-          <span class="verified-badge" id="settingsBadge">✓</span>
-
-        </h2>
-
-        <p class="profile-bio">
-          Управляйте фотографией своего профиля.
-        </p>
-
-        <div class="photo-actions">
-
-          <button class="action" id="choosePhoto">
-            Изменить фотографию
-          </button>
-
-          <button class="action secondary" id="removePhoto">
-            Удалить
-          </button>
-
+        <div class="profile-photo" id="settingsPhoto">
+          <span id="settingsInitial">T</span>
+          <img id="settingsImage" alt="Аватар">
         </div>
 
-        <p class="photo-note">
-          JPG, PNG или WEBP. Максимальный размер — 5 МБ.
-        </p>
+        <div>
+          <strong id="settingsDisplayName">Пользователь</strong>
+          <p>Фотография профиля</p>
+        </div>
 
       </div>
 
-    </div>
+      <input
+        type="file"
+        id="photoInput"
+        accept="image/jpeg,image/png,image/webp"
+        hidden
+      >
 
-    <input
-      type="file"
-      id="photoInput"
-      class="photo-input"
-      accept="image/jpeg,image/png,image/webp"
-    >
+      <div class="button-row">
 
-    <h2 class="section-title">Настройки профиля</h2>
+        <button class="action" id="choosePhoto">
+          Изменить фотографию
+        </button>
 
-    <div class="panel">
+        <button class="action secondary" id="removePhoto">
+          Удалить
+        </button>
 
-      <h3>Личные данные</h3>
+      </div>
+
+      <p class="photo-note">
+        JPG, PNG или WEBP. Максимальный размер — 5 МБ.
+      </p>
+
+      <hr class="divider">
 
       <label for="nameInput">Отображаемое имя</label>
 
@@ -681,30 +545,841 @@ button {
         Сохранить изменения
       </button>
 
+    </div>
+
+  </details>
+
+
+  <!-- ВНЕШНИЙ ВИД -->
+
+  <details class="settings-category">
+
+    <summary>
+      <span class="category-icon">🎨</span>
+
+      <span class="category-info">
+        <strong>Внешний вид</strong>
+        <small>Тема оформления интерфейса</small>
+      </span>
+
+      <span class="category-arrow">⌄</span>
+    </summary>
+
+    <div class="category-content">
+
+      <h3>Тема оформления</h3>
+
+      <p class="setting-description">
+        Выберите внешний вид личного кабинета.
+      </p>
+
+      <div class="theme-options">
+
+        <button
+          class="theme-option"
+          id="lightTheme"
+          data-theme-choice="light"
+        >
+
+          <span class="theme-preview light-preview">
+            ☀
+          </span>
+
+          <span>
+            <strong>Дневная</strong>
+            <small>Светлое оформление</small>
+          </span>
+
+          <span class="theme-check">✓</span>
+
+        </button>
+
+
+        <button
+          class="theme-option"
+          id="darkTheme"
+          data-theme-choice="dark"
+        >
+
+          <span class="theme-preview dark-preview">
+            ☾
+          </span>
+
+          <span>
+            <strong>Ночная</strong>
+            <small>Тёмное оформление</small>
+          </span>
+
+          <span class="theme-check">✓</span>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </details>
+
+
+  <!-- УВЕДОМЛЕНИЯ -->
+
+  <details class="settings-category">
+
+    <summary>
+      <span class="category-icon">🔔</span>
+
+      <span class="category-info">
+        <strong>Уведомления</strong>
+        <small>Управление уведомлениями</small>
+      </span>
+
+      <span class="category-arrow">⌄</span>
+    </summary>
+
+    <div class="category-content">
+
+      <div class="setting-row">
+
+        <div>
+          <strong>Отключить уведомления</strong>
+
+          <p class="setting-description">
+            Не получать уведомления, когда эта функция будет подключена.
+          </p>
+        </div>
+
+        <label class="switch">
+          <input type="checkbox" id="muteNotifications">
+          <span class="slider"></span>
+        </label>
+
+      </div>
+
       <hr class="divider">
 
-      <h3>Безопасность</h3>
+      <h3>Временная пауза</h3>
 
-      <label for="passwordInput">Новый пароль</label>
+      <p class="setting-description">
+        Временно отключить уведомления.
+      </p>
+
+      <div class="button-row">
+
+        <button class="action secondary mute-time" data-hours="1">
+          1 час
+        </button>
+
+        <button class="action secondary mute-time" data-hours="8">
+          8 часов
+        </button>
+
+        <button class="action secondary mute-time" data-hours="24">
+          24 часа
+        </button>
+
+      </div>
+
+      <button
+        class="action secondary"
+        id="unmuteNotifications"
+      >
+        Снять паузу
+      </button>
+
+      <p class="setting-description" id="notificationStatus">
+        Уведомления включены.
+      </p>
+
+    </div>
+
+  </details>
+
+
+  <!-- БЕЗОПАСНОСТЬ -->
+
+  <details class="settings-category">
+
+    <summary>
+      <span class="category-icon">🔒</span>
+
+      <span class="category-info">
+        <strong>Безопасность</strong>
+        <small>Пароль и защита аккаунта</small>
+      </span>
+
+      <span class="category-arrow">⌄</span>
+    </summary>
+
+    <div class="category-content">
+
+      <h3>Изменение пароля</h3>
+
+      <p class="setting-description">
+        Рекомендуем использовать надёжный пароль.
+      </p>
+
+      <label for="passwordInput">
+        Новый пароль
+      </label>
 
       <input
         id="passwordInput"
         type="password"
         placeholder="Минимум 6 символов"
+        autocomplete="new-password"
       >
 
-      <button class="action secondary" id="changePassword">
+      <button class="action" id="changePassword">
         Изменить пароль
       </button>
 
-      <div class="message" id="settingsMessage"></div>
+      <hr class="divider">
+
+      <h3>Защита аккаунта</h3>
+
+      <div class="security-info">
+        <strong>TEHNOCELL ID Security</strong>
+
+        <p>
+          Дополнительные инструменты защиты аккаунта
+          появятся в будущих обновлениях.
+        </p>
+      </div>
 
     </div>
 
-  </section>
+  </details>
+
+
+  <!-- АККАУНТ -->
+
+  <details class="settings-category">
+
+    <summary>
+      <span class="category-icon">⚙</span>
+
+      <span class="category-info">
+        <strong>Аккаунт</strong>
+        <small>Информация и управление аккаунтом</small>
+      </span>
+
+      <span class="category-arrow">⌄</span>
+    </summary>
+
+    <div class="category-content">
+
+      <div class="account-setting">
+        <span>Электронная почта</span>
+        <strong id="settingsEmail">Загрузка...</strong>
+      </div>
+
+      <div class="account-setting">
+        <span>TEHNOCELL ID</span>
+        <strong id="settingsUserId">Загрузка...</strong>
+      </div>
+
+      <hr class="divider">
+
+      <button class="action secondary" id="settingsLogout">
+        Выйти из аккаунта ↗
+      </button>
+
+    </div>
+
+  </details>
+
+
+  <div class="message" id="settingsMessage"></div>
+
+</section>
 
 </main>
-<script>
+/* WELCOME */
+
+.welcome {
+  background: #111;
+  color: #fff;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome::after {
+  content: "";
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border: 1px solid #444;
+  border-radius: 50%;
+  right: -65px;
+  top: -95px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.welcome > * {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome small {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #aaa;
+}
+
+.welcome h2 {
+  font-size: 25px;
+  margin: 17px 0 9px;
+}
+
+.welcome p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+
+/* VERIFIED */
+
+.verified-name {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.verified-badge {
+  display: none;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #1685f8;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 19px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+
+/* PROFILE */
+
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 23px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  box-shadow: var(--shadow);
+}
+
+.profile-photo {
+  position: relative;
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  flex-shrink: 0;
+  font-size: 34px;
+}
+
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: none;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 180px;
+}
+
+.profile-info h2 {
+  font-size: 21px;
+  margin-bottom: 9px;
+}
+
+.profile-bio {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.presence-dot {
+  display: none;
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  background: #22c55e;
+  border: 3px solid var(--surface);
+  border-radius: 50%;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+
+/* CARDS */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 21px;
+  box-shadow: var(--shadow);
+}
+
+.card-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.card-value {
+  font-size: 16px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.card-description {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+
+/* SETTINGS INTRO */
+
+.settings-intro {
+  margin-bottom: 22px;
+}
+
+.settings-intro h2 {
+  font-size: 21px;
+}
+
+.settings-intro p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 7px;
+}
+
+
+/* SETTINGS CATEGORIES */
+
+.settings-category {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  margin-bottom: 13px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.settings-category summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 19px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.settings-category summary::-webkit-details-marker {
+  display: none;
+}
+
+.category-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-secondary);
+  font-size: 19px;
+  flex-shrink: 0;
+}
+
+.category-info {
+  flex: 1;
+}
+
+.category-info strong {
+  display: block;
+  font-size: 14px;
+}
+
+.category-info small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.category-arrow {
+  font-size: 19px;
+  color: var(--muted);
+  transition: transform .2s;
+}
+
+.settings-category[open] .category-arrow {
+  transform: rotate(180deg);
+}
+
+.category-content {
+  padding: 5px 20px 22px;
+  border-top: 1px solid var(--border);
+  animation: fadeIn .2s ease;
+}
+
+.category-content h3 {
+  font-size: 14px;
+  margin-top: 18px;
+}
+
+
+/* INPUTS */
+
+.category-content label:not(.switch) {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 17px 0 8px;
+}
+
+.category-content input:not([type="checkbox"]),
+.category-content textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text);
+  outline: none;
+}
+
+.category-content input:focus,
+.category-content textarea:focus {
+  border-color: #1685f8;
+}
+
+.category-content textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+
+/* BUTTONS */
+
+.action {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+  border-radius: 8px;
+  padding: 12px 17px;
+  margin-top: 13px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.action.secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.action:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.button-row .action {
+  margin-top: 13px;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 22px 0;
+}
+
+.photo-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 17px;
+}
+
+.settings-profile .profile-photo {
+  width: 65px;
+  height: 65px;
+  font-size: 22px;
+}
+
+.settings-profile strong {
+  font-size: 14px;
+}
+
+.settings-profile p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+
+/* THEME SELECTOR */
+
+.theme-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 12px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.theme-option.selected {
+  border: 2px solid #1685f8;
+}
+
+.theme-preview {
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  font-size: 21px;
+}
+
+.light-preview {
+  background: #fff;
+  color: #111;
+  border: 1px solid #ddd;
+}
+
+.dark-preview {
+  background: #191b20;
+  color: #fff;
+}
+
+.theme-option strong,
+.theme-option small {
+  display: block;
+}
+
+.theme-option strong {
+  font-size: 13px;
+}
+
+.theme-option small {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.theme-check {
+  margin-left: auto;
+  color: #1685f8;
+  display: none;
+}
+
+.theme-option.selected .theme-check {
+  display: block;
+}
+
+
+/* NOTIFICATIONS SWITCH */
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 18px;
+}
+
+.setting-row strong {
+  font-size: 13px;
+}
+
+.setting-description {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 7px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 25px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #bbb;
+  border-radius: 30px;
+  transition: .2s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: .2s;
+}
+
+.switch input:checked + .slider {
+  background: #1685f8;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+
+/* SECURITY */
+
+.security-info {
+  padding: 14px;
+  margin-top: 15px;
+  background: var(--surface-secondary);
+  border-radius: 9px;
+}
+
+.security-info strong {
+  font-size: 13px;
+}
+
+.security-info p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 7px;
+}
+
+
+/* ACCOUNT */
+
+.account-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-setting span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.account-setting strong {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+
+/* MESSAGES */
+
+.message {
+  font-size: 13px;
+  margin-top: 13px;
+  overflow-wrap: anywhere;
+}
+
+
+/* MOBILE */
+
+@media(max-width:650px) {
+
+  .welcome {
+    padding: 24px;
+  }
+
+  .welcome h2 {
+    font-size: 21px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  .settings-category summary {
+    padding: 15px;
+  }
+
+  .category-content {
+    padding: 5px 15px 18px;
+  }
+
+}
+  <script>
+
+/* =================================
+   SUPABASE
+================================= */
 
 const SUPABASE_URL =
 "https://jvagiuiregvlrfooxdao.supabase.co";
@@ -732,34 +1407,33 @@ let presenceStarted = false;
 const $ = id => document.getElementById(id);
 
 
-// MESSAGES
+/* =================================
+   СООБЩЕНИЯ
+================================= */
 
-function showMessage(text, error = false) {
+function showMessage(message, error = false) {
 
-  const message = $("settingsMessage");
+  const element = $("settingsMessage");
 
-  message.textContent = text;
+  element.textContent = message;
 
-  message.style.color =
-    error ? "#b3261e" : "#222";
+  element.style.color =
+    error ? "#e05252" : "#22a653";
 
 }
 
 
-// ONLINE INDICATOR
+/* =================================
+   ONLINE PRESENCE
+================================= */
 
 function setOnlineStatus(isOnline) {
 
   $("profilePresence").style.display =
     isOnline ? "block" : "none";
 
-  $("onlineLabel").style.display =
-    isOnline ? "block" : "none";
-
 }
 
-
-// START PRESENCE
 
 function startPresence(user) {
 
@@ -795,7 +1469,7 @@ function startPresence(user) {
 
       if (error) {
 
-        console.error("Presence error:", error);
+        console.error(error);
 
         setOnlineStatus(false);
 
@@ -822,7 +1496,9 @@ function startPresence(user) {
 }
 
 
-// AVATAR
+/* =================================
+   АВАТАРКИ
+================================= */
 
 function setAvatar(initial, url) {
 
@@ -852,7 +1528,7 @@ function setAvatar(initial, url) {
 
     } else {
 
-      initialElement.style.display = "block";
+      initialElement.style.display = "grid";
 
       imageElement.removeAttribute("src");
 
@@ -865,7 +1541,9 @@ function setAvatar(initial, url) {
 }
 
 
-// VERIFIED BADGES
+/* =================================
+   ГАЛОЧКИ
+================================= */
 
 function updateVerifiedStatus(user) {
 
@@ -876,7 +1554,7 @@ function updateVerifiedStatus(user) {
 
     "profileBadge",
 
-    "settingsBadge"
+    "welcomeBadge"
 
   ];
 
@@ -890,11 +1568,41 @@ function updateVerifiedStatus(user) {
 }
 
 
-// LOAD ACCOUNT
+/* =================================
+   ОДНОРАЗОВОЕ ПРИВЕТСТВИЕ
+================================= */
+
+function setupWelcome(user) {
+
+  const key =
+    "tehnocell_welcome_seen_" + user.id;
+
+  const alreadySeen =
+    localStorage.getItem(key) === "1";
+
+  if (alreadySeen) {
+
+    $("welcome").style.display = "none";
+
+  } else {
+
+    $("welcome").style.display = "block";
+
+    localStorage.setItem(key, "1");
+
+  }
+
+}
+
+
+/* =================================
+   ЗАГРУЗКА АККАУНТА
+================================= */
 
 async function loadAccount() {
 
-  const { data, error } = await db.auth.getSession();
+  const { data, error } =
+    await db.auth.getSession();
 
   if (error || !data.session) {
 
@@ -916,7 +1624,8 @@ async function loadAccount() {
 
   }
 
-  const metadata = currentUser.user_metadata || {};
+  const metadata =
+    currentUser.user_metadata || {};
 
   const name =
     metadata.display_name || "Пользователь";
@@ -928,7 +1637,7 @@ async function loadAccount() {
     name.trim().charAt(0).toUpperCase() || "T";
 
 
-  // NAME
+  /* ИМЯ */
 
   $("profileDisplayName").textContent = name;
 
@@ -937,23 +1646,30 @@ async function loadAccount() {
   $("welcomeName").textContent = name;
 
 
-  // BIO
+  /* BIO */
 
   $("profileBio").textContent =
     bio || "Пока ничего не написано.";
 
 
-  // ACCOUNT INFORMATION
+  /* ИНФОРМАЦИЯ */
 
-  $("userEmail").textContent =
-    currentUser.email || "—";
-
-  $("userId").textContent =
+  const shortId =
     "TC-" +
     currentUser.id
       .replace(/-/g, "")
       .slice(0, 10)
       .toUpperCase();
+
+  $("userEmail").textContent =
+    currentUser.email || "—";
+
+  $("settingsEmail").textContent =
+    currentUser.email || "—";
+
+  $("userId").textContent = shortId;
+
+  $("settingsUserId").textContent = shortId;
 
   $("createdAt").textContent =
     new Date(
@@ -961,23 +1677,28 @@ async function loadAccount() {
     ).toLocaleDateString("ru-RU");
 
 
-  // SETTINGS INPUTS
+  /* ПОЛЯ НАСТРОЕК */
 
   $("nameInput").value = name;
 
   $("bioInput").value = bio;
 
 
-  // VERIFIED
+  /* ГАЛОЧКИ */
 
   updateVerifiedStatus(currentUser);
 
 
-  // AVATAR
+  /* ПРИВЕТСТВИЕ */
 
-  const avatarPath = metadata.avatar_path;
+  setupWelcome(currentUser);
+
+
+  /* АВАТАР */
 
   let avatarUrl = null;
+
+  const avatarPath = metadata.avatar_path;
 
   if (avatarPath) {
 
@@ -992,174 +1713,219 @@ async function loadAccount() {
   setAvatar(initial, avatarUrl);
 
 
-  // ONLINE
+  /* ONLINE */
 
   startPresence(currentUser);
 
 }
 
 
-// NAVIGATION
+/* =================================
+   НАВИГАЦИЯ
+================================= */
 
-document.querySelectorAll(".nav button[data-page]")
-.forEach(button => {
+function openPage(target) {
+
+  document.querySelectorAll(".page")
+    .forEach(page => {
+
+      page.classList.remove("active");
+
+    });
+
+  $(target).classList.add("active");
+
+
+  document.querySelectorAll(
+    ".nav button[data-page]"
+  ).forEach(button => {
+
+    button.classList.toggle(
+      "active",
+      button.dataset.page === target
+    );
+
+  });
+
+
+  $("pageTitle").textContent = {
+
+    home: "Обзор аккаунта",
+
+    settings: "Настройки аккаунта"
+
+  }[target];
+
+}
+
+
+document.querySelectorAll(
+  ".nav button[data-page]"
+).forEach(button => {
 
   button.addEventListener("click", () => {
 
-    const target = button.dataset.page;
-
-    document.querySelectorAll(".page")
-      .forEach(page => {
-        page.classList.remove("active");
-      });
-
-    $(target).classList.add("active");
-
-    document.querySelectorAll(
-      ".nav button[data-page]"
-    ).forEach(item => {
-      item.classList.remove("active");
-    });
-
-    button.classList.add("active");
-
-    $("pageTitle").textContent = {
-
-      home: "Обзор аккаунта",
-
-      settings: "Настройки аккаунта"
-
-    }[target];
+    openPage(button.dataset.page);
 
   });
 
 });
 
 
-// SAVE PROFILE
+/* =================================
+   СОХРАНЕНИЕ ПРОФИЛЯ
+================================= */
 
-$("saveProfile").addEventListener("click", async () => {
+$("saveProfile").addEventListener(
+  "click",
+  async () => {
 
-  if (!currentUser) return;
+    if (!currentUser) return;
 
-  const name = $("nameInput").value.trim();
+    const name =
+      $("nameInput").value.trim();
 
-  const bio = $("bioInput").value.trim();
+    const bio =
+      $("bioInput").value.trim();
 
-  if (name.length < 2) {
+    if (name.length < 2) {
 
-    showMessage(
-      "Имя должно содержать минимум 2 символа.",
-      true
-    );
+      showMessage(
+        "Имя должно содержать минимум 2 символа.",
+        true
+      );
 
-    return;
+      return;
 
-  }
+    }
 
-  const button = $("saveProfile");
+    const button = $("saveProfile");
 
-  button.disabled = true;
+    button.disabled = true;
 
-  button.textContent = "Сохранение...";
+    button.textContent = "Сохранение...";
 
-  try {
+    try {
 
-    const { error } = await db.auth.updateUser({
+      const { error } =
+        await db.auth.updateUser({
 
-      data: {
+          data: {
 
-        display_name: name,
+            display_name: name,
 
-        bio: bio
+            bio: bio
 
-      }
+          }
 
-    });
+        });
 
-    if (error) throw error;
+      if (error) throw error;
 
-    showMessage("Профиль успешно обновлён!");
+      await loadAccount();
 
-    await loadAccount();
+      showMessage(
+        "Профиль успешно обновлён!"
+      );
 
-  } catch (error) {
+    } catch (error) {
 
-    showMessage(
-      "Ошибка: " + error.message,
-      true
-    );
+      showMessage(
+        "Ошибка: " + error.message,
+        true
+      );
 
-  } finally {
+    } finally {
 
-    button.disabled = false;
+      button.disabled = false;
 
-    button.textContent = "Сохранить изменения";
+      button.textContent =
+        "Сохранить изменения";
 
-  }
-
-});
-
-
-// CHANGE PASSWORD
-
-$("changePassword").addEventListener("click", async () => {
-
-  const password = $("passwordInput").value;
-
-  if (password.length < 6) {
-
-    showMessage(
-      "Пароль должен содержать минимум 6 символов.",
-      true
-    );
-
-    return;
+    }
 
   }
+);
 
-  const button = $("changePassword");
 
-  button.disabled = true;
+/* =================================
+   СМЕНА ПАРОЛЯ
+================================= */
 
-  try {
+$("changePassword").addEventListener(
+  "click",
+  async () => {
 
-    const { error } = await db.auth.updateUser({
+    const password =
+      $("passwordInput").value;
 
-      password: password
+    if (password.length < 6) {
 
-    });
+      showMessage(
+        "Пароль должен содержать минимум 6 символов.",
+        true
+      );
 
-    if (error) throw error;
+      return;
 
-    $("passwordInput").value = "";
+    }
 
-    showMessage("Пароль успешно изменён.");
+    const button = $("changePassword");
 
-  } catch (error) {
+    button.disabled = true;
 
-    showMessage(
-      "Ошибка: " + error.message,
-      true
-    );
+    button.textContent = "Изменение...";
 
-  } finally {
+    try {
 
-    button.disabled = false;
+      const { error } =
+        await db.auth.updateUser({
+
+          password: password
+
+        });
+
+      if (error) throw error;
+
+      $("passwordInput").value = "";
+
+      showMessage(
+        "Пароль успешно изменён."
+      );
+
+    } catch (error) {
+
+      showMessage(
+        "Ошибка: " + error.message,
+        true
+      );
+
+    } finally {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Изменить пароль";
+
+    }
 
   }
+);
 
-});
 
+/* =================================
+   ЗАГРУЗКА ФОТОГРАФИИ
+================================= */
 
-// OPEN PHOTO SELECTOR
+$("choosePhoto").addEventListener(
+  "click",
+  () => {
 
-$("choosePhoto").addEventListener("click", () => {
+    $("photoInput").click();
 
-  $("photoInput").click();
+  }
+);
 
-});
-  // UPLOAD PHOTO
 
 $("photoInput").addEventListener(
   "change",
@@ -1167,18 +1933,7 @@ $("photoInput").addEventListener(
 
     const file = event.target.files[0];
 
-    if (!file) return;
-
-    if (!currentUser) {
-
-      showMessage(
-        "Аккаунт ещё загружается.",
-        true
-      );
-
-      return;
-
-    }
+    if (!file || !currentUser) return;
 
     const allowedTypes = [
 
@@ -1206,7 +1961,7 @@ $("photoInput").addEventListener(
     if (file.size > 5 * 1024 * 1024) {
 
       showMessage(
-        "Максимальный размер фотографии — 5 МБ.",
+        "Максимальный размер — 5 МБ.",
         true
       );
 
@@ -1237,33 +1992,27 @@ $("photoInput").addEventListener(
       }[file.type];
 
       const fileName =
-
         currentUser.id +
-
         "/avatar-" +
-
         Date.now() +
-
         "." +
-
         extension;
 
       const oldPath =
         currentUser.user_metadata?.avatar_path;
 
-      const { data, error } = await db.storage
+      const { data, error } =
+        await db.storage
+          .from(BUCKET)
+          .upload(fileName, file, {
 
-        .from(BUCKET)
+            contentType: file.type,
 
-        .upload(fileName, file, {
+            cacheControl: "3600",
 
-          contentType: file.type,
+            upsert: false
 
-          cacheControl: "3600",
-
-          upsert: false
-
-        });
+          });
 
       if (error) throw error;
 
@@ -1283,37 +2032,21 @@ $("photoInput").addEventListener(
       if (updateError) throw updateError;
 
       if (
-
         oldPath &&
-
         oldPath !== uploadedPath &&
-
         oldPath.startsWith(currentUser.id + "/")
-
       ) {
 
-        const { error: removeError } =
-          await db.storage
-
-            .from(BUCKET)
-
-            .remove([oldPath]);
-
-        if (removeError) {
-
-          console.warn(
-            "Не удалось удалить старую фотографию:",
-            removeError
-          );
-
-        }
+        await db.storage
+          .from(BUCKET)
+          .remove([oldPath]);
 
       }
 
       await loadAccount();
 
       showMessage(
-        "Фотография профиля успешно обновлена!"
+        "Фотография успешно обновлена!"
       );
 
     } catch (error) {
@@ -1329,8 +2062,7 @@ $("photoInput").addEventListener(
       }
 
       showMessage(
-        "Не удалось загрузить фотографию: " +
-        error.message,
+        "Ошибка загрузки: " + error.message,
         true
       );
 
@@ -1338,7 +2070,8 @@ $("photoInput").addEventListener(
 
       button.disabled = false;
 
-      button.textContent = "Изменить фотографию";
+      button.textContent =
+        "Изменить фотографию";
 
       event.target.value = "";
 
@@ -1348,129 +2081,76 @@ $("photoInput").addEventListener(
 );
 
 
-// REMOVE PHOTO
+/* =================================
+   УДАЛЕНИЕ ФОТОГРАФИИ
+================================= */
 
-$("removePhoto").addEventListener("click", async () => {
-
-  if (!currentUser) return;
-
-  const oldPath =
-    currentUser.user_metadata?.avatar_path;
-
-  if (!oldPath) {
-
-    showMessage(
-      "Фотография профиля ещё не установлена."
-    );
-
-    return;
-
-  }
-
-  const button = $("removePhoto");
-
-  button.disabled = true;
-
-  button.textContent = "Удаление...";
-
-  try {
-
-    const { error: updateError } =
-      await db.auth.updateUser({
-
-        data: {
-
-          avatar_path: null
-
-        }
-
-      });
-
-    if (updateError) throw updateError;
-
-    if (oldPath.startsWith(currentUser.id + "/")) {
-
-      const { error: removeError } =
-        await db.storage
-
-          .from(BUCKET)
-
-          .remove([oldPath]);
-
-      if (removeError) {
-
-        console.warn(
-          "Не удалось удалить старый файл:",
-          removeError
-        );
-
-      }
-
-    }
-
-    await loadAccount();
-
-    showMessage("Фотография профиля удалена.");
-
-  } catch (error) {
-
-    showMessage(
-      "Не удалось удалить фотографию: " +
-      error.message,
-      true
-    );
-
-  } finally {
-
-    button.disabled = false;
-
-    button.textContent = "Удалить";
-
-  }
-
-});
-
-
-// LOGOUT
-
-$("logoutButton").addEventListener(
+$("removePhoto").addEventListener(
   "click",
   async () => {
 
-    const button = $("logoutButton");
+    if (!currentUser) return;
+
+    const oldPath =
+      currentUser.user_metadata?.avatar_path;
+
+    if (!oldPath) {
+
+      showMessage(
+        "Фотография ещё не установлена."
+      );
+
+      return;
+
+    }
+
+    const button = $("removePhoto");
 
     button.disabled = true;
 
-    button.textContent = "Выход...";
+    button.textContent = "Удаление...";
 
     try {
 
-      if (presenceChannel) {
+      const { error } =
+        await db.auth.updateUser({
 
-        await presenceChannel.untrack();
+          data: {
 
-        await db.removeChannel(presenceChannel);
+            avatar_path: null
 
-        presenceChannel = null;
+          }
 
-      }
-
-      const { error } = await db.auth.signOut();
+        });
 
       if (error) throw error;
 
-      location.replace("login.html");
+      if (oldPath.startsWith(currentUser.id + "/")) {
+
+        await db.storage
+          .from(BUCKET)
+          .remove([oldPath]);
+
+      }
+
+      await loadAccount();
+
+      showMessage(
+        "Фотография удалена."
+      );
 
     } catch (error) {
 
-      alert(
-        "Не удалось выйти из аккаунта: " +
-        error.message
+      showMessage(
+        "Ошибка удаления: " + error.message,
+        true
       );
+
+    } finally {
 
       button.disabled = false;
 
-      button.textContent = "Выйти ↗";
+      button.textContent = "Удалить";
 
     }
 
@@ -1478,9 +2158,291 @@ $("logoutButton").addEventListener(
 );
 
 
-// START
+/* =================================
+   ТЕМЫ
+================================= */
 
-loadAccount();
+function applyTheme(theme) {
+
+  if (theme !== "light" && theme !== "dark") {
+
+    theme = "light";
+
+  }
+
+  document.documentElement.dataset.theme =
+    theme;
+
+  localStorage.setItem(
+    "tehnocell_theme",
+    theme
+  );
+
+  document.querySelectorAll(
+    "[data-theme-choice]"
+  ).forEach(button => {
+
+    button.classList.toggle(
+      "selected",
+      button.dataset.themeChoice === theme
+    );
+
+  });
+
+}
+
+
+const savedTheme =
+  localStorage.getItem("tehnocell_theme") || "light";
+
+applyTheme(savedTheme);
+
+
+$("lightTheme").addEventListener(
+  "click",
+  () => applyTheme("light")
+);
+
+$("darkTheme").addEventListener(
+  "click",
+  () => applyTheme("dark")
+);
+
+
+/* =================================
+   УВЕДОМЛЕНИЯ
+================================= */
+
+function getNotificationState() {
+
+  const muted =
+    localStorage.getItem(
+      "tc_notifications_muted"
+    ) === "1";
+
+  const mutedUntil =
+    Number(
+      localStorage.getItem(
+        "tc_notifications_muted_until"
+      ) || 0
+    );
+
+  const pauseActive =
+    mutedUntil > Date.now();
+
+  return {
+
+    muted: muted || pauseActive,
+
+    mutedUntil,
+
+    permanent: muted
+
+  };
+
+}
+
+
+function updateNotificationStatus() {
+
+  const state = getNotificationState();
+
+  $("muteNotifications").checked =
+    state.permanent;
+
+  if (state.permanent) {
+
+    $("notificationStatus").textContent =
+      "Уведомления отключены.";
+
+  } else if (state.mutedUntil > Date.now()) {
+
+    const remaining =
+      Math.ceil(
+        (state.mutedUntil - Date.now()) / 60000
+      );
+
+    $("notificationStatus").textContent =
+      "Пауза активна. Осталось примерно " +
+      remaining +
+      " мин.";
+
+  } else {
+
+    $("notificationStatus").textContent =
+      "Уведомления включены.";
+
+  }
+
+}
+
+
+/* ПОСТОЯННОЕ ОТКЛЮЧЕНИЕ */
+
+$("muteNotifications").addEventListener(
+  "change",
+  event => {
+
+    localStorage.setItem(
+      "tc_notifications_muted",
+      event.target.checked ? "1" : "0"
+    );
+
+    if (event.target.checked) {
+
+      localStorage.removeItem(
+        "tc_notifications_muted_until"
+      );
+
+    }
+
+    updateNotificationStatus();
+
+  }
+);
+
+
+/* ВРЕМЕННАЯ ПАУЗА */
+
+document.querySelectorAll(
+  ".mute-time"
+).forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    const hours =
+      Number(button.dataset.hours);
+
+    localStorage.setItem(
+      "tc_notifications_muted",
+      "0"
+    );
+
+    localStorage.setItem(
+      "tc_notifications_muted_until",
+
+      String(
+        Date.now() + hours * 60 * 60 * 1000
+      )
+
+    );
+
+    updateNotificationStatus();
+
+  });
+
+});
+
+
+/* СНЯТЬ ПАУЗУ */
+
+$("unmuteNotifications").addEventListener(
+  "click",
+  () => {
+
+    localStorage.setItem(
+      "tc_notifications_muted",
+      "0"
+    );
+
+    localStorage.removeItem(
+      "tc_notifications_muted_until"
+    );
+
+    updateNotificationStatus();
+
+  }
+);
+
+
+updateNotificationStatus();
+
+
+/* =================================
+   ВЫХОД ИЗ АККАУНТА
+================================= */
+
+async function logoutAccount() {
+
+  const buttons = [
+
+    $("logoutButton"),
+
+    $("settingsLogout")
+
+  ];
+
+  buttons.forEach(button => {
+
+    button.disabled = true;
+
+  });
+
+  try {
+
+    if (presenceChannel) {
+
+      await presenceChannel.untrack();
+
+      await db.removeChannel(presenceChannel);
+
+      presenceChannel = null;
+
+      presenceStarted = false;
+
+    }
+
+    const { error } =
+      await db.auth.signOut();
+
+    if (error) throw error;
+
+    location.replace("login.html");
+
+  } catch (error) {
+
+    alert(
+      "Не удалось выйти: " + error.message
+    );
+
+    buttons.forEach(button => {
+
+      button.disabled = false;
+
+    });
+
+  }
+
+}
+
+
+$("logoutButton").addEventListener(
+  "click",
+  logoutAccount
+);
+
+$("settingsLogout").addEventListener(
+  "click",
+  logoutAccount
+);
+
+
+/* =================================
+   ЗАПУСК
+================================= */
+
+loadAccount().catch(error => {
+
+  console.error(
+    "Ошибка загрузки TEHNOCELL ID:",
+    error
+  );
+
+  alert(
+    "Не удалось загрузить аккаунт. Проверь подключение к интернету."
+  );
+
+});
 
 </script>
 
