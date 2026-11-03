@@ -7,71 +7,35 @@
 <title>ENNIE — TEHNOCELL AI</title>
 
 <meta name="theme-color" content="#090909">
-<meta name="description" content="ENNIE — персональный AI-помощник TEHNOCELL">
+<meta name="description" content="ENNIE — Your Personal AI Assistant">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-/* =================================
-   ENNIE MOBILE MENU FIX
-================================= */
 
-.menu-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(2px);
-    z-index: 90;
-}
-
-.menu-overlay.active {
-    display: block;
-}
-
-.sidebar {
-    z-index: 100;
-}
-
-/* Центрирование кнопки меню */
-
-button[onclick="toggleSidebar()"] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    line-height: 1 !important;
-    padding: 0 !important;
-}
-
-/* Мобильное меню */
-
-@media (max-width: 760px) {
-
-    .sidebar {
-        z-index: 100;
-    }
-
-    .menu-overlay {
-        z-index: 99;
-    }
-
-}
 <style>
-
-/* =================================
-   ENNIE — MAIN DESIGN
-================================= */
 
 :root {
     --bg: #090909;
     --panel: #111111;
-    --panel2: #171717;
+    --panel2: #191919;
     --border: rgba(255,255,255,0.09);
     --text: #ffffff;
     --muted: #858585;
     --accent: #ffffff;
+    --overlay: rgba(0,0,0,0.65);
+}
+
+body.light-theme {
+    --bg: #f5f5f5;
+    --panel: #ffffff;
+    --panel2: #eeeeee;
+    --border: rgba(0,0,0,0.10);
+    --text: #151515;
+    --muted: #777777;
+    --accent: #151515;
+    --overlay: rgba(0,0,0,0.35);
 }
 
 * {
@@ -86,11 +50,18 @@ body {
     font-family: 'Inter', sans-serif;
     min-height: 100vh;
     overflow: hidden;
+    transition: background .25s, color .25s;
 }
 
-/* =================================
-   BACKGROUND
-================================= */
+button, input, textarea {
+    font-family: inherit;
+}
+
+button {
+    color: inherit;
+}
+
+/* BACKGROUND */
 
 body::before {
     content: "";
@@ -105,31 +76,29 @@ body::before {
     pointer-events: none;
 }
 
-/* =================================
-   APP LAYOUT
-================================= */
+/* APP */
 
 .app {
     display: flex;
     width: 100%;
     height: 100dvh;
     overflow: hidden;
+    position: relative;
 }
 
-/* =================================
-   SIDEBAR
-================================= */
+/* SIDEBAR */
 
 .sidebar {
     width: 270px;
     min-width: 270px;
     height: 100%;
-    background: #0d0d0d;
+    background: var(--panel);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     padding: 25px 18px;
-    transition: 0.3s;
+    transition: transform .28s ease;
+    z-index: 100;
 }
 
 .brand {
@@ -142,7 +111,7 @@ body::before {
 .brand-icon {
     width: 38px;
     height: 38px;
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid var(--border);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -167,24 +136,18 @@ body::before {
 .new-chat {
     width: 100%;
     height: 46px;
-    background: white;
-    color: black;
+    background: var(--accent);
+    color: var(--bg);
     border: none;
     border-radius: 12px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.2s;
-}
-
-.new-chat:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
 }
 
 .sidebar-label {
     font-size: 10px;
-    color: #666;
+    color: var(--muted);
     letter-spacing: 1.5px;
     margin: 32px 0 13px;
 }
@@ -195,9 +158,31 @@ body::before {
 }
 
 .history-empty {
-    color: #555;
+    color: var(--muted);
     font-size: 12px;
     line-height: 1.6;
+}
+
+.history-item {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 5px;
+    background: transparent;
+    border: none;
+    border-radius: 9px;
+    color: var(--muted);
+    text-align: left;
+    font-size: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-item:hover,
+.history-item.active {
+    background: var(--panel2);
+    color: var(--text);
 }
 
 .sidebar-bottom {
@@ -212,7 +197,6 @@ body::before {
     padding: 10px;
     border-radius: 12px;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .profile-button:hover {
@@ -220,14 +204,22 @@ body::before {
 }
 
 .profile-avatar {
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
-    background: #292929;
+    background: var(--panel2);
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     font-size: 14px;
+    font-weight: 600;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profile-info {
@@ -241,14 +233,12 @@ body::before {
 }
 
 .profile-status {
-    color: #777;
+    color: var(--muted);
     font-size: 10px;
     margin-top: 3px;
 }
 
-/* =================================
-   MAIN AREA
-================================= */
+/* MAIN */
 
 .main {
     flex: 1;
@@ -257,7 +247,10 @@ body::before {
     flex-direction: column;
     position: relative;
     min-width: 0;
+    z-index: 1;
 }
+
+/* TOPBAR */
 
 .topbar {
     height: 72px;
@@ -266,7 +259,8 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 30px;
+    padding: 0 25px;
+    background: var(--bg);
 }
 
 .topbar-left {
@@ -282,7 +276,7 @@ body::before {
 
 .topbar-version {
     font-size: 9px;
-    color: #777;
+    color: var(--muted);
     border: 1px solid var(--border);
     padding: 5px 8px;
     border-radius: 20px;
@@ -299,29 +293,54 @@ body::before {
     height: 40px;
     min-width: 40px;
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 11px;
     background: transparent;
-    color: white;
+    color: var(--text);
     cursor: pointer;
-    font-size: 18px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 0;
-    line-height: 1;
     flex-shrink: 0;
-    transition: 0.2s;
+    transition: .2s;
 }
 
 .icon-button:hover {
-    background: rgba(255,255,255,0.08);
+    background: var(--panel2);
 }
 
-/* =================================
-   WELCOME SCREEN
-================================= */
+/* MENU BUTTON */
+
+.menu-button {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.menu-button span {
+    width: 17px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 5px;
+    display: block;
+    transition: .2s;
+}
+
+.menu-button.active span:first-child {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.menu-button.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-button.active span:last-child {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* CONTENT */
 
 .content {
     flex: 1;
@@ -344,7 +363,7 @@ body::before {
     width: 76px;
     height: 76px;
     border-radius: 25px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid var(--border);
     background: linear-gradient(145deg,#222,#090909);
     display: flex;
     align-items: center;
@@ -356,12 +375,8 @@ body::before {
 }
 
 @keyframes symbolFloat {
-    0%,100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-7px);
-    }
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
 }
 
 .welcome h1 {
@@ -372,18 +387,16 @@ body::before {
 }
 
 .welcome h1 span {
-    color: #888;
+    color: var(--muted);
 }
 
 .welcome-description {
-    color: #888;
+    color: var(--muted);
     font-size: 14px;
     line-height: 1.7;
 }
 
-/* =================================
-   SUGGESTIONS
-================================= */
+/* SUGGESTIONS */
 
 .suggestions {
     display: grid;
@@ -395,18 +408,17 @@ body::before {
 }
 
 .suggestion {
-    background: rgba(255,255,255,0.025);
+    background: var(--panel);
     border: 1px solid var(--border);
     padding: 16px;
     border-radius: 14px;
     text-align: left;
     cursor: pointer;
-    transition: 0.2s;
+    transition: .2s;
 }
 
 .suggestion:hover {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(255,255,255,0.2);
+    background: var(--panel2);
     transform: translateY(-2px);
 }
 
@@ -422,14 +434,12 @@ body::before {
 }
 
 .suggestion-description {
-    color: #777;
+    color: var(--muted);
     font-size: 10px;
     line-height: 1.5;
 }
 
-/* =================================
-   CHAT AREA
-================================= */
+/* MESSAGES */
 
 .messages {
     width: 100%;
@@ -444,7 +454,7 @@ body::before {
 .message {
     display: flex;
     gap: 12px;
-    animation: messageAppear 0.3s ease;
+    animation: messageAppear .3s ease;
 }
 
 @keyframes messageAppear {
@@ -458,188 +468,297 @@ body::before {
     }
 }
 
-.message.user {
-    justify-content: flex-end;
-}
-
 .message-avatar {
-    width: 31px;
-    height: 31px;
-    min-width: 31px;
-    border-radius: 10px;
-    background: #202020;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 11px;
+    background: var(--panel2);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
-}
-
-.message-content {
-    max-width: 80%;
-    font-size: 13px;
-    line-height: 1.8;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-}
-
-.message.user .message-content {
-    background: #202020;
-    padding: 12px 16px;
-    border-radius: 15px 15px 3px 15px;
-}
-
-.message.assistant .message-content {
-    padding: 3px 0;
-}
-
-/* =================================
-   INPUT AREA
-================================= */
-
-.input-area {
-    width: 100%;
-    padding: 15px 25px 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.input-box {
-    width: 100%;
-    max-width: 760px;
-    min-height: 62px;
-    border: 1px solid rgba(255,255,255,0.14);
-    background: #151515;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    padding: 10px 12px;
-    gap: 10px;
-    transition: 0.2s;
-}
-
-.input-box:focus-within {
-    border-color: rgba(255,255,255,0.4);
-    box-shadow: 0 0 25px rgba(255,255,255,0.04);
-}
-
-.message-input {
-    flex: 1;
-    min-width: 0;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    font-family: inherit;
-    font-size: 13px;
-    resize: none;
-    max-height: 120px;
-    line-height: 1.5;
-}
-
-.message-input::placeholder {
-    color: #666;
-}
-
-.input-action {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    border: none;
-    border-radius: 11px;
-    background: transparent;
-    color: #aaa;
-    font-size: 17px;
-    cursor: pointer;
-}
-
-.send-button {
-    background: white;
-    color: black;
-    font-size: 16px;
     font-weight: 700;
 }
 
-.input-note {
-    color: #555;
-    font-size: 10px;
-    margin-top: 12px;
-    text-align: center;
+.message-content {
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    padding-top: 5px;
 }
 
-/* =================================
-   ENNIE EDGE ANIMATION
-================================= */
+.message.user {
+    justify-content: flex-end;
+}
+
+.message.user .message-content {
+    background: var(--panel2);
+    padding: 12px 16px;
+    border-radius: 15px;
+    max-width: 80%;
+}
+
+/* INPUT AREA */
+
+.input-area {
+    width: 100%;
+    max-width: 800px;
+    padding: 15px 20px 22px;
+    margin: 0 auto;
+}
+
+.input-box {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+}
+
+.input-box textarea {
+    flex: 1;
+    min-width: 0;
+    max-height: 120px;
+    resize: none;
+    background: transparent;
+    color: var(--text);
+    border: none;
+    outline: none;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 7px 3px;
+}
+
+.input-box textarea::placeholder {
+    color: var(--muted);
+}
+
+.send-button {
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 11px;
+    background: var(--accent);
+    color: var(--bg);
+    cursor: pointer;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.input-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 12px;
+}
+
+/* EDGE GLOW */
 
 .edge-glow {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.5s;
-    box-shadow:
-        inset 0 0 25px rgba(255,255,255,0.12),
-        inset 0 0 70px rgba(255,255,255,0.045);
+    z-index: 200;
+    box-shadow: inset 0 0 0 0 rgba(255,255,255,0);
+    transition: .3s;
 }
 
 .edge-glow.active {
-    opacity: 1;
-    animation: edgePulse 3s ease-in-out infinite;
+    box-shadow: inset 0 0 35px 2px rgba(255,255,255,.18);
 }
 
-@keyframes edgePulse {
-    0%,100% {
-        box-shadow:
-            inset 0 0 20px rgba(255,255,255,0.10),
-            inset 0 0 60px rgba(255,255,255,0.03);
-    }
-    50% {
-        box-shadow:
-            inset 0 0 35px rgba(255,255,255,0.22),
-            inset 0 0 90px rgba(255,255,255,0.07);
-    }
-}
+/* MOBILE OVERLAY */
 
-/* =================================
-   MOBILE
-================================= */
-
-.mobile-menu {
+.menu-overlay {
     display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    backdrop-filter: blur(3px);
+    z-index: 90;
 }
 
-@media(max-width:750px) {
+.menu-overlay.active {
+    display: block;
+}
+
+/* MODALS */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    animation: messageAppear .2s ease;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+}
+
+.modal-close {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.profile-large {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.profile-large-avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: var(--panel2);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.profile-large-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-large-name {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.profile-large-email {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 5px;
+    overflow-wrap: anywhere;
+}
+
+.modal-action {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    background: var(--panel2);
+    color: var(--text);
+    text-align: left;
+    margin-top: 9px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.modal-action.danger {
+    color: #ff7777;
+}
+
+/* SETTINGS */
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+
+.theme-switch {
+    display: flex;
+    gap: 7px;
+}
+
+.theme-switch button {
+    padding: 8px 11px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--panel2);
+    color: var(--text);
+    font-size: 11px;
+    cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
 
     .sidebar {
         position: fixed;
-        z-index: 100;
-        left: -280px;
         top: 0;
-        height: 100%;
-        box-shadow: 10px 0 40px rgba(0,0,0,0.5);
+        left: 0;
+        bottom: 0;
+        height: 100dvh;
+        width: min(290px, 82vw);
+        min-width: 0;
+        transform: translateX(-105%);
+        box-shadow: 15px 0 45px rgba(0,0,0,.25);
     }
 
     .sidebar.open {
-        left: 0;
+        transform: translateX(0);
     }
 
-    .mobile-menu {
+    .menu-button {
         display: flex;
     }
 
     .topbar {
-        height: 62px;
-        min-height: 62px;
         padding: 0 15px;
+        height: 64px;
+        min-height: 64px;
+    }
+
+    .topbar-left {
+        gap: 10px;
+    }
+
+    .topbar-title {
+        font-size: 13px;
+    }
+
+    .topbar-version {
+        display: none;
     }
 
     .content {
-        padding: 20px 16px;
-    }
-
-    .welcome-description {
-        font-size: 12px;
+        padding: 20px 15px;
     }
 
     .suggestions {
@@ -648,42 +767,41 @@ body::before {
     }
 
     .suggestion {
-        padding: 12px;
+        padding: 13px;
+    }
+
+    .messages {
+        padding: 15px;
     }
 
     .input-area {
-        padding: 10px 12px 18px;
+        padding: 12px 12px 18px;
     }
 
-    .input-box {
-        min-height: 56px;
-        border-radius: 15px;
-    }
-
-    .input-note {
-        font-size: 9px;
-    }
-
-    .message-content {
-        font-size: 12px;
-    }
 }
 
-@media(max-width:380px) {
+@media (max-width: 380px) {
+
     .suggestions {
         grid-template-columns: 1fr;
     }
+
 }
 
-</style>
-</head>
-<body>
+/* END OF DESIGN */
 
-<div class="menu-overlay" id="menuOverlay" onclick="closeSidebar()"></div>
+   </style>
+   <body>
+
+<div class="edge-glow" id="edgeGlow"></div>
+
+<!-- Затемнение при открытии меню -->
+<div class="menu-overlay" id="menuOverlay"
+     onclick="closeSidebar()"></div>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
+    <!-- БОКОВОЕ МЕНЮ -->
 
     <aside class="sidebar" id="sidebar">
 
@@ -702,15 +820,12 @@ body::before {
             + Новый диалог
         </button>
 
-        <div class="sidebar-label">
-            ИСТОРИЯ ДИАЛОГОВ
-        </div>
+        <div class="sidebar-label">ИСТОРИЯ ДИАЛОГОВ</div>
 
         <div class="chat-history" id="chatHistory">
 
-            <div class="history-empty" id="historyEmpty">
-                Здесь будут отображаться<br>
-                ваши разговоры с Энни.
+            <div class="history-empty">
+                Здесь будут отображаться твои диалоги.
             </div>
 
         </div>
@@ -726,7 +841,7 @@ body::before {
                 <div class="profile-info">
 
                     <div class="profile-name" id="profileName">
-                        Пользователь
+                        Загрузка...
                     </div>
 
                     <div class="profile-status">
@@ -735,7 +850,7 @@ body::before {
 
                 </div>
 
-                <span style="color:#777;font-size:13px;">›</span>
+                <span>›</span>
 
             </div>
 
@@ -744,21 +859,26 @@ body::before {
     </aside>
 
 
-    <!-- MAIN -->
+    <!-- ОСНОВНАЯ ОБЛАСТЬ -->
 
     <main class="main">
 
-        <!-- TOPBAR -->
+        <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
 
         <header class="topbar">
 
             <div class="topbar-left">
 
                 <button
-                    class="icon-button mobile-menu"
+                    class="icon-button menu-button"
+                    id="menuButton"
                     onclick="toggleSidebar()"
-                >
-                    ☰
+                    aria-label="Открыть меню">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
                 </button>
 
                 <div class="topbar-title">
@@ -771,22 +891,25 @@ body::before {
 
             </div>
 
+
             <div class="topbar-right">
 
                 <button
                     class="icon-button"
                     onclick="toggleTheme()"
-                    title="Сменить тему"
-                >
+                    title="Сменить тему">
+
                     ◐
+
                 </button>
 
                 <button
                     class="icon-button"
                     onclick="openSettings()"
-                    title="Настройки"
-                >
+                    title="Настройки">
+
                     ⚙
+
                 </button>
 
             </div>
@@ -794,11 +917,9 @@ body::before {
         </header>
 
 
-        <!-- CONTENT -->
+        <!-- ОБЛАСТЬ ЧАТА -->
 
         <section class="content" id="content">
-
-            <!-- WELCOME -->
 
             <div class="welcome" id="welcome">
 
@@ -811,135 +932,126 @@ body::before {
                 </h1>
 
                 <div class="welcome-description">
-                    Твой персональный интеллектуальный помощник.<br>
-                    Чем я могу помочь тебе сегодня?
+                    Твой персональный интеллектуальный помощник.
+                    <br>
+                    Я готова помочь тебе с любыми задачами.
                 </div>
 
 
-                <!-- SUGGESTIONS -->
-
                 <div class="suggestions">
 
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Расскажи, что ты умеешь')"
-                    >
+                    <button class="suggestion"
+                        onclick="useSuggestion('Расскажи, что ты умеешь.')">
 
                         <div class="suggestion-icon">✦</div>
 
                         <div class="suggestion-title">
-                            Возможности Энни
+                            Возможности
                         </div>
 
                         <div class="suggestion-description">
-                            Узнай, чем я могу тебе помочь.
+                            Узнай, что я умею.
                         </div>
 
-                    </div>
+                    </button>
 
 
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Помоги мне разобраться со сложной задачей')"
-                    >
+                    <button class="suggestion"
+                        onclick="useSuggestion('Помоги мне организовать мой день.')">
 
-                        <div class="suggestion-icon">◈</div>
-
-                        <div class="suggestion-title">
-                            Решить задачу
-                        </div>
-
-                        <div class="suggestion-description">
-                            Разберёмся даже со сложными вопросами.
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Помоги мне создать план на сегодня')"
-                    >
-
-                        <div class="suggestion-icon">⌁</div>
+                        <div class="suggestion-icon">◷</div>
 
                         <div class="suggestion-title">
                             Планирование
                         </div>
 
                         <div class="suggestion-description">
-                            Организуем твои дела и задачи.
+                            Организуем твои дела.
                         </div>
 
-                    </div>
+                    </button>
 
 
-                    <div
-                        class="suggestion"
-                        onclick="useSuggestion('Расскажи мне что-нибудь интересное')"
-                    >
+                    <button class="suggestion"
+                        onclick="useSuggestion('Помоги мне придумать новую идею.')">
 
-                        <div class="suggestion-icon">◎</div>
+                        <div class="suggestion-icon">✧</div>
 
                         <div class="suggestion-title">
-                            Просто общение
+                            Идеи
                         </div>
 
                         <div class="suggestion-description">
-                            Давай поговорим о чём-нибудь.
+                            Создадим что-нибудь интересное.
                         </div>
 
-                    </div>
+                    </button>
+
+
+                    <button class="suggestion"
+                        onclick="useSuggestion('Давай просто поговорим.')">
+
+                        <div class="suggestion-icon">♡</div>
+
+                        <div class="suggestion-title">
+                            Общение
+                        </div>
+
+                        <div class="suggestion-description">
+                            Просто поговорим.
+                        </div>
+
+                    </button>
 
                 </div>
 
             </div>
 
 
-            <!-- MESSAGES -->
+            <!-- СООБЩЕНИЯ -->
 
             <div class="messages" id="messages"></div>
 
         </section>
 
 
-        <!-- INPUT -->
+        <!-- ПОЛЕ ВВОДА -->
 
         <div class="input-area">
 
             <div class="input-box">
 
                 <button
-                    class="input-action"
+                    class="icon-button"
                     onclick="document.getElementById('fileInput').click()"
-                    title="Прикрепить файл"
-                >
+                    title="Прикрепить файл">
+
                     +
+
                 </button>
 
                 <textarea
-                    class="message-input"
                     id="messageInput"
                     placeholder="Напиши Энни..."
                     rows="1"
-                    onkeydown="handleInputKey(event)"
-                ></textarea>
+                    onkeydown="handleInputKey(event)">
+                </textarea>
 
                 <button
-                    class="input-action"
+                    class="icon-button"
                     onclick="startVoice()"
-                    title="Голосовой ввод"
-                >
-                    ♩
+                    title="Голосовой ввод">
+
+                    🎙
+
                 </button>
 
                 <button
-                    class="input-action send-button"
-                    id="sendButton"
-                    onclick="sendMessage()"
-                    title="Отправить"
-                >
+                    class="send-button"
+                    onclick="sendMessage()">
+
                     ↑
+
                 </button>
 
             </div>
@@ -948,11 +1060,10 @@ body::before {
                 type="file"
                 id="fileInput"
                 hidden
-                onchange="handleFile(this)"
-            >
+                onchange="handleFile(this)">
 
             <div class="input-note">
-                ENNIE может ошибаться. Проверяй важную информацию.
+                ENNIE · TEHNOCELL AI
             </div>
 
         </div>
@@ -962,544 +1073,154 @@ body::before {
 </div>
 
 
-<!-- SETTINGS WINDOW -->
+<!-- ПРОФИЛЬ -->
 
-<div id="settingsModal" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:500;
-    background:rgba(0,0,0,0.75);
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-">
+<div class="modal" id="profileModal"
+     onclick="if(event.target===this) closeProfile()">
 
-    <div style="
-        width:100%;
-        max-width:420px;
-        background:#151515;
-        border:1px solid rgba(255,255,255,0.1);
-        border-radius:20px;
-        padding:25px;
-    ">
+    <div class="modal-card">
 
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:25px;
-        ">
+        <div class="modal-header">
 
-            <h2 style="font-size:18px;">
-                Настройки Энни
-            </h2>
+            <h2>Мой профиль</h2>
 
-            <button
-                class="icon-button"
-                onclick="closeSettings()"
-            >
-                ×
+            <button class="modal-close"
+                onclick="closeProfile()">
+                ✕
             </button>
 
         </div>
 
-        <div style="color:#999;font-size:12px;margin-bottom:15px;">
-            Внешний вид
+
+        <div class="profile-large">
+
+            <div class="profile-large-avatar"
+                 id="profileLargeAvatar">
+
+                U
+
+            </div>
+
+            <div>
+
+                <div class="profile-large-name"
+                     id="profileLargeName">
+
+                    Пользователь
+
+                </div>
+
+                <div class="profile-large-email"
+                     id="profileLargeEmail">
+
+                    Загрузка...
+
+                </div>
+
+            </div>
+
         </div>
 
-        <button
-            class="new-chat"
-            onclick="toggleTheme()"
-        >
-            Переключить тему
+
+        <button class="modal-action"
+            onclick="openAccount()">
+
+            ◉ Открыть TEHNOCELL ID
+
         </button>
 
-        <div style="
-            color:#999;
-            font-size:12px;
-            margin:25px 0 12px;
-        ">
-            Информация
-        </div>
 
-        <div style="
-            color:#777;
-            font-size:12px;
-            line-height:1.8;
-        ">
-            ENNIE — TEHNOCELL AI<br>
-            Версия интерфейса: 1.0<br>
-            Персональный интеллектуальный помощник.
-        </div>
+        <button class="modal-action danger"
+            onclick="logout()">
 
-    </div>
+            Выйти из аккаунта
 
-</div>
-
-
-<!-- PROFILE WINDOW -->
-
-<div id="profileModal" style="
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:500;
-    background:rgba(0,0,0,0.75);
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-">
-
-    <div style="
-        width:100%;
-        max-width:380px;
-        background:#151515;
-        border:1px solid rgba(255,255,255,0.1);
-        border-radius:20px;
-        padding:25px;
-    ">
-
-        <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin-bottom:25px;
-        ">
-
-            <h2 style="font-size:18px;">
-                Мой аккаунт
-            </h2>
-
-            <button
-                class="icon-button"
-                onclick="closeProfile()"
-            >
-                ×
-            </button>
-
-        </div>
-
-        <div id="profileDetails" style="
-            color:#aaa;
-            font-size:13px;
-            line-height:2;
-        ">
-            Загрузка профиля...
-        </div>
-
-        <button
-            class="new-chat"
-            style="margin-top:20px;"
-            onclick="location.href='account.html'"
-        >
-            Открыть TEHNOCELL ID
         </button>
 
     </div>
 
 </div>
-<script>
-
-// =====================================
-// ENNIE — INTERFACE ENGINE
-// VERSION 1.0
-// =====================================
 
 
-// Основные элементы
+<!-- НАСТРОЙКИ -->
 
-const messageInput = document.getElementById("messageInput");
-const messagesBox = document.getElementById("messages");
-const welcome = document.getElementById("welcome");
-const edgeGlow = document.getElementById("edgeGlow");
+<div class="modal" id="settingsModal"
+     onclick="if(event.target===this) closeSettings()">
 
-let currentChatId = null;
-let chats = [];
+    <div class="modal-card">
 
+        <div class="modal-header">
 
-// =====================================
-// СОЗДАНИЕ ДИАЛОГА
-// =====================================
+            <h2>Настройки ENNIE</h2>
 
-function newChat() {
+            <button class="modal-close"
+                onclick="closeSettings()">
 
-    currentChatId = null;
+                ✕
 
-    messagesBox.innerHTML = "";
-    messagesBox.style.display = "none";
+            </button>
 
-    welcome.style.display = "block";
-
-    messageInput.value = "";
-
-    document.getElementById("sidebar").classList.remove("open");
-
-}
-
-
-// =====================================
-// ОТПРАВКА СООБЩЕНИЯ
-// =====================================
-
-async function sendMessage() {
-
-    const text = messageInput.value.trim();
-
-    if (!text) return;
-
-    welcome.style.display = "none";
-    messagesBox.style.display = "flex";
-
-    addMessage(text, "user");
-
-    messageInput.value = "";
-
-    messageInput.style.height = "auto";
-
-    edgeGlow.classList.add("active");
-
-    const typing = document.createElement("div");
-
-    typing.className = "message assistant";
-    typing.id = "typingIndicator";
-
-    typing.innerHTML = `
-        <div class="message-avatar">E</div>
-        <div class="message-content" style="color:#888;">
-            Энни думает...
         </div>
-    `;
 
-    messagesBox.appendChild(typing);
 
-    scrollToBottom();
+        <div class="setting-row">
 
-    // Пока ИИ не подключён.
-    // Настоящий ответ появится после настройки API.
+            <span>Оформление</span>
 
-    setTimeout(() => {
+            <div class="theme-switch">
 
-        const indicator = document.getElementById("typingIndicator");
+                <button onclick="setTheme('dark')">
+                    Ночное
+                </button>
 
-        if (indicator) indicator.remove();
+                <button onclick="setTheme('light')">
+                    Дневное
+                </button>
 
-        addMessage(
-            "Я уже здесь! Мой интерфейс готовится к подключению интеллектуальной системы. Скоро мы сможем общаться по-настоящему. 🤍",
-            "assistant"
-        );
+            </div>
 
-        edgeGlow.classList.remove("active");
+        </div>
 
-    }, 1300);
 
-}
+        <div class="setting-row">
 
+            <span>Версия</span>
 
-// =====================================
-// ДОБАВЛЕНИЕ СООБЩЕНИЯ
-// =====================================
+            <span style="color:var(--muted)">
+                1.0
+            </span>
 
-function addMessage(text, role) {
+        </div>
 
-    const message = document.createElement("div");
 
-    message.className = "message " + role;
+        <div class="setting-row">
 
-    const avatar = document.createElement("div");
+            <span>Система</span>
 
-    avatar.className = "message-avatar";
+            <span style="color:var(--muted)">
+                ENNIE CORE
+            </span>
 
-    avatar.textContent = role === "assistant" ? "E" : "U";
+        </div>
 
-    const content = document.createElement("div");
+    </div>
 
-    content.className = "message-content";
-
-    content.textContent = text;
-
-    if (role === "assistant") {
-
-        message.appendChild(avatar);
-
-        message.appendChild(content);
-
-    } else {
-
-        message.appendChild(content);
-
-    }
-
-    messagesBox.appendChild(message);
-
-    scrollToBottom();
-
-}
-
-
-// =====================================
-// ПРОКРУТКА
-// =====================================
-
-function scrollToBottom() {
-
-    const content = document.getElementById("content");
-
-    setTimeout(() => {
-
-        content.scrollTop = content.scrollHeight;
-
-    }, 50);
-
-}
-
-
-// =====================================
-// ENTER ДЛЯ ОТПРАВКИ
-// =====================================
-
-function handleInputKey(event) {
-
-    if (event.key === "Enter" && !event.shiftKey) {
-
-        event.preventDefault();
-
-        sendMessage();
-
-    }
-
-}
-
-
-// =====================================
-// БЫСТРЫЕ ПОДСКАЗКИ
-// =====================================
-
-function useSuggestion(text) {
-
-    messageInput.value = text;
-
-    sendMessage();
-
-}
-
-
-// =====================================
-// АВТОРАЗМЕР ПОЛЯ
-// =====================================
-
-messageInput.addEventListener("input", function() {
-
-    this.style.height = "auto";
-
-    this.style.height = Math.min(this.scrollHeight, 120) + "px";
-
-});
-
-
-// =====================================
-// ПЕРЕКЛЮЧЕНИЕ ТЕМЫ
-// =====================================
-
-function toggleTheme() {
-
-    const isLight = document.body.classList.toggle("light-theme");
-
-    localStorage.setItem(
-        "ennie_theme",
-        isLight ? "light" : "dark"
-    );
-
-}
-
-
-// Восстанавливаем тему
-
-if (localStorage.getItem("ennie_theme") === "light") {
-
-    document.body.classList.add("light-theme");
-
-}
-
-
-// =====================================
-// НАСТРОЙКИ
-// =====================================
-
-function openSettings() {
-
-    document.getElementById("settingsModal").style.display = "flex";
-
-}
-
-
-function closeSettings() {
-
-    document.getElementById("settingsModal").style.display = "none";
-
-}
-
-
-// =====================================
-// ПРОФИЛЬ
-// =====================================
-
-function openProfile() {
-
-    document.getElementById("profileModal").style.display = "flex";
-
-}
-
-
-function closeProfile() {
-
-    document.getElementById("profileModal").style.display = "none";
-
-}
-
-
-// =====================================
-// МОБИЛЬНОЕ МЕНЮ
-// =====================================
-
-// =====================================
-// ENNIE MOBILE MENU
-// =====================================
-
-function toggleSidebar() {
-
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("menuOverlay");
-
-    sidebar.classList.toggle("open");
-    overlay.classList.toggle("active");
-
-}
-
-
-function closeSidebar() {
-
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("menuOverlay");
-
-    sidebar.classList.remove("open");
-    overlay.classList.remove("active");
-
-   }
-
-
-// =====================================
-// ГОЛОСОВОЙ ВВОД
-// =====================================
-
-function startVoice() {
-
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-
-        alert("Голосовой ввод пока не поддерживается этим браузером.");
-
-        return;
-
-    }
-
-    const recognition = new SpeechRecognition();
-
-    recognition.lang = "ru-RU";
-
-    recognition.interimResults = false;
-
-    recognition.start();
-
-    edgeGlow.classList.add("active");
-
-    recognition.onresult = function(event) {
-
-        messageInput.value =
-            event.results[0][0].transcript;
-
-        edgeGlow.classList.remove("active");
-
-    };
-
-    recognition.onerror = function() {
-
-        edgeGlow.classList.remove("active");
-
-        alert("Не удалось распознать голос.");
-
-    };
-
-    recognition.onend = function() {
-
-        edgeGlow.classList.remove("active");
-
-    };
-
-}
-
-
-// =====================================
-// ПРИКРЕПЛЕНИЕ ФАЙЛОВ
-// =====================================
-
-function handleFile(input) {
-
-    const file = input.files[0];
-
-    if (!file) return;
-
-    messageInput.value +=
-        (messageInput.value ? "\n" : "") +
-        "[Выбран файл: " + file.name + "]";
-
-}
-
-
-// =====================================
-// ЗАГРУЗКА ПРОФИЛЯ
-// =====================================
-
-function setProfile(name, email) {
-
-    document.getElementById("profileName").textContent = name || "Пользователь";
-
-    document.getElementById("profileAvatar").textContent =
-        name ? name.charAt(0).toUpperCase() : "U";
-
-    document.getElementById("profileDetails").textContent =
-        "Имя: " + (name || "Пользователь") +
-        "\nEmail: " + (email || "Не указан");
-
-}
-
-
-// =====================================
-// ИНИЦИАЛИЗАЦИЯ
-// =====================================
-
-document.addEventListener("DOMContentLoaded", function() {
-
-    console.log("ENNIE interface initialized.");
-
-});
-
-</script>
+</div>
 <!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 // =====================================
-// ENNIE — DATABASE CONNECTION
+// ENNIE CORE — DATABASE CONFIGURATION
 // =====================================
 
-const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
+const SUPABASE_URL =
+"https://jvagiuiregvlrfooxdao.supabase.co";
 
-const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+const SUPABASE_KEY =
+"sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 
 const db = window.supabase.createClient(
     SUPABASE_URL,
@@ -1507,10 +1228,12 @@ const db = window.supabase.createClient(
 );
 
 let currentUser = null;
+let currentChatId = null;
+let chats = [];
 
 
 // =====================================
-// ПРОВЕРКА АВТОРИЗАЦИИ
+// АВТОРИЗАЦИЯ
 // =====================================
 
 async function initializeEnnie() {
@@ -1518,9 +1241,13 @@ async function initializeEnnie() {
     const { data, error } = await db.auth.getSession();
 
     if (error) {
-        console.error("Auth error:", error);
-        alert("Не удалось проверить авторизацию.");
+
+        console.error(error);
+
+        alert("Ошибка подключения к аккаунту.");
+
         return;
+
     }
 
     currentUser = data.session?.user;
@@ -1533,15 +1260,196 @@ async function initializeEnnie() {
 
     }
 
-    console.log("ENNIE connected to TEHNOCELL ID.");
+    loadProfile();
 
-    await loadChatHistory();
+    loadChatHistory();
 
 }
 
 
 // =====================================
-// СОЗДАНИЕ ЧАТА В БАЗЕ
+// ПРОФИЛЬ
+// =====================================
+
+function loadProfile() {
+
+    const metadata = currentUser.user_metadata || {};
+
+    const name =
+        metadata.display_name ||
+        metadata.full_name ||
+        metadata.name ||
+        currentUser.email?.split("@")[0] ||
+        "Пользователь";
+
+    const avatar =
+        metadata.avatar_url ||
+        metadata.picture ||
+        null;
+
+    document.getElementById("profileName").textContent = name;
+
+    document.getElementById("profileLargeName").textContent = name;
+
+    document.getElementById("profileLargeEmail").textContent =
+        currentUser.email || "Email не указан";
+
+    const avatarElements = [
+        document.getElementById("profileAvatar"),
+        document.getElementById("profileLargeAvatar")
+    ];
+
+    avatarElements.forEach(element => {
+
+        if (avatar) {
+
+            const image = document.createElement("img");
+
+            image.src = avatar;
+
+            image.alt = "Аватар";
+
+            element.replaceChildren(image);
+
+        } else {
+
+            element.textContent = name.charAt(0).toUpperCase();
+
+        }
+
+    });
+
+}
+
+
+// =====================================
+// ОТКРЫТИЕ ПРОФИЛЯ
+// =====================================
+
+function openProfile() {
+
+    closeSidebar();
+
+    document.getElementById("profileModal")
+        .classList.add("active");
+
+}
+
+
+function closeProfile() {
+
+    document.getElementById("profileModal")
+        .classList.remove("active");
+
+}
+
+
+function openAccount() {
+
+    window.location.href = "account.html";
+
+}
+
+
+// =====================================
+// ВЫХОД
+// =====================================
+
+async function logout() {
+
+    const confirmed = confirm(
+        "Ты действительно хочешь выйти из аккаунта?"
+    );
+
+    if (!confirmed) return;
+
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+
+        alert("Не удалось выйти из аккаунта.");
+
+        return;
+
+    }
+
+    window.location.href = "login.html";
+
+}
+
+
+// =====================================
+// МОБИЛЬНОЕ МЕНЮ
+// =====================================
+
+function toggleSidebar() {
+
+    const sidebar = document.getElementById("sidebar");
+
+    if (sidebar.classList.contains("open")) {
+
+        closeSidebar();
+
+    } else {
+
+        openSidebar();
+
+    }
+
+}
+
+
+function openSidebar() {
+
+    document.getElementById("sidebar")
+        .classList.add("open");
+
+    document.getElementById("menuOverlay")
+        .classList.add("active");
+
+    document.getElementById("menuButton")
+        .classList.add("active");
+
+}
+
+
+function closeSidebar() {
+
+    document.getElementById("sidebar")
+        .classList.remove("open");
+
+    document.getElementById("menuOverlay")
+        .classList.remove("active");
+
+    document.getElementById("menuButton")
+        .classList.remove("active");
+
+}
+
+
+// =====================================
+// СОЗДАНИЕ НОВОГО ДИАЛОГА
+// =====================================
+
+function newChat() {
+
+    currentChatId = null;
+
+    document.getElementById("messages").innerHTML = "";
+
+    document.getElementById("messages").style.display = "none";
+
+    document.getElementById("welcome").style.display = "block";
+
+    document.getElementById("messageInput").value = "";
+
+    closeSidebar();
+
+}
+
+
+// =====================================
+// СОЗДАНИЕ ЧАТА В SUPABASE
 // =====================================
 
 async function createChat(firstMessage) {
@@ -1553,19 +1461,16 @@ async function createChat(firstMessage) {
     const { data, error } = await db
         .from("ennie_chats")
         .insert({
+
             user_id: currentUser.id,
+
             title: title
+
         })
         .select()
         .single();
 
-    if (error) {
-
-        console.error("Chat creation error:", error);
-
-        throw error;
-
-    }
+    if (error) throw error;
 
     currentChatId = data.id;
 
@@ -1602,18 +1507,14 @@ async function saveUserMessage(text) {
 
         });
 
-    if (error) {
-
-        console.error("Message saving error:", error);
-
-        throw error;
-
-    }
+    if (error) throw error;
 
     await db
         .from("ennie_chats")
         .update({
+
             updated_at: new Date().toISOString()
+
         })
         .eq("id", currentChatId);
 
@@ -1655,21 +1556,37 @@ function renderChatHistory() {
 
     const history = document.getElementById("chatHistory");
 
-    if (!history) return;
-
     history.innerHTML = "";
+
+    if (chats.length === 0) {
+
+        history.innerHTML = `
+            <div class="history-empty">
+                Здесь будут отображаться твои диалоги.
+            </div>
+        `;
+
+        return;
+
+    }
 
     chats.forEach(chat => {
 
-        const item = document.createElement("button");
+        const button = document.createElement("button");
 
-        item.className = "history-item";
+        button.className = "history-item";
 
-        item.textContent = chat.title;
+        if (chat.id === currentChatId) {
 
-        item.onclick = () => selectChat(chat.id);
+            button.classList.add("active");
 
-        history.appendChild(item);
+        }
+
+        button.textContent = chat.title;
+
+        button.onclick = () => selectChat(chat.id);
+
+        history.appendChild(button);
 
     });
 
@@ -1682,8 +1599,6 @@ function renderChatHistory() {
 
 async function selectChat(chatId) {
 
-    currentChatId = chatId;
-
     const { data, error } = await db
         .from("ennie_messages")
         .select("*")
@@ -1692,17 +1607,23 @@ async function selectChat(chatId) {
 
     if (error) {
 
-        console.error("Loading messages error:", error);
+        console.error(error);
+
+        alert("Не удалось открыть диалог.");
 
         return;
 
     }
 
-    welcome.style.display = "none";
+    currentChatId = chatId;
 
-    messagesBox.style.display = "flex";
+    document.getElementById("welcome").style.display = "none";
 
-    messagesBox.innerHTML = "";
+    const messages = document.getElementById("messages");
+
+    messages.style.display = "flex";
+
+    messages.innerHTML = "";
 
     (data || []).forEach(message => {
 
@@ -1710,63 +1631,313 @@ async function selectChat(chatId) {
 
     });
 
+    renderChatHistory();
+
     closeSidebar();
-        
+
+    scrollToBottom();
 
 }
 
 
 // =====================================
-// ОБНОВЛЁННАЯ ОТПРАВКА СООБЩЕНИЙ
+// ОТОБРАЖЕНИЕ СООБЩЕНИЙ
 // =====================================
 
-window.sendMessage = async function() {
+function addMessage(text, role) {
 
-    const text = messageInput.value.trim();
+    const message = document.createElement("div");
+
+    message.className = "message " + role;
+
+    if (role === "assistant") {
+
+        const avatar = document.createElement("div");
+
+        avatar.className = "message-avatar";
+
+        avatar.textContent = "E";
+
+        message.appendChild(avatar);
+
+    }
+
+    const content = document.createElement("div");
+
+    content.className = "message-content";
+
+    content.textContent = text;
+
+    message.appendChild(content);
+
+    document.getElementById("messages")
+        .appendChild(message);
+
+    scrollToBottom();
+
+}
+
+
+// =====================================
+// ОТПРАВКА СООБЩЕНИЙ
+// =====================================
+
+async function sendMessage() {
+
+    const input = document.getElementById("messageInput");
+
+    const text = input.value.trim();
 
     if (!text || !currentUser) return;
 
-    messageInput.value = "";
+    input.value = "";
 
-    messageInput.style.height = "auto";
+    input.style.height = "auto";
 
-    welcome.style.display = "none";
+    document.getElementById("welcome").style.display = "none";
 
-    messagesBox.style.display = "flex";
+    document.getElementById("messages").style.display = "flex";
 
     addMessage(text, "user");
 
-    edgeGlow.classList.add("active");
+    document.getElementById("edgeGlow")
+        .classList.add("active");
 
     try {
 
         await saveUserMessage(text);
 
         addMessage(
-            "Твоё сообщение сохранено. Сейчас мы готовим подключение ENNIE CORE — моего настоящего интеллектуального ядра. 🤍",
+            "Твоё сообщение сохранено. Подключение настоящего ENNIE CORE будет следующим этапом. 🤍",
             "assistant"
         );
 
+        renderChatHistory();
+
     } catch (error) {
 
+        console.error(error);
+
         addMessage(
-            "Не удалось сохранить сообщение. Проверь подключение к интернету и попробуй ещё раз.",
+            "Не удалось сохранить сообщение. Проверь подключение к интернету.",
             "assistant"
         );
 
     }
 
-    edgeGlow.classList.remove("active");
+    document.getElementById("edgeGlow")
+        .classList.remove("active");
 
-};
+}
 
 
 // =====================================
-// ЗАПУСК ENNIE
+// БЫСТРЫЕ ПОДСКАЗКИ
+// =====================================
+
+function useSuggestion(text) {
+
+    document.getElementById("messageInput").value = text;
+
+    sendMessage();
+
+}
+
+
+// =====================================
+// ENTER ДЛЯ ОТПРАВКИ
+// =====================================
+
+function handleInputKey(event) {
+
+    if (event.key === "Enter" && !event.shiftKey) {
+
+        event.preventDefault();
+
+        sendMessage();
+
+    }
+
+}
+
+
+// =====================================
+// АВТОРАЗМЕР ПОЛЯ
+// =====================================
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const input = document.getElementById("messageInput");
+
+    input.addEventListener("input", function() {
+
+        this.style.height = "auto";
+
+        this.style.height =
+            Math.min(this.scrollHeight, 120) + "px";
+
+    });
+
+});
+
+
+// =====================================
+// НАСТРОЙКИ
+// =====================================
+
+function openSettings() {
+
+    closeSidebar();
+
+    document.getElementById("settingsModal")
+        .classList.add("active");
+
+}
+
+
+function closeSettings() {
+
+    document.getElementById("settingsModal")
+        .classList.remove("active");
+
+}
+
+
+// =====================================
+// ТЕМЫ
+// =====================================
+
+function setTheme(theme) {
+
+    document.body.classList.toggle(
+        "light-theme",
+        theme === "light"
+    );
+
+    localStorage.setItem("ennie_theme", theme);
+
+}
+
+
+function toggleTheme() {
+
+    const light = document.body.classList.contains("light-theme");
+
+    setTheme(light ? "dark" : "light");
+
+}
+
+
+const savedTheme = localStorage.getItem("ennie_theme");
+
+if (savedTheme === "light") {
+
+    document.body.classList.add("light-theme");
+
+}
+
+
+// =====================================
+// ГОЛОСОВОЙ ВВОД
+// =====================================
+
+function startVoice() {
+
+    const Recognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!Recognition) {
+
+        alert("Голосовой ввод не поддерживается браузером.");
+
+        return;
+
+    }
+
+    const recognition = new Recognition();
+
+    recognition.lang = "ru-RU";
+
+    recognition.interimResults = false;
+
+    recognition.onstart = function() {
+
+        document.getElementById("edgeGlow")
+            .classList.add("active");
+
+    };
+
+    recognition.onresult = function(event) {
+
+        document.getElementById("messageInput").value =
+            event.results[0][0].transcript;
+
+    };
+
+    recognition.onerror = function() {
+
+        alert("Не удалось распознать голос.");
+
+    };
+
+    recognition.onend = function() {
+
+        document.getElementById("edgeGlow")
+            .classList.remove("active");
+
+    };
+
+    recognition.start();
+
+}
+
+
+// =====================================
+// ПРИКРЕПЛЕНИЕ ФАЙЛОВ
+// =====================================
+
+function handleFile(input) {
+
+    const file = input.files[0];
+
+    if (!file) return;
+
+    const messageInput = document.getElementById("messageInput");
+
+    messageInput.value +=
+        (messageInput.value ? "\n" : "") +
+        "[Выбран файл: " + file.name + "]";
+
+}
+
+
+// =====================================
+// ЗАПУСК
 // =====================================
 
 initializeEnnie();
 
+</script>
+<script>
+// Автоматическое изменение высоты поля ввода
+const ennieInput = document.getElementById("messageInput");
+
+if (ennieInput) {
+    ennieInput.addEventListener("input", function() {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 150) + "px";
+    });
+}
+
+// Закрытие меню и окон клавишей Escape
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        if (typeof closeSidebar === "function") closeSidebar();
+        if (typeof closeProfile === "function") closeProfile();
+        if (typeof closeSettings === "function") closeSettings();
+    }
+});
 </script>
 
 </body>
