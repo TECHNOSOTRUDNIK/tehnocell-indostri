@@ -20,7 +20,7 @@ body {
   font-family: Arial, sans-serif;
 }
 
-button, input {
+button, input, textarea {
   font: inherit;
 }
 
@@ -68,12 +68,10 @@ button {
   text-decoration: none;
   font-size: 12px;
   font-weight: bold;
-  transition: .2s;
 }
 
 .home-button:hover {
   background: #f2f2f2;
-  border-color: #bbb;
 }
 
 .nav {
@@ -85,7 +83,7 @@ button {
 .nav button {
   border: 0;
   background: transparent;
-  padding: 11px 15px;
+  padding: 11px 13px;
   color: #777;
   font-size: 13px;
   border-radius: 7px;
@@ -180,6 +178,7 @@ button {
 .welcome p {
   font-size: 13px;
   color: #aaa;
+  line-height: 1.6;
 }
 
 .verified-name {
@@ -201,7 +200,6 @@ button {
   line-height: 19px;
   text-align: center;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(22,133,248,.3);
 }
 
 .section-title {
@@ -251,16 +249,23 @@ button {
   margin: 17px 0 8px;
 }
 
-.panel input {
+.panel input,
+.panel textarea {
   width: 100%;
   padding: 13px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fafafa;
   outline: none;
+  resize: vertical;
 }
 
-.panel input:focus {
+.panel textarea {
+  min-height: 90px;
+}
+
+.panel input:focus,
+.panel textarea:focus {
   border-color: #111;
 }
 
@@ -345,7 +350,7 @@ button {
 }
 
 .profile-info h3 {
-  font-size: 18px;
+  font-size: 19px;
   margin-bottom: 7px;
   display: flex;
   align-items: center;
@@ -356,7 +361,19 @@ button {
 .profile-info p {
   font-size: 12px;
   color: #888;
-  line-height: 1.5;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.profile-username {
+  color: #1685f8 !important;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.profile-status {
+  color: #555 !important;
+  margin-top: 8px;
 }
 
 .photo-actions {
@@ -378,6 +395,13 @@ button {
   font-size: 11px;
   color: #999;
   margin-top: 13px;
+  line-height: 1.5;
+}
+
+.hint {
+  color: #999;
+  font-size: 11px;
+  margin-top: 7px;
   line-height: 1.5;
 }
 
@@ -409,7 +433,7 @@ button {
   }
 
   .nav button {
-    padding: 10px 9px;
+    padding: 10px 8px;
     font-size: 11px;
   }
 
@@ -454,6 +478,7 @@ button {
 
     <nav class="nav">
       <button class="active" data-page="home">Обзор</button>
+      <button data-page="profile">Мой профиль</button>
       <button data-page="settings">Настройки</button>
       <button class="logout" id="logoutButton">Выйти ↗</button>
     </nav>
@@ -465,7 +490,6 @@ button {
 <main class="main">
 
   <div class="heading">
-
     <div>
       <h1 id="pageTitle">Обзор аккаунта</h1>
       <p>Центр управления TEHNOCELL INDOSTRI</p>
@@ -475,7 +499,6 @@ button {
       <span id="avatarInitial">T</span>
       <img id="avatarImage" alt="Фото профиля">
     </div>
-
   </div>
 
   <!-- HOME -->
@@ -517,13 +540,11 @@ button {
 
       <div class="card">
         <div class="card-label">Имя пользователя</div>
-
         <div class="card-value verified-name">
           <span id="userName">Загрузка...</span>
           <span class="verified-badge" id="userBadge"
           title="Подтверждённый аккаунт">✓</span>
         </div>
-
         <div class="card-description">Ваше отображаемое имя</div>
       </div>
 
@@ -531,6 +552,71 @@ button {
         <div class="card-label">Дата регистрации</div>
         <div class="card-value" id="createdAt">Загрузка...</div>
         <div class="card-description">Дата создания аккаунта</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Ваш никнейм</div>
+        <div class="card-value" id="homeUsername">Не установлен</div>
+        <div class="card-description">Уникальное имя в TEHNOCELL</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Статус</div>
+        <div class="card-value" id="homeStatus">Не установлен</div>
+        <div class="card-description">Ваш текущий статус</div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- PROFILE -->
+
+  <section class="page" id="profile">
+
+    <h2 class="section-title">Мой профиль</h2>
+
+    <div class="profile-card">
+
+      <div class="profile-photo" id="profilePhoto">
+        <span id="profileInitial">T</span>
+        <img id="profileImage" alt="Фотография профиля">
+      </div>
+
+      <div class="profile-info">
+
+        <h3>
+          <span id="profileDisplayName">Пользователь</span>
+          <span class="verified-badge" id="profileBadge"
+          title="Подтверждённый аккаунт">✓</span>
+        </h3>
+
+        <p class="profile-username" id="profileUsername">
+          @username
+        </p>
+
+        <p id="profileBio">Описание пока не добавлено.</p>
+
+        <p class="profile-status" id="profileStatus">
+          Статус не установлен.
+        </p>
+
+      </div>
+
+    </div>
+
+    <h2 class="section-title">Информация</h2>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-label">TEHNOCELL ID</div>
+        <div class="card-value" id="profileId">Загрузка...</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Дата регистрации</div>
+        <div class="card-value" id="profileCreated">Загрузка...</div>
       </div>
 
     </div>
@@ -545,24 +631,14 @@ button {
 
     <div class="profile-card">
 
-      <div class="profile-photo" id="profilePhoto">
-
-        <span id="profileInitial">T</span>
-
-        <img id="profileImage" alt="Фотография профиля">
-
+      <div class="profile-photo" id="settingsPhoto">
+        <span id="settingsInitial">T</span>
+        <img id="settingsImage" alt="Фотография профиля">
       </div>
 
       <div class="profile-info">
 
-        <h3>
-
-          <span id="profileDisplayName">Пользователь</span>
-
-          <span class="verified-badge" id="profileBadge"
-          title="Подтверждённый аккаунт">✓</span>
-
-        </h3>
+        <h3 id="settingsDisplayName">Пользователь</h3>
 
         <p>
           Ваша фотография будет отображаться
@@ -583,8 +659,6 @@ button {
 
         <p class="photo-note">
           JPG, PNG или WEBP. Максимальный размер — 5 МБ.
-          На телефоне можно выбрать галерею или камеру,
-          если браузер предлагает такой вариант.
         </p>
 
       </div>
@@ -595,7 +669,7 @@ button {
       type="file"
       id="photoInput"
       class="photo-input"
-      accept="image/*"
+      accept="image/jpeg,image/png,image/webp"
     >
 
     <h2 class="section-title">Настройки профиля</h2>
@@ -613,8 +687,48 @@ button {
         maxlength="40"
       >
 
-      <button class="action" id="saveName">
-        Сохранить изменения
+      <label for="usernameInput">Уникальный никнейм</label>
+
+      <input
+        id="usernameInput"
+        type="text"
+        placeholder="Например: technouser"
+        maxlength="20"
+        autocomplete="off"
+      >
+
+      <p class="hint">
+        От 3 до 20 символов. Только английские буквы,
+        цифры и нижнее подчёркивание.
+      </p>
+
+      <label for="bioInput">О себе (BIO)</label>
+
+      <textarea
+        id="bioInput"
+        maxlength="160"
+        placeholder="Расскажите немного о себе..."
+      ></textarea>
+
+      <p class="hint">
+        Максимум 160 символов.
+      </p>
+
+      <label for="statusInput">Статус</label>
+
+      <input
+        id="statusInput"
+        type="text"
+        maxlength="60"
+        placeholder="Например: Разрабатываю будущее"
+      >
+
+      <p class="hint">
+        Максимум 60 символов.
+      </p>
+
+      <button class="action" id="saveProfile">
+        Сохранить профиль
       </button>
 
       <hr class="divider">
@@ -640,7 +754,6 @@ button {
   </section>
 
 </main>
-
 <script>
 
 const SUPABASE_URL =
@@ -656,19 +769,19 @@ const db = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-// UID основателя TEHNOCELL INDOSTRI
-
 const VERIFIED_USERS = [
   "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
-  "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"
+  "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a",
+  "bfac130b-376b-471a-a342-e5839fbefaa0"
 ];
 
 let currentUser = null;
+let currentProfile = null;
 
 const $ = id => document.getElementById(id);
 
 
-// MESSAGES
+// MESSAGE
 
 function showMessage(text, error = false) {
 
@@ -676,7 +789,18 @@ function showMessage(text, error = false) {
 
   message.textContent = text;
 
-  message.style.color = error ? "#b3261e" : "#222";
+  message.style.color = error ? "#b3261e" : "#168044";
+
+}
+
+
+// PROFILE DEFAULTS
+
+function getDisplayName() {
+
+  return currentProfile?.display_name ||
+    currentUser?.user_metadata?.display_name ||
+    "Пользователь";
 
 }
 
@@ -685,37 +809,32 @@ function showMessage(text, error = false) {
 
 function setAvatar(initial, url) {
 
-  const images = [
-    $("avatarImage"),
-    $("profileImage")
+  const pairs = [
+    ["avatarInitial", "avatarImage"],
+    ["profileInitial", "profileImage"],
+    ["settingsInitial", "settingsImage"]
   ];
 
-  const initials = [
-    $("avatarInitial"),
-    $("profileInitial")
-  ];
+  pairs.forEach(([initialId, imageId]) => {
 
-  initials.forEach(item => {
+    const initialElement = $(initialId);
+    const imageElement = $(imageId);
 
-    item.textContent = initial || "T";
-
-    item.style.display = url ? "none" : "block";
-
-  });
-
-  images.forEach(item => {
+    initialElement.textContent = initial || "T";
 
     if (url) {
 
-      item.src = url;
+      initialElement.style.display = "none";
 
-      item.style.display = "block";
+      imageElement.src = url;
+      imageElement.style.display = "block";
 
     } else {
 
-      item.removeAttribute("src");
+      initialElement.style.display = "block";
 
-      item.style.display = "none";
+      imageElement.removeAttribute("src");
+      imageElement.style.display = "none";
 
     }
 
@@ -724,54 +843,103 @@ function setAvatar(initial, url) {
 }
 
 
-// LOAD ACCOUNT
+// LOAD PROFILE FROM DATABASE
 
-async function loadAccount() {
+async function loadProfileFromDatabase() {
 
-  const { data, error } = await db.auth.getSession();
+  const { data, error } = await db
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .maybeSingle();
 
-  if (error || !data.session) {
+  if (error) {
+    throw error;
+  }
 
-    location.replace("login.html");
+  if (data) {
+
+    currentProfile = data;
 
     return;
 
   }
 
-  currentUser = data.session.user;
+  // Создаём профиль для старого аккаунта,
+  // если его ещё нет в таблице.
 
-  if (!currentUser.email_confirmed_at) {
+  const initialName =
+    currentUser.user_metadata?.display_name ||
+    "Пользователь";
 
-    await db.auth.signOut();
+  const { data: created, error: createError } = await db
+    .from("profiles")
+    .insert({
+      id: currentUser.id,
+      display_name: initialName,
+      bio: "",
+      status_text: ""
+    })
+    .select()
+    .single();
 
-    location.replace("login.html");
+  if (createError) {
+
+    // Если профиль уже создался параллельно,
+    // пробуем получить его ещё раз.
+
+    const { data: existing, error: retryError } = await db
+      .from("profiles")
+      .select("*")
+      .eq("id", currentUser.id)
+      .maybeSingle();
+
+    if (retryError || !existing) {
+      throw createError;
+    }
+
+    currentProfile = existing;
 
     return;
 
   }
 
-  // VERIFIED STATUS
+  currentProfile = created;
 
-  const isVerifiedFounder =
-  VERIFIED_USERS.includes(currentUser.id);
-
-  $("welcomeBadge").style.display =
-    isVerifiedFounder ? "inline-block" : "none";
-
-  $("userBadge").style.display =
-    isVerifiedFounder ? "inline-block" : "none";
-
-  $("profileBadge").style.display =
-    isVerifiedFounder ? "inline-block" : "none";
+}
 
 
-  // USER INFORMATION
+// RENDER ACCOUNT
 
-  const name =
-    currentUser.user_metadata?.display_name || "Пользователь";
+function renderAccount() {
+
+  const name = getDisplayName();
+
+  const username = currentProfile.username || "";
+
+  const bio = currentProfile.bio || "";
+
+  const status = currentProfile.status_text || "";
 
   const initial =
     name.trim().charAt(0).toUpperCase() || "T";
+
+  const isVerified =
+    VERIFIED_USERS.includes(currentUser.id);
+
+  // BADGES
+
+  $("welcomeBadge").style.display =
+    isVerified ? "inline-block" : "none";
+
+  $("userBadge").style.display =
+    isVerified ? "inline-block" : "none";
+
+  $("profileBadge").style.display =
+    isVerified ? "inline-block" : "none";
+
+
+  // ACCOUNT INFORMATION
 
   $("welcomeName").textContent = name;
 
@@ -782,18 +950,54 @@ async function loadAccount() {
 
   $("userId").textContent =
     "TC-" +
-    currentUser.id.replace(/-/g, "").slice(0, 10).toUpperCase();
+    currentUser.id.replace(/-/g, "")
+      .slice(0, 10).toUpperCase();
 
   $("createdAt").textContent =
-    new Date(currentUser.created_at).toLocaleDateString("ru-RU");
+    new Date(currentUser.created_at)
+      .toLocaleDateString("ru-RU");
 
-  $("nameInput").value =
-    currentUser.user_metadata?.display_name || "";
+  $("homeUsername").textContent =
+    username ? "@" + username : "Не установлен";
+
+  $("homeStatus").textContent =
+    status || "Не установлен";
+
+
+  // PROFILE INFORMATION
 
   $("profileDisplayName").textContent = name;
 
+  $("profileUsername").textContent =
+    username ? "@" + username : "Никнейм не установлен";
 
-  // AVATAR URL
+  $("profileBio").textContent =
+    bio || "Описание пока не добавлено.";
+
+  $("profileStatus").textContent =
+    status || "Статус не установлен.";
+
+  $("profileId").textContent =
+    $("userId").textContent;
+
+  $("profileCreated").textContent =
+    $("createdAt").textContent;
+
+
+  // SETTINGS
+
+  $("settingsDisplayName").textContent = name;
+
+  $("nameInput").value = name;
+
+  $("usernameInput").value = username;
+
+  $("bioInput").value = bio;
+
+  $("statusInput").value = status;
+
+
+  // AVATAR
 
   const avatarPath =
     currentUser.user_metadata?.avatar_path;
@@ -811,6 +1015,76 @@ async function loadAccount() {
   }
 
   setAvatar(initial, avatarUrl);
+
+}
+
+
+// LOAD ACCOUNT
+
+async function loadAccount() {
+
+  try {
+
+    const { data, error } = await db.auth.getSession();
+
+    if (error || !data.session) {
+
+      location.replace("login.html");
+
+      return;
+
+    }
+
+    currentUser = data.session.user;
+
+    if (!currentUser.email_confirmed_at) {
+
+      await db.auth.signOut();
+
+      location.replace("login.html");
+
+      return;
+
+    }
+
+    await loadProfileFromDatabase();
+
+    renderAccount();
+
+  } catch (error) {
+
+    console.error("Ошибка загрузки аккаунта:", error);
+
+    document.querySelector(".main").innerHTML = `
+      <div class="panel">
+        <h2>Не удалось загрузить профиль</h2>
+        <p class="message">
+          ${escapeHTML(error.message)}
+        </p>
+        <button class="action" onclick="location.reload()">
+          Повторить
+        </button>
+      </div>
+    `;
+
+  }
+
+}
+
+
+// HTML ESCAPE
+
+function escapeHTML(value) {
+
+  return String(value).replace(/[&<>"']/g, char => ({
+
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+
+  })[char]);
 
 }
 
@@ -838,6 +1112,8 @@ document.querySelectorAll(".nav button[data-page]")
 
       home: "Обзор аккаунта",
 
+      profile: "Мой профиль",
+
       settings: "Настройки аккаунта"
 
     }[target];
@@ -847,16 +1123,51 @@ document.querySelectorAll(".nav button[data-page]")
 });
 
 
-// SAVE NAME
+// VALIDATE USERNAME
 
-$("saveName").addEventListener("click", async () => {
+function validateUsername(username) {
+
+  if (!username) {
+    return "Придумай никнейм.";
+  }
+
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+
+    return "Никнейм должен содержать от 3 до 20 символов: английские буквы, цифры или _.";
+
+  }
+
+  return null;
+
+}
+
+
+// SAVE PROFILE
+
+$("saveProfile").addEventListener("click", async () => {
+
+  if (!currentUser || !currentProfile) {
+
+    showMessage("Профиль ещё загружается.", true);
+
+    return;
+
+  }
 
   const name = $("nameInput").value.trim();
 
-  if (name.length < 2) {
+  const username =
+    $("usernameInput").value.trim().toLowerCase();
+
+  const bio = $("bioInput").value.trim();
+
+  const status = $("statusInput").value.trim();
+
+
+  if (name.length < 2 || name.length > 40) {
 
     showMessage(
-      "Имя должно содержать минимум 2 символа.",
+      "Имя должно содержать от 2 до 40 символов.",
       true
     );
 
@@ -864,23 +1175,131 @@ $("saveName").addEventListener("click", async () => {
 
   }
 
-  const { error } = await db.auth.updateUser({
+  const usernameError = validateUsername(username);
 
-    data: { display_name: name }
+  if (usernameError) {
 
-  });
-
-  if (error) {
-
-    showMessage("Ошибка: " + error.message, true);
+    showMessage(usernameError, true);
 
     return;
 
   }
 
-  showMessage("Имя успешно обновлено.");
+  if (bio.length > 160) {
 
-  await loadAccount();
+    showMessage("BIO не должно превышать 160 символов.", true);
+
+    return;
+
+  }
+
+  if (status.length > 60) {
+
+    showMessage("Статус не должен превышать 60 символов.", true);
+
+    return;
+
+  }
+
+  const button = $("saveProfile");
+
+  button.disabled = true;
+
+  button.textContent = "Сохранение...";
+
+  try {
+
+    // Сначала обновляем отображаемое имя
+    // в авторизации Supabase.
+
+    const { error: authError } = await db.auth.updateUser({
+
+      data: {
+        display_name: name
+      }
+
+    });
+
+    if (authError) {
+      throw authError;
+    }
+
+    // Затем сохраняем публичные данные профиля.
+
+    const { data, error } = await db
+      .from("profiles")
+      .update({
+
+        display_name: name,
+
+        username: username,
+
+        bio: bio,
+
+        status_text: status,
+
+        updated_at: new Date().toISOString()
+
+      })
+      .eq("id", currentUser.id)
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    currentProfile = data;
+
+    // Получаем обновлённые данные пользователя.
+
+    const { data: userData, error: userError } =
+      await db.auth.getUser();
+
+    if (!userError && userData.user) {
+
+      currentUser = userData.user;
+
+    }
+
+    renderAccount();
+
+    showMessage("Профиль успешно сохранён!");
+
+  } catch (error) {
+
+    console.error(error);
+
+    if (error.code === "23505") {
+
+      showMessage(
+        "Этот никнейм уже занят. Придумай другой.",
+        true
+      );
+
+    } else if (error.code === "23514") {
+
+      showMessage(
+        "Никнейм или данные не соответствуют правилам.",
+        true
+      );
+
+    } else {
+
+      showMessage(
+        "Ошибка сохранения: " + error.message,
+        true
+      );
+
+    }
+
+  } finally {
+
+    button.disabled = false;
+
+    button.textContent = "Сохранить профиль";
+
+  }
 
 });
 
@@ -902,27 +1321,38 @@ $("changePassword").addEventListener("click", async () => {
 
   }
 
-  const { error } = await db.auth.updateUser({
+  const button = $("changePassword");
 
-    password: password
+  button.disabled = true;
 
-  });
+  try {
 
-  if (error) {
+    const { error } = await db.auth.updateUser({
+
+      password: password
+
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    $("passwordInput").value = "";
+
+    showMessage("Пароль успешно изменён.");
+
+  } catch (error) {
 
     showMessage("Ошибка: " + error.message, true);
 
-    return;
+  } finally {
+
+    button.disabled = false;
 
   }
 
-  $("passwordInput").value = "";
-
-  showMessage("Пароль успешно изменён.");
-
 });
-
-
+  
 // OPEN PHOTO SELECTOR
 
 $("choosePhoto").addEventListener("click", () => {
@@ -949,13 +1379,9 @@ $("photoInput").addEventListener("change", async event => {
   }
 
   const allowedTypes = [
-
     "image/jpeg",
-
     "image/png",
-
     "image/webp"
-
   ];
 
   if (!allowedTypes.includes(file.type)) {
@@ -1005,24 +1431,17 @@ $("photoInput").addEventListener("change", async event => {
     }[file.type];
 
     const fileName =
-
       currentUser.id +
-
       "/avatar-" +
-
       Date.now() +
-
       "." +
-
       extension;
 
     const oldPath =
       currentUser.user_metadata?.avatar_path;
 
     const { data, error } = await db.storage
-
       .from(BUCKET)
-
       .upload(fileName, file, {
 
         contentType: file.type,
@@ -1037,56 +1456,42 @@ $("photoInput").addEventListener("change", async event => {
 
     uploadedPath = data.path;
 
-    const { error: updateError } = await db.auth.updateUser({
+    const { error: updateError } =
+      await db.auth.updateUser({
 
-      data: {
+        data: {
+          avatar_path: uploadedPath
+        }
 
-        avatar_path: uploadedPath
+      });
 
-      }
-
-    });
-
-    if (updateError) {
-
-      await db.storage
-        .from(BUCKET)
-        .remove([uploadedPath]);
-
-      throw updateError;
-
-    }
+    if (updateError) throw updateError;
 
     if (
-
       oldPath &&
-
       oldPath !== uploadedPath &&
-
       oldPath.startsWith(currentUser.id + "/")
-
     ) {
 
       const { error: removeError } = await db.storage
-
         .from(BUCKET)
-
         .remove([oldPath]);
 
       if (removeError) {
-
-        console.warn(
-          "Не удалось удалить старую фотографию:",
-          removeError
-        );
-
+        console.warn(removeError);
       }
 
     }
 
-    await loadAccount();
+    const { data: userData } = await db.auth.getUser();
 
-    showMessage("Фотография профиля успешно обновлена!");
+    if (userData.user) {
+      currentUser = userData.user;
+    }
+
+    renderAccount();
+
+    showMessage("Фотография успешно обновлена!");
 
   } catch (error) {
 
@@ -1143,38 +1548,36 @@ $("removePhoto").addEventListener("click", async () => {
 
   try {
 
-    const { error: updateError } = await db.auth.updateUser({
+    const { error: updateError } =
+      await db.auth.updateUser({
 
-      data: {
+        data: {
+          avatar_path: null
+        }
 
-        avatar_path: null
-
-      }
-
-    });
+      });
 
     if (updateError) throw updateError;
 
     if (oldPath.startsWith(currentUser.id + "/")) {
 
       const { error: removeError } = await db.storage
-
         .from(BUCKET)
-
         .remove([oldPath]);
 
       if (removeError) {
-
-        console.warn(
-          "Не удалось удалить старый файл:",
-          removeError
-        );
-
+        console.warn(removeError);
       }
 
     }
 
-    await loadAccount();
+    const { data: userData } = await db.auth.getUser();
+
+    if (userData.user) {
+      currentUser = userData.user;
+    }
+
+    renderAccount();
 
     showMessage("Фотография профиля удалена.");
 
@@ -1200,11 +1603,17 @@ $("removePhoto").addEventListener("click", async () => {
 
 $("logoutButton").addEventListener("click", async () => {
 
+  const button = $("logoutButton");
+
+  button.disabled = true;
+
   const { error } = await db.auth.signOut();
 
   if (error) {
 
-    alert("Не удалось выйти из аккаунта.");
+    alert("Не удалось выйти из аккаунта: " + error.message);
+
+    button.disabled = false;
 
     return;
 
