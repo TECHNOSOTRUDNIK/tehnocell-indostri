@@ -1,743 +1,1271 @@
-<!DOCTYPE html><html lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-<meta name="yandex-verification" content="2eda6662c50412a2">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="TEHNOCELL INDOSTRI — технологическая компания, объединяющая разработку программного обеспечения, игр, цифровых сервисов и перспективных проектов.">
-<meta name="theme-color" content="#111111"><title>TEHNOCELL INDOSTRI — Technology & Development</title><style>
+
+<meta name="yandex-verification" content="2eda6662c50412a2">
+<meta name="description" content="TEHNOCELL INDOSTRI — независимая технологическая компания.">
+<meta name="theme-color" content="#111111">
+
+<title>TEHNOCELL INDOSTRI — Technology Company</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --black: #101010;
+  --white: #ffffff;
+  --gray: #777777;
+  --light: #f4f4f4;
+  --border: #e7e7e7;
+  --container: 1200px;
+}
+
 * {
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
 }
 
 body {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #fbfbfb;
-    color: #111111;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--black);
+  background: var(--white);
+  overflow-x: hidden;
 }
 
 a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  width: min(var(--container), calc(100% - 48px));
+  margin: auto;
 }
 
 /* HEADER */
 
 header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 76px;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--border);
 }
 
 .header-inner {
-    max-width: 1150px;
-    margin: auto;
-    padding: 25px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
 }
 
 .brand {
-    font-size: 17px;
-    letter-spacing: 3px;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.brand-symbol {
+  width: 38px;
+  height: 38px;
+  background: #111;
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 21px;
+  border-radius: 9px;
+}
+
+.brand-text {
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+
+.brand-text span {
+  display: block;
+  font-size: 9px;
+  color: #888;
+  letter-spacing: 3px;
+  margin-top: 4px;
 }
 
 nav {
-    display: flex;
-    gap: 25px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 27px;
 }
 
 nav a {
-    font-size: 13px;
-    color: #666;
-    transition: 0.2s;
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  transition: .2s;
 }
 
 nav a:hover {
-    color: #000;
+  color: #000;
 }
 
-/* TEHNOCELL ID PROFILE */
-
 .profile-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    min-height: 40px;
-    padding: 7px 14px;
-    background: #111;
-    color: #fff;
-    border: 1px solid #111;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    white-space: nowrap;
-    transition: .2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #111;
+  color: white;
+  padding: 7px 15px 7px 8px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s;
+  white-space: nowrap;
 }
 
 .profile-link:hover {
-    background: #fff;
-    color: #111;
+  background: #333;
+  transform: translateY(-2px);
 }
 
 .profile-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    color: #111;
-    font-size: 16px;
-    border: 1px solid #ddd;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #444;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
 }
 
-.profile-link.logged-in {
-    padding: 5px 10px 5px 6px;
-    letter-spacing: 0;
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-
-/* HERO */
+    /* HERO */
 
 .hero {
-    text-align: center;
-    padding: 100px 20px 110px;
-    background: #ffffff;
-    border-bottom: 1px solid #e5e5e5;
+  background: #101010;
+  color: white;
+  min-height: 660px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
-.hero-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: #888;
-    text-transform: uppercase;
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 55px 55px;
+  mask-image: linear-gradient(to right, black, transparent);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,.12), transparent 70%);
+  right: -180px;
+  top: -100px;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 110px 0;
+  max-width: 850px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #aaa;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background: white;
 }
 
 .hero h1 {
-    font-size: clamp(30px, 6vw, 58px);
-    font-weight: 300;
-    letter-spacing: 5px;
-    margin: 25px 0 15px;
+  font-size: clamp(43px, 8vw, 92px);
+  line-height: .98;
+  letter-spacing: -5px;
+  font-weight: 900;
+  margin-bottom: 30px;
 }
 
-.hero p {
-    max-width: 620px;
-    margin: auto;
-    color: #777;
-    font-size: 16px;
-    line-height: 1.8;
+.hero h1 span {
+  color: #777;
+}
+
+.hero-description {
+  max-width: 560px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #aaa;
+  margin-bottom: 38px;
 }
 
 .hero-buttons {
-    margin-top: 35px;
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
 }
 
 .button {
-    display: inline-block;
-    padding: 15px 30px;
-    background: #111;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border: 1px solid #111;
-    transition: 0.25s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 25px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  transition: .2s;
 }
 
-.button:hover {
-    background: white;
-    color: #111;
+.button-white {
+  background: white;
+  color: black;
 }
 
-.button-light {
-    background: white;
-    color: #111;
+.button-white:hover {
+  background: #ddd;
+  transform: translateY(-3px);
 }
 
-.button-light:hover {
-    background: #111;
-    color: white;
+.button-outline {
+  border: 1px solid #555;
+  color: white;
+}
+
+.button-outline:hover {
+  background: white;
+  color: black;
+}
+
+.hero-bottom {
+  display: flex;
+  gap: 50px;
+  margin-top: 85px;
+  padding-top: 25px;
+  border-top: 1px solid #333;
+  max-width: 600px;
+}
+
+.hero-bottom strong {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 7px;
+}
+
+.hero-bottom span {
+  color: #777;
+  font-size: 10px;
+  letter-spacing: 1px;
 }
 
 /* GENERAL SECTIONS */
 
-.container {
-    max-width: 1050px;
-    margin: auto;
-    padding: 0 25px;
+section {
+  padding: 110px 0;
 }
 
-.section {
-    padding: 85px 0;
+.section-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 900;
+  color: #999;
+  margin-bottom: 17px;
+  text-transform: uppercase;
 }
 
-.section-heading {
-    text-align: center;
-    margin-bottom: 45px;
+.section-title {
+  font-size: clamp(30px, 5vw, 49px);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
 }
 
-.section-heading h2 {
-    font-size: 28px;
-    font-weight: 300;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin: 0 0 15px;
+.section-description {
+  color: #777;
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 550px;
+  margin-top: 20px;
+    }
+    /* DIVISIONS */
+
+.divisions {
+  background: #f7f7f7;
 }
 
-.section-heading p {
-    color: #888;
-    font-size: 14px;
-    line-height: 1.7;
+.divisions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+  margin-bottom: 55px;
 }
 
-/* DIVISIONS */
-
-.divisions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+.division-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
 }
 
 .division-card {
-    display: block;
-    background: white;
-    border: 1px solid #e5e5e5;
-    padding: 30px;
-    min-height: 220px;
-    transition: 0.25s;
+  background: white;
+  border: 1px solid #e9e9e9;
+  padding: 30px;
+  min-height: 255px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: .25s;
+  position: relative;
+  overflow: hidden;
 }
 
 .division-card:hover {
-    border-color: #111;
-    transform: translateY(-4px);
+  transform: translateY(-6px);
+  border-color: #111;
+  box-shadow: 0 15px 40px rgba(0,0,0,.06);
+}
+
+.division-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .division-number {
-    font-size: 11px;
-    color: #aaa;
-    letter-spacing: 2px;
+  font-size: 11px;
+  color: #aaa;
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.division-icon {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: #111;
+  color: white;
+  font-weight: 900;
+  font-size: 14px;
+  border-radius: 7px;
 }
 
 .division-card h3 {
-    margin: 25px 0 12px;
-    font-size: 17px;
-    font-weight: 500;
-    letter-spacing: 1px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -.5px;
+  margin-bottom: 12px;
 }
 
 .division-card p {
-    color: #777;
-    font-size: 14px;
-    line-height: 1.7;
-    margin-bottom: 20px;
+  color: #888;
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 270px;
+}
+
+.division-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
 }
 
 .status {
-    display: inline-block;
-    background: #f0f0f0;
-    color: #555;
-    padding: 6px 11px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 900;
+  color: #777;
 }
 
-.status-main {
-    background: #111;
-    color: white;
+.status.active {
+  color: #16834b;
 }
 
-/* PROJECTS */
+.division-arrow {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.division-card.disabled {
+  opacity: .65;
+}
+    /* PROJECTS */
 
 .projects {
-    background: #111;
-    color: white;
+  background: #111;
+  color: white;
 }
 
-.projects .section-heading p {
-    color: #999;
+.projects .section-label {
+  color: #777;
 }
 
-.project-box {
-    border: 1px solid #444;
-    padding: 35px;
-    text-align: center;
+.projects .section-description {
+  color: #888;
 }
 
-.project-box h3 {
-    font-weight: 400;
-    letter-spacing: 2px;
-    font-size: 21px;
+.project-feature {
+  margin-top: 55px;
+  padding: 45px;
+  border: 1px solid #333;
+  background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 65%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  min-height: 260px;
 }
 
-.project-box p {
-    color: #aaa;
-    font-size: 14px;
-    line-height: 1.8;
+.project-tag {
+  font-size: 10px;
+  color: #888;
+  letter-spacing: 2px;
+  font-weight: 800;
+  margin-bottom: 20px;
 }
 
-.project-box .status {
-    background: #333;
-    color: white;
+.project-feature h3 {
+  font-size: clamp(27px, 5vw, 43px);
+  letter-spacing: -2px;
+  margin-bottom: 15px;
+}
+
+.project-feature p {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+.project-arrow {
+  width: 65px;
+  height: 65px;
+  border: 1px solid #555;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  flex-shrink: 0;
 }
 
 /* ABOUT */
 
-.about-content {
-    max-width: 750px;
-    margin: auto;
-    text-align: center;
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
 }
 
-.about-content p {
-    color: #666;
-    font-size: 15px;
-    line-height: 2;
+.about-visual {
+  min-height: 360px;
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.about-name {
-    font-size: 13px;
-    letter-spacing: 3px;
-    color: #999;
-    margin-top: 35px;
+.about-visual::before,
+.about-visual::after {
+  content: "";
+  position: absolute;
+  border: 1px solid #444;
+  border-radius: 50%;
+  width: 270px;
+  height: 270px;
+}
+
+.about-visual::after {
+  width: 370px;
+  height: 370px;
+}
+
+.about-logo {
+  position: relative;
+  z-index: 2;
+  font-size: 65px;
+  font-weight: 900;
+  letter-spacing: -7px;
+}
+
+.about-logo span {
+  color: #777;
+}
+
+.about-text p {
+  font-size: 14px;
+  color: #777;
+  line-height: 1.9;
+  margin-top: 22px;
+}
+
+.about-line {
+  margin-top: 30px;
+  width: 55px;
+  height: 3px;
+  background: #111;
 }
 
 /* CONTACT */
 
 .contact {
-    background: #f1f1f1;
-    text-align: center;
+  background: #f5f5f5;
 }
 
-.contact p {
-    color: #777;
-    line-height: 1.8;
+.contact-box {
+  background: #111;
+  color: white;
+  padding: 65px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
 }
 
-/* FOOTER */
+.contact-box .section-label {
+  color: #777;
+}
+
+.contact-box h2 {
+  font-size: clamp(30px, 5vw, 48px);
+  letter-spacing: -2px;
+}
+
+.contact-box p {
+  color: #888;
+  font-size: 13px;
+  margin-top: 15px;
+  line-height: 1.7;
+}
+
+.contact-email {
+  display: inline-block;
+  margin-top: 25px;
+  font-size: 14px;
+  font-weight: 800;
+  border-bottom: 1px solid #777;
+  padding-bottom: 7px;
+}
+
+.contact-button {
+  background: white;
+  color: black;
+  padding: 17px 25px;
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+  transition: .2s;
+}
+
+.contact-button:hover {
+  background: #ddd;
+}
+    /* FOOTER */
 
 footer {
-    background: #111;
-    color: #999;
-    text-align: center;
-    padding: 35px 20px;
-    font-size: 11px;
-    letter-spacing: 1px;
+  background: #0a0a0a;
+  color: white;
+  padding: 35px 0;
 }
 
-footer .footer-brand {
-    color: white;
-    font-size: 14px;
-    letter-spacing: 3px;
-    margin-bottom: 12px;
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 
-footer p {
-    line-height: 1.8;
+.footer-brand {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 1px;
 }
 
-/* MOBILE */
+.footer-brand span {
+  display: block;
+  font-size: 9px;
+  color: #666;
+  margin-top: 6px;
+  letter-spacing: 2px;
+}
+
+.footer-copy {
+  font-size: 10px;
+  color: #666;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  font-size: 10px;
+  color: #888;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  nav {
+    gap: 15px;
+  }
+
+  nav a {
+    font-size: 10px;
+  }
+
+  .division-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-grid {
+    gap: 35px;
+  }
+}
 
 @media (max-width: 650px) {
-    .header-inner {
-        flex-direction: column;
-        padding: 22px 15px;
-    }
+  .container {
+    width: calc(100% - 32px);
+  }
 
-    nav {
-        justify-content: center;
-        gap: 15px;
-    }
+  header {
+    height: 66px;
+  }
 
-    nav a {
-        font-size: 12px;
-    }
+  .brand-symbol {
+    width: 33px;
+    height: 33px;
+    font-size: 18px;
+  }
 
-    .profile-link {
-        margin-top: 2px;
-    }
+  .brand-text {
+    font-size: 11px;
+  }
 
-    .hero {
-        padding: 75px 20px;
-    }
+  .brand-text span {
+    font-size: 8px;
+  }
 
-    .hero h1 {
-        letter-spacing: 3px;
-    }
+  nav {
+    display: none;
+  }
 
-    .section {
-        padding: 65px 0;
-    }
+  .profile-link {
+    padding: 5px 11px 5px 6px;
+    font-size: 10px;
+  }
 
-    .section-heading h2 {
-        font-size: 23px;
-    }
+  .profile-avatar {
+    width: 29px;
+    height: 29px;
+  }
 
-    .division-card {
-        padding: 25px;
-    }
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-content {
+    padding: 100px 0 75px;
+  }
+
+  .hero h1 {
+    letter-spacing: -3px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .hero-bottom {
+    gap: 25px;
+    margin-top: 65px;
+  }
+
+  .hero-bottom strong {
+    font-size: 10px;
+  }
+
+  .hero-bottom span {
+    font-size: 8px;
+  }
+
+  section {
+    padding: 75px 0;
+  }
+
+  .divisions-header {
+    display: block;
+    margin-bottom: 35px;
+  }
+
+  .division-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .division-card {
+    min-height: 220px;
+  }
+
+  .project-feature {
+    padding: 30px 23px;
+    min-height: 230px;
+  }
+
+  .project-arrow {
+    width: 45px;
+    height: 45px;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-visual {
+    min-height: 270px;
+  }
+
+  .about-logo {
+    font-size: 55px;
+  }
+
+  .contact-box {
+    padding: 40px 25px;
+    display: block;
+  }
+
+  .contact-button {
+    display: inline-block;
+    margin-top: 30px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+  }
 }
-</style></head><body><!-- HEADER --><header>
-<div class="header-inner"><div class="brand">
-    TEHNOCELL INDOSTRI
-</div>
 
-<nav>
-    <a href="#home">Главная</a>
-    <a href="#divisions">Подразделения</a>
-    <a href="#projects">Проекты</a>
-    <a href="#about">О компании</a>
-    <a href="#contact">Контакты</a>
-</nav>
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
-<a href="login.html" class="profile-link" id="profileLink">
-    Войти
-</a>
+  *, *::before, *::after {
+    transition: none !important;
+  }
+}
+</style>
+</head>
 
-</div>
-</header><!-- HERO --><section class="hero" id="home"><div class="hero-label">
-    Independent Technology Company
-</div>
+<body>
+    <!-- HEADER -->
 
-<h1>TEHNOCELL INDOSTRI</h1>
+<header>
+  <div class="container header-inner">
 
-<p>
-    Технологические решения, программные продукты
-    и перспективные разработки.
-    Создаём собственные проекты и развиваем
-    технологии для будущего.
-</p>
-
-<div class="hero-buttons">
-
-    <a href="#divisions" class="button">
-        Направления
+    <a href="index.html" class="brand">
+      <div class="brand-symbol">T</div>
+      <div class="brand-text">
+        TEHNOCELL
+        <span>INDOSTRI</span>
+      </div>
     </a>
 
-    <a href="#about" class="button button-light">
-        О компании
+    <nav>
+      <a href="#home">Главная</a>
+      <a href="#divisions">Подразделения</a>
+      <a href="#projects">Проекты</a>
+      <a href="#about">О компании</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+
+    <a href="login.html" class="profile-link" id="profileLink">
+      <div class="profile-avatar" id="profileAvatar">?</div>
+      <span id="profileName">Войти</span>
     </a>
 
-</div>
+  </div>
+</header>
 
-</section><!-- DIVISIONS --><section class="section" id="divisions">
-<div class="container"><div class="section-heading">
-    <h2>Наши направления</h2>
 
-    <p>
-        Подразделения и технологические направления
-        TEHNOCELL INDOSTRI.
-    </p>
-</div>
+<main>
 
-<div class="divisions-grid">
+  <!-- HERO -->
 
-    <a href="soft.html" class="division-card">
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
 
-        <span class="division-number">01 / SOFTWARE</span>
+        <div class="eyebrow">
+          Independent Technology Company
+        </div>
 
-        <h3>TEHNOCELLSOFT</h3>
+        <h1>
+          TEHNOCELL<br>
+          <span>INDOSTRI.</span>
+        </h1>
 
-        <p>
-            Разработка полезных программ,
-            приложений, утилит и цифровых сервисов.
+        <p class="hero-description">
+          Независимая технологическая компания, объединяющая
+          разработку программного обеспечения, игровые проекты
+          и современные цифровые решения.
         </p>
 
-        <span class="status status-main">
-            Открыть подразделение →
-        </span>
+        <div class="hero-buttons">
+          <a href="#divisions" class="button button-white">
+            НАШИ НАПРАВЛЕНИЯ →
+          </a>
 
-    </a>
+          <a href="#about" class="button button-outline">
+            О КОМПАНИИ
+          </a>
+        </div>
 
-    <a href="game.html" class="division-card">
+        <div class="hero-bottom">
+          <div>
+            <strong>TEHNOCELL</strong>
+            <span>TECHNOLOGY</span>
+          </div>
 
-        <span class="division-number">02 / GAMES</span>
+          <div>
+            <strong>INDEPENDENT</strong>
+            <span>DEVELOPMENT</span>
+          </div>
 
-        <h3>TEHNOCELLGAME</h3>
+          <div>
+            <strong>INNOVATION</strong>
+            <span>DIGITAL FUTURE</span>
+          </div>
+        </div>
 
-        <p>
-            Создание собственных видеоигр,
-            игровых проектов и цифровых развлечений.
-        </p>
+      </div>
+    </div>
+  </section>
 
-        <span class="status status-main">
-            Открыть подразделение →
-        </span>
 
-    </a>
+  <!-- DIVISIONS -->
 
-    <div class="division-card">
+  <section class="divisions" id="divisions">
+    <div class="container">
 
-        <span class="division-number">03 / RADIO</span>
+      <div class="divisions-header">
+        <div>
+          <div class="section-label">01 / OUR STRUCTURE</div>
+          <h2 class="section-title">Наши подразделения</h2>
+          <p class="section-description">
+            Различные направления разработки, объединённые
+            одной технологической экосистемой.
+          </p>
+        </div>
+      </div>
 
-        <h3>TEHNOCELLFM</h3>
+      <div class="division-grid">
 
-        <p>
-            Собственное интернет-радио,
-            музыкальные трансляции и программы.
-        </p>
+        <a href="soft.html" class="division-card">
+          <div class="division-top">
+            <span class="division-number">01 / SOFTWARE</span>
+            <div class="division-icon">S</div>
+          </div>
+          <div>
+            <h3>TEHNOCELLSOFT</h3>
+            <p>Программное обеспечение, приложения и цифровые инструменты.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status active">● АКТИВНО</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </a>
 
-        <span class="status">
-            Планируется
-        </span>
+        <a href="game.html" class="division-card">
+          <div class="division-top">
+            <span class="division-number">02 / GAMING</span>
+            <div class="division-icon">G</div>
+          </div>
+          <div>
+            <h3>TEHNOCELLGAME</h3>
+            <p>Разработка игр, игровых механик и интерактивных проектов.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status active">● АКТИВНО</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="weather.html" class="division-card">
+          <div class="division-top">
+            <span class="division-number">03 / WEATHER</span>
+            <div class="division-icon">W</div>
+          </div>
+          <div>
+            <h3>TEHNOCELL WEATHER</h3>
+            <p>Погодные данные и цифровые инструменты для повседневной жизни.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status active">● ДОСТУПНО</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </a>
+
+        <div class="division-card disabled">
+          <div class="division-top">
+            <span class="division-number">04 / AUDIO</span>
+            <div class="division-icon">F</div>
+          </div>
+          <div>
+            <h3>TEHNOCELLFM</h3>
+            <p>Музыкальное направление и цифровые аудиосервисы.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status">В ПЛАНАХ</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </div>
+
+        <div class="division-card disabled">
+          <div class="division-top">
+            <span class="division-number">05 / AUTOMOTIVE</span>
+            <div class="division-icon">C</div>
+          </div>
+          <div>
+            <h3>TEHNOCELLCAR</h3>
+            <p>Автомобильные технологии и цифровые решения.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status">В ПЛАНАХ</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </div>
+
+        <div class="division-card disabled">
+          <div class="division-top">
+            <span class="division-number">06 / NETWORK</span>
+            <div class="division-icon">M</div>
+          </div>
+          <div>
+            <h3>TEHNOCELL MESSENGER</h3>
+            <p>Коммуникационные сервисы и цифровое взаимодействие.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status">В ПЛАНАХ</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </div>
+
+        <div class="division-card disabled">
+          <div class="division-top">
+            <span class="division-number">07 / SECURITY</span>
+            <div class="division-icon">V</div>
+          </div>
+          <div>
+            <h3>TEHNOCELLVPN</h3>
+            <p>Сетевые технологии и инструменты конфиденциальности.</p>
+          </div>
+          <div class="division-bottom">
+            <span class="status">В ПЛАНАХ</span>
+            <span class="division-arrow">↗</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PROJECTS -->
+
+  <section class="projects" id="projects">
+    <div class="container">
+
+      <div class="section-label">02 / PROJECTS</div>
+
+      <h2 class="section-title">
+        Создаём собственные<br>
+        цифровые продукты.
+      </h2>
+
+      <p class="section-description">
+        Каждое направление развивается как часть
+        единой технологической экосистемы.
+      </p>
+
+      <div class="project-feature">
+        <div>
+          <div class="project-tag">TEHNOCELL ECOSYSTEM</div>
+          <h3>Будущее начинается<br>с разработки.</h3>
+          <p>
+            Мы постепенно создаём собственные приложения,
+            сервисы и игровые проекты. Это только начало
+            развития TEHNOCELL INDOSTRI.
+          </p>
+        </div>
+
+        <div class="project-arrow">↗</div>
+      </div>
 
     </div>
+  </section>
 
-    <div class="division-card">
 
-        <span class="division-number">04 / TRANSPORT</span>
+  <!-- ABOUT -->
 
-        <h3>TEHNOCELLCAR</h3>
+  <section id="about">
+    <div class="container">
 
-        <p>
-            Разработка концептов автомобилей,
-            транспортных систем и перспективных решений.
-        </p>
+      <div class="about-grid">
 
-        <span class="status">
-            Концепт
-        </span>
+        <div class="about-visual">
+          <div class="about-logo">
+            T<span>I.</span>
+          </div>
+        </div>
 
+        <div class="about-text">
+
+          <div class="section-label">03 / ABOUT US</div>
+
+          <h2 class="section-title">
+            Больше, чем<br>
+            просто разработка.
+          </h2>
+
+          <p>
+            TEHNOCELL INDOSTRI — независимая технологическая
+            компания, ориентированная на создание собственных
+            цифровых продуктов и развитие различных
+            технологических направлений.
+          </p>
+
+          <p>
+            Наша цель — постепенно сформировать единую
+            экосистему, в которой программное обеспечение,
+            игровые проекты и другие технологии будут
+            дополнять друг друга.
+          </p>
+
+          <div class="about-line"></div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- CONTACT -->
+
+  <section class="contact" id="contact">
+    <div class="container">
+
+      <div class="contact-box">
+
+        <div>
+          <div class="section-label">04 / CONTACT</div>
+          <h2>Есть идея?</h2>
+
+          <p>
+            Свяжитесь с нами. Мы открыты к общению,
+            предложениям и новым возможностям.
+          </p>
+
+          <a href="mailto:tehnocellindostri@gmail.com"
+             class="contact-email">
+            tehnocellindostri@gmail.com
+          </a>
+        </div>
+
+        <a href="mailto:tehnocellindostri@gmail.com"
+           class="contact-button">
+          НАПИСАТЬ НАМ →
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="container footer-inner">
+
+    <div class="footer-brand">
+      TEHNOCELL INDOSTRI
+      <span>INDEPENDENT TECHNOLOGY COMPANY</span>
     </div>
 
-    <div class="division-card">
-
-        <span class="division-number">05 / COMMUNICATION</span>
-
-        <h3>TEHNOCELLMESSENGER</h3>
-
-        <p>
-            Разработка собственного сервиса
-            общения и обмена сообщениями.
-        </p>
-
-        <span class="status">
-            В планах
-        </span>
-
+    <div class="footer-links">
+      <a href="#home">Главная</a>
+      <a href="#divisions">Подразделения</a>
+      <a href="#about">О компании</a>
     </div>
 
-    <div class="division-card">
-
-        <span class="division-number">06 / SECURITY</span>
-
-        <h3>TEHNOCELLVPN</h3>
-
-        <p>
-            Перспективное направление сетевых
-            технологий и защиты соединений.
-        </p>
-
-        <span class="status">
-            В планах
-        </span>
-
+    <div class="footer-copy">
+      © <span id="currentYear"></span> TEHNOCELL INDOSTRI
     </div>
 
-</div>
+  </div>
+</footer>
 
-</div>
-</section><!-- PROJECTS --><section class="section projects" id="projects">
-<div class="container"><div class="section-heading">
 
-    <h2>Наши проекты</h2>
+<!-- SUPABASE AUTH -->
 
-    <p>
-        Разработки и инициативы TEHNOCELL INDOSTRI.
-    </p>
+<script>
+const SUPABASE_URL =
+  "https://jvagiuiregvlrfooxdao.supabase.co";
 
-</div>
+const SUPABASE_KEY =
+  "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 
-<div class="project-box">
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
-    <h3>НОВЫЕ ПРОЕКТЫ</h3>
+const profileLink = document.getElementById("profileLink");
+const profileAvatar = document.getElementById("profileAvatar");
+const profileName = document.getElementById("profileName");
 
-    <p>
-        В этом разделе будут представлены
-        программные продукты, игры и другие
-        разработки нашей команды.
-    </p>
+document.getElementById("currentYear").textContent =
+  new Date().getFullYear();
 
-    <span class="status">
-        Скоро
-    </span>
 
-</div>
+function showLoggedOut() {
+  profileLink.href = "login.html";
+  profileName.textContent = "Войти";
+  profileAvatar.textContent = "?";
+  profileAvatar.replaceChildren();
+}
 
-</div>
-</section><!-- ABOUT --><section class="section" id="about">
-<div class="container"><div class="section-heading">
-    <h2>О компании</h2>
-</div>
 
-<div class="about-content">
+function showLoggedIn(user) {
+  if (!user) {
+    showLoggedOut();
+    return;
+  }
 
-    <p>
-        TEHNOCELL INDOSTRI — технологическая
-        компания, объединяющая различные направления
-        разработки и перспективные проекты.
+  const metadata = user.user_metadata || {};
 
-        Наша концепция заключается в создании
-        собственной экосистемы продуктов,
-        сервисов и технологических решений.
-    </p>
+  const displayName =
+    metadata.display_name || "Пользователь";
 
-    <p>
-        Каждое направление компании получает
-        возможность развиваться самостоятельно,
-        сохраняя общую принадлежность
-        к TEHNOCELL INDOSTRI.
-    </p>
+  profileLink.href = "account.html";
+  profileName.textContent = displayName;
 
-    <div class="about-name">
-        TECHNOLOGY · DEVELOPMENT · FUTURE
-    </div>
+  profileAvatar.replaceChildren();
 
-</div>
+  const avatarPath = metadata.avatar_path;
 
-</div>
-</section><!-- CONTACT --><section class="section contact" id="contact">
-<div class="container"><div class="section-heading">
+  if (avatarPath) {
+    const { data } = db.storage
+      .from("profile-avatars")
+      .getPublicUrl(avatarPath);
 
-    <h2>Связаться с нами</h2>
+    const avatarImage = document.createElement("img");
 
-    <p>
-        Есть предложение, идея или желание
-        сотрудничать с нашей командой?
-    </p>
+    avatarImage.src = data.publicUrl;
+    avatarImage.alt = "Аватар";
 
-</div>
-
-<a href="mailto:tehnocellindostri@gmail.com" class="button">
-    Написать нам
-</a>
-
-</div>
-</section><!-- FOOTER --><footer><div class="footer-brand">
-    TEHNOCELL INDOSTRI
-</div>
-
-<p>
-    Independent Technology Company
-</p>
-
-<p>
-    &copy; 2026 TEHNOCELL INDOSTRI.
-    Все права защищены.
-</p>
-
-<p>
-    Technology · Development · Future
-</p>
-
-</footer><!-- SUPABASE / TEHNOCELL ID --><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-(() => {
-
-    const SUPABASE_URL =
-        "https://jvagiuiregvlrfooxdao.supabase.co";
-
-    const SUPABASE_KEY =
-        "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
-
-    const link = document.getElementById("profileLink");
-
-    const avatarSymbols = {
-        avatar_1: "●",
-        avatar_2: "◆",
-        avatar_3: "▲",
-        avatar_4: "■",
-        avatar_5: "✦",
-        avatar_6: "✧",
-        avatar_7: "◈",
-        avatar_8: "✚"
+    avatarImage.onerror = () => {
+      profileAvatar.replaceChildren();
+      profileAvatar.textContent =
+        displayName.charAt(0).toUpperCase();
     };
 
-    if (!window.supabase || !link) return;
+    profileAvatar.appendChild(avatarImage);
 
-    const client = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+  } else {
+    profileAvatar.textContent =
+      displayName.charAt(0).toUpperCase();
+  }
+}
 
-    async function updateProfileButton() {
 
-        try {
+async function initializeProfile() {
+  const { data, error } = await db.auth.getSession();
 
-            const { data, error } =
-                await client.auth.getSession();
+  if (error) {
+    console.error("Ошибка получения сессии:", error);
+    showLoggedOut();
+    return;
+  }
 
-            if (error) throw error;
+  if (data.session) {
+    showLoggedIn(data.session.user);
+  } else {
+    showLoggedOut();
+  }
+}
 
-            const session = data.session;
 
-            if (session && session.user) {
+db.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    showLoggedIn(session.user);
+  } else {
+    showLoggedOut();
+  }
+});
 
-                const avatarId =
-                    session.user.user_metadata?.avatar_id || "avatar_1";
 
-                const symbol =
-                    avatarSymbols[avatarId] || "●";
+initializeProfile();
+</script>
 
-                link.href = "account.html";
-                link.classList.add("logged-in");
-
-                link.innerHTML =
-                    '<span class="profile-avatar"></span>' +
-                    '<span>Мой профиль</span>';
-
-                link.querySelector(
-                    ".profile-avatar"
-                ).textContent = symbol;
-
-                link.setAttribute(
-                    "aria-label",
-                    "Открыть личный кабинет"
-                );
-
-            } else {
-
-                link.href = "login.html";
-                link.classList.remove("logged-in");
-                link.textContent = "Войти";
-
-                link.setAttribute(
-                    "aria-label",
-                    "Войти в TEHNOCELL ID"
-                );
-            }
-
-        } catch (error) {
-
-            console.error("TEHNOCELL ID:", error);
-
-            link.href = "login.html";
-            link.classList.remove("logged-in");
-            link.textContent = "Войти";
-        }
-    }
-
-    updateProfileButton();
-
-    client.auth.onAuthStateChange(() => {
-        updateProfileButton();
-    });
-
-})();
-</script></body>
+</body>
 </html>
