@@ -39,6 +39,7 @@ button {
   position: sticky;
   top: 0;
   z-index: 5;
+  gap: 15px;
 }
 
 .logo {
@@ -50,6 +51,29 @@ button {
 .logo span {
   color: #888;
   font-weight: 400;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-button {
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  color: #333;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.home-button:hover {
+  background: #f2f2f2;
+  border-color: #bbb;
 }
 
 .nav {
@@ -158,6 +182,28 @@ button {
   color: #aaa;
 }
 
+.verified-name {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.verified-badge {
+  display: none;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: #1685f8;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 19px;
+  text-align: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(22,133,248,.3);
+}
+
 .section-title {
   font-size: 17px;
   margin: 30px 0 15px;
@@ -169,7 +215,7 @@ button {
   gap: 14px;
 }
 
-.card, .product, .panel {
+.card, .panel {
   background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 12px;
@@ -192,49 +238,6 @@ button {
   font-size: 11px;
   color: #aaa;
   margin-top: 8px;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.product {
-  transition: .2s;
-}
-
-.product:hover {
-  border-color: #aaa;
-}
-
-.product-icon {
-  width: 38px;
-  height: 38px;
-  border: 1px solid #ddd;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.product h3 {
-  font-size: 14px;
-}
-
-.product p {
-  font-size: 12px;
-  color: #888;
-  margin-top: 7px;
-}
-
-.product-status {
-  font-size: 10px;
-  color: #999;
-  margin-top: 17px;
-  letter-spacing: 1px;
 }
 
 .panel {
@@ -344,6 +347,10 @@ button {
 .profile-info h3 {
   font-size: 18px;
   margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .profile-info p {
@@ -386,9 +393,18 @@ button {
     font-size: 16px;
   }
 
-  .nav {
+  .header-actions {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .home-button {
+    padding: 9px 11px;
+    font-size: 11px;
+  }
+
+  .nav {
     gap: 2px;
   }
 
@@ -413,7 +429,7 @@ button {
     font-size: 22px;
   }
 
-  .grid, .products {
+  .grid {
     grid-template-columns: 1fr;
   }
 
@@ -427,19 +443,29 @@ button {
 <body>
 
 <header class="header">
+
   <div class="logo">TEHNOCELL <span>ID</span></div>
 
-  <nav class="nav">
-    <button class="active" data-page="home">Обзор</button>
-    <button data-page="products">Продукты</button>
-    <button data-page="settings">Настройки</button>
-    <button class="logout" id="logoutButton">Выйти ↗</button>
-  </nav>
+  <div class="header-actions">
+
+    <a href="index.html" class="home-button">
+      ← На главную
+    </a>
+
+    <nav class="nav">
+      <button class="active" data-page="home">Обзор</button>
+      <button data-page="settings">Настройки</button>
+      <button class="logout" id="logoutButton">Выйти ↗</button>
+    </nav>
+
+  </div>
+
 </header>
 
 <main class="main">
 
   <div class="heading">
+
     <div>
       <h1 id="pageTitle">Обзор аккаунта</h1>
       <p>Центр управления TEHNOCELL INDOSTRI</p>
@@ -449,6 +475,7 @@ button {
       <span id="avatarInitial">T</span>
       <img id="avatarImage" alt="Фото профиля">
     </div>
+
   </div>
 
   <!-- HOME -->
@@ -456,14 +483,20 @@ button {
   <section class="page active" id="home">
 
     <div class="welcome">
+
       <small>TEHNOCELL ID / PERSONAL ACCOUNT</small>
 
       <h2>
         Добро пожаловать,
-        <span id="welcomeName">Пользователь</span>
+        <span class="verified-name">
+          <span id="welcomeName">Пользователь</span>
+          <span class="verified-badge" id="welcomeBadge"
+          title="Подтверждённый аккаунт">✓</span>
+        </span>
       </h2>
 
       <p>Ваш единый аккаунт в экосистеме TEHNOCELL.</p>
+
     </div>
 
     <h2 class="section-title">Информация об аккаунте</h2>
@@ -484,7 +517,13 @@ button {
 
       <div class="card">
         <div class="card-label">Имя пользователя</div>
-        <div class="card-value" id="userName">Загрузка...</div>
+
+        <div class="card-value verified-name">
+          <span id="userName">Загрузка...</span>
+          <span class="verified-badge" id="userBadge"
+          title="Подтверждённый аккаунт">✓</span>
+        </div>
+
         <div class="card-description">Ваше отображаемое имя</div>
       </div>
 
@@ -492,76 +531,6 @@ button {
         <div class="card-label">Дата регистрации</div>
         <div class="card-value" id="createdAt">Загрузка...</div>
         <div class="card-description">Дата создания аккаунта</div>
-      </div>
-
-    </div>
-
-    <h2 class="section-title">Экосистема TEHNOCELL</h2>
-
-    <div class="products">
-
-      <div class="product">
-        <div class="product-icon">FM</div>
-        <h3>TEHNOCELLFM</h3>
-        <p>Музыка и аудио</p>
-        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
-      </div>
-
-      <div class="product">
-        <div class="product-icon">GM</div>
-        <h3>TEHNOCELLGAME</h3>
-        <p>Игры и развлечения</p>
-        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
-      </div>
-
-      <div class="product">
-        <div class="product-icon">CR</div>
-        <h3>TEHNOCELLCAR</h3>
-        <p>Автомобильные проекты</p>
-        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
-      </div>
-
-      <div class="product">
-        <div class="product-icon">SO</div>
-        <h3>TEHNOCELLSOFT</h3>
-        <p>Приложения и технологии</p>
-        <div class="product-status">ПРОДУКТ КОМПАНИИ</div>
-      </div>
-
-    </div>
-
-  </section>
-
-  <!-- PRODUCTS -->
-
-  <section class="page" id="products">
-
-    <h2 class="section-title">Все продукты</h2>
-
-    <div class="products">
-
-      <div class="product">
-        <div class="product-icon">FM</div>
-        <h3>TEHNOCELLFM</h3>
-        <p>Музыкальная платформа</p>
-      </div>
-
-      <div class="product">
-        <div class="product-icon">GM</div>
-        <h3>TEHNOCELLGAME</h3>
-        <p>Игровое направление</p>
-      </div>
-
-      <div class="product">
-        <div class="product-icon">CR</div>
-        <h3>TEHNOCELLCAR</h3>
-        <p>Автомобильные проекты</p>
-      </div>
-
-      <div class="product">
-        <div class="product-icon">SO</div>
-        <h3>TEHNOCELLSOFT</h3>
-        <p>Программное обеспечение</p>
       </div>
 
     </div>
@@ -577,13 +546,23 @@ button {
     <div class="profile-card">
 
       <div class="profile-photo" id="profilePhoto">
+
         <span id="profileInitial">T</span>
+
         <img id="profileImage" alt="Фотография профиля">
+
       </div>
 
       <div class="profile-info">
 
-        <h3 id="profileDisplayName">Пользователь</h3>
+        <h3>
+
+          <span id="profileDisplayName">Пользователь</span>
+
+          <span class="verified-badge" id="profileBadge"
+          title="Подтверждённый аккаунт">✓</span>
+
+        </h3>
 
         <p>
           Ваша фотография будет отображаться
@@ -677,16 +656,30 @@ const db = window.supabase.createClient(
   SUPABASE_KEY
 );
 
+// UID основателя TEHNOCELL INDOSTRI
+
+const VERIFIED_FOUNDER_ID =
+"1762dd53-22ee-4f97-a9e4-1914e7b7f2d4";
+
 let currentUser = null;
 
 const $ = id => document.getElementById(id);
 
+
+// MESSAGES
+
 function showMessage(text, error = false) {
+
   const message = $("settingsMessage");
 
   message.textContent = text;
+
   message.style.color = error ? "#b3261e" : "#222";
+
 }
+
+
+// AVATAR
 
 function setAvatar(initial, url) {
 
@@ -700,44 +693,77 @@ function setAvatar(initial, url) {
     $("profileInitial")
   ];
 
-  const photos = [
-    $("avatar"),
-    $("profilePhoto")
-  ];
-
   initials.forEach(item => {
+
     item.textContent = initial || "T";
+
     item.style.display = url ? "none" : "block";
+
   });
 
   images.forEach(item => {
+
     if (url) {
+
       item.src = url;
+
       item.style.display = "block";
+
     } else {
+
       item.removeAttribute("src");
+
       item.style.display = "none";
+
     }
+
   });
 
 }
+
+
+// LOAD ACCOUNT
 
 async function loadAccount() {
 
   const { data, error } = await db.auth.getSession();
 
   if (error || !data.session) {
+
     location.replace("login.html");
+
     return;
+
   }
 
   currentUser = data.session.user;
 
   if (!currentUser.email_confirmed_at) {
+
     await db.auth.signOut();
+
     location.replace("login.html");
+
     return;
+
   }
+
+  // VERIFIED STATUS
+
+  const isVerifiedFounder =
+    currentUser.id === VERIFIED_FOUNDER_ID;
+
+  $("welcomeBadge").style.display =
+    isVerifiedFounder ? "inline-block" : "none";
+
+  $("userBadge").style.display =
+    isVerifiedFounder ? "inline-block" : "none";
+
+  $("profileBadge").style.display =
+    isVerifiedFounder ? "inline-block" : "none";
+
+
+  // USER INFORMATION
 
   const name =
     currentUser.user_metadata?.display_name || "Пользователь";
@@ -746,8 +772,11 @@ async function loadAccount() {
     name.trim().charAt(0).toUpperCase() || "T";
 
   $("welcomeName").textContent = name;
+
   $("userName").textContent = name;
-  $("userEmail").textContent = currentUser.email || "—";
+
+  $("userEmail").textContent =
+    currentUser.email || "—";
 
   $("userId").textContent =
     "TC-" +
@@ -761,16 +790,22 @@ async function loadAccount() {
 
   $("profileDisplayName").textContent = name;
 
-  const avatarPath = currentUser.user_metadata?.avatar_path;
+
+  // AVATAR URL
+
+  const avatarPath =
+    currentUser.user_metadata?.avatar_path;
 
   let avatarUrl = null;
 
   if (avatarPath) {
+
     const { data } = db.storage
       .from(BUCKET)
       .getPublicUrl(avatarPath);
 
     avatarUrl = data.publicUrl;
+
   }
 
   setAvatar(initial, avatarUrl);
@@ -798,9 +833,11 @@ document.querySelectorAll(".nav button[data-page]")
     button.classList.add("active");
 
     $("pageTitle").textContent = {
+
       home: "Обзор аккаунта",
-      products: "Продукты TEHNOCELL",
+
       settings: "Настройки аккаунта"
+
     }[target];
 
   });
@@ -815,17 +852,28 @@ $("saveName").addEventListener("click", async () => {
   const name = $("nameInput").value.trim();
 
   if (name.length < 2) {
-    showMessage("Имя должно содержать минимум 2 символа.", true);
+
+    showMessage(
+      "Имя должно содержать минимум 2 символа.",
+      true
+    );
+
     return;
+
   }
 
   const { error } = await db.auth.updateUser({
+
     data: { display_name: name }
+
   });
 
   if (error) {
+
     showMessage("Ошибка: " + error.message, true);
+
     return;
+
   }
 
   showMessage("Имя успешно обновлено.");
@@ -842,17 +890,28 @@ $("changePassword").addEventListener("click", async () => {
   const password = $("passwordInput").value;
 
   if (password.length < 6) {
-    showMessage("Пароль должен содержать минимум 6 символов.", true);
+
+    showMessage(
+      "Пароль должен содержать минимум 6 символов.",
+      true
+    );
+
     return;
+
   }
 
   const { error } = await db.auth.updateUser({
+
     password: password
+
   });
 
   if (error) {
+
     showMessage("Ошибка: " + error.message, true);
+
     return;
+
   }
 
   $("passwordInput").value = "";
@@ -865,7 +924,9 @@ $("changePassword").addEventListener("click", async () => {
 // OPEN PHOTO SELECTOR
 
 $("choosePhoto").addEventListener("click", () => {
+
   $("photoInput").click();
+
 });
 
 
@@ -878,31 +939,53 @@ $("photoInput").addEventListener("change", async event => {
   if (!file) return;
 
   if (!currentUser) {
+
     showMessage("Аккаунт ещё загружается.", true);
+
     return;
+
   }
 
   const allowedTypes = [
+
     "image/jpeg",
+
     "image/png",
+
     "image/webp"
+
   ];
 
   if (!allowedTypes.includes(file.type)) {
-    showMessage("Выбери фотографию JPG, PNG или WEBP.", true);
+
+    showMessage(
+      "Выбери фотографию JPG, PNG или WEBP.",
+      true
+    );
+
     event.target.value = "";
+
     return;
+
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showMessage("Фотография слишком большая. Максимум 5 МБ.", true);
+
+    showMessage(
+      "Фотография слишком большая. Максимум 5 МБ.",
+      true
+    );
+
     event.target.value = "";
+
     return;
+
   }
 
   const button = $("choosePhoto");
 
   button.disabled = true;
+
   button.textContent = "Загрузка...";
 
   let uploadedPath = null;
@@ -910,26 +993,42 @@ $("photoInput").addEventListener("change", async event => {
   try {
 
     const extension = {
+
       "image/jpeg": "jpg",
+
       "image/png": "png",
+
       "image/webp": "webp"
+
     }[file.type];
 
     const fileName =
+
       currentUser.id +
+
       "/avatar-" +
+
       Date.now() +
+
       "." +
+
       extension;
 
-    const oldPath = currentUser.user_metadata?.avatar_path;
+    const oldPath =
+      currentUser.user_metadata?.avatar_path;
 
     const { data, error } = await db.storage
+
       .from(BUCKET)
+
       .upload(fileName, file, {
+
         contentType: file.type,
+
         cacheControl: "3600",
+
         upsert: false
+
       });
 
     if (error) throw error;
@@ -937,28 +1036,50 @@ $("photoInput").addEventListener("change", async event => {
     uploadedPath = data.path;
 
     const { error: updateError } = await db.auth.updateUser({
+
       data: {
+
         avatar_path: uploadedPath
+
       }
+
     });
 
     if (updateError) {
-      await db.storage.from(BUCKET).remove([uploadedPath]);
+
+      await db.storage
+        .from(BUCKET)
+        .remove([uploadedPath]);
+
       throw updateError;
+
     }
 
     if (
+
       oldPath &&
+
       oldPath !== uploadedPath &&
+
       oldPath.startsWith(currentUser.id + "/")
+
     ) {
+
       const { error: removeError } = await db.storage
+
         .from(BUCKET)
+
         .remove([oldPath]);
 
       if (removeError) {
-        console.warn("Не удалось удалить старую фотографию:", removeError);
+
+        console.warn(
+          "Не удалось удалить старую фотографию:",
+          removeError
+        );
+
       }
+
     }
 
     await loadAccount();
@@ -970,7 +1091,11 @@ $("photoInput").addEventListener("change", async event => {
     console.error(error);
 
     if (uploadedPath) {
-      await db.storage.from(BUCKET).remove([uploadedPath]);
+
+      await db.storage
+        .from(BUCKET)
+        .remove([uploadedPath]);
+
     }
 
     showMessage(
@@ -981,7 +1106,9 @@ $("photoInput").addEventListener("change", async event => {
   } finally {
 
     button.disabled = false;
+
     button.textContent = "Изменить фотографию";
+
     event.target.value = "";
 
   }
@@ -995,24 +1122,33 @@ $("removePhoto").addEventListener("click", async () => {
 
   if (!currentUser) return;
 
-  const oldPath = currentUser.user_metadata?.avatar_path;
+  const oldPath =
+    currentUser.user_metadata?.avatar_path;
 
   if (!oldPath) {
+
     showMessage("Фотография профиля ещё не установлена.");
+
     return;
+
   }
 
   const button = $("removePhoto");
 
   button.disabled = true;
+
   button.textContent = "Удаление...";
 
   try {
 
     const { error: updateError } = await db.auth.updateUser({
+
       data: {
+
         avatar_path: null
+
       }
+
     });
 
     if (updateError) throw updateError;
@@ -1020,11 +1156,18 @@ $("removePhoto").addEventListener("click", async () => {
     if (oldPath.startsWith(currentUser.id + "/")) {
 
       const { error: removeError } = await db.storage
+
         .from(BUCKET)
+
         .remove([oldPath]);
 
       if (removeError) {
-        console.warn("Не удалось удалить старый файл:", removeError);
+
+        console.warn(
+          "Не удалось удалить старый файл:",
+          removeError
+        );
+
       }
 
     }
@@ -1043,6 +1186,7 @@ $("removePhoto").addEventListener("click", async () => {
   } finally {
 
     button.disabled = false;
+
     button.textContent = "Удалить";
 
   }
@@ -1057,8 +1201,11 @@ $("logoutButton").addEventListener("click", async () => {
   const { error } = await db.auth.signOut();
 
   if (error) {
+
     alert("Не удалось выйти из аккаунта.");
+
     return;
+
   }
 
   location.replace("login.html");
