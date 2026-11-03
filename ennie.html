@@ -1485,9 +1485,9 @@ async function sendMessage() {
 
         // Отправляем сообщение серверной функции
 
-        const { data, error } = await db.functions.invoke(
-            "ennie-core",
-            {
+        const { data, error } = await db.functions.invoke("ennie-core-v2", {
+            
+            
                 body: {
                     chat_id: currentChatId,
                     message: text
