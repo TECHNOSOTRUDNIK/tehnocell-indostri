@@ -1522,31 +1522,17 @@ async function sendMessage() {
 
         }
 
-        // Отправляем сообщение серверной функции
+        // Передаём сообщение через ENNIE CORE
 
-        const { data, error } = await db.functions.invoke("ennie-core-v4", {
-            
-            
-                body: {
-                    chat_id: currentChatId,
-                    message: text
-                }
-            }
-        );
+        const answer = await ENNIE.send(text);
 
-        if (error) {
-            throw error;
+        if (!answer) {
+            throw new Error("ENNIE вернула пустой ответ.");
         }
 
-        if (!data || !data.success || !data.answer) {
-            throw new Error(
-                data?.error || "ENNIE не смогла ответить."
-            );
-        }
+        // Показываем ответ
 
-        // Получаем настоящий ответ OpenAI
-
-        addMessage(data.answer, "assistant");
+        addMessage(answer, "assistant");
 
         setEnnieState("idle");
 
@@ -1555,7 +1541,7 @@ async function sendMessage() {
         // Озвучиваем ответ
 
         if (document.getElementById("voiceEnabled").checked) {
-            speakText(data.answer);
+            speakText(answer);
         }
 
     }
