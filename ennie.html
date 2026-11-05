@@ -1045,6 +1045,43 @@ let currentChatId = null;
 let isSending = false;
 let recognition = null;
 let isListening = false;
+// ==========================================
+// ПОДКЛЮЧЕНИЕ ENNIE CORE
+// ==========================================
+
+ENNIE.connectBrain(async ({ system, messages, memory }) => {
+
+    const lastMessage = messages[messages.length - 1];
+
+    const { data, error } = await db.functions.invoke(
+        "ennie-core-v4",
+        {
+            body: {
+                chat_id: currentChatId,
+                message: lastMessage.content,
+                system: system,
+                messages: messages,
+                memory: memory
+            }
+        }
+    );
+
+    if (error) {
+        throw error;
+    }
+
+    if (!data || typeof data.answer !== "string") {
+        throw new Error(
+            data?.error || "ENNIE не получила ответ от языковой модели."
+        );
+    }
+
+    return {
+        answer: data.answer
+    };
+});
+
+console.log("ENNIE CORE CONNECTED TO SUPABASE");
 
 
 // ==========================================
