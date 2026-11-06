@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>ENNIE — TEHNOCELL AI</title>
+
+<meta name="theme-color" content="#080808">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+    --bg: #080808;
+    --panel: #111111;
+    --panel2: #191919;
+    --text: #ffffff;
+    --muted: #858585;
+    --border: rgba(255,255,255,.09);
+    --accent: #ffffff;
+    --user-message: #222222;
+    --shadow: 0 15px 50px rgba(0,0,0,.3);
+}
+
+body.light {
+    --bg: #f6f6f6;
+    --panel: #ffffff;
+    --panel2: #eeeeee;
+    --text: #111111;
+    --muted: #777777;
+    --border: rgba(0,0,0,.09);
+    --accent: #111111;
+    --user-message: #e9e9e9;
+    --shadow: 0 15px 50px rgba(0,0,0,.07);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100dvh;
+    overflow: hidden;
+    transition: background .25s, color .25s;
+}
+
+button, input, textarea {
+    font: inherit;
+}
+
+button {
+    color: inherit;
+    cursor: pointer;
+    border: none;
+}
+
+.app {
+    display: flex;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 285px;
+    min-width: 285px;
+    height: 100%;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 15px;
+    transition: transform .3s;
+    z-index: 20;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 5px 8px 25px;
+}
+
+.brand-orb {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 35% 30%,
+        #ffffff,
+        #bcbcbc 35%,
+        #444444 75%,
+        #111111
+    );
+    box-shadow: 0 0 22px rgba(255,255,255,.2);
+}
+
+.brand-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.brand-sub {
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-top: 3px;
+}
+
+.new-chat {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.new-chat:active {
+    transform: scale(.97);
+}
+
+.section-label {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin: 27px 9px 12px;
+}
+
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 13px 12px;
+    border-radius: 11px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-item.active,
+.history-item:active {
+    background: var(--panel2);
+    color: var(--text);
+}
+
+.sidebar-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px;
+    border-radius: 12px;
+    width: 100%;
+    background: transparent;
+    text-align: left;
+}
+
+.profile-avatar {
+    width: 37px;
+    height: 37px;
+    border-radius: 50%;
+    background: var(--panel2);
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-info strong {
+    font-size: 12px;
+}
+
+.profile-info small {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+/* MAIN */
+
+.main {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.topbar {
+    height: 65px;
+    min-height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 23px;
+    border-bottom: 1px solid var(--border);
+}
+
+.top-left,
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: transparent;
+    display: grid;
+    place-items: center;
+    transition: background .2s;
+}
+
+.icon-button:active {
+    background: var(--panel2);
+}
+
+.icon-button svg {
+    width: 19px;
+    height: 19px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.top-title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #777777;
+}
+
+/* CHAT AREA */
+
+.chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px 20px;
+    scroll-behavior: smooth;
+}
+
+.welcome {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 25px 10px;
+}
+
+.orb-container {
+    width: 175px;
+    height: 175px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.orb {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    background:
+        radial-gradient(
+            circle at 34% 27%,
+            #ffffff 0%,
+            #eeeeee 10%,
+            #bcbcbc 25%,
+            #777777 48%,
+            #303030 72%,
+            #080808 100%
+        );
+    box-shadow:
+        0 0 35px rgba(255,255,255,.17),
+        inset -12px -15px 25px rgba(0,0,0,.7),
+        inset 8px 8px 20px rgba(255,255,255,.5);
+    animation: orbFloat 5s ease-in-out infinite;
+    position: relative;
+}
+
+.orb::before {
+    content: "";
+    position: absolute;
+    inset: -15px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.13);
+    animation: orbRing 7s linear infinite;
+}
+
+.orb::after {
+    content: "";
+    position: absolute;
+    inset: -29px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.05);
+}
+
+@keyframes orbFloat {
+    0%,100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-9px) scale(1.035);
+    }
+}
+
+@keyframes orbRing {
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+    to {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+.welcome h1 {
+    font-size: clamp(25px, 5vw, 37px);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+}
+
+.welcome p {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+    max-width: 330px;
+}
+
+/* MESSAGES */
+
+.messages {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    gap: 7px;
+}
+
+.message.user {
+    align-self: flex-end;
+}
+
+.message.assistant {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 13px 16px;
+    border-radius: 17px;
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+.message.user .message-content {
+    background: var(--user-message);
+    border-bottom-right-radius: 5px;
+}
+
+.message.assistant .message-content {
+    background: transparent;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.message-author {
+    font-size: 10px;
+    color: var(--muted);
+    padding: 0 4px;
+}
+
+/* COMPOSER */
+
+.composer-area {
+    padding: 12px 20px 22px;
+    background: linear-gradient(
+        transparent,
+        var(--bg) 20%
+    );
+}
+
+.composer {
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 9px 10px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.composer textarea {
+    flex: 1;
+    min-width: 0;
+    max-height: 130px;
+    min-height: 42px;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    padding: 12px 5px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.composer textarea::placeholder {
+    color: var(--muted);
+}
+
+.send-button {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: 14px;
+    background: var(--accent);
+    color: var(--bg);
+    display: grid;
+    place-items: center;
+    transition: .2s;
+}
+
+.send-button:active {
+    transform: scale(.92);
+}
+
+.send-button svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.disclaimer {
+    text-align: center;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 11px;
+}
+
+/* MOBILE */
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: min(290px, 85vw);
+        transform: translateX(-105%);
+        box-shadow: var(--shadow);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.55);
+        z-index: 15;
+    }
+
+    .topbar {
+        padding: 0 12px;
+        height: 59px;
+        min-height: 59px;
+    }
+
+    .chat-area {
+        padding: 15px 14px;
+    }
+
+    .composer-area {
+        padding: 9px 12px 15px;
+    }
+
+    .orb-container {
+        width: 145px;
+        height: 145px;
+    }
+
+    .orb {
+        width: 95px;
+        height: 95px;
+    }
+
+    .welcome h1 {
+        font-size: 27px;
+    }
+
+    .message {
+        max-width: 92%;
+    }
+
+    .status {
+        display: none;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-orb"></div>
+
+            <div>
+                <div class="brand-name">ENNIE</div>
+                <div class="brand-sub">TEHNOCELL AI</div>
+            </div>
+        </div>
+
+        <button class="new-chat" id="newChat">
+            <span>＋</span>
+            Новый диалог
+        </button>
+
+        <div class="section-label">ИСТОРИЯ</div>
+
+        <div class="chat-history" id="chatHistory">
+        </div>
+
+        <div class="sidebar-bottom">
+
+            <button class="profile-button" id="profileButton">
+
+                <div class="profile-avatar">TC</div>
+
+                <div class="profile-info">
+                    <strong>TEHNOCELL ID</strong>
+                    <small>Личный аккаунт</small>
+                </div>
+
+                <span>›</span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="top-left">
+
+                <button class="icon-button" id="menuButton" aria-label="Меню">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 7h16M4 12h16M4 17h16"/>
+                    </svg>
+                </button>
+
+                <div class="top-title">ENNIE</div>
+
+            </div>
+
+            <div class="top-right">
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    TEHNOCELL AI
+                </div>
+
+                <button class="icon-button" id="themeButton" aria-label="Сменить тему">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"/>
+                    </svg>
+                </button>
+
+            </div>
+
+        </header>
+
+        <section class="chat-area" id="chatArea">
+
+            <div class="welcome" id="welcome">
+
+                <div class="orb-container">
+                    <div class="orb" id="mainOrb"></div>
+                </div>
+
+                <h1>Привет. Я ENNIE.</h1>
+
+                <p>
+                    Рада тебя видеть.
+                    Можем просто поговорить
+                    или заняться чем-нибудь интересным.
+                </p>
+
+            </div>
+
+            <div class="messages" id="messages"></div>
+
+        </section>
+
+        <footer class="composer-area">
+
+            <div class="composer">
+
+                <button class="icon-button" id="attachButton" aria-label="Прикрепить файл">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                </button>
+
+                <textarea
+                    id="messageInput"
+                    rows="1"
+                    placeholder="Напиши ENNIE..."
+                ></textarea>
+
+                <button class="send-button" id="sendButton" aria-label="Отправить">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 19V5M5 12l7-7 7 7"/>
+                    </svg>
+                </button>
+
+            </div>
+
+            <div class="disclaimer">
+                ENNIE — виртуальный ИИ-компаньон TEHNOCELL AI
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+// ======================================
+// ENNIE NEXT — CORE
+// ======================================
+
+const SUPABASE_URL =
+"https://jvagiuiregvlrfooxdao.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+// ======================================
+// STATE
+// ======================================
+
+let currentUser = null;
+let currentChatId = null;
+
+let chats = [];
+let messages = [];
+
+let isSending = false;
+let isSidebarOpen = false;
+
+const $ = id => document.getElementById(id);
+
+const sidebar = $("sidebar");
+const overlay = $("sidebarOverlay");
+const chatArea = $("chatArea");
+const messageList = $("messages");
+const welcome = $("welcome");
+const input = $("messageInput");
+
+// ======================================
+// SIDEBAR
+// ======================================
+
+function openSidebar() {
+    sidebar.classList.add("open");
+    overlay.classList.add("show");
+    isSidebarOpen = true;
+}
+
+function closeSidebar() {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+    isSidebarOpen = false;
+}
+
+$("menuButton").addEventListener(
+    "click",
+    () => {
+        if (isSidebarOpen) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+);
+
+overlay.addEventListener(
+    "click",
+    closeSidebar
+);
+
+// ======================================
+// THEME
+// ======================================
+
+function applyTheme(theme) {
+
+    document.body.classList.toggle(
+        "light",
+        theme === "light"
+    );
+
+    localStorage.setItem(
+        "ennie-theme",
+        theme
+    );
+}
+
+const savedTheme =
+localStorage.getItem("ennie-theme") || "dark";
+
+applyTheme(savedTheme);
+
+$("themeButton").addEventListener(
+    "click",
+    () => {
+        const newTheme =
+            document.body.classList.contains("light")
+                ? "dark"
+                : "light";
+
+        applyTheme(newTheme);
+    }
+);
+
+// ======================================
+// CHAT DISPLAY
+// ======================================
+
+function scrollToBottom() {
+
+    requestAnimationFrame(() => {
+        chatArea.scrollTop =
+            chatArea.scrollHeight;
+    });
+}
+
+function showWelcome(show) {
+
+    welcome.style.display =
+        show ? "flex" : "none";
+
+    messageList.style.display =
+        show ? "none" : "flex";
+}
+
+function renderMessages() {
+
+    messageList.innerHTML = "";
+
+    showWelcome(messages.length === 0);
+
+    messages.forEach(message => {
+
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "message " +
+            (message.role === "user"
+                ? "user"
+                : "assistant");
+
+        const author =
+            document.createElement("div");
+
+        author.className = "message-author";
+
+        author.textContent =
+            message.role === "user"
+                ? "Вы"
+                : "ENNIE";
+
+        const content =
+            document.createElement("div");
+
+        content.className = "message-content";
+
+        content.textContent =
+            message.content || "";
+
+        wrapper.appendChild(author);
+        wrapper.appendChild(content);
+
+        messageList.appendChild(wrapper);
+
+    });
+
+    scrollToBottom();
+}
+
+// ======================================
+// CHAT HISTORY DISPLAY
+// ======================================
+
+function renderChatHistory() {
+
+    const container = $("chatHistory");
+
+    container.innerHTML = "";
+
+    chats.forEach(chat => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "history-item" +
+            (chat.id === currentChatId
+                ? " active"
+                : "");
+
+        item.textContent =
+            chat.title || "Новый диалог";
+
+        item.addEventListener(
+            "click",
+            () => openChat(chat.id)
+        );
+
+        container.appendChild(item);
+
+    });
+}
+
+// ======================================
+// NEW CHAT
+// ======================================
+
+function createNewChat() {
+
+    currentChatId = null;
+    messages = [];
+
+    renderMessages();
+    renderChatHistory();
+
+    closeSidebar();
+
+    input.focus();
+}
+
+$("newChat").addEventListener(
+    "click",
+    createNewChat
+);
+
+// ======================================
+// OPEN CHAT
+// ======================================
+
+function openChat(chatId) {
+
+    const chat = chats.find(
+        item => item.id === chatId
+    );
+
+    if (!chat) return;
+
+    currentChatId = chatId;
+
+    messages = Array.isArray(chat.messages)
+        ? [...chat.messages]
+        : [];
+
+    renderMessages();
+    renderChatHistory();
+
+    closeSidebar();
+}
+
+// ======================================
+// INPUT
+// ======================================
+
+input.addEventListener(
+    "input",
+    () => {
+
+        input.style.height = "auto";
+
+        input.style.height =
+            Math.min(input.scrollHeight, 130) +
+            "px";
+
+    }
+);
+
+input.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter" &&
+            !event.shiftKey
+        ) {
+            event.preventDefault();
+
+            sendMessage();
+        }
+
+    }
+);
+
+// ======================================
+// ORB REACTION
+// ======================================
+
+function setOrbState(state) {
+
+    const orb = $("mainOrb");
+
+    if (!orb) return;
+
+    orb.style.transition =
+        "transform .5s, filter .5s";
+
+    if (state === "thinking") {
+
+        orb.style.transform = "scale(1.12)";
+
+        orb.style.filter =
+            "brightness(1.5)";
+
+    } else if (state === "speaking") {
+
+        orb.style.transform = "scale(1.07)";
+
+        orb.style.filter =
+            "brightness(1.35)";
+
+    } else {
+
+        orb.style.transform = "scale(1)";
+
+        orb.style.filter =
+            "brightness(1)";
+
+    }
+}
+<script>
+
+// ======================================
+// AUTHENTICATION
+// ======================================
+
+async function initializeEnnie() {
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error
+        } = await db.auth.getSession();
+
+        if (error) throw error;
+
+        if (!session) {
+
+            currentUser = null;
+
+            alert(
+                "Для использования ENNIE необходимо войти через TEHNOCELL ID."
+            );
+
+            return;
+        }
+
+        currentUser = session.user;
+
+        console.log(
+            "ENNIE: пользователь авторизован",
+            currentUser.id
+        );
+
+        await loadUserChats();
+
+    } catch (error) {
+
+        console.error(
+            "Ошибка авторизации ENNIE:",
+            error
+        );
+
+    }
+
+}
+
+// ======================================
+// LOAD USER CHATS
+// ======================================
+
+async function loadUserChats() {
+
+    if (!currentUser) return;
+
+    const {
+        data: chatData,
+        error: chatError
+    } = await db
+        .from("ennie_chats")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("created_at", {
+            ascending: false
+        });
+
+    if (chatError) {
+
+        console.error(
+            "Ошибка загрузки диалогов:",
+            chatError
+        );
+
+        return;
+    }
+
+    chats = chatData || [];
+
+    // Загружаем сообщения каждого диалога
+
+    for (const chat of chats) {
+
+        const {
+            data: messageData,
+            error: messageError
+        } = await db
+            .from("ennie_messages")
+            .select("*")
+            .eq("chat_id", chat.id)
+            .order("created_at", {
+                ascending: true
+            });
+
+        if (messageError) {
+
+            console.error(
+                "Ошибка загрузки сообщений:",
+                messageError
+            );
+
+            chat.messages = [];
+
+            continue;
+        }
+
+        chat.messages = (messageData || []).map(
+            message => ({
+                role: message.role,
+                content: message.content
+            })
+        );
+
+    }
+
+    renderChatHistory();
+
+    console.log(
+        "ENNIE: история загружена",
+        chats.length
+    );
+
+}
+
+// ======================================
+// AUTH STATE CHANGES
+// ======================================
+
+db.auth.onAuthStateChange(
+    (event, session) => {
+
+        if (event === "SIGNED_OUT") {
+
+            currentUser = null;
+            chats = [];
+            messages = [];
+            currentChatId = null;
+
+            renderMessages();
+            renderChatHistory();
+
+        }
+
+        if (event === "SIGNED_IN") {
+
+            currentUser = session?.user || null;
+
+            setTimeout(() => {
+                loadUserChats();
+            }, 0);
+
+        }
+
+    }
+);
+
+// ======================================
+// PROFILE BUTTON
+// ======================================
+
+$("profileButton").addEventListener(
+    "click",
+    async () => {
+
+        const {
+            data: {
+                session
+            }
+        } = await db.auth.getSession();
+
+        if (!session) {
+
+            alert(
+                "Сначала войдите в TEHNOCELL ID."
+            );
+
+            return;
+        }
+
+        window.location.href =
+            "account.html";
+
+    }
+);
+
+// ======================================
+// START
+// ======================================
+
+initializeEnnie();
+
+</script>
+  <script>
+
+// ======================================
+// CREATE CHAT IN SUPABASE
+// ======================================
+
+async function createChat(firstMessage) {
+
+    if (!currentUser) {
+        throw new Error(
+            "Необходимо войти в TEHNOCELL ID."
+        );
+    }
+
+    const title = firstMessage.length > 40
+        ? firstMessage.slice(0, 40) + "..."
+        : firstMessage;
+
+    const { data, error } = await db
+        .from("ennie_chats")
+        .insert({
+            user_id: currentUser.id,
+            title: title
+        })
+        .select()
+        .single();
+
+    if (error) throw error;
+
+    const chat = {
+        ...data,
+        messages: []
+    };
+
+    chats.unshift(chat);
+    currentChatId = chat.id;
+
+    renderChatHistory();
+
+    return chat;
+}
+
+// ======================================
+// SAVE MESSAGE
+// ======================================
+
+async function saveMessage(role, content) {
+
+    if (!currentChatId) {
+        throw new Error("Диалог не выбран.");
+    }
+
+    const { error } = await db
+        .from("ennie_messages")
+        .insert({
+            chat_id: currentChatId,
+            role: role,
+            content: content
+        });
+
+    if (error) throw error;
+
+}
+
+// ======================================
+// TYPING INDICATOR
+// ======================================
+
+function showTyping() {
+
+    const element =
+        document.createElement("div");
+
+    element.id = "ennieTyping";
+    element.className = "message assistant";
+
+    element.innerHTML = `
+        <div class="message-author">ENNIE</div>
+        <div class="message-content">
+            <span class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </div>
+    `;
+
+    messageList.appendChild(element);
+
+    scrollToBottom();
+
+}
+
+function hideTyping() {
+
+    const element = $("ennieTyping");
+
+    if (element) {
+        element.remove();
+    }
+
+}
+
+// ======================================
+// SEND MESSAGE
+// ======================================
+
+async function sendMessage() {
+
+    if (isSending) return;
+
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    if (!currentUser) {
+
+        alert(
+            "Сначала войдите в TEHNOCELL ID."
+        );
+
+        return;
+    }
+
+    isSending = true;
+
+    input.value = "";
+    input.style.height = "42px";
+
+    try {
+
+        // Создаём диалог при необходимости
+
+        if (!currentChatId) {
+            await createChat(text);
+        }
+
+        // Сохраняем сообщение пользователя
+
+        const userMessage = {
+            role: "user",
+            content: text
+        };
+
+        messages.push(userMessage);
+
+        renderMessages();
+
+        await saveMessage(
+            "user",
+            text
+        );
+
+        // Показываем индикатор ответа
+
+        showTyping();
+
+        setOrbState("thinking");
+
+        // Отправляем историю в ENNIE V8
+
+        const { data, error } =
+            await db.functions.invoke(
+                "ennie-core-v8",
+                {
+                    body: {
+                        messages: messages
+                    }
+                }
+            );
+
+        hideTyping();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data || !data.success) {
+
+            throw new Error(
+                data?.error ||
+                "ENNIE не смогла ответить."
+            );
+
+        }
+
+        const answer = data.answer;
+
+        if (
+            typeof answer !== "string" ||
+            !answer.trim()
+        ) {
+            throw new Error(
+                "ENNIE вернула пустой ответ."
+            );
+        }
+
+        // Добавляем ответ ENNIE
+
+        messages.push({
+            role: "assistant",
+            content: answer
+        });
+
+        renderMessages();
+
+        // Сохраняем ответ в Supabase
+
+        await saveMessage(
+            "assistant",
+            answer
+        );
+
+        // Обновляем локальную историю
+
+        const currentChat = chats.find(
+            chat => chat.id === currentChatId
+        );
+
+        if (currentChat) {
+            currentChat.messages = [...messages];
+        }
+
+        renderChatHistory();
+
+        setOrbState("idle");
+
+    } catch (error) {
+
+        hideTyping();
+
+        setOrbState("idle");
+
+        console.error(
+            "ENNIE MESSAGE ERROR:",
+            error
+        );
+
+        const errorMessage =
+            error?.message ||
+            "Не удалось получить ответ.";
+
+        messages.push({
+            role: "assistant",
+            content:
+                "Не получилось получить ответ. " +
+                errorMessage
+        });
+
+        renderMessages();
+
+    } finally {
+
+        isSending = false;
+
+        input.focus();
+
+    }
+
+}
+
+// ======================================
+// SEND BUTTON
+// ======================================
+
+$("sendButton").addEventListener(
+    "click",
+    sendMessage
+);
+
+console.log(
+    "ENNIE V8 connection initialized."
+);
+
+  </script>
+  
+// ======================================
+// INITIAL DISPLAY
+// ======================================
+
+renderMessages();
+renderChatHistory();
+
+console.log("ENNIE NEXT interface initialized.");
+
+             </script>
+             <style>
+
+/* Дополнительные элементы ENNIE */
+
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.history-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.delete-chat {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    opacity: .65;
+}
+
+.delete-chat:active {
+    background: var(--panel2);
+    color: #ff5555;
+}
+
+.delete-chat svg {
+    width: 15px;
+    height: 15px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+}
+
+.history-actions {
+    padding: 10px 0;
+    border-top: 1px solid var(--border);
+}
+
+.history-action {
+    width: 100%;
+    padding: 11px;
+    background: transparent;
+    color: var(--muted);
+    text-align: left;
+    font-size: 11px;
+    border-radius: 9px;
+}
+
+.history-action:active {
+    background: var(--panel2);
+}
+
+.voice-button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 13px;
+    background: var(--panel2);
+    display: grid;
+    place-items: center;
+}
+
+.voice-button svg {
+    width: 19px;
+    height: 19px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+}
+
+.voice-button.recording {
+    background: #8b2525;
+    color: white;
+}
+
+.typing-dots {
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: typing 1s infinite alternate;
+}
+
+.typing-dots span:nth-child(2) {
+    animation-delay: .2s;
+}
+
+.typing-dots span:nth-child(3) {
+    animation-delay: .4s;
+}
+
+@keyframes typing {
+    to {
+        opacity: .25;
+        transform: translateY(-4px);
+    }
+}
+
+</style>
+
+<script>
+
+// ======================================
+// HISTORY MANAGEMENT
+// ======================================
+
+// Перерисовываем историю с кнопками удаления
+
+function renderChatHistory() {
+
+    const container = $("chatHistory");
+
+    container.innerHTML = "";
+
+    chats.forEach(chat => {
+
+        const item = document.createElement("div");
+
+        item.className =
+            "history-item" +
+            (chat.id === currentChatId ? " active" : "");
+
+        const title = document.createElement("span");
+
+        title.className = "history-title";
+
+        title.textContent =
+            chat.title || "Новый диалог";
+
+        title.addEventListener("click", () => {
+            openChat(chat.id);
+        });
+
+        const deleteButton =
+            document.createElement("button");
+
+        deleteButton.className = "delete-chat";
+
+        deleteButton.setAttribute(
+            "aria-label",
+            "Удалить диалог"
+        );
+
+        deleteButton.innerHTML = `
+            <svg viewBox="0 0 24 24">
+                <path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3"/>
+            </svg>
+        `;
+
+        deleteButton.addEventListener("click", event => {
+            event.stopPropagation();
+            deleteChat(chat.id);
+        });
+
+        item.appendChild(title);
+        item.appendChild(deleteButton);
+
+        container.appendChild(item);
+
+    });
+
+}
+
+// ======================================
+// DELETE ONE CHAT
+// ======================================
+
+async function deleteChat(chatId) {
+
+    if (!currentUser) return;
+
+    const confirmed = confirm(
+        "Удалить этот диалог?\n\nВсе его сообщения тоже будут удалены."
+    );
+
+    if (!confirmed) return;
+
+    try {
+
+        const { error: messagesError } = await db
+            .from("ennie_messages")
+            .delete()
+            .eq("chat_id", chatId);
+
+        if (messagesError) throw messagesError;
+
+        const { error: chatError } = await db
+            .from("ennie_chats")
+            .delete()
+            .eq("id", chatId)
+            .eq("user_id", currentUser.id);
+
+        if (chatError) throw chatError;
+
+        chats = chats.filter(
+            chat => chat.id !== chatId
+        );
+
+        if (currentChatId === chatId) {
+
+            currentChatId = null;
+            messages = [];
+
+            renderMessages();
+
+        }
+
+        renderChatHistory();
+
+    } catch (error) {
+
+        console.error("DELETE CHAT ERROR:", error);
+
+        alert(
+            "Не удалось удалить диалог. Проверь подключение и права Supabase."
+        );
+
+    }
+
+}
+
+// ======================================
+// CLEAR ALL HISTORY
+// ======================================
+
+const historyActions =
+    document.createElement("div");
+
+historyActions.className = "history-actions";
+
+historyActions.innerHTML = `
+    <button class="history-action" id="clearHistoryButton">
+        Очистить всю историю диалогов
+    </button>
+`;
+
+$("sidebar").insertBefore(
+    historyActions,
+    $("sidebar").querySelector(".sidebar-bottom")
+);
+
+$("clearHistoryButton").addEventListener(
+    "click",
+    async () => {
+
+        if (!currentUser) return;
+
+        if (chats.length === 0) {
+            alert("История уже пустая.");
+            return;
+        }
+
+        const confirmed = confirm(
+            "Удалить ВСЕ диалоги и сообщения?\n\nДолговременная память ENNIE при этом останется."
+        );
+
+        if (!confirmed) return;
+
+        try {
+
+            for (const chat of [...chats]) {
+
+                const { error: messageError } = await db
+                    .from("ennie_messages")
+                    .delete()
+                    .eq("chat_id", chat.id);
+
+                if (messageError) throw messageError;
+
+                const { error: chatError } = await db
+                    .from("ennie_chats")
+                    .delete()
+                    .eq("id", chat.id)
+                    .eq("user_id", currentUser.id);
+
+                if (chatError) throw chatError;
+
+            }
+
+            chats = [];
+            messages = [];
+            currentChatId = null;
+
+            renderMessages();
+            renderChatHistory();
+
+            alert("История диалогов очищена.");
+
+        } catch (error) {
+
+            console.error("CLEAR HISTORY ERROR:", error);
+
+            alert(
+                "Не удалось полностью очистить историю."
+            );
+
+        }
+
+    }
+);
+
+// ======================================
+// VOICE INPUT
+// ======================================
+
+const voiceButton = document.createElement("button");
+
+voiceButton.className = "voice-button";
+
+voiceButton.id = "voiceButton";
+
+voiceButton.setAttribute(
+    "aria-label",
+    "Голосовой ввод"
+);
+
+voiceButton.innerHTML = `
+    <svg viewBox="0 0 24 24">
+        <rect x="9" y="2" width="6" height="13" rx="3"/>
+        <path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/>
+    </svg>
+`;
+
+$("composer").prepend(voiceButton);
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+let recognition = null;
+
+if (SpeechRecognition) {
+
+    recognition = new SpeechRecognition();
+
+    recognition.lang = "ru-RU";
+
+    recognition.interimResults = true;
+
+    recognition.continuous = false;
+
+    recognition.onstart = () => {
+        voiceButton.classList.add("recording");
+        setOrbState("speaking");
+    };
+
+    recognition.onresult = event => {
+
+        let transcript = "";
+
+        for (
+            let i = event.resultIndex;
+            i < event.results.length;
+            i++
+        ) {
+            transcript +=
+                event.results[i][0].transcript;
+        }
+
+        input.value = transcript;
+
+        input.dispatchEvent(
+            new Event("input")
+        );
+
+    };
+
+    recognition.onend = () => {
+
+        voiceButton.classList.remove("recording");
+
+        setOrbState("idle");
+
+    };
+
+    recognition.onerror = event => {
+
+        console.error(
+            "VOICE ERROR:",
+            event.error
+        );
+
+        voiceButton.classList.remove("recording");
+
+        setOrbState("idle");
+
+    };
+
+    voiceButton.addEventListener("click", () => {
+
+        try {
+
+            recognition.start();
+
+        } catch (error) {
+
+            try {
+                recognition.stop();
+            } catch (_) {}
+
+        }
+
+    });
+
+} else {
+
+    voiceButton.addEventListener("click", () => {
+
+        alert(
+            "Голосовой ввод не поддерживается этим браузером."
+        );
+
+    });
+
+}
+
+// ======================================
+// SPEECH OUTPUT
+// ======================================
+
+function speakEnnie(text) {
+
+    if (!("speechSynthesis" in window)) {
+
+        alert(
+            "Озвучивание не поддерживается браузером."
+        );
+
+        return;
+
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(text);
+
+    utterance.lang = "ru-RU";
+
+    utterance.rate = 1;
+
+    utterance.pitch = 1.05;
+
+    window.speechSynthesis.speak(utterance);
+
+}
+
+// ======================================
+// INITIALIZATION
+// ======================================
+
+renderChatHistory();
+
+console.log("ENNIE NEXT — all interface modules loaded.");
+
+</script>
+
+</body>
+</html>
