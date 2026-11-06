@@ -999,12 +999,12 @@ async function saveMessage(role, content) {
         .from("ennie_messages")
         .insert({
             chat_id: currentChatId,
+            user_id: currentUser.id,
             role: role,
             content: content
         });
 
     if (error) {
-        console.error("Ошибка сохранения сообщения:", error);
         throw error;
     }
 }
