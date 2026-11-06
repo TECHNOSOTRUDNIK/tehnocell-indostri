@@ -1172,6 +1172,7 @@ async function sendMessage() {
         });
 
         await saveMessage("user", text);
+        console.log("USER MESSAGE SAVED");
 
         showTyping();
 
@@ -1207,6 +1208,7 @@ async function sendMessage() {
         addMessage("assistant", answer);
 
         await saveMessage("assistant", answer);
+        console.log("ENNIE MESSAGE SAVED");
 
         setStatus("На связи");
 
