@@ -1054,7 +1054,7 @@ ENNIE.connectBrain(async ({ system, messages, memory }) => {
     const lastMessage = messages[messages.length - 1];
 
     const { data, error } = await db.functions.invoke(
-        "ennie-core-v6",
+        "ennie-core-v7",
         {
             body: {
                 chat_id: currentChatId,
