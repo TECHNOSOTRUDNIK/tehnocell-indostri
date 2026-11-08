@@ -1434,32 +1434,57 @@ async function sendMessage() {
     }
 }
     /* =================================
-   VOICE OUTPUT
+   FISH AUDIO VOICE OUTPUT
 ================================= */
 
-function speakText(text) {
-    if (!("speechSynthesis" in window)) return;
+let ennieAudio = null;
 
-    window.speechSynthesis.cancel();
+async function speakText(text) {
+    if (!text) return;
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ru-RU";
-    utterance.rate = 1;
-    utterance.pitch = 1;
+    try {
+        if (ennieAudio) {
+            ennieAudio.pause();
+            URL.revokeObjectURL(ennieAudio.src);
+            ennieAudio = null;
+        }
 
-    utterance.onstart = () => {
         document.body.classList.add("speaking");
-    };
 
-    utterance.onend = () => {
+        const { data, error } = await supabase.functions.invoke(
+            "ennie-voice",
+            {
+                body: { text: text }
+            }
+        );
+
+        if (error) throw error;
+
+        const audioBlob = data instanceof Blob
+            ? data
+            : new Blob([data], { type: "audio/mpeg" });
+
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        ennieAudio = new Audio(audioUrl);
+
+        ennieAudio.onended = () => {
+            document.body.classList.remove("speaking");
+            URL.revokeObjectURL(audioUrl);
+        };
+
+        ennieAudio.onerror = () => {
+            document.body.classList.remove("speaking");
+            URL.revokeObjectURL(audioUrl);
+            console.error("ENNIE AUDIO PLAYBACK ERROR");
+        };
+
+        await ennieAudio.play();
+
+    } catch (error) {
         document.body.classList.remove("speaking");
-    };
-
-    utterance.onerror = () => {
-        document.body.classList.remove("speaking");
-    };
-
-    window.speechSynthesis.speak(utterance);
+        console.error("ENNIE VOICE ERROR:", error);
+    }
 }
 
 /* =================================
