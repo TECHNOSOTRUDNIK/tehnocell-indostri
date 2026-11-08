@@ -1433,7 +1433,7 @@ async function sendMessage() {
         messageInput.focus();
     }
 }
-    /* =================================
+/* =================================
    FISH AUDIO VOICE OUTPUT
 ================================= */
 
@@ -1452,7 +1452,7 @@ async function speakText(text) {
         document.body.classList.add("speaking");
 
         const { data: sessionData, error: sessionError } =
-            await supabase.auth.getSession();
+            await supabaseClient.auth.getSession();
 
         if (sessionError) throw sessionError;
 
@@ -1463,12 +1463,12 @@ async function speakText(text) {
         }
 
         const response = await fetch(
-            `${supabase.supabaseUrl}/functions/v1/ennie-voice`,
+            `${SUPABASE_URL}/functions/v1/ennie-voice`,
             {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "apikey": supabase.supabaseKey,
+                    "apikey": SUPABASE_KEY,
                     "Authorization": `Bearer ${session.access_token}`
                 },
                 body: JSON.stringify({ text })
