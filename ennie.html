@@ -1451,19 +1451,35 @@ async function speakText(text) {
 
         document.body.classList.add("speaking");
 
-        const { data, error } = await supabase.functions.invoke(
-            "ennie-voice",
+        const { data: sessionData, error: sessionError } =
+            await supabase.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        const session = sessionData.session;
+
+        if (!session) {
+            throw new Error("Необходим вход в TEHNOCELL ID.");
+        }
+
+        const response = await fetch(
+            `${supabase.supabaseUrl}/functions/v1/ennie-voice`,
             {
-                body: { text: text }
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": supabase.supabaseKey,
+                    "Authorization": `Bearer ${session.access_token}`
+                },
+                body: JSON.stringify({ text })
             }
         );
 
-        if (error) throw error;
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
 
-        const audioBlob = data instanceof Blob
-            ? data
-            : new Blob([data], { type: "audio/mpeg" });
-
+        const audioBlob = await response.blob();
         const audioUrl = URL.createObjectURL(audioBlob);
 
         ennieAudio = new Audio(audioUrl);
