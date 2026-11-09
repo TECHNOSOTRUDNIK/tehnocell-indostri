@@ -249,7 +249,9 @@ button {
     font-size:17px;
 }
 
-/* WELCOME */
+/* =================================
+   ENNIE — LIVING CORE
+================================= */
 
 .welcome {
     flex:1;
@@ -258,153 +260,110 @@ button {
     align-items:center;
     justify-content:center;
     text-align:center;
-    padding:25px;
-    overflow-y:auto;
+    padding:20px;
+    overflow:hidden;
+    position:relative;
 }
 
 .core-wrap {
-    width:210px;
-    height:210px;
+    width:190px;
+    height:190px;
     position:relative;
     display:grid;
     place-items:center;
-    margin-bottom:35px;
+    margin-bottom:22px;
+    isolation:isolate;
 }
 
-.core-glow {
-    position:absolute;
-    width:220px;
-    height:220px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(255,255,255,.22),rgba(255,255,255,.07) 38%,transparent 72%);
-    filter:blur(19px);
-    animation:glow 6s ease-in-out infinite;
+#ennieCoreCanvas {
+    width:100%;
+    height:100%;
+    display:block;
+    overflow:visible;
 }
 
-.core {
-    width:154px;
-    height:154px;
-    border-radius:50%;
-    position:relative;
-    z-index:2;
-    background:
-      radial-gradient(ellipse at 31% 23%,rgba(255,255,255,.72),transparent 13%),
-      radial-gradient(ellipse at 65% 72%,rgba(255,255,255,.12),transparent 38%),
-      radial-gradient(circle at 50% 50%,rgba(255,255,255,.035) 0 48%,rgba(255,255,255,.12) 68%,rgba(255,255,255,.02) 74%,transparent 76%);
-    border:1px solid rgba(255,255,255,.42);
-    box-shadow:inset 0 0 24px rgba(255,255,255,.12),0 0 24px rgba(255,255,255,.28),0 0 65px rgba(255,255,255,.12);
-    animation:coreBreath 6s ease-in-out infinite;
-    backdrop-filter:blur(2px);
-}
-
-.core:before {
+.core-wrap::before {
     content:"";
     position:absolute;
-    inset:-9px;
-    border-radius:48% 52% 49% 51% / 51% 47% 53% 49%;
-    border:2px solid rgba(255,255,255,.88);
-    border-right-color:rgba(255,255,255,.28);
-    border-bottom-color:rgba(255,255,255,.58);
-    box-shadow:0 0 9px rgba(255,255,255,.8),0 0 24px rgba(255,255,255,.42),inset 0 0 12px rgba(255,255,255,.22);
-    animation:rotateCore 16s linear infinite,orbRipple 7s ease-in-out infinite;
-}
-
-.core:after {
-    content:"";
-    position:absolute;
-    inset:-17px;
+    inset:12%;
     border-radius:50%;
-    border:1px solid rgba(255,255,255,.22);
-    border-left-color:rgba(255,255,255,.75);
-    border-top-color:rgba(255,255,255,.5);
-    filter:drop-shadow(0 0 8px rgba(255,255,255,.4));
-    animation:rotateCore 23s linear infinite reverse;
+    background:radial-gradient(
+        circle,
+        rgba(255,255,255,.18),
+        rgba(255,255,255,.06) 42%,
+        transparent 72%
+    );
+    filter:blur(22px);
+    animation:coreAura 5s ease-in-out infinite;
+    z-index:-1;
 }
 
-@keyframes orbRipple {
+@keyframes coreAura {
     0%,100% {
-        border-radius:48% 52% 49% 51% / 51% 47% 53% 49%;
-        transform:scale(1);
+        transform:scale(.85);
+        opacity:.45;
     }
     50% {
-        border-radius:53% 47% 52% 48% / 47% 54% 46% 53%;
-        transform:scale(1.025);
+        transform:scale(1.2);
+        opacity:1;
     }
-}
-
-.core-ring {
-    position:absolute;
-    width:175px;
-    height:175px;
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:50%;
-    transform:rotateX(65deg);
-        animation:ringMove 9s linear infinite;
-}
-
-.core-particle {
-    position:absolute;
-    width:3px;
-    height:3px;
-    border-radius:50%;
-    background:white;
-    box-shadow:0 0 8px white;
-    animation:particle 5s ease-in-out infinite;
-}
-
-.core-particle:nth-child(2) {
-    top:25px;
-    left:45px;
-    animation-delay:-2s;
-}
-
-.core-particle:nth-child(3) {
-    bottom:30px;
-    right:38px;
-    animation-delay:-3s;
-}
-
-.core-particle:nth-child(4) {
-    top:65px;
-    right:12px;
-    animation-delay:-1s;
-}
-
-@keyframes glow {
-    0%,100% {transform:scale(.9);opacity:.6}
-    50% {transform:scale(1.12);opacity:1}
-}
-
-@keyframes coreBreath {
-    0%,100% {transform:scale(.96);filter:brightness(.95)}
-    50% {transform:scale(1.04);filter:brightness(1.15)}
-}
-
-@keyframes rotateCore {
-    to {transform:rotate(360deg)}
-}
-
-@keyframes ringMove {
-    to {transform:rotateX(65deg) rotate(360deg)}
-}
-
-@keyframes particle {
-    0%,100% {transform:translate(0,0);opacity:.3}
-    50% {transform:translate(9px,-12px);opacity:1}
 }
 
 .welcome-title {
     font-size:27px;
     font-weight:600;
-    letter-spacing:4px;
-    margin-bottom:12px;
+    letter-spacing:7px;
+    margin-top:3px;
+    color:#fff;
+    text-shadow:0 0 25px rgba(255,255,255,.18);
 }
 
 .welcome-sub {
+    margin-top:13px;
+    color:#888;
     font-size:13px;
-    color:#858585;
-    line-height:1.7;
-    max-width:300px;
+    line-height:1.9;
+    letter-spacing:.2px;
+}
+
+.welcome-greeting {
+    margin-top:17px;
+    color:#eee;
+    font-size:14px;
+    font-weight:500;
+    min-height:22px;
+    animation:greetingAppear .8s ease both;
+}
+
+@keyframes greetingAppear {
+    from {
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@media(max-width:700px) {
+    .core-wrap {
+        width:170px;
+        height:170px;
+        margin-bottom:20px;
+    }
+
+    .welcome-title {
+        font-size:24px;
+    }
+
+    .welcome-sub {
+        font-size:12px;
+    }
+
+    .welcome-greeting {
+        font-size:13px;
+    }
 }
 
 /* MESSAGES */
