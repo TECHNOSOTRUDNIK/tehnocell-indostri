@@ -2031,7 +2031,7 @@ startEnnie();
     const TAU = Math.PI * 2;
 
     function resize() {
-        const rect = wrap.getBoundingClientRect();
+        const rect = canvas.getBoundingClientRect();
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
         w = rect.width;
@@ -2042,13 +2042,14 @@ startEnnie();
 
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        particles = Array.from({ length: 65 }, () => ({
-            angle: Math.random() * TAU,
-            radius: 105 + Math.random() * 35,
-            speed: .001 + Math.random() * .003,
-            size: .5 + Math.random() * 1.7,
-            alpha: .2 + Math.random() * .7
-        }));
+        particles = Array.from({ length: 130 }, () => ({
+    angle: Math.random() * TAU,
+    radius: 125 + Math.random() * 85,
+    speed: .001 + Math.random() * .004,
+    size: .8 + Math.random() * 2.2,
+    alpha: .4 + Math.random() * .6,
+    phase: Math.random() * TAU
+}));
     }
 
     function heartPoint(t) {
@@ -2193,25 +2194,34 @@ startEnnie();
     }
 
     function drawParticles(cx, cy) {
-        particles.forEach(p => {
-            p.angle += p.speed;
+    particles.forEach(p => {
+        p.angle += p.speed;
 
-            const x = cx + Math.cos(p.angle) * p.radius;
-            const y = cy + Math.sin(p.angle) * p.radius;
+        const x = cx + Math.cos(p.angle) * p.radius;
+        const y = cy + Math.sin(p.angle) * p.radius;
 
-            const flicker =
-                .55 + Math.sin(time * 2 + p.angle * 3) * .35;
+        const flicker =
+            .55 + Math.sin(time * 2.5 + p.phase) * .4;
 
-            ctx.beginPath();
-            ctx.arc(x, y, p.size, 0, TAU);
+        const alpha = Math.max(.15, p.alpha * flicker);
 
-            ctx.fillStyle =
-                `rgba(255,255,255,${p.alpha * flicker})`;
+        // Мягкое свечение частицы
+        ctx.beginPath();
+        ctx.arc(x, y, p.size * 3, 0, TAU);
+        ctx.fillStyle = `rgba(255,255,255,${alpha * .12})`;
+        ctx.fill();
 
-            ctx.shadowColor = "#ffffff";
-            ctx.shadowBlur = 8;
-            ctx.fill();
-        });
+        // Яркое ядро частицы
+        ctx.beginPath();
+        ctx.arc(x, y, p.size, 0, TAU);
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.shadowColor = "#ffffff";
+        ctx.shadowBlur = 12;
+        ctx.fill();
+    });
+
+    ctx.shadowBlur = 0;
+    }
 
         ctx.shadowBlur = 0;
     }
