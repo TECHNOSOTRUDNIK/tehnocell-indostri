@@ -1378,7 +1378,7 @@ async function sendMessage() {
         /* Отправляем запрос в существующую Edge Function */
 
         const { data, error } = await supabaseClient.functions.invoke(
-            "ennie-core-v8",
+            "ennie-core-v9",
             {
                 body: {
                     messages: previousMessages || []
