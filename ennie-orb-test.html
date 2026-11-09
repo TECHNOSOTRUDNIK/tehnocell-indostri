@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080808">
-<title>ENNIE — Living Orb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#050505">
+<title>ENNIE — Living Core</title>
 
 <style>
 * {
@@ -14,12 +14,10 @@
 }
 
 body {
-    width: 100%;
-    min-height: 100vh;
-    overflow: hidden;
-    background: #080808;
+    background: #050505;
     color: white;
     font-family: Arial, sans-serif;
+    overflow: hidden;
 }
 
 .scene {
@@ -28,266 +26,76 @@ body {
     height: 100vh;
     height: 100dvh;
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: hidden;
+    align-items: center;
     background:
         radial-gradient(ellipse at center,
-        #202020 0%,
-        #101010 38%,
-        #080808 75%);
+        #171717 0%,
+        #090909 50%,
+        #030303 100%);
+    overflow: hidden;
 }
 
-/* BACKGROUND LIGHT */
-
-.ambient {
+canvas {
     position: absolute;
-    width: 75vw;
-    height: 75vw;
-    max-width: 600px;
-    max-height: 600px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.035);
-    filter: blur(100px);
-    animation: ambientPulse 7s ease-in-out infinite;
-}
-
-@keyframes ambientPulse {
-    0%,100% {
-        transform: scale(.8);
-        opacity: .35;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: .8;
-    }
-}
-
-/* ORB */
-
-.orb-container {
-    position: relative;
-    width: min(76vw, 350px);
-    aspect-ratio: 1;
-    z-index: 2;
-    animation: floating 6s ease-in-out infinite;
-}
-
-@keyframes floating {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-9px); }
-}
-
-.orb-glow {
-    position: absolute;
-    inset: -25%;
-    border-radius: 50%;
-    background: rgba(255,255,255,.10);
-    filter: blur(45px);
-    animation: glowPulse 4s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-    0%,100% {
-        opacity: .35;
-        transform: scale(.85);
-    }
-    50% {
-        opacity: .85;
-        transform: scale(1.12);
-    }
-}
-
-.orb-svg {
-    position: relative;
+    inset: 0;
     width: 100%;
     height: 100%;
-    overflow: visible;
-    filter: drop-shadow(0 0 25px rgba(255,255,255,.12));
 }
 
-.orb-shape {
-    fill: url(#orbGradient);
-    stroke: rgba(255,255,255,.9);
-    stroke-width: 1.1;
-}
-
-.orb-highlight {
-    fill: none;
-    stroke: rgba(255,255,255,.8);
-    stroke-width: 1;
-    opacity: .35;
-}
-
-/* LIVING LINE */
-
-.wave-line {
-    fill: none;
-    stroke: #bcbcbc;
-    stroke-width: 3.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    filter: url(#lineGlow);
-}
-
-/* ENERGY RINGS */
-
-.energy-ring {
-    position: absolute;
-    inset: -8%;
-    border: 1px solid rgba(255,255,255,.16);
-    border-radius: 50%;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.ring-one {
-    animation: ringPulse 5s ease-out infinite;
-}
-
-.ring-two {
-    animation: ringPulse 5s ease-out 2.5s infinite;
-}
-
-@keyframes ringPulse {
-    0% {
-        transform: scale(.8);
-        opacity: 0;
-    }
-    25% {
-        opacity: .45;
-    }
-    100% {
-        transform: scale(1.45);
-        opacity: 0;
-    }
-}
-
-/* PARTICLES */
-
-.particles {
-    position: absolute;
-    inset: -40%;
-    pointer-events: none;
-}
-
-.particle {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: white;
-    opacity: 0;
-    box-shadow: 0 0 12px white;
-    animation: particleMove var(--duration) ease-in-out infinite;
-    animation-delay: var(--delay);
-}
-
-@keyframes particleMove {
-    0% {
-        transform: translate(0,30px) scale(.4);
-        opacity: 0;
-    }
-    30% { opacity: .7; }
-    70% { opacity: .5; }
-    100% {
-        transform: translate(var(--x),var(--y)) scale(0);
-        opacity: 0;
-    }
-}
-
-/* INTERFACE */
-
-.top-label {
+.header {
     position: absolute;
     top: 45px;
-    left: 0;
     width: 100%;
     text-align: center;
-    letter-spacing: 7px;
     font-size: 12px;
-    color: rgba(255,255,255,.5);
-    font-weight: 300;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,.55);
+    z-index: 3;
 }
 
 .status {
     position: absolute;
     bottom: 125px;
-    width: 100%;
     text-align: center;
-    font-size: 13px;
+    width: 100%;
+    font-size: 11px;
+    letter-spacing: 4px;
     color: rgba(255,255,255,.5);
-    letter-spacing: 2px;
-    transition: .4s;
+    z-index: 3;
+    transition: .5s;
 }
 
 .controls {
     position: absolute;
     bottom: 35px;
     display: flex;
-    gap: 9px;
+    gap: 8px;
     justify-content: center;
-    flex-wrap: wrap;
     width: 100%;
-    padding: 0 12px;
+    padding: 0 8px;
+    z-index: 4;
 }
 
-.controls button {
-    background: rgba(255,255,255,.07);
-    border: 1px solid rgba(255,255,255,.15);
-    color: white;
+button {
+    padding: 12px 13px;
     border-radius: 30px;
-    padding: 11px 15px;
-    font-size: 11px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.07);
+    color: white;
+    font-size: 10px;
     letter-spacing: 1px;
-    cursor: pointer;
 }
 
-.controls button.active {
+button.active {
     background: white;
     color: black;
 }
 
-/* STATES */
-
-body.listening .orb-glow {
-    animation-duration: 1.5s;
-}
-
-body.listening .wave-line {
-    stroke: white;
-    stroke-width: 4;
-}
-
-body.thinking .orb-container {
-    animation-duration: 2s;
-}
-
-body.speaking .energy-ring {
-    animation-duration: 1.5s;
-}
-
-body.speaking .orb-glow {
-    opacity: 1;
-    filter: blur(65px);
-}
-
-@media (max-width: 500px) {
-    .orb-container {
-        width: min(76vw, 310px);
-    }
-
-    .top-label {
-        top: 55px;
-    }
-
-    .status {
-        bottom: 130px;
-    }
-
-    .controls button {
-        padding: 10px 12px;
-        font-size: 10px;
+@media(max-width:390px) {
+    button {
+        padding: 10px 9px;
+        font-size: 9px;
     }
 }
 </style>
@@ -297,417 +105,608 @@ body.speaking .orb-glow {
 
 <div class="scene">
 
-    <div class="ambient"></div>
+    <canvas id="core"></canvas>
 
-    <div class="top-label">TEHNOCELL AI</div>
-
-    <div class="orb-container" id="orb">
-
-        <div class="orb-glow"></div>
-
-        <div class="energy-ring ring-one"></div>
-        <div class="energy-ring ring-two"></div>
-
-        <div class="particles" id="particles"></div>
-
-        <svg class="orb-svg"
-             viewBox="0 0 400 400"
-             xmlns="http://www.w3.org/2000/svg">
-
-            <defs>
-
-                <radialGradient id="orbGradient"
-                    cx="35%" cy="25%" r="80%">
-
-                    <stop offset="0%" stop-color="#ffffff"/>
-                    <stop offset="70%" stop-color="#f8f8f8"/>
-                    <stop offset="100%" stop-color="#dedede"/>
-
-                </radialGradient>
-
-                <filter id="lineGlow"
-                    x="-100%" y="-100%"
-                    width="300%" height="300%">
-
-                    <feGaussianBlur stdDeviation="4"
-                        result="blur"/>
-
-                    <feMerge>
-                        <feMergeNode in="blur"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-
-                </filter>
-
-            </defs>
-
-            <path id="orbShape" class="orb-shape"></path>
-
-            <path id="orbHighlight"
-                  class="orb-highlight"></path>
-
-            <path id="waveLine" class="wave-line"></path>
-
-        </svg>
-
-    </div>
+    <div class="header">TEHNOCELL AI</div>
 
     <div class="status" id="status">
         ENNIE IS HERE
     </div>
 
     <div class="controls">
-
-        <button class="active" data-state="idle">
-            ОЖИДАНИЕ
-        </button>
-
-        <button data-state="listening">
-            СЛУШАЮ
-        </button>
-
-        <button data-state="thinking">
-            ДУМАЮ
-        </button>
-
-        <button data-state="speaking">
-            ОТВЕЧАЮ
-        </button>
-
+        <button class="active" data-state="idle">ОЖИДАНИЕ</button>
+        <button data-state="listening">СЛУШАЮ</button>
+        <button data-state="thinking">ДУМАЮ</button>
+        <button data-state="speaking">ОТВЕЧАЮ</button>
     </div>
 
 </div>
 
 <script>
+/* =====================================
+   ENNIE LIVING CORE
+===================================== */
 
-/* =================================
-   ENNIE MORPH ENGINE
-================================= */
+const canvas = document.getElementById("core");
+const ctx = canvas.getContext("2d");
 
-const shape = document.getElementById("orbShape");
-const highlight = document.getElementById("orbHighlight");
-const wave = document.getElementById("waveLine");
-const status = document.getElementById("status");
+let W, H, DPR;
+let centerX, centerY;
+let coreSize;
 
-const CENTER = 200;
-const RADIUS = 150;
-const POINTS = 120;
+function resize() {
 
-let currentMorph = 0;
+    W = window.innerWidth;
+    H = window.innerHeight;
+
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = W * DPR;
+    canvas.height = H * DPR;
+
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+    centerX = W / 2;
+    centerY = H / 2 - 10;
+
+    coreSize = Math.min(W * .37, H * .25, 190);
+}
+
+window.addEventListener("resize", resize);
+resize();
+
+/* =====================================
+   ANIMATION SETTINGS
+===================================== */
+
+let morph = 0;
 let targetMorph = 0;
 
-let state = "idle";
-let startTime = performance.now();
-
-let lastTransform = performance.now();
-let transformInterval = 7500;
-
-let transitionStart = null;
+let transitionStart = 0;
 let transitionFrom = 0;
 
-const circlePoints = [];
-const heartPoints = [];
+let lastTransformation = performance.now();
 
-/* CIRCLE */
+let currentState = "idle";
 
-for (let i = 0; i < POINTS; i++) {
+const statusElement = document.getElementById("status");
 
-    const angle = (i / POINTS) * Math.PI * 2;
+const STATE_NAMES = {
+    idle: "ENNIE IS HERE",
+    listening: "I'M LISTENING",
+    thinking: "THINKING...",
+    speaking: "SPEAKING"
+};
 
-    circlePoints.push({
-        x: CENTER + Math.cos(angle) * RADIUS,
-        y: CENTER + Math.sin(angle) * RADIUS
-    });
+/* =====================================
+   EASING
+===================================== */
 
+function smoothStep(t) {
+    return t * t * (3 - 2 * t);
 }
 
-/* HEART */
+function easeInOut(t) {
+    return t < .5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
 
-for (let i = 0; i < POINTS; i++) {
+/* =====================================
+   SHAPE GEOMETRY
+===================================== */
 
-    const angle = (i / POINTS) * Math.PI * 2;
+function circlePoint(a) {
 
-    const x = 16 * Math.pow(Math.sin(angle), 3);
+    return {
+        x: Math.cos(a),
+        y: Math.sin(a)
+    };
+}
+
+/*
+   Rounded heart geometry.
+   The bottom is deliberately softened.
+*/
+
+function heartPoint(a) {
+
+    const x = 16 * Math.pow(Math.sin(a), 3);
 
     const y =
-        13 * Math.cos(angle)
-        - 5 * Math.cos(2 * angle)
-        - 2 * Math.cos(3 * angle)
-        - Math.cos(4 * angle);
+        13 * Math.cos(a)
+        - 5 * Math.cos(2 * a)
+        - 2 * Math.cos(3 * a)
+        - Math.cos(4 * a);
 
-    heartPoints.push({
-        x: CENTER + x * 9,
-        y: CENTER - y * 9
-    });
-
+    return {
+        x: x / 17,
+        y: -y / 17
+    };
 }
 
-/* SMOOTH SHAPE */
+function getPoint(a, time, extra = 0) {
 
-function smoothPath(points) {
+    const c = circlePoint(a);
+    const h = heartPoint(a);
 
-    let d = "";
+    let x = c.x + (h.x - c.x) * morph;
+    let y = c.y + (h.y - c.y) * morph;
 
-    for (let i = 0; i < points.length; i++) {
+    const breathing =
+        Math.sin(time * .0015 + a * 3) * .008;
 
-        const current = points[i];
+    const organic =
+        Math.sin(a * 5 + time * .0008) * .008;
 
-        const next = points[(i + 1) % points.length];
+    const factor = 1 + breathing + organic + extra;
 
-        const midX = (current.x + next.x) / 2;
-        const midY = (current.y + next.y) / 2;
+    return {
+        x: x * factor,
+        y: y * factor
+    };
+}
+
+function createShape(time, extra = 0) {
+
+    const path = new Path2D();
+
+    const count = 220;
+
+    for (let i = 0; i <= count; i++) {
+
+        const a = (i / count) * Math.PI * 2;
+
+        const p = getPoint(a, time, extra);
+
+        const x = centerX + p.x * coreSize;
+        const y = centerY + p.y * coreSize;
 
         if (i === 0) {
-            d = `M ${midX} ${midY}`;
+            path.moveTo(x, y);
         } else {
-            d += ` Q ${current.x} ${current.y} ${midX} ${midY}`;
+            path.lineTo(x, y);
+        }
+    }
+
+    path.closePath();
+
+    return path;
+}
+
+/* =====================================
+   OUTER GLOW
+===================================== */
+
+function drawGlow(time) {
+
+    const pulse = Math.sin(time * .0014) * 8;
+
+    const gradient = ctx.createRadialGradient(
+        centerX,
+        centerY,
+        coreSize * .2,
+        centerX,
+        centerY,
+        coreSize * 2.2
+    );
+
+    gradient.addColorStop(0, "rgba(255,255,255,.15)");
+    gradient.addColorStop(.4, "rgba(255,255,255,.065)");
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = gradient;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        centerX,
+        centerY,
+        coreSize * 2 + pulse,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+}
+
+/* =====================================
+   WHITE ENERGY BODY
+===================================== */
+
+function drawBody(time, path) {
+
+    ctx.save();
+
+    ctx.shadowColor = "rgba(255,255,255,.5)";
+    ctx.shadowBlur = 35;
+
+    const gradient = ctx.createRadialGradient(
+        centerX - coreSize * .28,
+        centerY - coreSize * .35,
+        2,
+        centerX,
+        centerY,
+        coreSize * 1.4
+    );
+
+    gradient.addColorStop(0, "#ffffff");
+    gradient.addColorStop(.55, "#fafafa");
+    gradient.addColorStop(.82, "#e8e8e8");
+    gradient.addColorStop(1, "#bcbfc7");
+
+    ctx.fillStyle = gradient;
+    ctx.fill(path);
+
+    ctx.restore();
+
+    /* INNER LIGHT */
+
+    ctx.save();
+
+    ctx.clip(path);
+
+    const inner = ctx.createRadialGradient(
+        centerX - coreSize * .25,
+        centerY - coreSize * .3,
+        0,
+        centerX,
+        centerY,
+        coreSize * 1.1
+    );
+
+    inner.addColorStop(0, "rgba(255,255,255,.95)");
+    inner.addColorStop(.55, "rgba(255,255,255,.3)");
+    inner.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.fillStyle = inner;
+
+    ctx.fillRect(
+        centerX - coreSize * 1.5,
+        centerY - coreSize * 1.5,
+        coreSize * 3,
+        coreSize * 3
+    );
+
+    ctx.restore();
+}
+
+/* =====================================
+   FLOWING ENERGY LAYERS
+===================================== */
+
+function drawEnergyLayers(time) {
+
+    const layers = 7;
+
+    ctx.save();
+
+    for (let layer = 0; layer < layers; layer++) {
+
+        const phase =
+            time * (.00035 + layer * .000035)
+            + layer * 1.15;
+
+        const path = new Path2D();
+
+        const count = 180;
+
+        for (let i = 0; i <= count; i++) {
+
+            const a = i / count * Math.PI * 2;
+
+            const flow =
+                Math.sin(a * 3 + phase) * .10 +
+                Math.sin(a * 5 - phase * 1.3) * .035 +
+                Math.cos(a * 2 + phase * .7) * .025;
+
+            const radius = 1 + flow;
+
+            const p = getPoint(a, time);
+
+            const x = centerX + p.x * coreSize * radius;
+            const y = centerY + p.y * coreSize * radius;
+
+            if (i === 0) path.moveTo(x,y);
+            else path.lineTo(x,y);
         }
 
+        path.closePath();
+
+        ctx.strokeStyle =
+            `rgba(255,255,255,${.15 + Math.sin(phase) * .08})`;
+
+        ctx.lineWidth = 1.5 + layer * .35;
+
+        ctx.shadowColor = "rgba(255,255,255,.85)";
+        ctx.shadowBlur = 9 + layer * 2;
+
+        ctx.stroke(path);
     }
 
-    return d + " Z";
+    ctx.restore();
 }
 
-/* MORPH */
+/* =====================================
+   MOVING SILK RIBBONS
+===================================== */
 
-function getShape(morph, time) {
+function drawRibbons(time) {
 
-    const points = [];
+    ctx.save();
 
-    for (let i = 0; i < POINTS; i++) {
+    ctx.globalCompositeOperation = "screen";
 
-        const a = circlePoints[i];
-        const b = heartPoints[i];
+    const ribbonCount = 5;
 
-        const wobble =
-            Math.sin(time * 0.0015 + i * 0.08) * 1.2;
+    for (let r = 0; r < ribbonCount; r++) {
 
-        points.push({
+        const phase = time * .00045 + r * 1.25;
 
-            x: a.x + (b.x - a.x) * morph,
+        ctx.beginPath();
 
-            y: a.y + (b.y - a.y) * morph + wobble
+        for (let i = 0; i <= 120; i++) {
 
-        });
+            const t = i / 120;
 
+            const angle = t * Math.PI * 2;
+
+            const wave =
+                Math.sin(angle * 2 + phase) * .12 +
+                Math.sin(angle * 3 - phase * 1.4) * .05;
+
+            const p = getPoint(angle, time);
+
+            const radius = 1 + wave;
+
+            const x = centerX + p.x * coreSize * radius;
+            const y = centerY + p.y * coreSize * radius;
+
+            if (i === 0) ctx.moveTo(x,y);
+            else ctx.lineTo(x,y);
+        }
+
+        const alpha = .15 + Math.sin(phase) * .07;
+
+        ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+        ctx.lineWidth = 3 + r * .8;
+
+        ctx.shadowColor = "white";
+        ctx.shadowBlur = 15;
+
+        ctx.stroke();
     }
 
-    return points;
+    ctx.restore();
 }
 
-/* INTERNAL LIVING LINE */
+/* =====================================
+   PARTICLE SYSTEM
+===================================== */
 
-function createWave(time, morph) {
+const particles = [];
 
-    const points = [];
+for (let i = 0; i < 100; i++) {
 
-    const speed = time * 0.001;
+    particles.push({
+        angle: Math.random() * Math.PI * 2,
+        distance: .8 + Math.random() * 1.1,
+        speed: .0001 + Math.random() * .0005,
+        size: .5 + Math.random() * 2.2,
+        phase: Math.random() * Math.PI * 2
+    });
+}
 
-    for (let i = 0; i <= 100; i++) {
+function drawParticles(time) {
 
-        const t = i / 100;
+    ctx.save();
 
-        const x = 75 + t * 250;
+    for (const p of particles) {
 
-        const wave1 = Math.sin(t * 8 + speed) * 23;
+        const angle = p.angle + time * p.speed;
 
-        const wave2 = Math.sin(t * 15 - speed * 1.4) * 8;
+        const distance =
+            p.distance +
+            Math.sin(time * .001 + p.phase) * .05;
 
-        const wave3 = Math.sin(t * 3 + speed * .5) * 13;
-
-        const heartEffect = morph * Math.sin(t * Math.PI) * 15;
+        const x =
+            centerX +
+            Math.cos(angle) * coreSize * distance;
 
         const y =
-            200 +
-            wave1 +
-            wave2 +
-            wave3 +
-            heartEffect;
+            centerY +
+            Math.sin(angle) * coreSize * distance;
 
-        points.push({x,y});
+        const alpha =
+            .2 + (Math.sin(time * .002 + p.phase) + 1) * .3;
 
+        ctx.beginPath();
+
+        ctx.arc(x, y, p.size, 0, Math.PI * 2);
+
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+
+        ctx.shadowColor = "white";
+        ctx.shadowBlur = 12;
+
+        ctx.fill();
     }
 
-    return points.map((p,i) => {
-
-        return `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`;
-
-    }).join(" ");
-
+    ctx.restore();
 }
 
-/* HIGHLIGHT */
+/* =====================================
+   LIGHT SPARKS
+===================================== */
 
-function createHighlight(time, morph) {
+function drawSparks(time) {
 
-    const points = [];
+    ctx.save();
 
-    for (let i = 0; i <= 40; i++) {
+    for (let i = 0; i < 12; i++) {
 
-        const t = i / 40;
+        const phase = time * .001 + i * 2.1;
 
-        const x = 120 + t * 150;
+        const angle = phase * .7;
 
-        const y =
-            105 +
-            Math.sin(t * 3 + time * .0005) * 7 +
-            morph * 10;
+        const distance =
+            coreSize * (1.1 + Math.sin(phase) * .15);
 
-        points.push({x,y});
+        const x = centerX + Math.cos(angle) * distance;
+        const y = centerY + Math.sin(angle) * distance;
 
+        const size = 2 + Math.sin(phase * 2) * 1.2;
+
+        ctx.beginPath();
+
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        ctx.shadowColor = "white";
+        ctx.shadowBlur = 20;
+
+        ctx.fill();
     }
 
-    return points.map((p,i) => {
-
-        return `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`;
-
-    }).join(" ");
-
+    ctx.restore();
 }
 
-/* TRANSFORMATION */
+/* =====================================
+   TRANSFORMATION FLASH
+===================================== */
+
+let flash = 0;
+
+function drawFlash() {
+
+    if (flash <= 0) return;
+
+    ctx.fillStyle = `rgba(255,255,255,${flash * .12})`;
+
+    ctx.fillRect(0,0,W,H);
+
+    flash *= .91;
+
+    if (flash < .01) flash = 0;
+}
+
+/* =====================================
+   MORPH ENGINE
+===================================== */
 
 function transformTo(value, time) {
 
-    transitionFrom = currentMorph;
+    if (targetMorph === value) return;
+
+    transitionFrom = morph;
     targetMorph = value;
+
     transitionStart = time;
 
+    flash = 1;
 }
 
-/* ANIMATION LOOP */
+function updateMorph(time) {
 
-function animate(time) {
+    if (!transitionStart) return;
 
-    if (transitionStart !== null) {
-
-        const progress = Math.min(
-            (time - transitionStart) / 1800,
-            1
-        );
-
-        const eased =
-            progress < .5
-                ? 4 * progress * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-        currentMorph =
-            transitionFrom +
-            (targetMorph - transitionFrom) * eased;
-
-        if (progress >= 1) {
-            transitionStart = null;
-        }
-
-    }
-
-    const points = getShape(currentMorph, time);
-
-    shape.setAttribute("d", smoothPath(points));
-
-    wave.setAttribute("d", createWave(time, currentMorph));
-
-    highlight.setAttribute(
-        "d",
-        createHighlight(time, currentMorph)
+    const progress = Math.min(
+        (time - transitionStart) / 2400,
+        1
     );
 
-    /* AUTOMATIC TRANSFORMATION */
+    const eased = easeInOut(progress);
 
-    if (time - lastTransform > transformInterval) {
+    morph =
+        transitionFrom +
+        (targetMorph - transitionFrom) * eased;
+
+    if (progress >= 1) {
+        morph = targetMorph;
+        transitionStart = 0;
+    }
+}
+
+/* =====================================
+   AUTOMATIC HEART TRANSFORMATION
+===================================== */
+
+function automaticTransformation(time) {
+
+    if (time - lastTransformation > 9000) {
 
         transformTo(targetMorph < .5 ? 1 : 0, time);
 
-        lastTransform = time;
-
+        lastTransformation = time;
     }
-
-    requestAnimationFrame(animate);
-
 }
 
-requestAnimationFrame(animate);
+/* =====================================
+   MAIN RENDER LOOP
+===================================== */
 
-/* =================================
-   PARTICLES
-================================= */
+function render(time) {
 
-const particleContainer =
-    document.getElementById("particles");
+    ctx.clearRect(0,0,W,H);
 
-for (let i = 0; i < 25; i++) {
+    updateMorph(time);
 
-    const particle = document.createElement("div");
+    automaticTransformation(time);
 
-    particle.className = "particle";
+    drawGlow(time);
 
-    particle.style.left = Math.random() * 100 + "%";
-    particle.style.top = Math.random() * 100 + "%";
+    const path = createShape(time);
 
-    particle.style.setProperty(
-        "--x",
-        (Math.random() * 150 - 75) + "px"
-    );
+    drawBody(time, path);
 
-    particle.style.setProperty(
-        "--y",
-        (Math.random() * 150 - 75) + "px"
-    );
+    drawEnergyLayers(time);
 
-    particle.style.setProperty(
-        "--duration",
-        (3 + Math.random() * 5) + "s"
-    );
+    drawRibbons(time);
 
-    particle.style.setProperty(
-        "--delay",
-        (Math.random() * 5) + "s"
-    );
+    /*
+       IMPORTANT:
+       The heart has no internal stripe.
+       It is represented only by the
+       flowing white energy layers.
+    */
 
-    particleContainer.appendChild(particle);
+    drawParticles(time);
 
+    drawSparks(time);
+
+    drawFlash();
+
+    requestAnimationFrame(render);
 }
 
-/* =================================
-   ENNIE STATES
-================================= */
+requestAnimationFrame(render);
 
-const stateNames = {
-
-    idle: "ENNIE IS HERE",
-
-    listening: "I'M LISTENING",
-
-    thinking: "THINKING...",
-
-    speaking: "SPEAKING"
-
-};
+/* =====================================
+   STATES
+===================================== */
 
 document.querySelectorAll("[data-state]").forEach(button => {
 
     button.addEventListener("click", () => {
 
-        state = button.dataset.state;
+        currentState = button.dataset.state;
 
-        document.body.classList.remove(
-            "listening",
-            "thinking",
-            "speaking"
-        );
-
-        if (state !== "idle") {
-            document.body.classList.add(state);
-        }
-
-        document.querySelectorAll("[data-state]").forEach(btn => {
+        document.querySelectorAll("button").forEach(btn => {
             btn.classList.remove("active");
         });
 
         button.classList.add("active");
 
-        status.textContent = stateNames[state];
+        statusElement.textContent =
+            STATE_NAMES[currentState];
 
+        if (currentState === "listening") {
+            transformTo(0, performance.now());
+        }
+
+        if (currentState === "speaking") {
+            transformTo(1, performance.now());
+        }
     });
 
 });
@@ -715,4 +714,4 @@ document.querySelectorAll("[data-state]").forEach(button => {
 </script>
 
 </body>
-  </html>
+</html>
