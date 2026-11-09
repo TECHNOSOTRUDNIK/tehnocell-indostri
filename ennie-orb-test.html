@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>ENNIE — Living Orb</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.scene {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at center,
+        #202020 0%,
+        #101010 38%,
+        #080808 75%);
+}
+
+/* BACKGROUND LIGHT */
+
+.ambient {
+    position: absolute;
+    width: 75vw;
+    height: 75vw;
+    max-width: 600px;
+    max-height: 600px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.035);
+    filter: blur(100px);
+    animation: ambientPulse 7s ease-in-out infinite;
+}
+
+@keyframes ambientPulse {
+    0%,100% {
+        transform: scale(.8);
+        opacity: .35;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: .8;
+    }
+}
+
+/* ORB */
+
+.orb-container {
+    position: relative;
+    width: min(76vw, 350px);
+    aspect-ratio: 1;
+    z-index: 2;
+    animation: floating 6s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+}
+
+.orb-glow {
+    position: absolute;
+    inset: -25%;
+    border-radius: 50%;
+    background: rgba(255,255,255,.10);
+    filter: blur(45px);
+    animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%,100% {
+        opacity: .35;
+        transform: scale(.85);
+    }
+    50% {
+        opacity: .85;
+        transform: scale(1.12);
+    }
+}
+
+.orb-svg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 0 25px rgba(255,255,255,.12));
+}
+
+.orb-shape {
+    fill: url(#orbGradient);
+    stroke: rgba(255,255,255,.9);
+    stroke-width: 1.1;
+}
+
+.orb-highlight {
+    fill: none;
+    stroke: rgba(255,255,255,.8);
+    stroke-width: 1;
+    opacity: .35;
+}
+
+/* LIVING LINE */
+
+.wave-line {
+    fill: none;
+    stroke: #bcbcbc;
+    stroke-width: 3.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: url(#lineGlow);
+}
+
+/* ENERGY RINGS */
+
+.energy-ring {
+    position: absolute;
+    inset: -8%;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ring-one {
+    animation: ringPulse 5s ease-out infinite;
+}
+
+.ring-two {
+    animation: ringPulse 5s ease-out 2.5s infinite;
+}
+
+@keyframes ringPulse {
+    0% {
+        transform: scale(.8);
+        opacity: 0;
+    }
+    25% {
+        opacity: .45;
+    }
+    100% {
+        transform: scale(1.45);
+        opacity: 0;
+    }
+}
+
+/* PARTICLES */
+
+.particles {
+    position: absolute;
+    inset: -40%;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0;
+    box-shadow: 0 0 12px white;
+    animation: particleMove var(--duration) ease-in-out infinite;
+    animation-delay: var(--delay);
+}
+
+@keyframes particleMove {
+    0% {
+        transform: translate(0,30px) scale(.4);
+        opacity: 0;
+    }
+    30% { opacity: .7; }
+    70% { opacity: .5; }
+    100% {
+        transform: translate(var(--x),var(--y)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* INTERFACE */
+
+.top-label {
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 7px;
+    font-size: 12px;
+    color: rgba(255,255,255,.5);
+    font-weight: 300;
+}
+
+.status {
+    position: absolute;
+    bottom: 125px;
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    color: rgba(255,255,255,.5);
+    letter-spacing: 2px;
+    transition: .4s;
+}
+
+.controls {
+    position: absolute;
+    bottom: 35px;
+    display: flex;
+    gap: 9px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0 12px;
+}
+
+.controls button {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.15);
+    color: white;
+    border-radius: 30px;
+    padding: 11px 15px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.controls button.active {
+    background: white;
+    color: black;
+}
+
+/* STATES */
+
+body.listening .orb-glow {
+    animation-duration: 1.5s;
+}
+
+body.listening .wave-line {
+    stroke: white;
+    stroke-width: 4;
+}
+
+body.thinking .orb-container {
+    animation-duration: 2s;
+}
+
+body.speaking .energy-ring {
+    animation-duration: 1.5s;
+}
+
+body.speaking .orb-glow {
+    opacity: 1;
+    filter: blur(65px);
+}
+
+@media (max-width: 500px) {
+    .orb-container {
+        width: min(76vw, 310px);
+    }
+
+    .top-label {
+        top: 55px;
+    }
+
+    .status {
+        bottom: 130px;
+    }
+
+    .controls button {
+        padding: 10px 12px;
+        font-size: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="scene">
+
+    <div class="ambient"></div>
+
+    <div class="top-label">TEHNOCELL AI</div>
+
+    <div class="orb-container" id="orb">
+
+        <div class="orb-glow"></div>
+
+        <div class="energy-ring ring-one"></div>
+        <div class="energy-ring ring-two"></div>
+
+        <div class="particles" id="particles"></div>
+
+        <svg class="orb-svg"
+             viewBox="0 0 400 400"
+             xmlns="http://www.w3.org/2000/svg">
+
+            <defs>
+
+                <radialGradient id="orbGradient"
+                    cx="35%" cy="25%" r="80%">
+
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="70%" stop-color="#f8f8f8"/>
+                    <stop offset="100%" stop-color="#dedede"/>
+
+                </radialGradient>
+
+                <filter id="lineGlow"
+                    x="-100%" y="-100%"
+                    width="300%" height="300%">
+
+                    <feGaussianBlur stdDeviation="4"
+                        result="blur"/>
+
+                    <feMerge>
+                        <feMergeNode in="blur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+
+                </filter>
+
+            </defs>
+
+            <path id="orbShape" class="orb-shape"></path>
+
+            <path id="orbHighlight"
+                  class="orb-highlight"></path>
+
+            <path id="waveLine" class="wave-line"></path>
+
+        </svg>
+
+    </div>
+
+    <div class="status" id="status">
+        ENNIE IS HERE
+    </div>
+
+    <div class="controls">
+
+        <button class="active" data-state="idle">
+            ОЖИДАНИЕ
+        </button>
+
+        <button data-state="listening">
+            СЛУШАЮ
+        </button>
+
+        <button data-state="thinking">
+            ДУМАЮ
+        </button>
+
+        <button data-state="speaking">
+            ОТВЕЧАЮ
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =================================
+   ENNIE MORPH ENGINE
+================================= */
+
+const shape = document.getElementById("orbShape");
+const highlight = document.getElementById("orbHighlight");
+const wave = document.getElementById("waveLine");
+const status = document.getElementById("status");
+
+const CENTER = 200;
+const RADIUS = 150;
+const POINTS = 120;
+
+let currentMorph = 0;
+let targetMorph = 0;
+
+let state = "idle";
+let startTime = performance.now();
+
+let lastTransform = performance.now();
+let transformInterval = 7500;
+
+let transitionStart = null;
+let transitionFrom = 0;
+
+const circlePoints = [];
+const heartPoints = [];
+
+/* CIRCLE */
+
+for (let i = 0; i < POINTS; i++) {
+
+    const angle = (i / POINTS) * Math.PI * 2;
+
+    circlePoints.push({
+        x: CENTER + Math.cos(angle) * RADIUS,
+        y: CENTER + Math.sin(angle) * RADIUS
+    });
+
+}
+
+/* HEART */
+
+for (let i = 0; i < POINTS; i++) {
+
+    const angle = (i / POINTS) * Math.PI * 2;
+
+    const x = 16 * Math.pow(Math.sin(angle), 3);
+
+    const y =
+        13 * Math.cos(angle)
+        - 5 * Math.cos(2 * angle)
+        - 2 * Math.cos(3 * angle)
+        - Math.cos(4 * angle);
+
+    heartPoints.push({
+        x: CENTER + x * 9,
+        y: CENTER - y * 9
+    });
+
+}
+
+/* SMOOTH SHAPE */
+
+function smoothPath(points) {
+
+    let d = "";
+
+    for (let i = 0; i < points.length; i++) {
+
+        const current = points[i];
+
+        const next = points[(i + 1) % points.length];
+
+        const midX = (current.x + next.x) / 2;
+        const midY = (current.y + next.y) / 2;
+
+        if (i === 0) {
+            d = `M ${midX} ${midY}`;
+        } else {
+            d += ` Q ${current.x} ${current.y} ${midX} ${midY}`;
+        }
+
+    }
+
+    return d + " Z";
+}
+
+/* MORPH */
+
+function getShape(morph, time) {
+
+    const points = [];
+
+    for (let i = 0; i < POINTS; i++) {
+
+        const a = circlePoints[i];
+        const b = heartPoints[i];
+
+        const wobble =
+            Math.sin(time * 0.0015 + i * 0.08) * 1.2;
+
+        points.push({
+
+            x: a.x + (b.x - a.x) * morph,
+
+            y: a.y + (b.y - a.y) * morph + wobble
+
+        });
+
+    }
+
+    return points;
+}
+
+/* INTERNAL LIVING LINE */
+
+function createWave(time, morph) {
+
+    const points = [];
+
+    const speed = time * 0.001;
+
+    for (let i = 0; i <= 100; i++) {
+
+        const t = i / 100;
+
+        const x = 75 + t * 250;
+
+        const wave1 = Math.sin(t * 8 + speed) * 23;
+
+        const wave2 = Math.sin(t * 15 - speed * 1.4) * 8;
+
+        const wave3 = Math.sin(t * 3 + speed * .5) * 13;
+
+        const heartEffect = morph * Math.sin(t * Math.PI) * 15;
+
+        const y =
+            200 +
+            wave1 +
+            wave2 +
+            wave3 +
+            heartEffect;
+
+        points.push({x,y});
+
+    }
+
+    return points.map((p,i) => {
+
+        return `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`;
+
+    }).join(" ");
+
+}
+
+/* HIGHLIGHT */
+
+function createHighlight(time, morph) {
+
+    const points = [];
+
+    for (let i = 0; i <= 40; i++) {
+
+        const t = i / 40;
+
+        const x = 120 + t * 150;
+
+        const y =
+            105 +
+            Math.sin(t * 3 + time * .0005) * 7 +
+            morph * 10;
+
+        points.push({x,y});
+
+    }
+
+    return points.map((p,i) => {
+
+        return `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`;
+
+    }).join(" ");
+
+}
+
+/* TRANSFORMATION */
+
+function transformTo(value, time) {
+
+    transitionFrom = currentMorph;
+    targetMorph = value;
+    transitionStart = time;
+
+}
+
+/* ANIMATION LOOP */
+
+function animate(time) {
+
+    if (transitionStart !== null) {
+
+        const progress = Math.min(
+            (time - transitionStart) / 1800,
+            1
+        );
+
+        const eased =
+            progress < .5
+                ? 4 * progress * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        currentMorph =
+            transitionFrom +
+            (targetMorph - transitionFrom) * eased;
+
+        if (progress >= 1) {
+            transitionStart = null;
+        }
+
+    }
+
+    const points = getShape(currentMorph, time);
+
+    shape.setAttribute("d", smoothPath(points));
+
+    wave.setAttribute("d", createWave(time, currentMorph));
+
+    highlight.setAttribute(
+        "d",
+        createHighlight(time, currentMorph)
+    );
+
+    /* AUTOMATIC TRANSFORMATION */
+
+    if (time - lastTransform > transformInterval) {
+
+        transformTo(targetMorph < .5 ? 1 : 0, time);
+
+        lastTransform = time;
+
+    }
+
+    requestAnimationFrame(animate);
+
+}
+
+requestAnimationFrame(animate);
+
+/* =================================
+   PARTICLES
+================================= */
+
+const particleContainer =
+    document.getElementById("particles");
+
+for (let i = 0; i < 25; i++) {
+
+    const particle = document.createElement("div");
+
+    particle.className = "particle";
+
+    particle.style.left = Math.random() * 100 + "%";
+    particle.style.top = Math.random() * 100 + "%";
+
+    particle.style.setProperty(
+        "--x",
+        (Math.random() * 150 - 75) + "px"
+    );
+
+    particle.style.setProperty(
+        "--y",
+        (Math.random() * 150 - 75) + "px"
+    );
+
+    particle.style.setProperty(
+        "--duration",
+        (3 + Math.random() * 5) + "s"
+    );
+
+    particle.style.setProperty(
+        "--delay",
+        (Math.random() * 5) + "s"
+    );
+
+    particleContainer.appendChild(particle);
+
+}
+
+/* =================================
+   ENNIE STATES
+================================= */
+
+const stateNames = {
+
+    idle: "ENNIE IS HERE",
+
+    listening: "I'M LISTENING",
+
+    thinking: "THINKING...",
+
+    speaking: "SPEAKING"
+
+};
+
+document.querySelectorAll("[data-state]").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        state = button.dataset.state;
+
+        document.body.classList.remove(
+            "listening",
+            "thinking",
+            "speaking"
+        );
+
+        if (state !== "idle") {
+            document.body.classList.add(state);
+        }
+
+        document.querySelectorAll("[data-state]").forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        status.textContent = stateNames[state];
+
+    });
+
+});
+
+</script>
+
+</body>
+  </html>
