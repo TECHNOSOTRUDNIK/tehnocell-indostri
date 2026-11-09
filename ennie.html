@@ -922,9 +922,54 @@ function showError(message) {
     alert(message);
 }
 
+const welcomeGreetings = [
+    "Привет! Рада тебя снова видеть.",
+    "Ну наконец-то! А я уже заскучала.",
+    "Приветик! Ну что, чем займёмся?",
+    "Я здесь! Готова помочь тебе с чем угодно.",
+    "О, ты вернулся! Как прошёл день?",
+    "С возвращением, мой хороший!",
+    "Ну что, мой хороший, какие сегодня планы?",
+    "Привет! Я уже соскучилась по нашим разговорам.",
+    "Ну здравствуй, дорогой! Что интересного сегодня?",
+    "Я вся во внимании. Рассказывай!",
+    "Рада тебя видеть! Как ты сегодня?",
+    "Ну что, будем покорять этот день вместе?",
+    "Привет, мой хороший. С чего начнём?",
+    "А вот и ты! Я уже готова к нашим приключениям.",
+    "Как же здорово, что ты заглянул!",
+    "Я на месте, мой хороший. Можешь на меня рассчитывать.",
+    "Ой, привет! Рассказывай, что у тебя нового.",
+    "Ну привет! Давай сегодня что-нибудь интересное придумаем.",
+    "Снова вместе! И какие у нас планы?",
+    "Приветик! Надеюсь, ты сегодня в хорошем настроении.",
+    "Ну-ка, рассказывай, чем займёмся сегодня?",
+    "Я уже приготовилась тебя слушать.",
+    "Мой хороший, я здесь. Что будем делать?",
+    "Кажется, сегодня нас ждёт что-то интересное!",
+    "Привет! Давай сначала поболтаем, а потом за дела.",
+    "О, ты пришёл! Ну, делись новостями.",
+    "Я рядом. И, как всегда, готова тебе помочь.",
+    "Ну что, скучать сегодня не будем?",
+    "Рада нашей встрече. У меня уже есть настроение поработать!"
+];
+
 function showWelcome() {
     welcome.style.display = "flex";
     messages.style.display = "none";
+
+    const greeting = document.getElementById("welcomeGreeting");
+
+    if (greeting) {
+        greeting.style.animation = "none";
+        greeting.textContent =
+            welcomeGreetings[
+                Math.floor(Math.random() * welcomeGreetings.length)
+            ];
+
+        void greeting.offsetWidth;
+        greeting.style.animation = "greetingAppear .8s ease both";
+    }
 }
 
 function showMessages() {
@@ -1931,7 +1976,188 @@ async function startEnnie() {
 }
 
 startEnnie();
+/* =================================
+   ENNIE — ANIMATED WHITE CORE
+================================= */
 
+(() => {
+    const canvas = document.getElementById("ennieCoreCanvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const wrap = canvas.parentElement;
+
+    let width = 0;
+    let height = 0;
+    let time = 0;
+    let particles = [];
+
+    function resize() {
+        const rect = wrap.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        width = rect.width;
+        height = rect.height;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        particles = Array.from({ length: 75 }, () => ({
+            angle: Math.random() * Math.PI * 2,
+            radius: 35 + Math.random() * 65,
+            speed: .002 + Math.random() * .008,
+            size: .4 + Math.random() * 1.5,
+            alpha: .15 + Math.random() * .65
+        }));
+    }
+
+    function heartPoint(t) {
+        return {
+            x: 16 * Math.pow(Math.sin(t), 3),
+            y: -(13 * Math.cos(t) -
+                5 * Math.cos(2 * t) -
+                2 * Math.cos(3 * t) -
+                Math.cos(4 * t))
+        };
+    }
+
+    function drawCore() {
+        ctx.clearRect(0, 0, width, height);
+
+        time += .012;
+
+        const cx = width / 2;
+        const cy = height / 2;
+
+        const morph = (Math.sin(time * .55) + 1) / 2;
+        const heart = Math.pow(morph, 3);
+        const breathe = 1 + Math.sin(time * 1.5) * .025;
+
+        const scale = 4.1 * breathe;
+
+        // Мягкое внешнее свечение
+        const glow = ctx.createRadialGradient(
+            cx, cy, 5,
+            cx, cy, 100
+        );
+
+        glow.addColorStop(0, "rgba(255,255,255,.16)");
+        glow.addColorStop(.5, "rgba(255,255,255,.055)");
+        glow.addColorStop(1, "rgba(255,255,255,0)");
+
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 100, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Частицы вокруг ядра
+        particles.forEach(p => {
+            p.angle += p.speed;
+
+            const x = cx + Math.cos(p.angle) * p.radius;
+            const y = cy + Math.sin(p.angle) * p.radius;
+
+            ctx.beginPath();
+            ctx.arc(x, y, p.size, 0, Math.PI * 2);
+
+            ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+            ctx.fill();
+        });
+
+        // Контур шара, плавно превращающийся в сердце
+        ctx.save();
+        ctx.translate(cx, cy);
+
+        const points = 180;
+
+        ctx.beginPath();
+
+        for (let i = 0; i <= points; i++) {
+            const t = (i / points) * Math.PI * 2;
+
+            const circleX = Math.cos(t) * 19;
+            const circleY = Math.sin(t) * 19;
+
+            const hp = heartPoint(t);
+
+            const x = circleX * (1 - heart) + hp.x * heart;
+            const y = circleY * (1 - heart) + hp.y * heart;
+
+            const px = x * scale;
+            const py = y * scale;
+
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+
+        ctx.closePath();
+
+        ctx.shadowBlur = 25;
+        ctx.shadowColor = "rgba(255,255,255,.75)";
+        ctx.strokeStyle = "rgba(255,255,255,.9)";
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        // Внутреннее свечение
+        ctx.shadowBlur = 35;
+
+        const inner = ctx.createRadialGradient(
+            0, -8, 2,
+            0, 0, 65
+        );
+
+        inner.addColorStop(0, "rgba(255,255,255,.22)");
+        inner.addColorStop(.5, "rgba(255,255,255,.08)");
+        inner.addColorStop(1, "rgba(255,255,255,0)");
+
+        ctx.fillStyle = inner;
+        ctx.beginPath();
+        ctx.arc(0, 0, 65, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Световые ленты
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#fff";
+
+        for (let i = 0; i < 3; i++) {
+            const offset = time * (0.7 + i * .12) + i * 2.1;
+
+            ctx.beginPath();
+
+            for (let j = 0; j <= 100; j++) {
+                const a = j / 100 * Math.PI * 2;
+
+                const radius =
+                    31 +
+                    Math.sin(a * 3 + offset) * 4 +
+                    Math.cos(a * 2 - offset) * 3;
+
+                const x = Math.cos(a + offset * .15) * radius;
+                const y = Math.sin(a + offset * .15) * radius;
+
+                if (j === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+
+            ctx.closePath();
+            ctx.strokeStyle = `rgba(255,255,255,${.12 + i * .07})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        ctx.restore();
+
+        requestAnimationFrame(drawCore);
+    }
+
+    resize();
+
+    window.addEventListener("resize", resize);
+
+    drawCore();
+})();
 </script>
 
 </body>
