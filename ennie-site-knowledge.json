@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "source": "TEHNOCELL INDOSTRI GitHub Pages",
-  "updated_at": "2026-11-10T19:31:48.110Z",
+  "updated_at": "2026-11-10T20:30:08.375Z",
   "documents": [
     {
       "slug": "index.html",
@@ -62,6 +62,12 @@
       "title": "TEHNOCELL WEATHER — TEHNOCELLSOFT",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html",
       "content": "TEHNOCELL WEATHER — TEHNOCELLSOFT TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW. 02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения. 03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранного города. 09 Поиск городов Находите нужные города и получайте информацию о погоде. 04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓ СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0 © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER"
+    },
+    {
+      "slug": "ennie-faq-weather-download",
+      "title": "Как скачать TEHNOCELL WEATHER — официальная инструкция",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html#download",
+      "content": "Если пользователь спрашивает, как скачать TEHNOCELL WEATHER, не отвечай, что не знаешь. Открой страницу проекта TEHNOCELL WEATHER: https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html . Прокрути к разделу «04 / ЗАГРУЗКА» или открой напрямую https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html#download. Там есть кнопка «СКАЧАТЬ APK». Она скачивает Android установочный файл версии 1.0.0 по официальной ссылке GitHub Releases: https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/v1.0.0/default.TEHNOCELL-WEATHER.apk. На Android после загрузки открой APK и следуй системным подсказкам установки; если браузер или Android предупредит о неизвестном источнике, устанавливай только если уверен, что файл получен с официальной страницы TEHNOCELL. Не обещай версию Windows: текущая страница загрузки прямо говорит, что приложение доступно для Android. Важно: старая страница tehnosellsoft.html содержит placeholder ССЫЛКА_НА_СКАЧИВАНИЕ_ФАЙЛА и не является правильной страницей загрузки. Для скачивания используй именно weather-app.html#download."
     }
   ]
 }
