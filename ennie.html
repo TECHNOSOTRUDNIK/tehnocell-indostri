@@ -2450,37 +2450,42 @@ async function sendMessage() {
       throw new Error("Сессия аккаунта завершилась. Войди снова.");
     }
 
-    const response = await fetch(
-      SUPABASE_URL + "/functions/v1/" + CHAT_FUNCTION,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + accessToken
-        },
-        body: JSON.stringify({
+    // Отправляем запрос через Supabase SDK:
+    // он сам подставляет актуальный JWT и стандартные заголовки.
+    const { data: result, error: functionError } =
+      await supabaseClient.functions.invoke(CHAT_FUNCTION, {
+        body: {
           messages: currentMessages
-        })
+        }
+      });
+
+    if (functionError) {
+      console.error("ENNIE function invoke error:", functionError);
+
+      let serverMessage = "";
+
+      try {
+        const context = functionError.context;
+        if (context && typeof context.json === "function") {
+          const payload = await context.json();
+          serverMessage =
+            payload?.error ||
+            payload?.message ||
+            "";
+        }
+      } catch {
+        // Если ответ не JSON, используем сообщение SDK.
       }
-    );
-
-    let result;
-
-    try {
-      result = await response.json();
-    } catch {
-      throw new Error("Сервер вернул некорректный ответ.");
-    }
-
-    if (!response.ok) {
-      console.error("ENNIE server error:", result);
 
       throw new Error(
-        result.error ||
-        result.message ||
-        "Ошибка сервера: " + response.status
+        serverMessage ||
+        functionError.message ||
+        "Не удалось связаться с сервером ENNIE."
       );
+    }
+
+    if (!result) {
+      throw new Error("Сервер ENNIE вернул пустой ответ.");
     }
 
     const answer =
