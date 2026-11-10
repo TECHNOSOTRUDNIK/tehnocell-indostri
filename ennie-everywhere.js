@@ -301,6 +301,7 @@
     try { sessionStorage.removeItem(NARRATION_KEY); } catch (_) {}
     const old = document.querySelector(".ee-cinematic");
     if (old) old.remove();
+    launch.style.display = "";
   }
   function showCinematic(data) {
     let layer = document.querySelector(".ee-cinematic");
