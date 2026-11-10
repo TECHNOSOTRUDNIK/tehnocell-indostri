@@ -36,6 +36,20 @@
     .ee-iconbtn:disabled{opacity:.45;cursor:default}.ee-send{background:#f2f2f2;color:#111;border-color:#fff}
     .ee-mic.ee-recording{background:#fff;color:#111;box-shadow:0 0 0 5px rgba(255,255,255,.12)}
     .ee-login{color:#ddd;text-decoration:underline}
+    .ee-cinematic{position:fixed;inset:0;z-index:2147482500;pointer-events:none;display:grid;place-items:center;opacity:0;transition:opacity .55s ease}
+    .ee-cinematic.ee-cinematic-visible{opacity:1}
+    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.28) 68%,rgba(0,0,0,.78) 115%);animation:ee-vignette-in 1s ease both}
+    .ee-cinematic-card{position:relative;width:min(520px,calc(100vw - 34px));max-height:min(70vh,620px);overflow:auto;padding:25px 24px 17px;border:1px solid rgba(255,255,255,.16);border-radius:26px;background:rgba(9,9,9,.86);backdrop-filter:blur(18px);box-shadow:0 15px 70px rgba(0,0,0,.4),0 0 45px rgba(255,255,255,.08);text-align:center;pointer-events:auto;transform:translateY(18px) scale(.97);animation:ee-card-in .65s cubic-bezier(.2,.8,.2,1) forwards}
+    .ee-cinematic-orb{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%);box-shadow:0 0 18px rgba(255,255,255,.85),0 0 55px rgba(255,255,255,.28);animation:ee-cinematic-pulse 2.4s ease-in-out infinite}
+    .ee-cinematic-label{font-size:10px;letter-spacing:4px;color:#aaa;margin-bottom:13px}
+    .ee-cinematic-text{font-size:14px;line-height:1.75;color:#f5f5f5;white-space:pre-wrap;text-align:left}
+    .ee-cinematic-actions{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:17px}
+    .ee-cinematic-actions button{pointer-events:auto;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:18px;padding:8px 13px;font-size:11px;cursor:pointer}
+    .ee-cinematic-actions .ee-cinematic-close{width:32px;height:32px;padding:0;border-radius:50%;font-size:20px}
+    @keyframes ee-vignette-in{from{opacity:0}to{opacity:1}}
+    @keyframes ee-card-in{to{transform:translateY(0) scale(1)}}
+    @keyframes ee-cinematic-pulse{0%,100%{transform:scale(.96);filter:brightness(.95)}50%{transform:scale(1.07);filter:brightness(1.14)}}
+    @media(prefers-reduced-motion:reduce){.ee-cinematic,.ee-cinematic-card,.ee-vignette,.ee-cinematic-orb{animation:none!important;transition:none!important;transform:none!important}}
     .ee-thinking .ee-head-orb{animation:ee-think 1s ease-in-out infinite}
     .ee-speaking .ee-head-orb{animation:ee-speak .42s ease-in-out infinite alternate}
     .ee-listening .ee-head-orb{box-shadow:0 0 0 7px rgba(255,255,255,.09),0 0 24px rgba(255,255,255,.9)}
@@ -266,6 +280,119 @@
     }).replace(/\n{3,}/g, "\n\n").trim();
   }
 
+  const NARRATION_KEY = "ennie_everywhere_narration_v1";
+  let narrationAudio = null;
+  let narrationTimer = null;
+
+  function readNarration() {
+    try { return JSON.parse(sessionStorage.getItem(NARRATION_KEY) || "null"); }
+    catch (_) { return null; }
+  }
+  function saveNarration(data) {
+    try { sessionStorage.setItem(NARRATION_KEY, JSON.stringify(data)); } catch (_) {}
+  }
+  function clearNarration() {
+    if (narrationTimer) clearInterval(narrationTimer);
+    narrationTimer = null;
+    if (narrationAudio) {
+      try { narrationAudio.pause(); } catch (_) {}
+      narrationAudio = null;
+    }
+    try { sessionStorage.removeItem(NARRATION_KEY); } catch (_) {}
+    const old = document.querySelector(".ee-cinematic");
+    if (old) old.remove();
+  }
+  function showCinematic(data) {
+    let layer = document.querySelector(".ee-cinematic");
+    if (!layer) {
+      layer = document.createElement("div");
+      layer.className = "ee-cinematic";
+      layer.innerHTML = '<div class="ee-vignette"></div><div class="ee-cinematic-card"><div class="ee-cinematic-orb"></div><div class="ee-cinematic-label">ENNIE</div><div class="ee-cinematic-text"></div><div class="ee-cinematic-actions"><button type="button" class="ee-cinematic-chat">Открыть диалог</button><button type="button" class="ee-cinematic-close" aria-label="Завершить рассказ">×</button></div></div>';
+      document.body.appendChild(layer);
+      layer.querySelector(".ee-cinematic-close").addEventListener("click", clearNarration);
+      layer.querySelector(".ee-cinematic-chat").addEventListener("click", () => {
+        clearNarration();
+        openPanel();
+      });
+    }
+    layer.querySelector(".ee-cinematic-text").textContent = data.text || "";
+    requestAnimationFrame(() => layer.classList.add("ee-cinematic-visible"));
+  }
+  async function makeNarrationAudio(data) {
+    if (!voiceOutputEnabled || !data.text) return;
+    try {
+      const session = await getSession();
+      if (!session) return;
+      const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + session.access_token
+        },
+        body: JSON.stringify({ text: data.text.slice(0, 1800) })
+      });
+      if (!response.ok) throw new Error("voice " + response.status);
+      const blob = await response.blob();
+      if (!blob.size) throw new Error("empty audio");
+      const reader = new FileReader();
+      const dataUrl = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+      data.audio = dataUrl;
+      data.position = 0;
+      saveNarration(data);
+      playNarration(data);
+    } catch (error) {
+      console.warn("ENNIE narration audio unavailable:", error);
+      if ("speechSynthesis" in window && voiceOutputEnabled) {
+        const utterance = new SpeechSynthesisUtterance(data.text);
+        utterance.lang = "ru-RU";
+        utterance.rate = 1.02;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+  }
+  function playNarration(data) {
+    if (!voiceOutputEnabled || !data.audio) return;
+    try {
+      if (narrationAudio) narrationAudio.pause();
+      narrationAudio = new Audio(data.audio);
+      narrationAudio.currentTime = Math.max(0, Number(data.position) || 0);
+      narrationAudio.onended = clearNarration;
+      narrationAudio.play().then(() => {
+        if (narrationTimer) clearInterval(narrationTimer);
+        narrationTimer = setInterval(() => {
+          if (!narrationAudio || narrationAudio.paused) return;
+          data.position = narrationAudio.currentTime;
+          saveNarration(data);
+        }, 350);
+      }).catch(error => console.warn("ENNIE narration playback blocked:", error));
+    } catch (error) {
+      console.warn("ENNIE narration resume failed:", error);
+    }
+  }
+  async function presentAnswer(answer) {
+    const data = { text: String(answer).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").trim(), position: 0, audio: null };
+    stopAudio();
+    if (narrationTimer) clearInterval(narrationTimer);
+    saveNarration(data);
+    panel.classList.remove("ee-open");
+    launch.style.display = "none";
+    showCinematic(data);
+    await makeNarrationAudio(data);
+  }
+  function resumeNarrationIfNeeded() {
+    const data = readNarration();
+    if (!data || !data.text) return;
+    launch.style.display = "none";
+    showCinematic(data);
+    if (voiceOutputEnabled && data.audio) {
+      playNarration(data);
+    }
+  }
   async function speak(text) {
     if (!voiceOutputEnabled) return;
     const clean = String(text).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").replace(/https?:\/\/\S+/g, "ссылка").trim();
@@ -273,34 +400,29 @@
     stopAudio();
     try {
       const session = await getSession();
-      if (session && clean.length <= 1800) {
-        const chunks = clean.match(/[^.!?]+[.!?]?/g) || [clean];
-        for (const part of chunks) {
-          const chunk = part.trim();
-          if (!chunk) continue;
-          const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "apikey": SUPABASE_KEY,
-              "Authorization": "Bearer " + session.access_token
-            },
-            body: JSON.stringify({ text: chunk.slice(0, 700) })
-          });
-          if (!response.ok) throw new Error("voice " + response.status);
-          const blob = await response.blob();
-          if (!blob.size) throw new Error("empty audio");
-          audioObjectUrl = URL.createObjectURL(blob);
-          const audio = new Audio(audioObjectUrl);
-          setMode("speaking", "Я отвечаю тебе голосом…");
-          await new Promise((resolve, reject) => {
-            audio.onended = resolve;
-            audio.onerror = reject;
-            audio.play().catch(reject);
-          });
-          URL.revokeObjectURL(audioObjectUrl);
-          audioObjectUrl = null;
-        }
+      if (session) {
+        const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + session.access_token
+          },
+          body: JSON.stringify({ text: clean.slice(0, 1800) })
+        });
+        if (!response.ok) throw new Error("voice " + response.status);
+        const blob = await response.blob();
+        if (!blob.size) throw new Error("empty audio");
+        audioObjectUrl = URL.createObjectURL(blob);
+        const audio = new Audio(audioObjectUrl);
+        setMode("speaking", "Я отвечаю тебе голосом…");
+        await new Promise((resolve, reject) => {
+          audio.onended = resolve;
+          audio.onerror = reject;
+          audio.play().catch(reject);
+        });
+        URL.revokeObjectURL(audioObjectUrl);
+        audioObjectUrl = null;
         setMode("", "Можешь продолжать, я слушаю.");
         return;
       }
@@ -310,7 +432,7 @@
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(clean);
       utterance.lang = "ru-RU";
-      utterance.rate = 0.94;
+      utterance.rate = 1.02;
       setMode("speaking", "Я отвечаю тебе голосом…");
       utterance.onend = () => setMode("", "Можешь продолжать, я слушаю.");
       window.speechSynthesis.speak(utterance);
@@ -369,8 +491,8 @@
       const answer = processMarkers(String(raw));
       history.push({ role: "assistant", content: answer });
       addBubble(answer, "assistant");
-      setMode("", "Я рядом. Можешь попросить меня что-нибудь показать.");
-      await speak(answer);
+      setMode("", "Я подготовила объяснение.");
+      await presentAnswer(answer);
     } catch (error) {
       console.error("ENNIE EVERYWHERE error:", error);
       addBubble(error.message || "Не получилось связаться с ENNIE. Попробуй ещё раз.", "assistant");
@@ -477,5 +599,6 @@
     if (document.hidden) stopRecording(false);
   });
 
+  resumeNarrationIfNeeded();
   showFirstVisitWelcome();
 })();
