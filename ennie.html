@@ -1879,7 +1879,8 @@ function addMessage(role, text, imageUrl = null) {
 
   const content = document.createElement("div");
   content.className = "message-text";
-  content.textContent = text;
+  const visibleText = String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
+  content.textContent = visibleText;
 
   // В сообщениях пользователя не показываем подпись «Ты».
   if (role === "assistant") body.append(author);
@@ -2240,14 +2241,16 @@ async function openChat(chatId) {
 async function saveMessage(role, content) {
   if (!currentUser || !currentChatId) return;
 
-  const { error } = await supabaseClient
+  const { data: saved, error } = await supabaseClient
     .from("ennie_messages")
     .insert({
       chat_id: currentChatId,
       user_id: currentUser.id,
       role: role,
       content: content
-    });
+    })
+    .select("id")
+    .single();
 
   if (error) {
     console.error("Message save error:", error);
@@ -2261,6 +2264,7 @@ async function saveMessage(role, content) {
     })
     .eq("id", currentChatId)
     .eq("user_id", currentUser.id);
+  return saved;
 }
 
 
@@ -2437,7 +2441,7 @@ async function sendMessage() {
       content: userContent
     });
 
-    await saveMessage("user", userContent);
+    const savedUserMessage = await saveMessage("user", userContent);
 
     setTyping(true);
 
@@ -2497,6 +2501,21 @@ async function sendMessage() {
 
     if (!answer) {
       throw new Error("ENNIE получила пустой ответ.");
+    }
+
+    if (result.contextualized_message && savedUserMessage?.id) {
+      currentMessages[currentMessages.length - 1].content =
+        result.contextualized_message;
+
+      const { error: contextSaveError } = await supabaseClient
+        .from("ennie_messages")
+        .update({ content: result.contextualized_message })
+        .eq("id", savedUserMessage.id)
+        .eq("user_id", currentUser.id);
+
+      if (contextSaveError) {
+        console.warn("ENNIE image context persistence failed:", contextSaveError);
+      }
     }
 
     currentMessages.push({
