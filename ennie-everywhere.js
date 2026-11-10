@@ -38,7 +38,7 @@
     .ee-login{color:#ddd;text-decoration:underline}
     .ee-cinematic{position:fixed;inset:0;z-index:2147482500;pointer-events:none;opacity:0;transition:opacity .65s ease}
     .ee-cinematic.ee-cinematic-visible{opacity:1}
-    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 18%,rgba(0,0,0,.13) 43%,rgba(0,0,0,.38) 70%,rgba(0,0,0,.78) 112%);opacity:.88;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
+    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0) 18%,rgba(255,255,255,.08) 43%,rgba(255,255,255,.24) 70%,rgba(255,255,255,.52) 112%);opacity:.88;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
     .ee-cinematic.ee-speaking .ee-vignette{animation:ee-vignette-speak 1.55s ease-in-out infinite;opacity:1}
     .ee-cinematic.ee-paused .ee-vignette{animation:none;opacity:.55}
     .ee-cinematic-stop{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(0,0,0,.28);color:rgba(255,255,255,.8);font-size:20px;line-height:1;pointer-events:auto;cursor:pointer;backdrop-filter:blur(8px)}
