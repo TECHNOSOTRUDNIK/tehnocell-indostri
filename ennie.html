@@ -4778,8 +4778,8 @@ console.log("ENNIE V11 — all interface systems loaded.");
       [{opacity:.45, transform:"translateY(4px)"},{opacity:1,transform:"translateY(0)"}],
       {duration:380,easing:"ease-out"}
     );
-    if (window.voiceEnabled === true && typeof window.speakText === "function") {
-      window.speakText(phrase);
+    if (typeof voiceEnabled !== "undefined" && voiceEnabled && typeof speakText === "function") {
+      speakText(phrase);
     }
   }
 
