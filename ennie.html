@@ -1875,13 +1875,14 @@ function addMessage(role, text, imageUrl = null) {
 
   const author = document.createElement("div");
   author.className = "message-author";
-  author.textContent = role === "assistant" ? "ENNIE" : "ТЫ";
+  author.textContent = "ENNIE";
 
   const content = document.createElement("div");
   content.className = "message-text";
   content.textContent = text;
 
-  body.append(author);
+  // В сообщениях пользователя не показываем подпись «Ты».
+  if (role === "assistant") body.append(author);
 
   if (imageUrl) {
     const image = document.createElement("img");
