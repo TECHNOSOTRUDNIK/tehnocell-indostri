@@ -1828,11 +1828,34 @@ messageInput.addEventListener("keydown", (event) => {
 });
 
 sendBtn.type = "button";
-sendBtn.addEventListener("click", (event) => {
-  event.preventDefault();
-  event.stopPropagation();
-  sendMessage();
-});
+
+/* Надёжная обработка нажатий на кнопки чата.
+   Capture-режим не зависит от вложенных обработчиков интерфейса. */
+document.addEventListener("click", (event) => {
+  const sendButton = event.target.closest && event.target.closest("#sendBtn");
+  if (sendButton) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (!sendButton.disabled) sendMessage();
+    return;
+  }
+
+  const microphoneButton = event.target.closest && event.target.closest("#micBtn");
+  if (microphoneButton) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (voiceRecorder && voiceRecorder.state === "recording") {
+      finishVoiceRecording(true);
+      return;
+    }
+    if (voiceDraftElement) {
+      showToast("Подожди завершения или удали распознанный текст.", "info");
+      return;
+    }
+    startVoiceRecording();
+  }
+}, true);
 
 
 /* ==========================================
@@ -3832,11 +3855,21 @@ body.light-theme .core-wrap::before {
 }
 
 /* ENNIE VOICE DRAFT + RECORDER */
+.composer-area {
+  position: relative;
+  z-index: 81;
+}
+.composer {
+  position: relative;
+  z-index: 1;
+}
 #sendBtn {
   position: relative;
-  z-index: 5;
+  z-index: 6;
+  display: grid;
   pointer-events: auto;
   touch-action: manipulation;
+  cursor: pointer;
 }
 #sendBtn:disabled { opacity: .42; }
 #micBtn.recording {
@@ -4388,17 +4421,7 @@ function showVoiceDraft(text) {
   chatArea.scrollTop = chatArea.scrollHeight;
 }
 
-$("#micBtn").addEventListener("click", () => {
-  if (voiceRecorder && voiceRecorder.state === "recording") {
-    finishVoiceRecording(true);
-    return;
-  }
-  if (voiceDraftElement) {
-    showToast("Подожди завершения или удали распознанный текст.", "info");
-    return;
-  }
-  startVoiceRecording();
-});
+/* Обработчик микрофона назначен выше через единый capture-слушатель. */
 
 
 /* ==========================================
