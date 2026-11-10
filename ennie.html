@@ -824,6 +824,115 @@ button:focus-visible {
   stroke-linejoin: round;
 }
 
+
+/* ENNIE MOBILE HOTFIX — final cascade */
+@media (max-width: 700px) {
+  .welcome {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    padding: 12px 14px 24px !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  .welcome-content {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+  }
+  .core-wrap {
+    display: block !important;
+    position: relative !important;
+    width: 196px !important;
+    height: 196px !important;
+    min-width: 196px !important;
+    min-height: 196px !important;
+    max-width: calc(100vw - 48px) !important;
+    max-height: calc(100vw - 48px) !important;
+    flex: 0 0 196px !important;
+    margin: 0 auto 8px !important;
+    overflow: visible !important;
+  }
+  #ennieCoreCanvas {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+  }
+  .settings-profile {
+    display: grid !important;
+    grid-template-columns: 52px minmax(0,1fr) !important;
+    align-items: center !important;
+    gap: 9px 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 15px !important;
+  }
+  .settings-avatar {
+    grid-row: 1 / span 2 !important;
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background-position: center !important;
+    background-size: cover !important;
+  }
+  .settings-profile-info { min-width: 0 !important; }
+  .settings-profile-name,.settings-profile-status,.settings-profile-id {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+  .settings-account-link { grid-column: 2 !important; justify-self: start !important; }
+}
+@media (max-width: 380px) {
+  .core-wrap {
+    width: 174px !important;
+    height: 174px !important;
+    min-width: 174px !important;
+    min-height: 174px !important;
+    flex-basis: 174px !important;
+  }
+}
+/* centered minimal gear mark */
+#settingsBtn, #topSettingsBtn {
+  display: inline-grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+}
+#settingsBtn svg, #topSettingsBtn svg {
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: auto !important;
+  transform: none !important;
+  overflow: visible !important;
+  stroke: currentColor !important;
+  stroke-width: 1.65 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  fill: none !important;
+}
+
+
+.settings-account-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
+.settings-account-copy{min-height:34px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:transparent;color:var(--text);font:inherit;font-size:11px;cursor:pointer}
+.settings-account-copy:active{transform:scale(.97)}
+.settings-account-link{min-height:34px;padding:0 12px;border:1px solid var(--border);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text);font-size:11px}
+.settings-profile{box-sizing:border-box;min-width:0}
+
 </style>
 </head>
 <body>
@@ -1151,34 +1260,19 @@ button:focus-visible {
     </div>
 
 
-    <!-- КАРТОЧКА АККАУНТА -->
-    <div class="settings-profile">
-
+    <!-- TEHNOCELL ID — ACCOUNT CARD -->
+    <section class="settings-profile" aria-label="TEHNOCELL ID">
       <div class="settings-avatar" id="settingsAvatar">E</div>
-
       <div class="settings-profile-info">
-        <div class="settings-profile-name" id="settingsProfileName">
-          TEHNOCELL ID
-        </div>
-        <div class="settings-profile-status" id="settingsProfileStatus">
-          Аккаунт не подключён
-        </div>
-        <div class="settings-profile-id" id="settingsProfileId">
-          TC-ID: загружается...
-        </div>
+        <div class="settings-profile-name" id="settingsProfileName">TEHNOCELL ID</div>
+        <div class="settings-profile-status" id="settingsProfileStatus">Аккаунт не подключён</div>
+        <div class="settings-profile-id" id="settingsProfileId">TC-ID: проверка...</div>
       </div>
-
-      <a
-        href="https://technosotrudnik.github.io/tehnocell-indostri/account.html"
-        class="settings-account-link"
-        target="_blank"
-        rel="noopener"
-      >
-        Открыть
-      </a>
-
-    </div>
-
+      <div class="settings-account-actions">
+        <a href="https://technosotrudnik.github.io/tehnocell-indostri/account.html" class="settings-account-link" target="_blank" rel="noopener">Открыть профиль</a>
+        <button type="button" class="settings-account-copy" id="copyAccountEmail">Копировать email</button>
+      </div>
+    </section>
 
     <div class="settings-group">
 
@@ -1424,6 +1518,21 @@ function closeSettings() {
 
 $("#settingsBtn").addEventListener("click", openSettings);
 $("#topSettingsBtn").addEventListener("click", openSettings);
+
+const copyAccountEmailButton = document.getElementById("copyAccountEmail");
+if (copyAccountEmailButton) {
+  copyAccountEmailButton.addEventListener("click", async () => {
+    const email = currentUser?.email;
+    if (!email) { showError("Сначала войди в TEHNOCELL ID."); return; }
+    try {
+      await navigator.clipboard.writeText(email);
+      showToast("Email скопирован");
+    } catch (error) {
+      showError("Не удалось скопировать email. Проверь разрешение браузера.");
+    }
+  });
+}
+
 $("#closeSettings").addEventListener("click", closeSettings);
 
 $("#settingsModal").addEventListener("click", (event) => {
