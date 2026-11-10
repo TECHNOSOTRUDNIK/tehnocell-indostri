@@ -36,20 +36,15 @@
     .ee-iconbtn:disabled{opacity:.45;cursor:default}.ee-send{background:#f2f2f2;color:#111;border-color:#fff}
     .ee-mic.ee-recording{background:#fff;color:#111;box-shadow:0 0 0 5px rgba(255,255,255,.12)}
     .ee-login{color:#ddd;text-decoration:underline}
-    .ee-cinematic{position:fixed;inset:0;z-index:2147482500;pointer-events:none;display:grid;place-items:center;opacity:0;transition:opacity .55s ease}
+    .ee-cinematic{position:fixed;inset:0;z-index:2147482500;pointer-events:none;opacity:0;transition:opacity .65s ease}
     .ee-cinematic.ee-cinematic-visible{opacity:1}
-    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.28) 68%,rgba(0,0,0,.78) 115%);animation:ee-vignette-in 1s ease both}
-    .ee-cinematic-card{position:relative;width:min(520px,calc(100vw - 34px));max-height:min(70vh,620px);overflow:auto;padding:25px 24px 17px;border:1px solid rgba(255,255,255,.16);border-radius:26px;background:rgba(9,9,9,.86);backdrop-filter:blur(18px);box-shadow:0 15px 70px rgba(0,0,0,.4),0 0 45px rgba(255,255,255,.08);text-align:center;pointer-events:auto;transform:translateY(18px) scale(.97);animation:ee-card-in .65s cubic-bezier(.2,.8,.2,1) forwards}
-    .ee-cinematic-orb{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%);box-shadow:0 0 18px rgba(255,255,255,.85),0 0 55px rgba(255,255,255,.28);animation:ee-cinematic-pulse 2.4s ease-in-out infinite}
-    .ee-cinematic-label{font-size:10px;letter-spacing:4px;color:#aaa;margin-bottom:13px}
-    .ee-cinematic-text{font-size:14px;line-height:1.75;color:#f5f5f5;white-space:pre-wrap;text-align:left}
-    .ee-cinematic-actions{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:17px}
-    .ee-cinematic-actions button{pointer-events:auto;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:18px;padding:8px 13px;font-size:11px;cursor:pointer}
-    .ee-cinematic-actions .ee-cinematic-close{width:32px;height:32px;padding:0;border-radius:50%;font-size:20px}
-    @keyframes ee-vignette-in{from{opacity:0}to{opacity:1}}
-    @keyframes ee-card-in{to{transform:translateY(0) scale(1)}}
-    @keyframes ee-cinematic-pulse{0%,100%{transform:scale(.96);filter:brightness(.95)}50%{transform:scale(1.07);filter:brightness(1.14)}}
-    @media(prefers-reduced-motion:reduce){.ee-cinematic,.ee-cinematic-card,.ee-vignette,.ee-cinematic-orb{animation:none!important;transition:none!important;transform:none!important}}
+    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 43%,rgba(0,0,0,.20) 70%,rgba(0,0,0,.68) 115%);opacity:.72;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
+    .ee-cinematic.ee-speaking .ee-vignette{animation:ee-vignette-speak 1.55s ease-in-out infinite;opacity:1}
+    .ee-cinematic.ee-paused .ee-vignette{animation:none;opacity:.55}
+    .ee-cinematic-stop{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(0,0,0,.28);color:rgba(255,255,255,.8);font-size:20px;line-height:1;pointer-events:auto;cursor:pointer;backdrop-filter:blur(8px)}
+    @keyframes ee-vignette-in{from{opacity:0}to{opacity:.72}}
+    @keyframes ee-vignette-speak{0%,100%{opacity:.62}50%{opacity:1}}
+    @media(prefers-reduced-motion:reduce){.ee-cinematic,.ee-vignette{animation:none!important;transition:none!important}}
     .ee-thinking .ee-head-orb{animation:ee-think 1s ease-in-out infinite}
     .ee-speaking .ee-head-orb{animation:ee-speak .42s ease-in-out infinite alternate}
     .ee-listening .ee-head-orb{box-shadow:0 0 0 7px rgba(255,255,255,.09),0 0 24px rgba(255,255,255,.9)}
@@ -303,21 +298,37 @@
     if (old) old.remove();
     launch.style.display = "";
   }
-  function showCinematic(data) {
+  function showCinematic() {
     let layer = document.querySelector(".ee-cinematic");
     if (!layer) {
       layer = document.createElement("div");
       layer.className = "ee-cinematic";
-      layer.innerHTML = '<div class="ee-vignette"></div><div class="ee-cinematic-card"><div class="ee-cinematic-orb"></div><div class="ee-cinematic-label">ENNIE</div><div class="ee-cinematic-text"></div><div class="ee-cinematic-actions"><button type="button" class="ee-cinematic-chat">Открыть диалог</button><button type="button" class="ee-cinematic-close" aria-label="Завершить рассказ">×</button></div></div>';
+      layer.innerHTML = '<div class="ee-vignette"></div><button type="button" class="ee-cinematic-stop" aria-label="Остановить голосовую инструкцию">×</button>';
       document.body.appendChild(layer);
-      layer.querySelector(".ee-cinematic-close").addEventListener("click", clearNarration);
-      layer.querySelector(".ee-cinematic-chat").addEventListener("click", () => {
-        clearNarration();
-        openPanel();
-      });
+      layer.querySelector(".ee-cinematic-stop").addEventListener("click", clearNarration);
     }
-    layer.querySelector(".ee-cinematic-text").textContent = data.text || "";
     requestAnimationFrame(() => layer.classList.add("ee-cinematic-visible"));
+  }
+  function setCinematicSpeaking(speaking) {
+    const layer = document.querySelector(".ee-cinematic");
+    if (!layer) return;
+    layer.classList.toggle("ee-speaking", !!speaking);
+    layer.classList.toggle("ee-paused", !speaking);
+  }
+  function makeSpeakableText(value) {
+    return String(value || "")
+      .replace(/\[\[ENNIE_SHOW:\d+\]\]/g, " ")
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g, "$1")
+      .replace(/https?:\/\/\S+/gi, " ")
+      .replace(/www\.\S+/gi, " ")
+      .replace(/^\s{0,3}#{1,6}\s*/gm, "")
+      .replace(/^\s*(?:[-*•]|\d+[.)])\s*/gm, "")
+      .replace(/\b\d+(?:[.,:/-]\d+)*\b/g, " ")
+      .replace(/[\*_~`>#]/g, " ")
+      .replace(/\s+/g, " ")
+      .replace(/\s+([,.!?;:])/g, "$1")
+      .trim();
   }
   async function makeNarrationAudio(data) {
     if (!voiceOutputEnabled || !data.text) return;
@@ -331,7 +342,7 @@
           "apikey": SUPABASE_KEY,
           "Authorization": "Bearer " + session.access_token
         },
-        body: JSON.stringify({ text: data.text.slice(0, 1800) })
+        body: JSON.stringify({ text: data.speechText.slice(0, 1800) })
       });
       if (!response.ok) throw new Error("voice " + response.status);
       const blob = await response.blob();
@@ -348,10 +359,12 @@
       playNarration(data);
     } catch (error) {
       console.warn("ENNIE narration audio unavailable:", error);
-      if ("speechSynthesis" in window && voiceOutputEnabled) {
-        const utterance = new SpeechSynthesisUtterance(data.text);
+      if ("speechSynthesis" in window && voiceOutputEnabled && data.speechText) {
+        const utterance = new SpeechSynthesisUtterance(data.speechText);
         utterance.lang = "ru-RU";
-        utterance.rate = 1.02;
+        utterance.rate = 1.04;
+        utterance.onstart = () => setCinematicSpeaking(true);
+        utterance.onend = () => { setCinematicSpeaking(false); clearNarration(); };
         window.speechSynthesis.speak(utterance);
       }
     }
@@ -363,7 +376,10 @@
       narrationAudio = new Audio(data.audio);
       narrationAudio.currentTime = Math.max(0, Number(data.position) || 0);
       narrationAudio.onended = clearNarration;
+      narrationAudio.onplay = () => setCinematicSpeaking(true);
+      narrationAudio.onpause = () => setCinematicSpeaking(false);
       narrationAudio.play().then(() => {
+        setCinematicSpeaking(true);
         if (narrationTimer) clearInterval(narrationTimer);
         narrationTimer = setInterval(() => {
           if (!narrationAudio || narrationAudio.paused) return;
@@ -376,23 +392,28 @@
     }
   }
   async function presentAnswer(answer) {
-    const data = { text: String(answer).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").trim(), position: 0, audio: null };
+    const fullText = String(answer).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").trim();
+    const speechText = makeSpeakableText(fullText);
+    if (!voiceOutputEnabled || !speechText) return;
+    const data = { text: fullText, speechText, position: 0, audio: null };
     stopAudio();
     if (narrationTimer) clearInterval(narrationTimer);
     saveNarration(data);
     panel.classList.remove("ee-open");
     launch.style.display = "none";
-    showCinematic(data);
+    showCinematic();
     await makeNarrationAudio(data);
   }
   function resumeNarrationIfNeeded() {
     const data = readNarration();
-    if (!data || !data.text) return;
-    launch.style.display = "none";
-    showCinematic(data);
-    if (voiceOutputEnabled && data.audio) {
-      playNarration(data);
+    if (!data || !data.speechText) return;
+    if (!voiceOutputEnabled) {
+      clearNarration();
+      return;
     }
+    launch.style.display = "none";
+    showCinematic();
+    if (data.audio) playNarration(data);
   }
   async function speak(text) {
     if (!voiceOutputEnabled) return;
