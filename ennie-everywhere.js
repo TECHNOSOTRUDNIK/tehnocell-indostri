@@ -524,7 +524,7 @@
     input.style.height = "auto";
     addBubble(value, "user");
     const page = buildPageContext();
-    const onAccountPage=/account\\.html|tehnocell-id/i.test(location.pathname);
+    const onAccountPage=location.pathname.toLowerCase().endsWith("account.html")||location.pathname.toLowerCase().includes("tehnocell-id");
     const asksAvatar=/аватар|фото профил|картинк.*профил|поменять.*фото|изменить.*фото/i.test(value);
     if(onAccountPage&&asksAvatar){
       const settingsOpen=!!document.querySelector("#settings.page.active");
@@ -540,7 +540,7 @@
       "Страница: " + page.title + " (" + page.path + ")",
       "Заголовки: " + page.headings.join(" | "),
       "Доступные элементы: " + page.elements.map((el, index) => index + ": " + el.tag + " — " + el.label + (el.href ? " (" + el.href + ")" : "")).join(" ; "),
-      /account\\.html|tehnocell-id/i.test(page.path) ? "[СПРАВКА TEHNOCELL ID] Аватар: Настройки → Профиль → Изменить фото; JPG, PNG, WEBP до 5 МБ. Имя и описание: «Отображаемое имя» и «О себе», затем «Сохранить изменения» (био до 160 символов). Тема: Внешний вид. Уведомления: включить/выключить/пауза 1, 8, 24 часа. Пароль: Безопасность → Изменить пароль. Не проси пароль, коды или секретные ключи." : "",
+      (page.path.toLowerCase().endsWith("account.html") || page.path.toLowerCase().includes("tehnocell-id")) ? "[СПРАВКА TEHNOCELL ID] Аватар: Настройки → Профиль → Изменить фото; JPG, PNG, WEBP до 5 МБ. Имя и описание: «Отображаемое имя» и «О себе», затем «Сохранить изменения» (био до 160 символов). Тема: Внешний вид. Уведомления: включить/выключить/пауза 1, 8, 24 часа. Пароль: Безопасность → Изменить пароль. Не проси пароль, коды или секретные ключи." : "",
       "Если пользователь просит показать или найти элемент, добавь в ответ скрытый маркер [[ENNIE_SHOW:число]] с точным индексом элемента. Не нажимай кнопки, не отправляй формы и не выполняй опасные действия. Отвечай ласково, мягко и естественно, проговаривая свои действия."
     ].join("\n");
     history.push({ role: "user", content: value + "\n\n" + pageText });
