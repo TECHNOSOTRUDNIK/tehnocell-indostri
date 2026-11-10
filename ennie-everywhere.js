@@ -38,12 +38,12 @@
     .ee-login{color:#ddd;text-decoration:underline}
     .ee-cinematic{position:fixed;inset:0;z-index:2147482500;pointer-events:none;opacity:0;transition:opacity .65s ease}
     .ee-cinematic.ee-cinematic-visible{opacity:1}
-    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 43%,rgba(0,0,0,.20) 70%,rgba(0,0,0,.68) 115%);opacity:.72;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
+    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 18%,rgba(0,0,0,.13) 43%,rgba(0,0,0,.38) 70%,rgba(0,0,0,.78) 112%);opacity:.88;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
     .ee-cinematic.ee-speaking .ee-vignette{animation:ee-vignette-speak 1.55s ease-in-out infinite;opacity:1}
     .ee-cinematic.ee-paused .ee-vignette{animation:none;opacity:.55}
     .ee-cinematic-stop{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(0,0,0,.28);color:rgba(255,255,255,.8);font-size:20px;line-height:1;pointer-events:auto;cursor:pointer;backdrop-filter:blur(8px)}
-    @keyframes ee-vignette-in{from{opacity:0}to{opacity:.72}}
-    @keyframes ee-vignette-speak{0%,100%{opacity:.62}50%{opacity:1}}
+    @keyframes ee-vignette-in{from{opacity:0}to{opacity:.88}}
+    @keyframes ee-vignette-speak{0%,100%{opacity:.72}50%{opacity:1}}
     @media(prefers-reduced-motion:reduce){.ee-cinematic,.ee-vignette{animation:none!important;transition:none!important}}
     .ee-thinking .ee-head-orb{animation:ee-think 1s ease-in-out infinite}
     .ee-speaking .ee-head-orb{animation:ee-speak .42s ease-in-out infinite alternate}
@@ -97,6 +97,12 @@
   const close = panel.querySelector(".ee-close");
   const voiceToggle = panel.querySelector(".ee-voice-toggle");
   let voiceOutputEnabled = localStorage.getItem("ennie_voice_output") === "true";
+  window.addEventListener("storage", event => {
+    if (event.key !== "ennie_voice_output") return;
+    voiceOutputEnabled = event.newValue === "true";
+    updateVoiceToggle();
+    if (!voiceOutputEnabled) { stopAudio(); clearNarration(); }
+  });
   const history = [];
   let client = null;
   let recorder = null;
@@ -117,6 +123,7 @@
   voiceToggle.addEventListener("click", () => {
     voiceOutputEnabled = !voiceOutputEnabled;
     localStorage.setItem("ennie_voice_output", String(voiceOutputEnabled));
+    localStorage.setItem("ennie-voice", String(voiceOutputEnabled));
     if (!voiceOutputEnabled) stopAudio();
     updateVoiceToggle();
     setMode("", voiceOutputEnabled ? "Хорошо, теперь я могу озвучивать ответы." : "Хорошо, дальше буду отвечать текстом.");
@@ -144,6 +151,8 @@
   }
 
   function showFirstVisitWelcome() {
+    const path = location.pathname;
+    if (path !== "/" && path !== "/index.html") return;
     const key = "ennie_site_intro_seen_v1";
     if (localStorage.getItem(key)) return;
     localStorage.setItem(key, "true");
@@ -293,6 +302,7 @@
       try { narrationAudio.pause(); } catch (_) {}
       narrationAudio = null;
     }
+    setCinematicSpeaking(false);
     try { sessionStorage.removeItem(NARRATION_KEY); } catch (_) {}
     const old = document.querySelector(".ee-cinematic");
     if (old) old.remove();
@@ -404,7 +414,7 @@
     showCinematic();
     await makeNarrationAudio(data);
   }
-  function resumeNarrationIfNeeded() {
+  function resumeNarrationIfNeeded(forceResume) {
     const data = readNarration();
     if (!data || !data.speechText) return;
     if (!voiceOutputEnabled) {
@@ -413,8 +423,23 @@
     }
     launch.style.display = "none";
     showCinematic();
-    if (data.audio) playNarration(data);
+    if (data.audio && (forceResume || !narrationAudio || narrationAudio.paused)) playNarration(data);
   }
+  window.addEventListener("pagehide", () => {
+    if (!narrationAudio || narrationAudio.ended) return;
+    const data = readNarration();
+    if (!data) return;
+    data.position = narrationAudio.currentTime || data.position || 0;
+    saveNarration(data);
+  });
+  window.addEventListener("pageshow", event => {
+    if (!event.persisted) return;
+    const data = readNarration();
+    if (!data || !data.audio || !voiceOutputEnabled) return;
+    launch.style.display = "none";
+    showCinematic();
+    setTimeout(() => resumeNarrationIfNeeded(true), 120);
+  });
   async function speak(text) {
     if (!voiceOutputEnabled) return;
     const clean = String(text).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").replace(/https?:\/\/\S+/g, "ссылка").trim();
