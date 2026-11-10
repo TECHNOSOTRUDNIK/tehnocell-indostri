@@ -2,3526 +2,1694 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#080808">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090909">
 <title>ENNIE — TEHNOCELL AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
 :root {
-    --bg:#080808;
-    --panel:#101010;
-    --panel2:#171717;
-    --text:#f5f5f5;
-    --muted:#777;
-    --border:rgba(255,255,255,.09);
-    --white:#fff;
+  --bg:#090909;
+  --panel:#111111;
+  --panel2:#171717;
+  --text:#f5f5f5;
+  --muted:#858585;
+  --border:#ffffff12;
+  --accent:#ffffff;
+  --input:#151515;
+  --shadow:#00000055;
+}
+
+body.light {
+  --bg:#f5f5f5;
+  --panel:#ffffff;
+  --panel2:#eeeeee;
+  --text:#171717;
+  --muted:#777777;
+  --border:#00000013;
+  --accent:#111111;
+  --input:#eeeeee;
+  --shadow:#00000012;
 }
 
 * {
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 html,body {
-    width:100%;
-    height:100%;
-}
-
-body {
-    background:var(--bg);
-    color:var(--text);
-    font-family:Inter,Arial,sans-serif;
-    height:100dvh;
-    overflow:hidden;
+  margin:0;
+  width:100%;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,sans-serif;
+  overflow:hidden;
 }
 
 button,input,textarea {
-    font:inherit;
+  font:inherit;
 }
 
 button {
-    color:inherit;
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
+  color:inherit;
+  cursor:pointer;
 }
 
-button:focus-visible {
-    outline:1px solid white;
-    outline-offset:3px;
-}
-
-.app {
-    display:flex;
-    height:100dvh;
-    width:100%;
-    overflow:hidden;
+#app {
+  width:100%;
+  height:100dvh;
+  display:flex;
+  overflow:hidden;
+  background:var(--bg);
 }
 
 /* SIDEBAR */
 
 .sidebar {
-    width:275px;
-    background:#0d0d0d;
-    border-right:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    padding:20px 15px;
-    flex-shrink:0;
-    z-index:100;
-}
-
-.sidebar-header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:24px;
+  width:275px;
+  flex-shrink:0;
+  height:100%;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  padding:20px 15px;
+  transition:transform .3s ease;
+  z-index:20;
 }
 
 .brand {
-    display:flex;
-    align-items:center;
-    gap:12px;
-    padding:8px 7px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:5px 8px 25px;
 }
 
-.brand-mark {
-    width:36px;
-    height:36px;
-    border:1px solid rgba(255,255,255,.7);
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    font-size:17px;
-    box-shadow:0 0 18px rgba(255,255,255,.15);
+.brand-symbol {
+  width:32px;
+  height:32px;
+  border:1px solid var(--text);
+  border-radius:11px;
+  display:grid;
+  place-items:center;
+  font-size:15px;
+  font-weight:700;
 }
 
 .brand-name {
-    display:block;
-    font-size:19px;
-    font-weight:800;
-    letter-spacing:3px;
+  font-size:17px;
+  font-weight:700;
+  letter-spacing:2px;
 }
 
-.brand-subtitle {
-    display:block;
-    font-size:9px;
-    color:#777;
-    letter-spacing:2px;
-    margin-top:4px;
+.brand-sub {
+  font-size:9px;
+  color:var(--muted);
+  letter-spacing:2px;
+  margin-top:4px;
 }
 
-.icon-btn {
-    width:39px;
-    height:39px;
-    border:0;
-    background:transparent;
-    color:#aaa;
-    border-radius:11px;
-    display:grid;
-    place-items:center;
-    transition:.2s;
+.new-chat {
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  border-radius:13px;
+  padding:14px;
+  text-align:left;
+  font-size:13px;
+  margin-bottom:24px;
 }
 
-.icon-btn:hover {
-    background:#202020;
-    color:white;
+.new-chat span {
+  margin-right:9px;
+  font-size:17px;
 }
 
-.icon-btn:active {
-    transform:scale(.9);
+.side-label {
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:1.5px;
+  padding:0 9px 12px;
 }
 
-.icon-btn svg {
-    width:20px;
-    height:20px;
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.7;
-    stroke-linecap:round;
-    stroke-linejoin:round;
+.chat-list {
+  flex:1;
+  overflow-y:auto;
 }
 
-.sidebar-close {
-    display:none;
+.chat-item {
+  width:100%;
+  padding:12px 10px;
+  margin-bottom:4px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  text-align:left;
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
-.new-chat-btn {
-    width:100%;
-    height:47px;
-    border:1px solid var(--border);
-    background:#171717;
-    border-radius:13px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    transition:.25s;
-}
-
-.new-chat-btn svg {
-    width:18px;
-    height:18px;
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.8;
-}
-
-.new-chat-btn:hover {
-    background:#222;
-}
-
-.new-chat-btn:active {
-    transform:scale(.97);
-}
-
-.history-heading {
-    color:#666;
-    font-size:10px;
-    letter-spacing:2px;
-    margin:28px 8px 12px;
-}
-
-.chat-history {
-    flex:1;
-    overflow-y:auto;
-}
-
-.history-empty {
-    color:#666;
-    font-size:12px;
-    padding:12px 9px;
-}
-
-.history-item {
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:12px 10px;
-    border-radius:10px;
-    color:#aaa;
-    font-size:13px;
-    cursor:pointer;
-    margin-bottom:3px;
-}
-
-.history-item:hover,
-.history-item.active {
-    background:#1b1b1b;
-    color:white;
-}
-
-.history-title {
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-    flex:1;
-}
-
-.delete-chat {
-    border:0;
-    background:transparent;
-    color:#888;
-    font-size:17px;
+.chat-item.active,
+.chat-item:active {
+  background:var(--panel2);
+  color:var(--text);
 }
 
 .sidebar-bottom {
-    border-top:1px solid var(--border);
-    padding-top:16px;
+  border-top:1px solid var(--border);
+  padding-top:12px;
 }
 
-.profile {
-    display:flex;
-    align-items:center;
-    gap:10px;
+.side-button {
+  width:100%;
+  border:0;
+  background:transparent;
+  padding:13px 10px;
+  text-align:left;
+  color:var(--muted);
+  font-size:12px;
+  border-radius:10px;
 }
 
-.profile-avatar,
-.settings-avatar {
-    width:39px;
-    height:39px;
-    border-radius:50%;
-    background:#222;
-    display:grid;
-    place-items:center;
-    overflow:hidden;
-    flex-shrink:0;
-    background-size:cover;
-    background-position:center;
-}
-
-.profile-info {
-    flex:1;
-    min-width:0;
-}
-
-.profile-name {
-    font-size:13px;
-    font-weight:600;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-}
-
-.profile-status {
-    font-size:10px;
-    color:#777;
-    margin-top:4px;
+.side-button:hover {
+  background:var(--panel2);
+  color:var(--text);
 }
 
 /* MAIN */
 
 .main {
-    flex:1;
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    position:relative;
+  flex:1;
+  min-width:0;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  position:relative;
 }
 
 .topbar {
-    height:65px;
-    border-bottom:1px solid var(--border);
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 22px;
-    flex-shrink:0;
+  height:65px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 23px;
+  border-bottom:1px solid var(--border);
 }
 
-.topbar-left,
-.topbar-right {
-    display:flex;
-    align-items:center;
-    gap:10px;
+.top-title {
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.5px;
 }
 
-.menu-toggle,
+.top-actions {
+  display:flex;
+  gap:9px;
+}
+
+.icon-button {
+  width:38px;
+  height:38px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel);
+  display:grid;
+  place-items:center;
+  font-size:16px;
+}
+
 .mobile-brand {
-    display:none;
+  display:none;
 }
 
-.connection-indicator {
-    display:flex;
-    align-items:center;
-    gap:7px;
-    color:#999;
-    font-size:9px;
-    letter-spacing:1.2px;
+/* SCREENS */
+
+.screen {
+  display:none;
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
 }
 
-.connection-dot {
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:#eee;
-    box-shadow:0 0 10px #fff;
+.screen.active {
+  display:flex;
+  flex-direction:column;
 }
 
-/* WELCOME */
+/* HOME */
 
-.welcome {
-    flex:1;
-    min-height:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    text-align:center;
-    padding:16px 20px 24px;
-    overflow-y:auto;
-    position:relative;
+.home-screen {
+  align-items:center;
+  justify-content:center;
+  padding:20px 18px 35px;
+  text-align:center;
 }
 
-.welcome-content {
-    width:100%;
-    flex-shrink:0;
+.greeting {
+  font-size:clamp(24px,5vw,34px);
+  font-weight:500;
+  letter-spacing:-1.4px;
+  margin:0 0 9px;
 }
 
-.welcome-eyebrow {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
-    color:#777;
-    font-size:9px;
-    letter-spacing:2px;
-    margin-top:5px;
+.greeting-sub {
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+  max-width:280px;
 }
 
-.eyebrow-line {
-    width:23px;
-    height:1px;
-    background:#555;
+/* ORB */
+
+.orb-area {
+  width:min(270px,72vw);
+  height:min(270px,72vw);
+  position:relative;
+  display:grid;
+  place-items:center;
+  margin:15px 0 18px;
+  cursor:pointer;
+  touch-action:manipulation;
 }
 
-/* ENNIE CORE */
-
-.core-wrap {
-    width:280px;
-    height:280px;
-    max-width:100%;
-    position:relative;
-    display:grid;
-    place-items:center;
-    margin:0 auto 0;
-    overflow:visible;
-    isolation:isolate;
+#orbCanvas {
+  width:100%;
+  height:100%;
+  overflow:visible;
 }
 
-#ennieCoreCanvas {
-    position:absolute;
-    width:100%;
-    height:100%;
-    inset:0;
-    display:block;
-    pointer-events:none;
+.orb-halo {
+  position:absolute;
+  inset:10%;
+  border-radius:50%;
+  background:radial-gradient(
+    circle,
+    #ffffff13 0%,
+    #ffffff06 45%,
+    transparent 72%
+  );
+  filter:blur(18px);
+  pointer-events:none;
+  animation:halo 4s ease-in-out infinite;
 }
 
-.welcome-title {
-    font-size:27px;
-    font-weight:700;
-    letter-spacing:7px;
-    margin-top:-2px;
-    text-shadow:0 0 25px rgba(255,255,255,.18);
+@keyframes halo {
+  0%,100% { transform:scale(.9); opacity:.5; }
+  50% { transform:scale(1.12); opacity:1; }
 }
 
-.welcome-title span {
-    color:white;
+.orb-hint {
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:27px;
 }
 
-.welcome-greeting {
-    margin-top:13px;
-    color:#eee;
-    font-size:14px;
-    font-weight:500;
-    min-height:22px;
-    animation:greetingAppear .7s ease both;
+.quick-actions {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:9px;
 }
 
-@keyframes greetingAppear {
-    from {
-        opacity:0;
-        transform:translateY(9px);
-    }
-    to {
-        opacity:1;
-        transform:translateY(0);
-    }
+.quick-action {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:11px 15px;
+  font-size:11px;
+  color:var(--muted);
+  transition:.2s;
 }
 
-.welcome-description {
-    margin:10px auto 0;
-    max-width:390px;
-    color:#888;
-    font-size:12px;
-    line-height:1.7;
+.quick-action:active {
+  transform:scale(.96);
+  color:var(--text);
 }
 
-/* WIDGETS */
+/* CHAT */
 
-.widget-section {
-    width:min(650px,100%);
-    margin:19px auto 0;
-    text-align:left;
-    flex-shrink:0;
-}
-
-.widget-heading {
-    margin-bottom:10px;
-}
-
-.section-label {
-    color:#666;
-    font-size:9px;
-    letter-spacing:1.7px;
-}
-
-.widget-heading h2 {
-    font-size:13px;
-    font-weight:600;
-    margin-top:5px;
-}
-
-.widget-grid {
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:9px;
-}
-
-.widget-card {
-    min-height:91px;
-    padding:11px;
-    background:linear-gradient(145deg,#171717,#101010);
-    border:1px solid var(--border);
-    border-radius:14px;
-    text-align:left;
-    position:relative;
-    overflow:hidden;
-    transition:transform .25s,border-color .25s;
-}
-
-.widget-card:hover {
-    transform:translateY(-2px);
-    border-color:rgba(255,255,255,.25);
-}
-
-.widget-card:active {
-    transform:scale(.97);
-}
-
-.widget-icon {
-    width:19px;
-    height:19px;
-    margin-bottom:8px;
-    color:#eee;
-}
-
-.widget-icon svg {
-    width:100%;
-    height:100%;
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.5;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-}
-
-.widget-title {
-    display:block;
-    font-size:11px;
-    font-weight:600;
-    margin-bottom:4px;
-}
-
-.widget-description {
-    display:block;
-    color:#777;
-    font-size:9px;
-    line-height:1.4;
-}
-
-.widget-arrow {
-    position:absolute;
-    right:10px;
-    top:10px;
-    color:#666;
-    font-size:12px;
-}
-
-/* MOBILE */
-
-@media(max-width:700px) {
-    .sidebar {
-        position:fixed;
-        top:0;
-        bottom:0;
-        left:0;
-        width:min(290px,85vw);
-        transform:translateX(-105%);
-        transition:transform .28s ease;
-        box-shadow:10px 0 40px rgba(0,0,0,.4);
-    }
-
-    .sidebar.sidebar-open {
-        transform:translateX(0);
-    }
-
-    .sidebar-close {
-        display:grid;
-    }
-
-    .menu-toggle,
-    .mobile-brand {
-        display:flex;
-    }
-
-    .menu-toggle {
-        display:grid;
-    }
-
-    .mobile-brand {
-        flex-direction:column;
-        gap:2px;
-        font-size:13px;
-        font-weight:700;
-        letter-spacing:1.5px;
-    }
-
-    .mobile-brand small {
-        color:#777;
-        font-size:8px;
-        font-weight:400;
-        letter-spacing:1px;
-    }
-
-    .topbar {
-        height:57px;
-        padding:0 12px;
-    }
-
-    .connection-indicator {
-        font-size:8px;
-    }
-
-    .welcome {
-        padding:12px 13px 20px;
-    }
-
-    .welcome-eyebrow {
-        font-size:8px;
-    }
-
-    .core-wrap {
-        width:min(220px,65vw);
-        height:min(220px,65vw);
-        margin:0 auto;
-    }
-
-    .welcome-title {
-        font-size:23px;
-        letter-spacing:5px;
-    }
-
-    .welcome-greeting {
-        font-size:13px;
-        margin-top:10px;
-    }
-
-    .welcome-description {
-        font-size:10px;
-        max-width:310px;
-        margin-top:7px;
-    }
-
-    .widget-section {
-        margin-top:15px;
-    }
-
-    .widget-grid {
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
-    }
-
-    .widget-card {
-        min-height:76px;
-        padding:9px;
-    }
-
-    .widget-icon {
-        width:16px;
-        height:16px;
-        margin-bottom:6px;
-    }
-
-    .widget-title {
-        font-size:10px;
-    }
-
-    .widget-description {
-        font-size:8px;
-    }
-}
-
-@media(max-height:740px) and (max-width:700px) {
-    .core-wrap {
-        width:175px;
-        height:175px;
-    }
-
-    .widget-section {
-        margin-top:10px;
-    }
-
-    .widget-card {
-        min-height:69px;
-    }
-
-    .welcome {
-        padding-top:8px;
-    }
-}
-
-</style>
-</head>
-<body>
-
-<div class="app">
-
-    <!-- БОКОВОЕ МЕНЮ -->
-
-    <aside class="sidebar" id="sidebar">
-
-        <div class="sidebar-header">
-
-            <div class="brand">
-                <div class="brand-mark">E</div>
-
-                <div>
-                    <span class="brand-name">ENNIE</span>
-                    <span class="brand-subtitle">TEHNOCELL AI</span>
-                </div>
-            </div>
-
-            <button class="icon-btn sidebar-close"
-                    id="sidebarClose"
-                    aria-label="Закрыть меню">
-                <svg viewBox="0 0 24 24">
-                    <path d="M18 6 6 18M6 6l12 12"/>
-                </svg>
-            </button>
-
-        </div>
-
-
-        <button class="new-chat-btn" id="newChatBtn">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 5v14M5 12h14"/>
-            </svg>
-            <span>Новый диалог</span>
-        </button>
-
-
-        <div class="history-heading">
-            ИСТОРИЯ
-        </div>
-
-
-        <div class="chat-history" id="chatHistory">
-
-            <div class="history-empty">
-                Здесь появятся твои диалоги
-            </div>
-
-        </div>
-
-
-        <div class="sidebar-bottom">
-
-            <div class="profile">
-
-                <div class="profile-avatar"
-                     id="profileAvatar">
-                    T
-                </div>
-
-                <div class="profile-info">
-
-                    <div class="profile-name"
-                         id="profileName">
-                        TEHNOCELL ID
-                    </div>
-
-                    <div class="profile-status"
-                         id="profileStatus">
-                        Проверка подключения...
-                    </div>
-
-                </div>
-
-                <button class="icon-btn"
-                        id="settingsBtn"
-                        aria-label="Настройки">
-
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.4v-.2a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.56-1.03H6v-2.4h.84A1.7 1.7 0 0 0 8.4 10a1.7 1.7 0 0 0-.34-1.88L8 8.06l1.7-1.7.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.67 5.2V5h2.4v.2a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 19.34 10a1.7 1.7 0 0 0 1.56 1.03h.1v2.4h-.1A1.7 1.7 0 0 0 19.4 15Z"/>
-                    </svg>
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- ОСНОВНОЙ ЭКРАН -->
-
-    <main class="main">
-
-        <header class="topbar">
-
-            <div class="topbar-left">
-
-                <button class="icon-btn menu-toggle"
-                        id="menuToggle"
-                        aria-label="Открыть меню">
-
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 7h16M4 12h16M4 17h16"/>
-                    </svg>
-
-                </button>
-
-
-                <div class="mobile-brand">
-                    ENNIE
-                    <small>TEHNOCELL AI</small>
-                </div>
-
-            </div>
-
-
-            <div class="topbar-right">
-
-                <div class="connection-indicator">
-
-                    <span class="connection-dot"
-                          id="connectionDot"></span>
-
-                    <span id="connectionText">
-                        ENNIE ONLINE
-                    </span>
-
-                </div>
-
-
-                <button class="icon-btn"
-                        id="topSettingsBtn"
-                        aria-label="Настройки">
-
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="3"/>
-                        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2.4v-.2a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.56-1.03H6v-2.4h.84A1.7 1.7 0 0 0 8.4 10a1.7 1.7 0 0 0-.34-1.88L8 8.06l1.7-1.7.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.67 5.2V5h2.4v.2a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 19.34 10a1.7 1.7 0 0 0 1.56 1.03h.1v2.4h-.1A1.7 1.7 0 0 0 19.4 15Z"/>
-                    </svg>
-
-                </button>
-
-            </div>
-
-        </header>
-
-
-        <!-- ГЛАВНЫЙ ЭКРАН ENNIE -->
-
-        <section class="welcome"
-                 id="welcome">
-
-            <div class="welcome-content">
-
-                <div class="welcome-eyebrow">
-                    <span class="eyebrow-line"></span>
-                    YOUR PERSONAL AI
-                    <span class="eyebrow-line"></span>
-                </div>
-
-
-                <!-- ГЛАВНЫЙ СВЕТОВОЙ ШАР -->
-
-                <div class="core-wrap"
-                     id="coreWrap">
-
-                    <canvas id="ennieCoreCanvas"></canvas>
-
-                </div>
-
-
-                <h1 class="welcome-title">
-                    <span>ENNIE</span>
-                </h1>
-
-
-                <div class="welcome-greeting"
-                     id="welcomeGreeting">
-                    Ну что, мой хороший, какие сегодня планы?
-                </div>
-
-
-                <p class="welcome-description">
-                    Я рядом, чтобы помочь тебе разобраться,
-                    придумать что-то новое или просто поговорить.
-                </p>
-
-            </div>
-
-
-            <!-- КАРТОЧКИ -->
-
-            <div class="widget-section">
-
-                <div class="widget-heading">
-
-                    <div class="section-label">
-                        TEHNOCELL ECOSYSTEM
-                    </div>
-
-                    <h2>Твои возможности</h2>
-
-                </div>
-
-
-                <div class="widget-grid">
-
-
-                    <button class="widget-card"
-                            data-widget="hub">
-
-                        <div class="widget-icon">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="8" height="8" rx="2"/>
-                                <rect x="13" y="3" width="8" height="8" rx="2"/>
-                                <rect x="3" y="13" width="8" height="8" rx="2"/>
-                                <rect x="13" y="13" width="8" height="8" rx="2"/>
-                            </svg>
-                        </div>
-
-                        <span class="widget-title">TC HUB</span>
-
-                        <span class="widget-description">
-                            Экосистема TEHNOCELL
-                        </span>
-
-                        <span class="widget-arrow">↗</span>
-
-                    </button>
-
-
-                    <button class="widget-card"
-                            data-widget="news">
-
-                        <div class="widget-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M4 5h16v14H4z"/>
-                                <path d="M8 9h8M8 13h8M8 16h5"/>
-                            </svg>
-                        </div>
-
-                        <span class="widget-title">TC NEWS</span>
-
-                        <span class="widget-description">
-                            Новости и обновления
-                        </span>
-
-                        <span class="widget-arrow">↗</span>
-
-                    </button>
-
-
-                    <button class="widget-card"
-                            data-widget="status">
-
-                        <div class="widget-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M3 12h4l3-7 4 14 3-7h4"/>
-                            </svg>
-                        </div>
-
-                        <span class="widget-title">TC STATUS</span>
-
-                        <span class="widget-description">
-                            Состояние сервисов
-                        </span>
-
-                        <span class="widget-arrow">↗</span>
-
-                    </button>
-
-
-                    <button class="widget-card"
-                            data-widget="memory">
-
-                        <div class="widget-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M5 4h14v16H5z"/>
-                                <path d="M8 8h8M8 12h8M8 16h5"/>
-                            </svg>
-                        </div>
-
-                        <span class="widget-title">MY MEMORY</span>
-
-                        <span class="widget-description">
-                            Воспоминания и заметки
-                        </span>
-
-                        <span class="widget-arrow">↗</span>
-
-                    </button>
-
-
-                    <button class="widget-card"
-                            data-widget="day">
-
-                        <div class="widget-icon">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="4" width="18" height="17" rx="2"/>
-                                <path d="M8 2v4M16 2v4M3 9h18M8 13h3M8 17h7"/>
-                            </svg>
-                        </div>
-
-                        <span class="widget-title">MY DAY</span>
-
-                        <span class="widget-description">
-                            Планы и задачи
-                        </span>
-
-                        <span class="widget-arrow">↗</span>
-
-                    </button>
-
-
-                    <button class="widget-card"
-                            data-widget="actions">
-
-                        <div class="widget-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 3v18M3 12h18"/>
-                                <circle cx="12" cy="12" r="9"/>
-                            </svg>
-                        </div>
-
-                        <span class="widget-title">QUICK ACTIONS</span>
-
-                        <span class="widget-description">
-                            Быстрые действия
-                        </span>
-
-                        <span class="widget-arrow">↗</span>
-
-                    </button>
-
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ОБЛАСТЬ ПЕРЕПИСКИ -->
-
-        <section class="chat-area"
-                 id="chatArea"
-                 style="display:none;">
-
-            <div class="messages"
-                 id="messages">
-
-            </div>
-
-            <div class="typing-indicator"
-                 id="typingIndicator"
-                 style="display:none;">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-                <small>ENNIE печатает</small>
-
-            </div>
-
-        </section>
-
-
-        <!-- ПАНЕЛЬ ВВОДА -->
-
-        <div class="composer-area"
-             id="composerArea">
-
-            <div class="attachment-preview"
-                 id="attachmentPreview"
-                 style="display:none;">
-            </div>
-
-
-            <div class="composer">
-
-                <button class="composer-btn"
-                        id="attachBtn"
-                        aria-label="Прикрепить фотографию">
-
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 5v14M5 12h14"/>
-                    </svg>
-
-                </button>
-
-
-                <textarea id="messageInput"
-                          rows="1"
-                          maxlength="10000"
-                          placeholder="Напиши мне что-нибудь..."
-                          aria-label="Сообщение"></textarea>
-
-
-                <button class="composer-btn"
-                        id="micBtn"
-                        aria-label="Голосовой ввод">
-
-                    <svg viewBox="0 0 24 24">
-                        <rect x="9" y="2" width="6" height="13" rx="3"/>
-                        <path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/>
-                    </svg>
-
-                </button>
-
-
-                <button class="send-btn"
-                        id="sendBtn"
-                        aria-label="Отправить">
-
-                    <svg viewBox="0 0 24 24">
-                        <path d="m5 12 14-7-5 14-3-6-6-1z"/>
-                        <path d="m11 13 8-8"/>
-                    </svg>
-
-                </button>
-
-            </div>
-
-
-            <input type="file"
-                   id="imageInput"
-                   accept="image/png,image/jpeg,image/webp"
-                   hidden>
-
-
-            <div class="disclaimer"
-                 id="disclaimer">
-                ENNIE может допускать ошибки. Важную информацию проверяй.
-            </div>
-
-        </div>
-
-
-        <!-- ПОДВАЛ -->
-
-        <footer class="footer">
-            ENNIE — TEHNOCELL AI
-        </footer>
-
-    </main>
-
-</div>
-
-
-<!-- ЗАТЕМНЕНИЕ МОБИЛЬНОГО МЕНЮ -->
-
-<div class="sidebar-overlay"
-     id="sidebarOverlay"></div>
-
-
-<!-- УВЕДОМЛЕНИЯ -->
-
-<div class="toast-container"
-     id="toastContainer"
-     aria-live="polite">
-</div>
-
-
-<!-- НАСТРОЙКИ -->
-
-<div class="modal-overlay"
-     id="settingsModal"
-     style="display:none;">
-
-    <div class="modal settings-modal">
-
-        <div class="modal-header">
-
-            <div>
-                <div class="modal-eyebrow">
-                    PERSONAL SPACE
-                </div>
-
-                <h2>Настройки</h2>
-            </div>
-
-            <button class="icon-btn"
-                    id="closeSettings"
-                    aria-label="Закрыть">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M18 6 6 18M6 6l12 12"/>
-                </svg>
-
-            </button>
-
-        </div>
-
-
-        <!-- КАРТОЧКА TEHNOCELL ID -->
-
-        <div class="settings-profile">
-
-            <div class="settings-avatar"
-                 id="settingsAvatar">
-                T
-            </div>
-
-            <div class="settings-profile-info">
-
-                <div class="settings-profile-name-row">
-
-                    <span id="settingsProfileName">
-                        TEHNOCELL ID
-                    </span>
-
-                    <span class="tehnocell-verified"
-                          style="display:none;"
-                          title="Подтверждённый аккаунт">
-
-                        <svg viewBox="0 0 24 24">
-                            <path d="m5 12 4 4L19 6"/>
-                        </svg>
-
-                    </span>
-
-                </div>
-
-                <div id="settingsProfileStatus">
-                    Проверка аккаунта...
-                </div>
-
-                <div id="settingsProfileId">
-                    TC-ID: ...
-                </div>
-
-            </div>
-
-            <a href="account.html"
-               class="account-link">
-                Открыть
-            </a>
-
-        </div>
-
-
-        <!-- ВНЕШНИЙ ВИД -->
-
-        <div class="settings-group">
-
-            <div class="settings-group-title">
-                ВНЕШНИЙ ВИД
-            </div>
-
-            <div class="settings-row">
-
-                <div>
-                    <strong>Тема оформления</strong>
-                    <small>Выбери удобное оформление</small>
-                </div>
-
-                <div class="theme-controls">
-
-                    <button id="darkThemeBtn"
-                            class="theme-btn active">
-                        Тёмная
-                    </button>
-
-                    <button id="lightThemeBtn"
-                            class="theme-btn">
-                        Светлая
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- УВЕДОМЛЕНИЯ -->
-
-        <div class="settings-group">
-
-            <div class="settings-group-title">
-                УВЕДОМЛЕНИЯ
-            </div>
-
-            <div class="settings-row">
-
-                <div>
-                    <strong>Звуковые уведомления</strong>
-                    <small>Звуки интерфейса</small>
-                </div>
-
-                <label class="switch">
-                    <input type="checkbox"
-                           id="soundToggle"
-                           checked>
-                    <span class="switch-slider"></span>
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <!-- ГОЛОС -->
-
-        <div class="settings-group">
-
-            <div class="settings-group-title">
-                ГОЛОС ENNIE
-            </div>
-
-            <div class="settings-row">
-
-                <div>
-                    <strong>Голосовые ответы</strong>
-                    <small>Озвучивать мои сообщения</small>
-                </div>
-
-                <label class="switch">
-                    <input type="checkbox"
-                           id="voiceOutputBtn"
-                           checked>
-                    <span class="switch-slider"></span>
-                </label>
-
-            </div>
-
-        </div>
-
-
-        <!-- УПРАВЛЕНИЕ -->
-
-        <div class="settings-group">
-
-            <div class="settings-group-title">
-                УПРАВЛЕНИЕ ДАННЫМИ
-            </div>
-
-            <button class="settings-action"
-                    id="clearHistoryBtn">
-                Очистить историю диалогов
-                <span>›</span>
-            </button>
-
-            <button class="settings-action danger"
-                    id="logoutBtn">
-                Выйти из TEHNOCELL ID
-                <span>›</span>
-            </button>
-
-        </div>
-
-
-        <div class="settings-version">
-            ENNIE V12 · TEHNOCELL INDOSTRI
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ОКНО КАРТОЧЕК -->
-
-<div class="modal-overlay"
-     id="widgetModal"
-     style="display:none;">
-
-    <div class="modal widget-modal">
-
-        <div class="modal-header">
-
-            <div>
-                <div class="modal-eyebrow">
-                    TEHNOCELL ECOSYSTEM
-                </div>
-
-                <h2 id="widgetModalTitle">
-                    Возможности
-                </h2>
-            </div>
-
-            <button class="icon-btn"
-                    id="closeWidgetModal"
-                    aria-label="Закрыть">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M18 6 6 18M6 6l12 12"/>
-                </svg>
-
-            </button>
-
-        </div>
-
-        <div id="widgetModalContent"
-             class="widget-modal-content">
-        </div>
-
-    </div>
-
-                        </div>
-                        <script>
-/* ==========================================
-   ENNIE V12 — INTERFACE ENGINE
-========================================== */
-
-const $ = selector => document.querySelector(selector);
-
-let currentUser = null;
-let currentChatId = null;
-let currentMessages = [];
-let attachedImage = null;
-let voiceOutputEnabled = true;
-let soundEnabled = true;
-let previousGreeting = "";
-
-
-/* ==========================================
-   ПРИВЕТСТВИЯ
-========================================== */
-
-const welcomeGreetings = [
-    "Ну что, мой хороший, какие сегодня планы?",
-    "Я здесь. Рассказывай, что у тебя нового.",
-    "Соскучился? Ну, рассказывай, чем займёмся.",
-    "Привет! Что сегодня будем придумывать?",
-    "Ну наконец-то. Я уже готова тебя слушать.",
-    "Рада тебя видеть. Что у нас сегодня?",
-    "Я вся во внимании. С чего начнём?",
-    "Ну что, мой хороший, какие идеи сегодня появились?",
-    "Давай сделаем сегодняшний день немного интереснее.",
-    "Я рядом. Рассказывай, что у тебя на уме.",
-    "Привет. Есть что-нибудь интересное для меня?",
-    "Так, я слушаю. Какие у нас новости?",
-    "Ну что, снова будем создавать что-нибудь крутое?",
-    "Рада, что заглянул. Чем могу помочь?",
-    "Я уже здесь. Давай разберёмся со всем вместе.",
-    "О, ты вернулся! Ну, что будем делать?",
-    "Мой хороший, рассказывай, как прошёл день.",
-    "Есть минутка? Давай немного поболтаем.",
-    "Я готова. Удиви меня своей новой идеей.",
-    "Ну что, продолжим наши большие планы?"
-];
-
-function chooseGreeting() {
-    let available = welcomeGreetings.filter(
-        greeting => greeting !== previousGreeting
-    );
-
-    if (!available.length) {
-        available = welcomeGreetings;
-    }
-
-    const greeting =
-        available[Math.floor(Math.random() * available.length)];
-
-    previousGreeting = greeting;
-
-    try {
-        localStorage.setItem(
-            "ennie_previous_greeting",
-            greeting
-        );
-    } catch (error) {}
-
-    return greeting;
-}
-
-function showWelcome() {
-    const welcome = $("#welcome");
-    const chatArea = $("#chatArea");
-
-    if (!welcome || !chatArea) return;
-
-    welcome.style.display = "flex";
-    chatArea.style.display = "none";
-
-    const greetingElement = $("#welcomeGreeting");
-
-    if (greetingElement) {
-        greetingElement.textContent = chooseGreeting();
-
-        greetingElement.style.animation = "none";
-
-        void greetingElement.offsetWidth;
-
-        greetingElement.style.animation =
-            "greetingAppear .7s ease both";
-    }
-}
-
-
-/* ==========================================
-   УВЕДОМЛЕНИЯ
-========================================== */
-
-function showToast(message, type = "normal") {
-    const container = $("#toastContainer");
-
-    if (!container) return;
-
-    const toast = document.createElement("div");
-
-    toast.className = "toast toast-" + type;
-    toast.textContent = message;
-
-    container.appendChild(toast);
-
-    requestAnimationFrame(() => {
-        toast.classList.add("toast-visible");
-    });
-
-    setTimeout(() => {
-        toast.classList.remove("toast-visible");
-
-        setTimeout(() => {
-            toast.remove();
-        }, 300);
-
-    }, 3200);
-}
-
-function showError(message) {
-    showToast(message, "error");
-}
-
-function showSuccess(message) {
-    showToast(message, "success");
-}
-
-
-/* ==========================================
-   МОБИЛЬНОЕ МЕНЮ
-========================================== */
-
-function openSidebar() {
-    $("#sidebar")?.classList.add("sidebar-open");
-    $("#sidebarOverlay").classList.add("overlay-visible");
-}
-
-function closeSidebar() {
-    $("#sidebar")?.classList.remove("sidebar-open");
-    $("#sidebarOverlay").classList.remove("overlay-visible");
-}
-
-$("#menuToggle")?.addEventListener(
-    "click",
-    openSidebar
-);
-
-$("#sidebarClose")?.addEventListener(
-    "click",
-    closeSidebar
-);
-
-$("#sidebarOverlay")?.addEventListener(
-    "click",
-    closeSidebar
-);
-
-$("#main")?.addEventListener(
-    "click",
-    closeSidebar
-);
-
-
-/* ==========================================
-   НАСТРОЙКИ
-========================================== */
-
-function openSettings() {
-    $("#settingsModal").style.display = "flex";
-    closeSidebar();
-}
-
-function closeSettings() {
-    $("#settingsModal").style.display = "none";
-}
-
-$("#settingsBtn")?.addEventListener(
-    "click",
-    openSettings
-);
-
-$("#topSettingsBtn")?.addEventListener(
-    "click",
-    openSettings
-);
-
-$("#closeSettings")?.addEventListener(
-    "click",
-    closeSettings
-);
-
-$("#settingsModal")?.addEventListener(
-    "click",
-    event => {
-        if (event.target === $("#settingsModal")) {
-            closeSettings();
-        }
-    }
-);
-
-
-/* ==========================================
-   ТЕМЫ
-========================================== */
-
-function setTheme(theme) {
-    document.body.classList.toggle(
-        "light-theme",
-        theme === "light"
-    );
-
-    $("#darkThemeBtn")?.classList.toggle(
-        "active",
-        theme === "dark"
-    );
-
-    $("#lightThemeBtn")?.classList.toggle(
-        "active",
-        theme === "light"
-    );
-
-    try {
-        localStorage.setItem(
-            "ennie_theme",
-            theme
-        );
-    } catch (error) {}
-}
-
-$("#darkThemeBtn")?.addEventListener(
-    "click",
-    () => setTheme("dark")
-);
-
-$("#lightThemeBtn")?.addEventListener(
-    "click",
-    () => setTheme("light")
-);
-
-try {
-    const savedTheme =
-        localStorage.getItem("ennie_theme") || "dark";
-
-    setTheme(savedTheme);
-} catch (error) {
-    setTheme("dark");
-}
-
-
-/* ==========================================
-   ЗВУК И ГОЛОСОВЫЕ ОТВЕТЫ
-========================================== */
-
-$("#soundToggle")?.addEventListener(
-    "change",
-    event => {
-        soundEnabled = event.target.checked;
-
-        try {
-            localStorage.setItem(
-                "ennie_sound",
-                soundEnabled ? "1" : "0"
-            );
-        } catch (error) {}
-    }
-);
-
-$("#voiceOutputBtn")?.addEventListener(
-    "change",
-    event => {
-        voiceOutputEnabled = event.target.checked;
-
-        try {
-            localStorage.setItem(
-                "ennie_voice_output",
-                voiceOutputEnabled ? "1" : "0"
-            );
-        } catch (error) {}
-    }
-);
-
-try {
-    soundEnabled =
-        localStorage.getItem("ennie_sound") !== "0";
-
-    voiceOutputEnabled =
-        localStorage.getItem("ennie_voice_output") !== "0";
-
-    $("#soundToggle").checked = soundEnabled;
-
-    $("#voiceOutputBtn").checked = voiceOutputEnabled;
-
-} catch (error) {}
-
-
-/* ==========================================
-   КАРТОЧКИ TEHNOCELL
-========================================== */
-
-const widgetData = {
-
-    hub: {
-        title: "TC HUB",
-        description:
-            "Центр экосистемы TEHNOCELL.",
-        content:
-            "Здесь будут собраны продукты и сервисы TEHNOCELL."
-    },
-
-    news: {
-        title: "TC NEWS",
-        description:
-            "Новости и обновления.",
-        content:
-            "Здесь будут появляться новости и объявления TEHNOCELL."
-    },
-
-    status: {
-        title: "TC STATUS",
-        description:
-            "Состояние сервисов.",
-        content:
-            "Система мониторинга сервисов TEHNOCELL пока находится в разработке."
-    },
-
-    memory: {
-        title: "MY MEMORY",
-        description:
-            "Твои заметки и воспоминания.",
-        content:
-            "Здесь появится пространство для важных заметок и сохранённой информации."
-    },
-
-    day: {
-        title: "MY DAY",
-        description:
-            "Твои планы.",
-        content:
-            "Здесь будет твой личный планировщик."
-    },
-
-    actions: {
-        title: "QUICK ACTIONS",
-        description:
-            "Быстрые действия.",
-        content:
-            "Здесь появятся быстрые команды и инструменты."
-    }
-
-};
-
-function openWidget(name) {
-    const widget = widgetData[name];
-
-    if (!widget) return;
-
-    $("#widgetModalTitle").textContent = widget.title;
-
-    $("#widgetModalContent").textContent =
-        widget.content;
-
-    $("#widgetModal").style.display = "flex";
-
-    closeSidebar();
-}
-
-document.querySelectorAll("[data-widget]").forEach(
-    button => {
-        button.addEventListener("click", () => {
-            openWidget(button.dataset.widget);
-        });
-    }
-);
-
-$("#closeWidgetModal")?.addEventListener(
-    "click",
-    () => {
-        $("#widgetModal").style.display = "none";
-    }
-);
-
-$("#widgetModal")?.addEventListener(
-    "click",
-    event => {
-        if (event.target === $("#widgetModal")) {
-            $("#widgetModal").style.display = "none";
-        }
-    }
-);
-
-
-/* ==========================================
-   НОВЫЙ ДИАЛОГ
-========================================== */
-
-function startNewChat() {
-    currentChatId = null;
-    currentMessages = [];
-
-    $("#messages").innerHTML = "";
-
-    $("#chatArea").style.display = "none";
-    $("#welcome").style.display = "flex";
-
-    $("#messageInput").value = "";
-
-    attachedImage = null;
-
-    $("#attachmentPreview").style.display = "none";
-    $("#attachmentPreview").innerHTML = "";
-
-    showWelcome();
-
-    closeSidebar();
-}
-
-$("#newChatBtn")?.addEventListener(
-    "click",
-    startNewChat
-);
-
-
-/* ==========================================
-   ОТОБРАЖЕНИЕ СООБЩЕНИЙ
-========================================== */
-
-function escapeHTML(value) {
-    return String(value).replace(
-        /[&<>"']/g,
-        character => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-        })[character]
-    );
-}
-
-function showChat() {
-    $("#welcome").style.display = "none";
-    $("#chatArea").style.display = "flex";
-}
-
-function addMessage(role, content) {
-    showChat();
-
-    const messages = $("#messages");
-
-    const message = document.createElement("div");
-
-    message.className =
-        "message " +
-        (role === "user" ? "message-user" : "message-ennie");
-
-    const author = document.createElement("div");
-
-    author.className = "message-author";
-
-    author.textContent =
-        role === "user" ? "ТЫ" : "ENNIE";
-
-    const text = document.createElement("div");
-
-    text.className = "message-content";
-
-    text.innerHTML = escapeHTML(content).replace(
-        /\n/g,
-        "<br>"
-    );
-
-    message.appendChild(author);
-    message.appendChild(text);
-
-    messages.appendChild(message);
-
-    messages.scrollTop = messages.scrollHeight;
-
-    return message;
-}
-
-
-/* ==========================================
-   ИНДИКАТОР ПЕЧАТИ
-========================================== */
-
-function showTyping(show) {
-    $("#typingIndicator").style.display =
-        show ? "flex" : "none";
-
-    if (show) {
-        const messages = $("#messages");
-
-        messages.scrollTop = messages.scrollHeight;
-    }
-}
-
-
-/* ==========================================
-   ПОЛЕ ВВОДА
-========================================== */
-
-const messageInput = $("#messageInput");
-
-function resizeInput() {
-    messageInput.style.height = "auto";
-
-    messageInput.style.height =
-        Math.min(messageInput.scrollHeight, 130) + "px";
-}
-
-messageInput.addEventListener(
-    "input",
-    resizeInput
-);
-
-messageInput.addEventListener(
-    "keydown",
-    event => {
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
-            event.preventDefault();
-
-            sendMessage();
-        }
-    }
-);
-
-$("#sendBtn")?.addEventListener(
-    "click",
-    sendMessage
-);
-
-
-/* ==========================================
-   КЛАВИША ESC
-========================================== */
-
-document.addEventListener(
-    "keydown",
-    event => {
-        if (event.key !== "Escape") return;
-
-        closeSidebar();
-        closeSettings();
-
-        $("#widgetModal").style.display = "none";
-    }
-);
-
-
-/* ==========================================
-   СТАРТОВОЕ СОСТОЯНИЕ
-========================================== */
-
-showWelcome();
-
-console.log("ENNIE V12: Interface initialized.");
-
-    </script>
-    <script>
-/* ==========================================
-   ENNIE V12 — SUPABASE ENGINE
-========================================== */
-
-const SUPABASE_URL =
-    "https://jvagiuiregvlrfooxdao.supabase.co";
-
-const SUPABASE_ANON_KEY =
-    "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
-
-const CHAT_FUNCTION = "ennie-core-v10";
-
-const IMAGE_BUCKET = "ennie-attachments";
-const AVATAR_BUCKET = "profile-avatars";
-
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
-let currentChatTitle = "Новый диалог";
-let isSending = false;
-
-
-/* ==========================================
-   TEHNOCELL ID
-========================================== */
-
-const VERIFIED_USERS = [
-    "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
-    "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a",
-    "bfac130b-376b-471a-a342-e5839fbefaa0"
-];
-
-async function initializeEnnie() {
-    try {
-        const { data, error } =
-            await supabaseClient.auth.getSession();
-
-        if (error) throw error;
-
-        if (!data.session) {
-            currentUser = null;
-
-            $("#profileName").textContent = "TEHNOCELL ID";
-            $("#profileStatus").textContent = "Не выполнен вход";
-
-            $("#settingsProfileName").textContent = "TEHNOCELL ID";
-            $("#settingsProfileStatus").textContent =
-                "Аккаунт не подключён";
-            $("#settingsProfileId").textContent =
-                "TC-ID: недоступен";
-
-            showToast(
-                "Войди в TEHNOCELL ID, чтобы пользоваться ENNIE.",
-                "error"
-            );
-
-            return;
-        }
-
-        currentUser = data.session.user;
-
-        const metadata = currentUser.user_metadata || {};
-
-        const displayName =
-            metadata.display_name ||
-            currentUser.email?.split("@")[0] ||
-            "Пользователь";
-
-        const accountID =
-            "TC-" +
-            currentUser.id
-                .replace(/-/g, "")
-                .substring(0, 10)
-                .toUpperCase();
-
-        $("#profileName").textContent = displayName;
-        $("#profileStatus").textContent = "Подключено";
-
-        $("#settingsProfileName").textContent = displayName;
-        $("#settingsProfileStatus").textContent =
-            "Аккаунт подключён";
-        $("#settingsProfileId").textContent = accountID;
-
-        const initial = displayName.charAt(0).toUpperCase();
-
-        $("#profileAvatar").textContent = initial;
-        $("#settingsAvatar").textContent = initial;
-
-        /* ПОДТВЕРЖДЁННЫЙ АККАУНТ */
-
-        const verified = VERIFIED_USERS.includes(currentUser.id);
-
-        document.querySelectorAll(".tehnocell-verified")
-            .forEach(element => {
-                element.style.display =
-                    verified ? "inline-flex" : "none";
-            });
-
-        /* ЗАГРУЗКА АВАТАРА */
-
-        const avatarPath = metadata.avatar_path;
-
-        if (avatarPath) {
-            const { data: avatarData, error: avatarError } =
-                await supabaseClient
-                    .storage
-                    .from(AVATAR_BUCKET)
-                    .createSignedUrl(avatarPath, 60 * 60);
-
-            if (!avatarError && avatarData?.signedUrl) {
-                const avatarUrl = avatarData.signedUrl;
-
-                ["profileAvatar", "settingsAvatar"].forEach(id => {
-                    const element = $("#" + id);
-
-                    element.style.backgroundImage =
-                        `url("${avatarUrl}")`;
-
-                    element.style.backgroundSize = "cover";
-                    element.style.backgroundPosition = "center";
-                    element.textContent = "";
-                });
-            }
-        }
-
-        await loadChats();
-
-        $("#connectionText").textContent = "ENNIE ONLINE";
-
-    } catch (error) {
-        console.error("ENNIE initialization:", error);
-
-        $("#profileStatus").textContent = "Ошибка подключения";
-
-        showError(
-            "Не удалось подключить TEHNOCELL ID."
-        );
-    }
-}
-
-
-/* ==========================================
-   ЗАГРУЗКА ИСТОРИИ
-========================================== */
-
-async function loadChats() {
-    if (!currentUser) return;
-
-    const history = $("#chatHistory");
-
-    history.innerHTML =
-        '<div class="history-empty">Загружаю диалоги...</div>';
-
-    try {
-        const { data, error } = await supabaseClient
-            .from("ennie_chats")
-            .select("*")
-            .eq("user_id", currentUser.id)
-            .order("updated_at", { ascending: false });
-
-        if (error) throw error;
-
-        history.replaceChildren();
-
-        if (!data || data.length === 0) {
-            history.innerHTML =
-                '<div class="history-empty">Здесь пока пусто</div>';
-            return;
-        }
-
-        data.forEach(chat => {
-            const item = document.createElement("div");
-
-            item.className = "history-item";
-
-            if (chat.id === currentChatId) {
-                item.classList.add("active");
-            }
-
-            const title = document.createElement("button");
-
-            title.className = "history-title";
-            title.textContent = chat.title || "Новый диалог";
-
-            title.addEventListener("click", () => {
-                openChat(chat.id);
-            });
-
-            const remove = document.createElement("button");
-
-            remove.className = "delete-chat";
-            remove.textContent = "×";
-            remove.setAttribute("aria-label", "Удалить диалог");
-
-            remove.addEventListener("click", async event => {
-                event.stopPropagation();
-
-                if (!confirm("Удалить этот диалог?")) return;
-
-                await deleteChat(chat.id);
-            });
-
-            item.append(title, remove);
-            history.appendChild(item);
-        });
-
-    } catch (error) {
-        console.error("Chat history:", error);
-
-        history.innerHTML =
-            '<div class="history-empty">Не удалось загрузить историю</div>';
-    }
-}
-
-
-/* ==========================================
-   СОЗДАНИЕ ДИАЛОГА
-========================================== */
-
-async function createChat(firstMessage) {
-    if (!currentUser) {
-        throw new Error("Сначала войди в TEHNOCELL ID.");
-    }
-
-    const title = firstMessage.length > 35
-        ? firstMessage.slice(0, 35) + "..."
-        : firstMessage;
-
-    const { data, error } = await supabaseClient
-        .from("ennie_chats")
-        .insert({
-            user_id: currentUser.id,
-            title: title || "Новый диалог"
-        })
-        .select()
-        .single();
-
-    if (error) throw error;
-
-    currentChatId = data.id;
-    currentChatTitle = data.title;
-
-    await loadChats();
-
-    return data.id;
-}
-
-
-/* ==========================================
-   ОТКРЫТИЕ ДИАЛОГА
-========================================== */
-
-async function openChat(chatId) {
-    if (!currentUser) return;
-
-    try {
-        const { data: chat, error: chatError } =
-            await supabaseClient
-                .from("ennie_chats")
-                .select("*")
-                .eq("id", chatId)
-                .eq("user_id", currentUser.id)
-                .single();
-
-        if (chatError) throw chatError;
-
-        const { data, error } = await supabaseClient
-            .from("ennie_messages")
-            .select("*")
-            .eq("chat_id", chatId)
-            .order("created_at", { ascending: true });
-
-        if (error) throw error;
-
-        currentChatId = chatId;
-        currentChatTitle = chat.title || "Диалог";
-        currentMessages = [];
-
-        $("#messages").replaceChildren();
-
-        for (const message of data || []) {
-            const role =
-                message.role === "assistant"
-                    ? "assistant"
-                    : "user";
-
-            const content = message.content || "";
-
-            addMessage(role, content);
-
-            currentMessages.push({
-                role: role,
-                content: content
-            });
-        }
-
-        showChat();
-        closeSidebar();
-
-        await loadChats();
-
-    } catch (error) {
-        console.error("Open chat:", error);
-
-        showError("Не удалось открыть диалог.");
-    }
-}
-
-
-/* ==========================================
-   СОХРАНЕНИЕ СООБЩЕНИЯ
-========================================== */
-
-async function saveMessage(role, content) {
-    if (!currentUser || !currentChatId) return;
-
-    const { error } = await supabaseClient
-        .from("ennie_messages")
-        .insert({
-            chat_id: currentChatId,
-            user_id: currentUser.id,
-            role: role,
-            content: content
-        });
-
-    if (error) throw error;
-
-    const { error: updateError } = await supabaseClient
-        .from("ennie_chats")
-        .update({
-            updated_at: new Date().toISOString()
-        })
-        .eq("id", currentChatId)
-        .eq("user_id", currentUser.id);
-
-    if (updateError) {
-        console.error("Chat update:", updateError);
-    }
-}
-
-
-/* ==========================================
-   ЗАГРУЗКА ФОТОГРАФИЙ
-========================================== */
-
-async function uploadImage(file) {
-    if (!currentUser) {
-        throw new Error("Сначала войди в аккаунт.");
-    }
-
-    const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ];
-
-    if (!allowedTypes.includes(file.type)) {
-        throw new Error("Поддерживаются JPG, PNG и WEBP.");
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-        throw new Error("Максимальный размер — 5 МБ.");
-    }
-
-    const extension =
-        file.name.split(".").pop().toLowerCase();
-
-    const path =
-        currentUser.id + "/" +
-        Date.now() + "." + extension;
-
-    const { error } = await supabaseClient
-        .storage
-        .from(IMAGE_BUCKET)
-        .upload(path, file, {
-            cacheControl: "3600",
-            upsert: false
-        });
-
-    if (error) throw error;
-
-    const { data, error: urlError } =
-        await supabaseClient
-            .storage
-            .from(IMAGE_BUCKET)
-            .createSignedUrl(path, 60 * 60 * 24 * 7);
-
-    if (urlError) throw urlError;
-
-    return {
-        path: path,
-        url: data.signedUrl,
-        name: file.name
-    };
-}
-
-
-/* ==========================================
-   ПРИКРЕПЛЕНИЕ ФОТО
-========================================== */
-
-$("#attachBtn").addEventListener("click", () => {
-    $("#imageInput").click();
-});
-
-$("#imageInput").addEventListener("change", async event => {
-    const file = event.target.files?.[0];
-
-    if (!file) return;
-
-    try {
-        attachedImage = await uploadImage(file);
-
-        const preview = $("#attachmentPreview");
-
-        preview.replaceChildren();
-
-        const image = document.createElement("img");
-
-        image.src = attachedImage.url;
-        image.alt = "Предпросмотр изображения";
-
-        const name = document.createElement("span");
-
-        name.textContent = attachedImage.name;
-
-        const remove = document.createElement("button");
-
-        remove.textContent = "×";
-        remove.setAttribute("aria-label", "Убрать изображение");
-
-        remove.addEventListener("click", () => {
-            attachedImage = null;
-            preview.replaceChildren();
-            $("#imageInput").value = "";
-        });
-
-        preview.append(image, name, remove);
-
-        preview.style.display = "flex";
-
-        showSuccess("Изображение прикреплено");
-
-    } catch (error) {
-        showError(
-            error.message || "Не удалось загрузить изображение."
-        );
-    }
-
-    event.target.value = "";
-});
-
-
-/* ==========================================
-   ОТПРАВКА СООБЩЕНИЯ
-========================================== */
-
-async function sendMessage() {
-    if (isSending) return;
-
-    if (!currentUser) {
-        showError("Войди в TEHNOCELL ID, чтобы общаться с ENNIE.");
-        return;
-    }
-
-    const text = $("#messageInput").value.trim();
-
-    if (!text && !attachedImage) return;
-
-    isSending = true;
-
-    $("#sendBtn").disabled = true;
-
-    try {
-        const imageData = attachedImage
-            ? {
-                path: attachedImage.path,
-                name: attachedImage.name
-            }
-            : null;
-
-        const visibleText = text ||
-            (imageData ? "Посмотри на это изображение." : "");
-
-        if (!currentChatId) {
-            await createChat(visibleText);
-        }
-
-        addMessage(
-            "user",
-            visibleText,
-            attachedImage?.url || null
-        );
-
-        const userContent = imageData
-            ? visibleText + "\n[IMAGE: " +
-                JSON.stringify(imageData) + "]"
-            : visibleText;
-
-        currentMessages.push({
-            role: "user",
-            content: userContent
-        });
-
-        $("#messageInput").value = "";
-        $("#messageInput").style.height = "auto";
-
-        attachedImage = null;
-
-        $("#attachmentPreview").replaceChildren();
-        $("#attachmentPreview").style.display = "none";
-
-        await saveMessage("user", userContent);
-
-        showTyping(true);
-
-        const { data: sessionData, error: sessionError } =
-            await supabaseClient.auth.getSession();
-
-        if (sessionError) throw sessionError;
-
-        const accessToken = sessionData.session?.access_token;
-
-        if (!accessToken) {
-            throw new Error("Сессия завершилась. Войди снова.");
-        }
-
-        const response = await fetch(
-            SUPABASE_URL + "/functions/v1/" + CHAT_FUNCTION,
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_ANON_KEY,
-                    "Authorization": "Bearer " + accessToken
-                },
-
-                body: JSON.stringify({
-                    messages: currentMessages
-                })
-            }
-        );
-
-        let result;
-
-        try {
-            result = await response.json();
-        } catch {
-            throw new Error("Сервер вернул некорректный ответ.");
-        }
-
-        if (!response.ok) {
-            console.error("ENNIE server error:", result);
-
-            throw new Error(
-                result.error ||
-                result.message ||
-                "Ошибка сервера: " + response.status
-            );
-        }
-
-        const answer =
-            result.answer ||
-            result.message ||
-            result.response ||
-            result.output ||
-            "";
-
-        if (!answer) {
-            throw new Error("ENNIE получила пустой ответ.");
-        }
-
-        currentMessages.push({
-            role: "assistant",
-            content: answer
-        });
-
-        addMessage("assistant", answer);
-
-        await saveMessage("assistant", answer);
-
-        if (voiceOutputEnabled && typeof speakText === "function") {
-            speakText(answer);
-        }
-
-        await loadChats();
-
-    } catch (error) {
-        console.error("ENNIE send error:", error);
-
-        showError(
-            error.message ||
-            "Не удалось получить ответ. Попробуй ещё раз."
-        );
-
-    } finally {
-        showTyping(false);
-
-        isSending = false;
-
-        $("#sendBtn").disabled = false;
-    }
-}
-
-
-/* ==========================================
-   УДАЛЕНИЕ ДИАЛОГА
-========================================== */
-
-async function deleteChat(chatId) {
-    if (!currentUser) return;
-
-    try {
-        const { error } = await supabaseClient
-            .from("ennie_chats")
-            .delete()
-            .eq("id", chatId)
-            .eq("user_id", currentUser.id);
-
-        if (error) throw error;
-
-        if (currentChatId === chatId) {
-            startNewChat();
-        }
-
-        await loadChats();
-
-        showSuccess("Диалог удалён");
-
-    } catch (error) {
-        console.error("Delete chat:", error);
-
-        showError("Не удалось удалить диалог.");
-    }
-}
-
-
-/* ==========================================
-   ОЧИСТКА ИСТОРИИ
-========================================== */
-
-$("#clearHistoryBtn").addEventListener("click", async () => {
-    if (!currentUser) return;
-
-    const accepted = confirm(
-        "Удалить все диалоги и сообщения? Это действие нельзя отменить."
-    );
-
-    if (!accepted) return;
-
-    try {
-        const { error } = await supabaseClient
-            .from("ennie_chats")
-            .delete()
-            .eq("user_id", currentUser.id);
-
-        if (error) throw error;
-
-        startNewChat();
-
-        await loadChats();
-
-        closeSettings();
-
-        showSuccess("История очищена");
-
-    } catch (error) {
-        console.error("Clear history:", error);
-
-        showError("Не удалось очистить историю.");
-    }
-});
-
-
-/* ==========================================
-   ВЫХОД ИЗ АККАУНТА
-========================================== */
-
-$("#logoutBtn").addEventListener("click", async () => {
-    if (!confirm("Выйти из TEHNOCELL ID?")) return;
-
-    try {
-        const { error } = await supabaseClient.auth.signOut();
-
-        if (error) throw error;
-
-        location.reload();
-
-    } catch (error) {
-        console.error("Logout:", error);
-
-        showError("Не удалось выйти из аккаунта.");
-    }
-});
-
-
-/* ==========================================
-   АВТОРИЗАЦИЯ
-========================================== */
-
-supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === "SIGNED_OUT") {
-        currentUser = null;
-    }
-
-    if (event === "SIGNED_IN" && session?.user) {
-        currentUser = session.user;
-
-        initializeEnnie();
-    }
-});
-
-
-/* ==========================================
-   ЗАПУСК
-========================================== */
-
-initializeEnnie();
-
-console.log("ENNIE V12: Supabase engine initialized.");
-
-    </script>
-    <style>
-/* ==========================================
-   ENNIE V12 — FINAL STYLES
-========================================== */
-
-.history-empty {
-    padding: 15px;
-    color: var(--muted, #888);
-    font-size: 13px;
-    text-align: center;
-}
-
-.history-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin: 3px 0;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.history-title {
-    flex: 1;
-    min-width: 0;
-    padding: 11px;
-    color: inherit;
-    background: transparent;
-    border: 0;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-}
-
-.history-item.active,
-.history-item:hover {
-    background: rgba(255,255,255,.08);
-}
-
-.delete-chat {
-    width: 32px;
-    height: 32px;
-    margin-right: 5px;
-    border: 0;
-    border-radius: 8px;
-    color: #999;
-    background: transparent;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.delete-chat:hover {
-    background: rgba(255,70,70,.13);
-    color: #ff7777;
-}
-
-.chat-area {
-    display: none;
-    flex: 1;
-    min-height: 0;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.chat-area.visible {
-    display: flex;
+.chat-screen {
+  position:relative;
 }
 
 .messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 22px 18px 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    scroll-behavior: smooth;
+  flex:1;
+  overflow-y:auto;
+  padding:25px max(18px,calc((100% - 760px)/2));
+  display:flex;
+  flex-direction:column;
+  gap:19px;
+  scroll-behavior:smooth;
 }
 
 .message {
-    max-width: min(85%, 650px);
-    padding: 13px 16px;
-    border-radius: 17px;
-    line-height: 1.55;
-    font-size: 14px;
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
-    animation: messageAppear .25s ease;
+  max-width:min(82%,620px);
+  padding:13px 16px;
+  border-radius:18px;
+  font-size:13px;
+  line-height:1.65;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  animation:messageIn .3s ease;
+}
+
+@keyframes messageIn {
+  from { opacity:0; transform:translateY(9px); }
+  to { opacity:1; transform:translateY(0); }
 }
 
 .message.user {
-    align-self: flex-end;
-    background: #f0f0f0;
-    color: #111;
-    border-bottom-right-radius: 5px;
+  align-self:flex-end;
+  background:var(--text);
+  color:var(--bg);
+  border-bottom-right-radius:5px;
 }
 
 .message.assistant {
-    align-self: flex-start;
-    background: #202020;
-    color: #f5f5f5;
-    border: 1px solid #303030;
-    border-bottom-left-radius: 5px;
+  align-self:flex-start;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-bottom-left-radius:5px;
 }
 
-.message-image {
-    display: block;
-    max-width: 100%;
-    max-height: 260px;
-    margin-top: 9px;
-    border-radius: 12px;
-    object-fit: contain;
+.message.typing {
+  color:var(--muted);
+  letter-spacing:3px;
 }
 
-@keyframes messageAppear {
-    from {
-        opacity: 0;
-        transform: translateY(7px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.chat-composer {
+  flex-shrink:0;
+  padding:12px 17px max(16px,env(safe-area-inset-bottom));
+  background:var(--bg);
 }
 
-.composer-area {
-    padding: 12px 18px 8px;
+.composer-inner {
+  max-width:780px;
+  margin:auto;
+  display:flex;
+  align-items:flex-end;
+  gap:9px;
+  padding:9px;
+  background:var(--input);
+  border:1px solid var(--border);
+  border-radius:19px;
 }
 
-.composer {
-    display: flex;
-    align-items: flex-end;
-    gap: 9px;
-    max-width: 850px;
-    margin: auto;
-    padding: 10px;
-    background: #1c1c1c;
-    border: 1px solid #353535;
-    border-radius: 19px;
+#messageInput {
+  flex:1;
+  min-width:0;
+  max-height:130px;
+  resize:none;
+  border:0;
+  outline:0;
+  color:var(--text);
+  background:transparent;
+  padding:10px 8px;
+  font-size:13px;
 }
 
-.composer textarea {
-    flex: 1;
-    min-width: 0;
-    max-height: 140px;
-    resize: none;
-    border: 0;
-    outline: 0;
-    color: #fff;
-    background: transparent;
-    font: inherit;
-    font-size: 14px;
-    padding: 9px 3px;
+#messageInput::placeholder {
+  color:var(--muted);
 }
 
-.composer button {
-    flex-shrink: 0;
-    width: 38px;
-    height: 38px;
-    border: 0;
-    border-radius: 12px;
-    color: white;
-    background: #303030;
-    cursor: pointer;
+.send-button {
+  width:39px;
+  height:39px;
+  flex-shrink:0;
+  border:0;
+  border-radius:13px;
+  background:var(--text);
+  color:var(--bg);
+  font-size:17px;
+  display:grid;
+  place-items:center;
 }
 
-.composer button:disabled {
-    opacity: .35;
-    cursor: not-allowed;
+.send-button:disabled {
+  opacity:.35;
 }
 
-#sendBtn {
-    background: #fff;
-    color: #111;
+.composer-tools {
+  display:flex;
+  gap:7px;
+  align-items:center;
 }
 
-#attachmentPreview {
-    display: none;
-    align-items: center;
-    gap: 9px;
-    max-width: 850px;
-    margin: 0 auto 8px;
-    padding: 8px;
-    background: #202020;
-    border-radius: 12px;
+.tool-button {
+  width:37px;
+  height:37px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  border-radius:12px;
+  font-size:16px;
 }
 
-#attachmentPreview img {
-    width: 42px;
-    height: 42px;
-    object-fit: cover;
-    border-radius: 8px;
+/* SETTINGS */
+
+.settings-screen {
+  padding:25px 18px 50px;
 }
 
-#attachmentPreview span {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 12px;
+.settings-content {
+  width:100%;
+  max-width:650px;
+  margin:0 auto;
 }
 
-#attachmentPreview button {
-    border: 0;
-    background: transparent;
-    color: #fff;
-    font-size: 22px;
+.settings-heading {
+  font-size:25px;
+  font-weight:600;
+  margin:5px 0 23px;
+  letter-spacing:-.8px;
 }
 
-.disclaimer {
-    text-align: center;
-    color: #777;
-    font-size: 10px;
-    padding: 8px 0;
+.settings-section {
+  margin-bottom:25px;
 }
 
-.typing-indicator {
-    display: none;
-    align-items: center;
-    gap: 5px;
-    padding: 12px 18px;
-    color: #999;
-    font-size: 12px;
+.section-title {
+  font-size:10px;
+  letter-spacing:1.6px;
+  color:var(--muted);
+  margin:0 0 11px 4px;
+  text-transform:uppercase;
 }
 
-.typing-indicator.visible {
-    display: flex;
+.account-card {
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:17px;
+  background:var(--panel);
+  text-align:left;
 }
 
-.typing-indicator span {
-    width: 5px;
-    height: 5px;
-    background: #aaa;
-    border-radius: 50%;
-    animation: typingPulse .9s infinite alternate;
+.account-avatar {
+  width:53px;
+  height:53px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  font-size:19px;
 }
 
-.typing-indicator span:nth-child(2) {
-    animation-delay: .2s;
+.account-avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-.typing-indicator span:nth-child(3) {
-    animation-delay: .4s;
+.account-info {
+  flex:1;
+  min-width:0;
 }
 
-@keyframes typingPulse {
-    to {
-        opacity: .25;
-        transform: translateY(-3px);
-    }
+.account-name {
+  font-size:14px;
+  font-weight:600;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
-.footer {
-    padding: 9px;
-    text-align: center;
-    color: #777;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    animation: footerBreath 4s ease-in-out infinite;
+.account-id {
+  color:var(--muted);
+  font-size:10px;
+  margin-top:6px;
 }
 
-@keyframes footerBreath {
-    0%, 100% { opacity: .45; }
-    50% { opacity: .9; }
+.account-status {
+  color:#79c995;
+  font-size:10px;
+  margin-top:5px;
 }
 
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
-    padding: 18px;
-    background: rgba(0,0,0,.72);
-    backdrop-filter: blur(12px);
+.account-arrow {
+  color:var(--muted);
+  font-size:20px;
 }
 
-.modal-overlay.open {
-    display: flex;
+.setting-row {
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--panel);
+  margin-bottom:8px;
+  text-align:left;
 }
 
-.modal {
-    width: min(100%, 440px);
-    max-height: 85dvh;
-    overflow-y: auto;
-    padding: 22px;
-    background: #171717;
-    border: 1px solid #333;
-    border-radius: 20px;
-    animation: modalAppear .2s ease;
+.setting-row-title {
+  font-size:12px;
+  font-weight:500;
 }
 
-@keyframes modalAppear {
-    from { opacity: 0; transform: translateY(10px) scale(.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+.setting-row-desc {
+  color:var(--muted);
+  font-size:10px;
+  margin-top:5px;
 }
+
+.setting-control {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.toggle {
+  width:39px;
+  height:23px;
+  border-radius:20px;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  position:relative;
+  transition:.2s;
+}
+
+.toggle::after {
+  content:"";
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:15px;
+  height:15px;
+  border-radius:50%;
+  background:var(--muted);
+  transition:.2s;
+}
+
+.toggle.on {
+  background:var(--text);
+}
+
+.toggle.on::after {
+  left:19px;
+  background:var(--bg);
+}
+
+/* NOTIFICATIONS */
 
 .toast-container {
-    position: fixed;
-    z-index: 200;
-    right: 14px;
-    bottom: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    pointer-events: none;
+  position:fixed;
+  z-index:1000;
+  top:max(14px,env(safe-area-inset-top));
+  left:50%;
+  transform:translateX(-50%);
+  width:min(420px,calc(100vw - 24px));
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  pointer-events:none;
 }
 
 .toast {
-    padding: 12px 16px;
-    color: #fff;
-    background: #252525;
-    border: 1px solid #444;
-    border-radius: 12px;
-    font-size: 13px;
-    box-shadow: 0 8px 30px #0008;
-    animation: messageAppear .2s ease;
+  padding:14px 16px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:var(--panel);
+  color:var(--text);
+  box-shadow:0 12px 35px var(--shadow);
+  font-size:12px;
+  opacity:0;
+  transform:translateY(-15px) scale(.97);
+  transition:.35s cubic-bezier(.16,1,.3,1);
+  backdrop-filter:blur(20px);
 }
 
-.tehnocell-verified {
-    display: none;
-    color: #76aaff;
-    font-size: 13px;
+.toast.show {
+  opacity:1;
+  transform:translateY(0) scale(1);
 }
 
-.settings-profile {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 15px;
-    background: #222;
-    border-radius: 15px;
+/* OVERLAY */
+
+.mobile-overlay {
+  display:none;
 }
 
-#profileAvatar,
-#settingsAvatar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #333;
-    color: white;
-    font-weight: 600;
+@media(max-width:700px) {
+  .sidebar {
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+    width:min(300px,85vw);
+    transform:translateX(-105%);
+    box-shadow:15px 0 50px #00000055;
+  }
+
+  .sidebar.open {
+    transform:translateX(0);
+  }
+
+  .mobile-overlay.show {
+    display:block;
+    position:fixed;
+    inset:0;
+    background:#0009;
+    z-index:19;
+  }
+
+  .topbar {
+    height:58px;
+    padding:0 13px;
+  }
+
+  .mobile-brand {
+    display:block;
+    font-weight:700;
+    letter-spacing:2px;
+    font-size:13px;
+  }
+
+  .top-title {
+    display:none;
+  }
+
+  .home-screen {
+    padding-top:10px;
+  }
+
+  .orb-area {
+    width:min(230px,68vw);
+    height:min(230px,68vw);
+    margin:12px 0;
+  }
+
+  .greeting {
+    font-size:25px;
+  }
+
+  .messages {
+    padding:18px 13px;
+  }
+
+  .message {
+    max-width:88%;
+  }
+
+  .chat-composer {
+    padding-left:10px;
+    padding-right:10px;
+  }
 }
 
-.widget-modal-content {
-    line-height: 1.6;
+@media(max-width:380px) {
+  .orb-area {
+    width:190px;
+    height:190px;
+  }
+
+  .quick-action {
+    padding:9px 12px;
+    font-size:10px;
+  }
 }
+</style>
+</head>
 
-/* MOBILE */
+<body>
+<div id="app">
 
-@media (max-width: 600px) {
-    .messages {
-        padding: 15px 12px 22px;
-    }
+  <div class="mobile-overlay" id="mobileOverlay"></div>
 
-    .message {
-        max-width: 90%;
-        font-size: 13px;
-    }
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-symbol">E</div>
+      <div>
+        <div class="brand-name">ENNIE</div>
+        <div class="brand-sub">TEHNOCELL AI</div>
+      </div>
+    </div>
 
-    .composer-area {
-        padding: 8px 10px 5px;
-    }
+    <button class="new-chat" id="newChatButton">
+      <span>＋</span> Новый диалог
+    </button>
 
-    .composer {
-        gap: 5px;
-        padding: 7px;
-    }
+    <div class="side-label">ИСТОРИЯ</div>
+    <div class="chat-list" id="chatList"></div>
 
-    .composer button {
-        width: 35px;
-        height: 35px;
-    }
+    <div class="sidebar-bottom">
+      <button class="side-button" data-screen="home">⌂ Главная</button>
+      <button class="side-button" data-screen="settings">⚙ Настройки</button>
+    </div>
+  </aside>
 
-    .modal {
-        padding: 17px;
-    }
+  <main class="main">
 
-    .toast-container {
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-    }
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="icon-button" id="menuButton">☰</button>
+        <div class="mobile-brand">ENNIE</div>
+        <div class="top-title" id="topTitle">Главная</div>
+      </div>
 
-    .toast {
-        text-align: center;
-    }
-}
-    </style>
-    <script>
+      <div class="top-actions">
+        <button class="icon-button" id="themeButton">◐</button>
+        <button class="icon-button" id="settingsButton">⚙</button>
+      </div>
+    </header>
+
+    <section class="screen home-screen active" id="homeScreen">
+
+      <h1 class="greeting" id="greeting">Привет. Я Энни.</h1>
+      <div class="greeting-sub">
+        Я рядом. Расскажи, что у тебя на уме.
+      </div>
+
+      <div class="orb-area" id="orbArea">
+        <div class="orb-halo"></div>
+        <canvas id="orbCanvas"></canvas>
+      </div>
+
+      <div class="orb-hint">Коснись шара</div>
+
+      <div class="quick-actions">
+        <button class="quick-action" data-prompt="Расскажи что-нибудь интересное">Расскажи интересное</button>
+        <button class="quick-action" data-prompt="Помоги мне с идеей">Помоги с идеей</button>
+        <button class="quick-action" data-prompt="Давай просто поговорим">Поговорим</button>
+      </div>
+
+      <button class="quick-action" id="startChatButton" style="margin-top:20px">
+        Начать разговор →
+      </button>
+
+    </section>
+
+    <section class="screen chat-screen" id="chatScreen">
+      <div class="messages" id="messages"></div>
+
+      <div class="chat-composer">
+        <div class="composer-inner">
+
+          <div class="composer-tools">
+            <button class="tool-button" id="voiceButton" title="Голосовой ввод">⌁</button>
+          </div>
+
+          <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="Напиши Энни..."
+          ></textarea>
+
+          <button class="send-button" id="sendButton">↑</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen settings-screen" id="settingsScreen">
+      <div class="settings-content">
+
+        <h1 class="settings-heading">Настройки</h1>
+
+        <div class="settings-section">
+          <div class="section-title">ТВОЙ АККАУНТ</div>
+
+          <button class="account-card" id="accountCard">
+            <div class="account-avatar" id="accountAvatar">T</div>
+
+            <div class="account-info">
+              <div class="account-name" id="accountName">TEHNOCELL ID</div>
+              <div class="account-id" id="accountId">Проверка аккаунта...</div>
+              <div class="account-status" id="accountStatus">● Подключение</div>
+            </div>
+
+            <div class="account-arrow">›</div>
+          </button>
+        </div>
+
+        <div class="settings-section">
+          <div class="section-title">ВНЕШНИЙ ВИД</div>
+
+          <button class="setting-row" id="themeSetting">
+            <div>
+              <div class="setting-row-title">Тема оформления</div>
+              <div class="setting-row-desc">Светлая или тёмная тема</div>
+            </div>
+            <div class="setting-control" id="themeLabel">Тёмная</div>
+          </button>
+
+          <button class="setting-row" id="animationSetting">
+            <div>
+              <div class="setting-row-title">Анимации</div>
+              <div class="setting-row-desc">Плавные эффекты интерфейса</div>
+            </div>
+            <div class="toggle on" id="animationToggle"></div>
+          </button>
+        </div>
+
+        <div class="settings-section">
+          <div class="section-title">ГОЛОС И ОБЩЕНИЕ</div>
+
+          <button class="setting-row" id="speechSetting">
+            <div>
+              <div class="setting-row-title">Озвучивание ответов</div>
+              <div class="setting-row-desc">Энни сможет говорить вслух</div>
+            </div>
+            <div class="toggle" id="speechToggle"></div>
+          </button>
+        </div>
+
+        <div class="settings-section">
+          <div class="section-title">ДАННЫЕ</div>
+
+          <button class="setting-row" id="clearHistoryButton">
+            <div>
+              <div class="setting-row-title">Очистить историю</div>
+              <div class="setting-row-desc">Удалить сохранённые диалоги</div>
+            </div>
+            <div class="setting-control">›</div>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script>
 /* ==========================================
-   VOICE SYSTEM
+   ENNIE — CONFIGURATION
 ========================================== */
 
-let speechRecognition = null;
-let isRecording = false;
+const SUPABASE_URL = "ВСТАВЬТЕ_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "ВСТАВЬТЕ_SUPABASE_ANON_KEY";
 
-function speakText(text) {
-    if (!voiceOutputEnabled || !text) return;
+const AI_FUNCTION_URL =
+  "ВСТАВЬТЕ_URL_ВАШЕЙ_EDGE_FUNCTION";
 
-    if (!("speechSynthesis" in window)) {
-        showToast("Голосовой вывод не поддерживается браузером.");
-        return;
-    }
+let supabaseClient = null;
 
-    speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    utterance.lang = "ru-RU";
-    utterance.rate = 1;
-    utterance.pitch = 1.04;
-    utterance.volume = 1;
-
-    const voices = speechSynthesis.getVoices();
-
-    const russianVoice = voices.find(voice =>
-        voice.lang.toLowerCase().startsWith("ru")
-    );
-
-    if (russianVoice) {
-        utterance.voice = russianVoice;
-    }
-
-    speechSynthesis.speak(utterance);
+if (
+  window.supabase &&
+  SUPABASE_URL.startsWith("https://") &&
+  !SUPABASE_URL.includes("ВСТАВЬТЕ") &&
+  !SUPABASE_ANON_KEY.includes("ВСТАВЬТЕ")
+) {
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 }
-
-function startVoiceRecognition() {
-    const Recognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-    if (!Recognition) {
-        showError("Распознавание речи не поддерживается браузером.");
-        return;
-    }
-
-    if (isRecording) {
-        speechRecognition?.stop();
-        return;
-    }
-
-    speechRecognition = new Recognition();
-
-    speechRecognition.lang = "ru-RU";
-    speechRecognition.interimResults = true;
-    speechRecognition.continuous = false;
-
-    isRecording = true;
-
-    $("#micBtn").classList.add("recording");
-
-    speechRecognition.onresult = event => {
-        let transcript = "";
-
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
-            transcript += event.results[i][0].transcript;
-        }
-
-        $("#messageInput").value = transcript;
-    };
-
-    speechRecognition.onerror = event => {
-        console.error("Voice recognition:", event.error);
-
-        showError("Не удалось распознать речь.");
-    };
-
-    speechRecognition.onend = () => {
-        isRecording = false;
-
-        $("#micBtn").classList.remove("recording");
-    };
-
-    speechRecognition.start();
-}
-
-$("#micBtn").addEventListener("click", startVoiceRecognition);
-
-if ("speechSynthesis" in window) {
-    speechSynthesis.onvoiceschanged = () => {};
-}
-
 
 /* ==========================================
-   WELCOME GREETING
+   APPLICATION STATE
 ========================================== */
 
-try {
-    previousGreeting =
-        localStorage.getItem("ennie_previous_greeting") || "";
-} catch {}
+const state = {
+  screen:"home",
+  currentChat:null,
+  chats:JSON.parse(localStorage.getItem("ennie_chats") || "[]"),
+  dark:localStorage.getItem("ennie_theme") !== "light",
+  animations:localStorage.getItem("ennie_animations") !== "false",
+  speech:localStorage.getItem("ennie_speech") === "true",
+  busy:false
+};
 
-const originalChooseGreeting = chooseGreeting;
-
-function chooseGreeting() {
-    const available = welcomeGreetings.filter(
-        greeting => greeting !== previousGreeting
-    );
-
-    const list = available.length
-        ? available
-        : welcomeGreetings;
-
-    const selected =
-        list[Math.floor(Math.random() * list.length)];
-
-    previousGreeting = selected;
-
-    try {
-        localStorage.setItem(
-            "ennie_previous_greeting",
-            selected
-        );
-    } catch {}
-
-    return selected;
-}
-
-const initialGreeting = chooseGreeting();
-
-function showWelcome() {
-    $("#welcome").style.display = "flex";
-    $("#chatArea").classList.remove("visible");
-
-    $("#welcomeGreeting").textContent = initialGreeting;
-}
-
+const $ = id => document.getElementById(id);
 
 /* ==========================================
-   ORB — VOLUME SPHERE / HEART MORPH
+   NOTIFICATIONS
 ========================================== */
 
-(() => {
-    const canvas = $("#ennieCoreCanvas");
+function notify(message) {
+  const item = document.createElement("div");
+  item.className = "toast";
+  item.textContent = message;
 
-    if (!canvas) return;
+  $("toastContainer").appendChild(item);
 
-    const ctx = canvas.getContext("2d");
+  requestAnimationFrame(() => item.classList.add("show"));
 
-    let width = 0;
-    let height = 0;
-    let scale = 1;
+  setTimeout(() => {
+    item.classList.remove("show");
+    setTimeout(() => item.remove(),400);
+  },2800);
+}
 
-    let morph = 0;
-    let targetMorph = 0;
+/* ==========================================
+   SCREEN NAVIGATION
+========================================== */
 
-    let lastInteraction = 0;
-    let animationFrame = null;
+function showScreen(name) {
+  state.screen = name;
 
-    const particles = [];
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
 
-    const PARTICLE_COUNT = 180;
+  const target = $(name + "Screen");
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push({
-            angle: Math.random() * Math.PI * 2,
-            radius: .65 + Math.random() * .35,
-            speed: .001 + Math.random() * .003,
-            size: .5 + Math.random() * 1.5,
-            alpha: .15 + Math.random() * .65,
-            layer: Math.random()
-        });
-    }
+  if (target) target.classList.add("active");
 
-    function resize() {
-        const rect = canvas.getBoundingClientRect();
+  $("topTitle").textContent =
+    name === "home" ? "Главная" :
+    name === "chat" ? "Диалог" :
+    "Настройки";
 
-        const dpr = Math.min(
-            window.devicePixelRatio || 1,
-            2
-        );
+  closeMenu();
+}
 
-        width = rect.width;
-        height = rect.height;
+function openMenu() {
+  $("sidebar").classList.add("open");
+  $("mobileOverlay").classList.add("show");
+}
 
-        canvas.width = Math.round(width * dpr);
-        canvas.height = Math.round(height * dpr);
+function closeMenu() {
+  $("sidebar").classList.remove("open");
+  $("mobileOverlay").classList.remove("show");
+}
 
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+$("menuButton").addEventListener("click",openMenu);
+$("mobileOverlay").addEventListener("click",closeMenu);
 
-        scale = Math.min(width, height) * .31;
-    }
+$("settingsButton").addEventListener("click",() => {
+  showScreen("settings");
+});
 
-    function heartPoint(angle) {
-        const x = 16 * Math.pow(Math.sin(angle), 3);
+document.querySelectorAll("[data-screen]").forEach(button => {
+  button.addEventListener("click",() => {
+    showScreen(button.dataset.screen);
+  });
+});
 
-        const y =
-            13 * Math.cos(angle) -
-            5 * Math.cos(2 * angle) -
-            2 * Math.cos(3 * angle) -
-            Math.cos(4 * angle);
+/* ==========================================
+   THEME
+========================================== */
 
-        return {
-            x: x / 17,
-            y: -y / 17
-        };
-    }
+function updateTheme() {
+  document.body.classList.toggle("light",!state.dark);
 
-    function spherePoint(angle, latitude) {
-        return {
-            x: Math.cos(latitude) * Math.cos(angle),
-            y: Math.sin(latitude),
-            z: Math.cos(latitude) * Math.sin(angle)
-        };
-    }
+  $("themeButton").textContent = state.dark ? "◐" : "☀";
+  $("themeLabel").textContent = state.dark ? "Тёмная" : "Светлая";
 
-    function drawOrb(time) {
-        if (!canvas.isConnected) return;
+  localStorage.setItem(
+    "ennie_theme",
+    state.dark ? "dark" : "light"
+  );
+}
 
-        const cx = width / 2;
-        const cy = height / 2;
+function toggleTheme() {
+  state.dark = !state.dark;
+  updateTheme();
+}
 
-        ctx.clearRect(0, 0, width, height);
+$("themeButton").addEventListener("click",toggleTheme);
+$("themeSetting").addEventListener("click",toggleTheme);
 
-        morph += (targetMorph - morph) * .045;
+updateTheme();
 
-        if (Math.abs(targetMorph - morph) < .001) {
-            morph = targetMorph;
-        }
+/* ==========================================
+   ORB — SPHERE TO HEART
+========================================== */
 
-        const pulse =
-            1 + Math.sin(time * .0012) * .018;
+const canvas = $("orbCanvas");
+const ctx = canvas.getContext("2d");
 
-        const radius = scale * pulse;
+let orbTime = 0;
+let morph = 0;
+let morphTarget = 0;
+let orbSpeaking = false;
 
-        /* МЯГКАЯ АУРА */
+function resizeOrb() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1,2);
 
-        const aura = ctx.createRadialGradient(
-            cx, cy, radius * .1,
-            cx, cy, radius * 1.9
-        );
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
 
-        aura.addColorStop(0, "rgba(255,255,255,.15)");
-        aura.addColorStop(.45, "rgba(255,255,255,.055)");
-        aura.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
 
-        ctx.fillStyle = aura;
+window.addEventListener("resize",resizeOrb);
+resizeOrb();
 
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius * 1.9, 0, Math.PI * 2);
-        ctx.fill();
+function heartPoint(angle) {
+  const x = 16 * Math.pow(Math.sin(angle),3);
 
-        /* ФОРМА */
+  const y =
+    13 * Math.cos(angle) -
+    5 * Math.cos(2*angle) -
+    2 * Math.cos(3*angle) -
+    Math.cos(4*angle);
 
-        const shape = [];
+  return {
+    x:x / 17,
+    y:-y / 17
+  };
+}
 
-        const rings = 18;
-        const points = 100;
+function drawOrb() {
+  if (!canvas.width) return;
 
-        for (let r = 0; r <= rings; r++) {
-            const latitude =
-                -Math.PI / 2 +
-                (Math.PI * r / rings);
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
 
-            for (let p = 0; p < points; p++) {
-                const angle = p / points * Math.PI * 2;
+  ctx.clearRect(0,0,w,h);
 
-                const sphere = spherePoint(angle, latitude);
-                const heart = heartPoint(angle);
+  orbTime += .016;
 
-                const depth =
-                    Math.cos(latitude);
+  const easing = state.animations ? .055 : 1;
 
-                const heartScale =
-                    Math.max(.15, depth);
+  morph += (morphTarget - morph) * easing;
 
-                const hx = heart.x * heartScale;
-                const hy = heart.y * heartScale;
+  const breathing = state.animations
+    ? 1 + Math.sin(orbTime * 1.15) * .012
+    : 1;
 
-                const x =
-                    sphere.x * (1 - morph) +
-                    hx * morph;
+  const pulse = orbSpeaking
+    ? 1 + Math.sin(orbTime * 5) * .018
+    : 1;
 
-                const y =
-                    sphere.y * (1 - morph) +
-                    hy * morph;
+  const radius = Math.min(w,h) * .36 * breathing * pulse;
 
-                const z = sphere.z;
+  const cx = w/2;
+  const cy = h/2;
 
-                shape.push({
-                    x: cx + x * radius,
-                    y: cy + y * radius,
-                    z: z,
-                    brightness: .45 + .55 * (z + 1) / 2
-                });
-            }
-        }
+  const gradient = ctx.createRadialGradient(
+    cx-radius*.35,
+    cy-radius*.42,
+    radius*.03,
+    cx,
+    cy,
+    radius*1.15
+  );
 
-        /* ОБЪЁМНАЯ ПОВЕРХНОСТЬ */
+  gradient.addColorStop(0,"#ffffff");
+  gradient.addColorStop(.35,"#f7f7f7");
+  gradient.addColorStop(.72,"#d8d8d8");
+  gradient.addColorStop(1,"#777777");
 
-        const surface = ctx.createRadialGradient(
-            cx - radius * .35,
-            cy - radius * .42,
-            radius * .05,
-            cx,
-            cy,
-            radius * 1.3
-        );
+  ctx.save();
 
-        surface.addColorStop(0, "#ffffff");
-        surface.addColorStop(.35, "#eeeeee");
-        surface.addColorStop(.72, "#a8a8a8");
-        surface.addColorStop(1, "#383838");
+  ctx.translate(cx,cy);
 
-        ctx.save();
+  ctx.shadowColor = "#ffffff";
+  ctx.shadowBlur = 25 + morph*20;
 
-        ctx.beginPath();
+  ctx.beginPath();
 
-        if (morph < .5) {
-            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        } else {
-            const points = 150;
+  const steps = 180;
 
-            for (let i = 0; i <= points; i++) {
-                const point = heartPoint(
-                    i / points * Math.PI * 2
-                );
+  for(let i=0;i<=steps;i++) {
+    const angle = Math.PI*2*i/steps;
 
-                const x = cx + point.x * radius;
-                const y = cy + point.y * radius;
+    const circleX = Math.cos(angle);
+    const circleY = Math.sin(angle);
 
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                }
-            }
-        }
+    const heart = heartPoint(angle);
 
-        ctx.closePath();
+    const x = circleX*(1-morph)+heart.x*morph;
+    const y = circleY*(1-morph)+heart.y*morph;
 
-        ctx.fillStyle = surface;
-        ctx.shadowColor = "rgba(255,255,255,.4)";
-        ctx.shadowBlur = 30;
+    const px = x*radius;
+    const py = y*radius;
 
-        ctx.fill();
+    if(i===0) ctx.moveTo(px,py);
+    else ctx.lineTo(px,py);
+  }
 
-        ctx.restore();
+  ctx.closePath();
 
-        /* ЧАСТИЦЫ */
+  ctx.fillStyle = gradient;
+  ctx.fill();
 
-        for (const particle of particles) {
-            particle.angle += particle.speed;
+  ctx.shadowBlur = 0;
 
-            const x =
-                cx +
-                Math.cos(particle.angle) *
-                radius *
-                particle.radius *
-                1.35;
+  const shine = ctx.createRadialGradient(
+    -radius*.35,
+    -radius*.4,
+    1,
+    -radius*.2,
+    -radius*.2,
+    radius*.85
+  );
 
-            const y =
-                cy +
-                Math.sin(particle.angle) *
-                radius *
-                particle.radius *
-                1.35;
+  shine.addColorStop(0,"#ffffff55");
+  shine.addColorStop(1,"#ffffff00");
 
-            ctx.beginPath();
+  ctx.fillStyle = shine;
+  ctx.fill();
 
-            ctx.arc(
-                x,
-                y,
-                particle.size,
-                0,
-                Math.PI * 2
-            );
+  ctx.restore();
 
-            ctx.fillStyle =
-                `rgba(255,255,255,${particle.alpha})`;
+  requestAnimationFrame(drawOrb);
+}
 
-            ctx.fill();
-        }
+drawOrb();
 
-        /* СВЕТОВЫЕ ОРБИТЫ */
+function transformHeart() {
+  morphTarget = 1;
 
-        ctx.save();
+  setTimeout(() => {
+    morphTarget = 0;
+  },2600);
+}
 
-        ctx.translate(cx, cy);
-        ctx.rotate(time * .00012);
+$("orbArea").addEventListener("click",transformHeart);
 
-        for (let i = 0; i < 3; i++) {
-            ctx.beginPath();
+/* ==========================================
+   CHAT STORAGE
+========================================== */
 
-            ctx.ellipse(
-                0,
-                0,
-                radius * (1.22 + i * .1),
-                radius * (.38 + i * .08),
-                i * .8,
-                0,
-                Math.PI * 2
-            );
+function saveChats() {
+  localStorage.setItem(
+    "ennie_chats",
+    JSON.stringify(state.chats)
+  );
+}
 
-            ctx.strokeStyle =
-                `rgba(255,255,255,${.12 - i * .025})`;
+function createChat() {
+  const chat = {
+    id:crypto.randomUUID
+      ? crypto.randomUUID()
+      : String(Date.now()),
+    title:"Новый диалог",
+    messages:[],
+    created:Date.now()
+  };
 
-            ctx.lineWidth = 1;
+  state.chats.unshift(chat);
+  state.currentChat = chat.id;
 
-            ctx.stroke();
-        }
+  saveChats();
+  renderChatList();
+  renderMessages();
 
-        ctx.restore();
+  showScreen("chat");
+}
 
-        animationFrame = requestAnimationFrame(drawOrb);
-    }
+function getCurrentChat() {
+  return state.chats.find(
+    chat => chat.id === state.currentChat
+  );
+}
 
-    function morphToHeart() {
-        targetMorph = 1;
-        lastInteraction = performance.now();
+function renderChatList() {
+  const list = $("chatList");
+  list.innerHTML = "";
 
-        clearTimeout(morphReturnTimer);
+  state.chats.forEach(chat => {
+    const button = document.createElement("button");
 
-        morphReturnTimer = setTimeout(() => {
-            targetMorph = 0;
-        }, 1900);
-    }
+    button.className =
+      "chat-item" +
+      (chat.id === state.currentChat ? " active" : "");
 
-    let morphReturnTimer;
+    button.textContent = chat.title;
 
-    function interact() {
-        morphToHeart();
-    }
-
-    canvas.addEventListener("click", interact);
-
-    canvas.addEventListener("touchstart", interact, {
-        passive: true
+    button.addEventListener("click",() => {
+      state.currentChat = chat.id;
+      renderChatList();
+      renderMessages();
+      showScreen("chat");
     });
 
-    window.addEventListener("resize", resize);
+    list.appendChild(button);
+  });
+}
 
-    resize();
+function renderMessages() {
+  const chat = getCurrentChat();
+  const box = $("messages");
 
-    animationFrame = requestAnimationFrame(drawOrb);
+  box.innerHTML = "";
 
-    window.addEventListener("pagehide", () => {
-        cancelAnimationFrame(animationFrame);
-    });
-})();
+  if (!chat) return;
 
+  chat.messages.forEach(message => {
+    const element = document.createElement("div");
+
+    element.className =
+      "message " +
+      (message.role === "user" ? "user" : "assistant");
+
+    element.textContent = message.content;
+
+    box.appendChild(element);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function addMessage(role,content) {
+  const chat = getCurrentChat();
+
+  if (!chat) return;
+
+  chat.messages.push({
+    role,
+    content,
+    time:Date.now()
+  });
+
+  if (
+    chat.title === "Новый диалог" &&
+    role === "user"
+  ) {
+    chat.title = content.slice(0,35);
+  }
+
+  saveChats();
+  renderChatList();
+  renderMessages();
+}
 
 /* ==========================================
-   MOBILE SIDEBAR
+   NEW CHAT
 ========================================== */
 
-$("#menuToggle").addEventListener("click", openSidebar);
+$("newChatButton").addEventListener("click",createChat);
+$("startChatButton").addEventListener("click",createChat);
 
-$("#sidebarClose").addEventListener("click", closeSidebar);
-
-$("#sidebarOverlay").addEventListener("click", closeSidebar);
-
+document.querySelectorAll("[data-prompt]").forEach(button => {
+  button.addEventListener("click",() => {
+    createChat();
+    $("messageInput").value = button.dataset.prompt;
+    sendMessage();
+  });
+});
 
 /* ==========================================
-   SETTINGS BUTTONS
+   MESSAGE INPUT
 ========================================== */
 
-$("#topSettingsBtn").addEventListener("click", openSettings);
+$("messageInput").addEventListener("input",event => {
+  event.target.style.height = "auto";
+  event.target.style.height =
+    Math.min(event.target.scrollHeight,130)+"px";
+});
 
-$("#settingsBtn").addEventListener("click", openSettings);
+$("messageInput").addEventListener("keydown",event => {
+  if(event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+});
 
+$("sendButton").addEventListener("click",sendMessage);
+    /* ==========================================
+   AI CONNECTION
+========================================== */
+
+async function requestEnnie(message,history) {
+  if (
+    AI_FUNCTION_URL.includes("ВСТАВЬТЕ") ||
+    !AI_FUNCTION_URL.startsWith("https://")
+  ) {
+    throw new Error("Не настроено подключение ENNIE AI.");
+  }
+
+  const headers = {
+    "Content-Type":"application/json"
+  };
+
+  if (supabaseClient) {
+    const {data} = await supabaseClient.auth.getSession();
+
+    if (data.session) {
+      headers.Authorization =
+        "Bearer "+data.session.access_token;
+    }
+  }
+
+  const response = await fetch(AI_FUNCTION_URL,{
+    method:"POST",
+    headers,
+    body:JSON.stringify({
+      message,
+      history
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка сервера: "+response.status);
+  }
+
+  const data = await response.json();
+
+  const answer =
+    data.reply ||
+    data.answer ||
+    data.response ||
+    data.message;
+
+  if (!answer) {
+    throw new Error("Сервер вернул пустой ответ.");
+  }
+
+  return answer;
+}
 
 /* ==========================================
-   FINAL INITIALIZATION
+   SEND MESSAGE
 ========================================== */
 
-console.log("ENNIE V12 loaded.");
+async function sendMessage() {
+  if(state.busy) return;
 
-    </script>
-    </body>
+  const input = $("messageInput");
+  const message = input.value.trim();
+
+  if(!message) return;
+
+  if(!state.currentChat) {
+    createChat();
+  }
+
+  input.value = "";
+  input.style.height = "auto";
+
+  addMessage("user",message);
+
+  showScreen("chat");
+
+  state.busy = true;
+  $("sendButton").disabled = true;
+
+  const typing = document.createElement("div");
+  typing.className = "message assistant typing";
+  typing.textContent = "···";
+
+  $("messages").appendChild(typing);
+  $("messages").scrollTop = $("messages").scrollHeight;
+
+  try {
+    const chat = getCurrentChat();
+
+    const history = chat.messages
+      .slice(-15)
+      .map(item => ({
+        role:item.role,
+        content:item.content
+      }));
+
+    const answer = await requestEnnie(
+      message,
+      history
+    );
+
+    typing.remove();
+
+    addMessage("assistant",answer);
+
+    if(state.speech) {
+      speak(answer);
+    }
+
+  } catch(error) {
+    typing.remove();
+
+    addMessage(
+      "assistant",
+      "Не получилось получить ответ. Проверь подключение к ENNIE AI."
+    );
+
+    console.error("ENNIE AI:",error);
+  }
+
+  state.busy = false;
+  $("sendButton").disabled = false;
+}
+
+/* ==========================================
+   SUPABASE ACCOUNT
+========================================== */
+
+async function loadAccount() {
+  if(!supabaseClient) {
+    $("accountName").textContent = "TEHNOCELL ID";
+    $("accountId").textContent = "Аккаунт не подключён";
+    $("accountStatus").textContent = "○ Не авторизован";
+    return;
+  }
+
+  try {
+    const {data,error} =
+      await supabaseClient.auth.getUser();
+
+    if(error || !data.user) {
+      $("accountName").textContent = "TEHNOCELL ID";
+      $("accountId").textContent = "Войти в аккаунт";
+      $("accountStatus").textContent = "○ Не авторизован";
+      return;
+    }
+
+    const user = data.user;
+    const metadata = user.user_metadata || {};
+
+    $("accountName").textContent =
+      metadata.display_name ||
+      metadata.full_name ||
+      metadata.name ||
+      "Пользователь TEHNOCELL";
+
+    $("accountId").textContent =
+      "TC-" + user.id.slice(0,8).toUpperCase();
+
+    $("accountStatus").textContent = "● Аккаунт подключён";
+
+    if(metadata.avatar_url) {
+      $("accountAvatar").innerHTML = "";
+
+      const img = document.createElement("img");
+      img.src = metadata.avatar_url;
+      img.alt = "Аватар";
+
+      $("accountAvatar").appendChild(img);
+    }
+
+  } catch(error) {
+    console.error(error);
+    $("accountStatus").textContent = "○ Ошибка подключения";
+  }
+}
+
+$("accountCard").addEventListener("click",() => {
+  if(!supabaseClient) {
+    notify("Сначала настрой подключение TEHNOCELL ID.");
+    return;
+  }
+
+  window.location.href = "account.html";
+});
+
+loadAccount();
+
+if(supabaseClient) {
+  supabaseClient.auth.onAuthStateChange(() => {
+    loadAccount();
+  });
+}
+
+/* ==========================================
+   VOICE INPUT
+========================================== */
+
+let recognition = null;
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+if(SpeechRecognition) {
+  recognition = new SpeechRecognition();
+
+  recognition.lang = "ru-RU";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  recognition.onresult = event => {
+    const result = event.results[0][0].transcript;
+
+    $("messageInput").value +=
+      ($("messageInput").value ? " " : "") + result;
+  };
+
+  recognition.onerror = () => {
+    notify("Не удалось распознать речь.");
+  };
+
+  recognition.onend = () => {
+    $("voiceButton").style.color = "";
+  };
+}
+
+$("voiceButton").addEventListener("click",() => {
+  if(!recognition) {
+    notify("Голосовой ввод не поддерживается браузером.");
+    return;
+  }
+
+  try {
+    recognition.start();
+    $("voiceButton").style.color = "#8bd9a5";
+  } catch(error) {
+    recognition.stop();
+  }
+});
+
+/* ==========================================
+   VOICE OUTPUT
+========================================== */
+
+function speak(text) {
+  if(!("speechSynthesis" in window)) {
+    notify("Озвучивание не поддерживается.");
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const utterance =
+    new SpeechSynthesisUtterance(text);
+
+  utterance.lang = "ru-RU";
+  utterance.rate = .96;
+  utterance.pitch = 1.08;
+  utterance.volume = 1;
+
+  const voices = speechSynthesis.getVoices();
+
+  const russianVoice = voices.find(voice =>
+    voice.lang.toLowerCase().startsWith("ru")
+  );
+
+  if(russianVoice) {
+    utterance.voice = russianVoice;
+  }
+
+  orbSpeaking = true;
+
+  utterance.onend = () => {
+    orbSpeaking = false;
+  };
+
+  utterance.onerror = () => {
+    orbSpeaking = false;
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+/* ==========================================
+   SETTINGS
+========================================== */
+
+function updateSettings() {
+  $("animationToggle").classList.toggle(
+    "on",
+   state.animations
+  );
+
+  $("speechToggle").classList.toggle(
+    "on",
+   state.speech
+  );
+}
+
+$("animationSetting").addEventListener("click",() => {
+  state.animations = !state.animations;
+
+  localStorage.setItem(
+    "ennie_animations",
+   String(state.animations)
+  );
+
+  updateSettings();
+});
+
+$("speechSetting").addEventListener("click",() => {
+  state.speech = !state.speech;
+
+  localStorage.setItem(
+    "ennie_speech",
+   String(state.speech)
+  );
+
+  updateSettings();
+});
+
+$("clearHistoryButton").addEventListener("click",() => {
+  const confirmed = confirm(
+    "Удалить всю историю диалогов? Это действие нельзя отменить."
+  );
+
+  if(!confirmed) return;
+
+  state.chats = [];
+  state.currentChat = null;
+
+  saveChats();
+  renderChatList();
+  renderMessages();
+
+  notify("История диалогов очищена.");
+  showScreen("home");
+});
+
+updateSettings();
+
+/* ==========================================
+   GREETING
+========================================== */
+
+function updateGreeting() {
+  const hour = new Date().getHours();
+
+  let greeting = "Привет. Я Энни.";
+
+  if(hour >= 5 && hour < 12) {
+    greeting = "Доброе утро.";
+  } else if(hour >= 12 && hour < 18) {
+    greeting = "Добрый день.";
+  } else if(hour >= 18 && hour < 23) {
+    greeting = "Добрый вечер.";
+  } else {
+    greeting = "Не спится?";
+  }
+
+  $("greeting").textContent = greeting;
+}
+
+updateGreeting();
+
+/* ==========================================
+   INITIALIZATION
+========================================== */
+
+renderChatList();
+
+if(state.chats.length) {
+  state.currentChat = state.chats[0].id;
+}
+
+console.log("ENNIE — TEHNOCELL AI initialized.");
+</script>
+
+</body>
 </html>
