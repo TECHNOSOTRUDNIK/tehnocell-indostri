@@ -3,7 +3,7 @@
   window.__ennieEverywhereLoaded = true;
 
   const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_BIv_yX4jprEpauZyjtA_lr0Weo8X";
+  const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
   const CORE = "ennie-core-v10";
   const root = document.createElement("div");
   root.id = "ennie-everywhere-root";
