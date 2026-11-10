@@ -22,7 +22,7 @@
     .ee-head{height:67px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 15px;border-bottom:1px solid rgba(255,255,255,.09)}
     .ee-head-orb{width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%);box-shadow:0 0 15px rgba(255,255,255,.65);flex-shrink:0}
     .ee-head-copy{flex:1;min-width:0}.ee-head-title{font-size:13px;font-weight:750;letter-spacing:2px}.ee-head-sub{font-size:10px;color:#929292;margin-top:4px}
-    .ee-close{width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:#aaa;font-size:23px;cursor:pointer}
+    .ee-close{width:38px;height:38px;border:0;border-radius:50%;background:transparent;color:#aaa;font-size:23px;cursor:pointer}.ee-voice-toggle{height:34px;padding:0 10px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:#1b1b1b;color:#aaa;font-size:10px;cursor:pointer;white-space:nowrap}.ee-voice-toggle.ee-enabled{color:#fff;border-color:rgba(255,255,255,.5);background:#292929}
     .ee-messages{flex:1;min-height:0;overflow:auto;padding:15px 13px;display:flex;flex-direction:column;gap:10px}
     .ee-bubble{max-width:88%;padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
     .ee-bubble.assistant{align-self:flex-start;background:#202020;border:1px solid rgba(255,255,255,.07);border-bottom-left-radius:5px}
@@ -63,6 +63,7 @@
     <div class="ee-head">
       <div class="ee-head-orb" aria-hidden="true"></div>
       <div class="ee-head-copy"><div class="ee-head-title">ENNIE</div><div class="ee-head-sub">Твоя помощница рядом</div></div>
+      <button class="ee-voice-toggle" type="button" aria-pressed="false" aria-label="Включить озвучивание ответов">Звук: выкл.</button>
       <button class="ee-close" type="button" aria-label="Закрыть">×</button>
     </div>
     <div class="ee-messages" aria-live="polite"></div>
@@ -85,6 +86,8 @@
   const send = panel.querySelector(".ee-send");
   const state = panel.querySelector(".ee-state");
   const close = panel.querySelector(".ee-close");
+  const voiceToggle = panel.querySelector(".ee-voice-toggle");
+  let voiceOutputEnabled = localStorage.getItem("ennie_voice_output") === "true";
   const history = [];
   let client = null;
   let recorder = null;
@@ -94,6 +97,21 @@
   let highlighted = null;
   let audioObjectUrl = null;
   let isBusy = false;
+
+  function updateVoiceToggle() {
+    voiceToggle.classList.toggle("ee-enabled", voiceOutputEnabled);
+    voiceToggle.textContent = voiceOutputEnabled ? "Звук: вкл." : "Звук: выкл.";
+    voiceToggle.setAttribute("aria-pressed", String(voiceOutputEnabled));
+    voiceToggle.setAttribute("aria-label", voiceOutputEnabled ? "Выключить озвучивание ответов" : "Включить озвучивание ответов");
+  }
+  updateVoiceToggle();
+  voiceToggle.addEventListener("click", () => {
+    voiceOutputEnabled = !voiceOutputEnabled;
+    localStorage.setItem("ennie_voice_output", String(voiceOutputEnabled));
+    if (!voiceOutputEnabled) stopAudio();
+    updateVoiceToggle();
+    setMode("", voiceOutputEnabled ? "Хорошо, теперь я могу озвучивать ответы." : "Хорошо, дальше буду отвечать текстом.");
+  });
 
   function setMode(mode, message) {
     panel.classList.toggle("ee-thinking", mode === "thinking");
@@ -114,6 +132,19 @@
     if (!messagesBox.children.length) {
       addBubble("Привет. Я здесь, рядом с тобой. Могу подсказать, найти нужное и показать прямо на странице.", "assistant");
     }
+  }
+
+  function showFirstVisitWelcome() {
+    const key = "ennie_site_intro_seen_v1";
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, "true");
+    window.setTimeout(() => {
+      if (document.visibilityState !== "visible") return;
+      openPanel();
+      messagesBox.replaceChildren();
+      addBubble("Привет! Я ENNIE, помощница TEHNOCELL INDOSTRI. Рада знакомству. Здесь можно изучить подразделения и проекты компании, открыть TEHNOCELLSOFT и посмотреть доступные приложения, перейти к TEHNOCELL WEATHER, познакомиться с играми TEHNOCELLGAME, а через TEHNOCELL ID — войти в аккаунт и управлять профилем.\n\nЕсли потеряешься, просто напиши мне, что хочешь найти: я объясню и, где получится, прокручу страницу к нужному месту. Можешь закрыть это окно в любой момент. Микрофон включается только вручную, а мой голос сейчас выключен.", "assistant");
+      setMode("", "Добро пожаловать в TEHNOCELL INDOSTRI.");
+    }, 1400);
   }
   function stopAudio() {
     try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (_) {}
@@ -236,6 +267,7 @@
   }
 
   async function speak(text) {
+    if (!voiceOutputEnabled) return;
     const clean = String(text).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").replace(/https?:\/\/\S+/g, "ссылка").trim();
     if (!clean) return;
     stopAudio();
@@ -444,4 +476,6 @@
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stopRecording(false);
   });
+
+  showFirstVisitWelcome();
 })();
