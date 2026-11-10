@@ -951,6 +951,18 @@ body::after {
   box-shadow: inset 0 0 0 0 rgba(255,255,255,0);
   transition: opacity .35s ease, box-shadow .45s ease;
 }
+body.ennie-thinking::after {
+  opacity: .72;
+  box-shadow:
+    inset 0 0 16px 1px rgba(255,255,255,.07),
+    inset 0 0 48px 4px rgba(255,255,255,.05);
+  animation: ennieVignetteListen 2.6s ease-in-out infinite;
+}
+body.light-theme.ennie-thinking::after {
+  box-shadow:
+    inset 0 0 16px 1px rgba(70,70,70,.06),
+    inset 0 0 48px 4px rgba(70,70,70,.04);
+}
 body.speaking::after {
   opacity: 1;
   box-shadow:
@@ -2355,6 +2367,7 @@ async function sendMessage() {
   if (!text && !attachedImage) return;
 
   isSending = true;
+  document.body.classList.add("ennie-thinking");
   sendBtn.disabled = true;
 
   try {
@@ -2475,6 +2488,7 @@ async function sendMessage() {
 
   } finally {
     setTyping(false);
+    document.body.classList.remove("ennie-thinking");
     isSending = false;
     sendBtn.disabled = false;
     messageInput.focus();
