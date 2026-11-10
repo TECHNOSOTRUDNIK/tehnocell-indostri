@@ -1729,7 +1729,9 @@ $("#themeToggle").addEventListener("change", (event) => {
    НАСТРОЙКИ ГОЛОСА
 ========================================== */
 
-voiceEnabled = localStorage.getItem("ennie-voice") !== "false";
+voiceEnabled = localStorage.getItem("ennie_voice_output") !== null
+  ? localStorage.getItem("ennie_voice_output") === "true"
+  : localStorage.getItem("ennie-voice") !== "false";
 
 $("#voiceOutputToggle").checked = voiceEnabled;
 
@@ -1737,6 +1739,7 @@ $("#voiceOutputToggle").addEventListener("change", (event) => {
   voiceEnabled = event.target.checked;
   if (!voiceEnabled) stopEnnieVoice();
   localStorage.setItem("ennie-voice", String(voiceEnabled));
+  localStorage.setItem("ennie_voice_output", String(voiceEnabled));
 
   showToast(
     voiceEnabled ? "Голосовые ответы включены" : "Голосовые ответы выключены",
