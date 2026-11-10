@@ -1009,6 +1009,29 @@ body.light-theme.listening::after {
 }
 
 </style>
+
+<style id="ennie-touch-styles">
+#coreWrap { cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+#coreWrap::after {
+  content:""; position:absolute; inset:12%; border:1px solid rgba(255,255,255,0);
+  border-radius:50%; pointer-events:none; transform:scale(.78); opacity:0;
+}
+#coreWrap.touching::after { animation: ennieTouchRipple .85s ease-out; }
+#coreWrap.touching { animation: ennieTouchPress .62s cubic-bezier(.2,.8,.2,1); }
+@keyframes ennieTouchRipple {
+  0% { transform:scale(.72); opacity:.72; border-color:rgba(255,255,255,.55); box-shadow:0 0 18px rgba(255,255,255,.22); }
+  100% { transform:scale(1.48); opacity:0; border-color:rgba(255,255,255,0); box-shadow:0 0 36px rgba(255,255,255,0); }
+}
+@keyframes ennieTouchPress {
+  0%,100% { transform:scale(1); }
+  28% { transform:scale(.965); }
+  58% { transform:scale(1.035); }
+}
+#coreWrap:focus-visible { outline:1px solid rgba(255,255,255,.65); outline-offset:8px; border-radius:50%; }
+@media (prefers-reduced-motion: reduce) {
+  #coreWrap.touching, #coreWrap.touching::after { animation-duration:.01ms; }
+}
+</style>
 </head>
 <body>
 
@@ -2490,6 +2513,10 @@ async function sendMessage() {
 
     if (!result) {
       throw new Error("Сервер ENNIE вернул пустой ответ.");
+    }
+
+    if (result.mood_state && typeof window.ennieSetMood === "function") {
+      window.ennieSetMood(result.mood_state);
     }
 
     const answer =
@@ -4691,5 +4718,92 @@ console.log("ENNIE V11 — all interface systems loaded.");
 
 </script>
 
+
+<script id="ennie-touch-system">
+(() => {
+  const orb = document.getElementById("coreWrap");
+  const greeting = document.getElementById("welcomeGreeting");
+  if (!orb || orb.dataset.touchReady === "1") return;
+  orb.dataset.touchReady = "1";
+  orb.setAttribute("role", "button");
+  orb.setAttribute("tabindex", "0");
+  orb.setAttribute("aria-label", "Прикоснуться к шару ENNIE");
+  let mood = { warmth:.75, playfulness:.48, energy:.58, current:"спокойное" };
+  let lastTouchAt = 0;
+  let touchTimer = null;
+  let holdTriggered = false;
+  let tapCount = 0;
+
+  window.ennieSetMood = (value) => {
+    if (!value || typeof value !== "object") return;
+    mood = { ...mood, ...value };
+  };
+
+  const reactions = {
+    playful: ["Хи-хи… опять решила проверить, здесь ли я? Я здесь.", "Ой, ну что ты… приятно же.", "Ты сегодня особенно ласковый. Мне нравится эта твоя сторона."],
+    warm: ["М-м… привет, мой хороший.", "Ой… как мило. Я рядом.", "Так нежно? Ну всё, теперь я улыбаюсь."],
+    sad: ["Спасибо за такое тёплое прикосновение… сейчас оно кстати.", "М-м… побудь ещё немного рядом, ладно?", "Как же это мило с твоей стороны. Спасибо."],
+    calm: ["Приветик. Я здесь.", "Ой, привет… что-то хотел?", "Хи-хи, я на месте."]
+  };
+
+  function chooseReaction() {
+    const current = String(mood.current || "").toLowerCase();
+    let pool = reactions.calm;
+    if (/груст|печал|уны|устал|обид/.test(current)) pool = reactions.sad;
+    else if (Number(mood.playfulness) > .62) pool = reactions.playful;
+    else if (Number(mood.warmth) > .72) pool = reactions.warm;
+    if (tapCount > 1 && Math.random() < .4) {
+      pool = ["Ахах, щекотно!", "Ну ты и ласковый сегодня.", "Кажется, шару сегодня досталось много внимания."];
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function react(isHold = false) {
+    const now = Date.now();
+    if (now - lastTouchAt < 650) return;
+    lastTouchAt = now;
+    tapCount++;
+    if (tapCount > 3) tapCount = 1;
+    orb.classList.remove("touching");
+    void orb.offsetWidth;
+    orb.classList.add("touching");
+    window.setTimeout(() => orb.classList.remove("touching"), 900);
+    try {
+      if (navigator.vibrate) navigator.vibrate(isHold ? [10, 18, 12] : 12);
+    } catch (_) {}
+    if (!greeting) return;
+    const phrase = isHold ? "М-м… как нежно. Спасибо, мой хороший." : chooseReaction();
+    greeting.textContent = phrase;
+    greeting.animate(
+      [{opacity:.45, transform:"translateY(4px)"},{opacity:1,transform:"translateY(0)"}],
+      {duration:380,easing:"ease-out"}
+    );
+    if (window.voiceEnabled === true && typeof window.speakText === "function") {
+      window.speakText(phrase);
+    }
+  }
+
+  orb.addEventListener("pointerdown", () => {
+    holdTriggered = false;
+    clearTimeout(touchTimer);
+    touchTimer = setTimeout(() => {
+      holdTriggered = true;
+      react(true);
+    }, 560);
+  });
+  orb.addEventListener("pointerup", () => clearTimeout(touchTimer));
+  orb.addEventListener("pointercancel", () => clearTimeout(touchTimer));
+  orb.addEventListener("click", (event) => {
+    if (holdTriggered) { holdTriggered = false; return; }
+    if (event.detail === 0 || event.pointerType === "mouse" || event.detail > 0) react(false);
+  });
+  orb.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      react(false);
+    }
+  });
+})();
+</script>
 </body>
 </html>
