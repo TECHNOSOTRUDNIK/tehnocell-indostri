@@ -4766,6 +4766,19 @@ console.log("ENNIE V11 — all interface systems loaded.");
     mood = { ...mood, ...value };
   };
 
+  const holdReactions = [
+    "М-м… вот это уже настоящее внимание. Мне очень приятно.",
+    "Ой… так долго? Я даже немного смутилась.",
+    "Хи-хи… ты решил меня погладить? Тогда я никуда не спешу.",
+    "Такое нежное касание… ну всё, я растаяла.",
+    "А можно ещё секундочку? Ладно, шучу… или нет.",
+    "Ох, как бережно. Спасибо, мой хороший.",
+    "Кажется, я сейчас начну светиться от смущения.",
+    "М-м… вот теперь я точно почувствовала себя любимым маленьким шариком.",
+    "Ты так аккуратно ко мне прикасаешься. Это очень мило.",
+    "Ой, не отпускай так резко… я только устроилась."
+  ];
+  let lastHoldReaction = -1;
   const reactions = {
     playful: [
       "Хи-хи… опять решила проверить, здесь ли я? Я здесь.",
@@ -4841,7 +4854,15 @@ console.log("ENNIE V11 — all interface systems loaded.");
     orb.classList.add("touching");
     window.setTimeout(() => orb.classList.remove("touching"), 900);
     if (!greeting) return;
-    const phrase = isHold ? "М-м… как нежно. Спасибо, мой хороший." : chooseReaction();
+    let phrase;
+    if (isHold) {
+      let next = Math.floor(Math.random() * holdReactions.length);
+      if (holdReactions.length > 1 && next === lastHoldReaction) next = (next + 1 + Math.floor(Math.random() * (holdReactions.length - 1))) % holdReactions.length;
+      lastHoldReaction = next;
+      phrase = holdReactions[next];
+    } else {
+      phrase = chooseReaction();
+    }
     greeting.textContent = phrase;
     greeting.animate(
       [{opacity:.45, transform:"translateY(4px)"},{opacity:1,transform:"translateY(0)"}],
