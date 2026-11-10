@@ -1271,14 +1271,14 @@ body.light-theme.listening::after {
           autocomplete="off"
         ></textarea>
 
-        <button class="composer-btn mic-btn" id="micBtn" aria-label="Голосовой ввод">
+        <button type="button" class="composer-btn mic-btn" id="micBtn" aria-label="Голосовой ввод">
           <svg viewBox="0 0 24 24">
             <rect x="9" y="2" width="6" height="13" rx="3"/>
             <path d="M5 11a7 7 0 0 0 14 0M12 18v4M9 22h6"/>
           </svg>
         </button>
 
-        <button class="send-btn" id="sendBtn" aria-label="Отправить">
+        <button type="button" class="send-btn" id="sendBtn" aria-label="Отправить">
           <svg viewBox="0 0 24 24">
             <path d="m5 12 14-7-5 14-2-6-7-1Z"/>
             <path d="m12 13 7-8"/>
@@ -1314,6 +1314,7 @@ body.light-theme.listening::after {
 
 <!-- УВЕДОМЛЕНИЯ -->
 <div class="toast-container" id="toastContainer"></div>
+<button id="voiceTrashZone" type="button" aria-label="Перетащить сюда, чтобы удалить" title="Удалить голосовое сообщение"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg></button>
 
 
 <!-- ОКНО НАСТРОЕК -->
@@ -1826,7 +1827,12 @@ messageInput.addEventListener("keydown", (event) => {
   }
 });
 
-sendBtn.addEventListener("click", sendMessage);
+sendBtn.type = "button";
+sendBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  sendMessage();
+});
 
 
 /* ==========================================
@@ -3824,6 +3830,79 @@ body.light-theme .core-wrap::before {
     min-height: 110px;
   }
 }
+
+/* ENNIE VOICE DRAFT + RECORDER */
+#sendBtn {
+  position: relative;
+  z-index: 5;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+#sendBtn:disabled { opacity: .42; }
+#micBtn.recording {
+  color: #fff;
+  background: rgba(255,255,255,.16);
+  box-shadow: 0 0 0 5px rgba(255,255,255,.06), 0 0 22px rgba(255,255,255,.2);
+  animation: micPulse 1.25s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.08); }
+}
+.voice-draft-message {
+  position: relative;
+  padding: 13px 46px 13px 12px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: linear-gradient(145deg,#202020,#141414);
+  border-radius: 16px;
+  max-width: min(92%,680px);
+  touch-action: pan-y;
+}
+.voice-draft-body { min-width:0; }
+.voice-draft-text { overflow-wrap:anywhere; }
+.voice-draft-countdown {
+  margin-top: 9px;
+  color: #aaa;
+  font-size: 11px;
+}
+.voice-draft-countdown b { color:#fff; font-variant-numeric:tabular-nums; }
+.voice-draft-trash {
+  position:absolute;
+  top:12px;
+  right:10px;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:10px;
+  background:#292929;
+  color:#fff;
+}
+.voice-draft-trash svg { width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round; }
+#voiceTrashZone {
+  position:fixed;
+  z-index:90;
+  right:20px;
+  bottom:100px;
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:19px;
+  background:rgba(22,22,22,.96);
+  color:#fff;
+  box-shadow:0 10px 35px rgba(0,0,0,.45);
+  opacity:0;
+  transform:translateY(12px) scale(.88);
+  pointer-events:none;
+  transition:opacity .2s,transform .2s,background .2s;
+}
+#voiceTrashZone.visible { opacity:1;transform:translateY(0) scale(1);pointer-events:auto; }
+#voiceTrashZone.drag-over { background:#fff;color:#080808;transform:scale(1.12); }
+#voiceTrashZone svg { width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+
 </style>
 
 
@@ -4020,78 +4099,305 @@ if ("speechSynthesis" in window) {
 
 
 /* ==========================================
-   ГОЛОСОВОЙ ВВОД
+   ENNIE — MEDIARECORDER VOICE INPUT
 ========================================== */
 
-const SpeechRecognition =
-  window.SpeechRecognition ||
-  window.webkitSpeechRecognition;
+let voiceRecorder = null;
+let voiceStream = null;
+let voiceChunks = [];
+let voiceDraftTimer = null;
+let voiceDraftElement = null;
+let voiceDraftText = "";
+let voiceRecordingStartedAt = 0;
+let voiceAudioContext = null;
 
-if (SpeechRecognition) {
-  speechRecognition = new SpeechRecognition();
+function playVoiceCue(starting = true) {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    voiceAudioContext = voiceAudioContext || new AudioContextClass();
+    if (voiceAudioContext.state === "suspended") voiceAudioContext.resume();
 
-  speechRecognition.lang = "ru-RU";
-  speechRecognition.continuous = false;
-  speechRecognition.interimResults = true;
-
-  speechRecognition.onstart = () => {
-    isListening = true;
-    document.body.classList.add("listening");
-
-    showToast("Я слушаю тебя...", "info");
-  };
-
-  speechRecognition.onresult = (event) => {
-    let finalText = "";
-    let interimText = "";
-
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const transcript = event.results[i][0].transcript;
-
-      if (event.results[i].isFinal) {
-        finalText += transcript;
-      } else {
-        interimText += transcript;
-      }
-    }
-
-    messageInput.value = finalText || interimText;
-    messageInput.dispatchEvent(new Event("input"));
-  };
-
-  speechRecognition.onerror = (event) => {
-    console.error("Voice recognition error:", event.error);
-
-    if (event.error !== "no-speech") {
-      showError("Не удалось распознать речь.");
-    }
-  };
-
-  speechRecognition.onend = () => {
-    isListening = false;
-    document.body.classList.remove("listening");
-  };
-
-} else {
-  console.warn("Speech Recognition is not supported.");
+    const oscillator = voiceAudioContext.createOscillator();
+    const gain = voiceAudioContext.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(starting ? 660 : 440, voiceAudioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(starting ? 880 : 330, voiceAudioContext.currentTime + 0.11);
+    gain.gain.setValueAtTime(0.0001, voiceAudioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.055, voiceAudioContext.currentTime + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, voiceAudioContext.currentTime + 0.14);
+    oscillator.connect(gain);
+    gain.connect(voiceAudioContext.destination);
+    oscillator.start();
+    oscillator.stop(voiceAudioContext.currentTime + 0.15);
+  } catch (error) {
+    console.debug("ENNIE audio cue unavailable:", error);
+  }
 }
 
-$("#micBtn").addEventListener("click", () => {
-  if (!speechRecognition) {
-    showError("Голосовой ввод не поддерживается этим браузером.");
+function updateVoiceButton(recording) {
+  const button = $("#micBtn");
+  if (!button) return;
+  button.classList.toggle("recording", recording);
+  button.setAttribute("aria-label", recording ? "Остановить запись" : "Голосовой ввод");
+  button.title = recording ? "Остановить запись" : "Голосовой ввод";
+}
+
+async function startVoiceRecording() {
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    showError("Запись голоса не поддерживается этим браузером. Открой ENNIE в актуальном Chrome.");
     return;
   }
-
-  if (isListening) {
-    speechRecognition.stop();
+  if (!currentUser) {
+    showError("Сначала войди в TEHNOCELL ID.");
     return;
   }
 
   try {
-    speechRecognition.start();
+    stopEnnieVoice();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+
+    voiceStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+    });
+
+    const mimeCandidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4"
+    ];
+    const mimeType = mimeCandidates.find(type => MediaRecorder.isTypeSupported(type));
+    voiceRecorder = mimeType ? new MediaRecorder(voiceStream, { mimeType }) : new MediaRecorder(voiceStream);
+    voiceChunks = [];
+    voiceRecordingStartedAt = Date.now();
+
+    voiceRecorder.ondataavailable = event => {
+      if (event.data && event.data.size) voiceChunks.push(event.data);
+    };
+    voiceRecorder.onerror = event => {
+      console.error("ENNIE recorder error:", event.error || event);
+      showError("Не удалось записать голос. Попробуй ещё раз.");
+      finishVoiceRecording(false);
+    };
+    voiceRecorder.onstop = async () => {
+      const blob = new Blob(voiceChunks, { type: voiceRecorder?.mimeType || "audio/webm" });
+      voiceChunks = [];
+      if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+      voiceStream = null;
+      voiceRecorder = null;
+      updateVoiceButton(false);
+      document.body.classList.remove("listening");
+
+      if (blob.size < 1200) {
+        showToast("Запись получилась слишком короткой.", "info");
+        return;
+      }
+      await transcribeVoiceBlob(blob);
+    };
+
+    voiceRecorder.start(250);
+    isListening = true;
+    updateVoiceButton(true);
+    document.body.classList.add("listening");
+    playVoiceCue(true);
+    showToast("Я слушаю тебя. Нажми микрофон ещё раз, когда закончишь.", "info");
+    voiceRecordingTimer = setTimeout(() => {
+      if (voiceRecorder && voiceRecorder.state === "recording") {
+        showToast("Достигнута максимальная длина записи.", "info");
+        finishVoiceRecording(true);
+      }
+    }, 90000);
   } catch (error) {
-    console.error(error);
+    console.error("ENNIE microphone error:", error);
+    if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+    voiceStream = null;
+    voiceRecorder = null;
+    isListening = false;
+    updateVoiceButton(false);
+    document.body.classList.remove("listening");
+    showError(error.name === "NotAllowedError"
+      ? "Разреши ENNIE доступ к микрофону в настройках браузера."
+      : "Не получилось включить микрофон. Проверь разрешение и попробуй снова.");
   }
+}
+
+let voiceRecordingTimer = null;
+
+function finishVoiceRecording(shouldTranscribe = true) {
+  if (voiceRecordingTimer) clearTimeout(voiceRecordingTimer);
+  voiceRecordingTimer = null;
+  if (voiceRecorder && voiceRecorder.state !== "inactive") {
+    playVoiceCue(false);
+    voiceRecorder.stop();
+  } else {
+    isListening = false;
+    updateVoiceButton(false);
+    document.body.classList.remove("listening");
+  }
+}
+
+async function transcribeVoiceBlob(blob) {
+  try {
+    showToast("Преобразую голос в текст…", "info");
+    document.body.classList.add("ennie-thinking");
+
+    const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+    if (sessionError) throw sessionError;
+    const accessToken = sessionData.session?.access_token;
+    if (!accessToken) throw new Error("Сессия TEHNOCELL ID завершилась. Войди снова.");
+
+    const form = new FormData();
+    const extension = blob.type.includes("mp4") ? "m4a" : "webm";
+    form.append("audio", blob, "ennie-recording." + extension);
+
+    const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-transcribe", {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + accessToken
+      },
+      body: form
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Ошибка распознавания: " + response.status);
+
+    const text = String(result.text || "").trim();
+    if (!text) {
+      showToast("Я не расслышала слова. Попробуй ещё раз.", "info");
+      return;
+    }
+    showVoiceDraft(text);
+  } catch (error) {
+    console.error("ENNIE transcription error:", error);
+    showError(error.message || "Не удалось распознать голос.");
+  } finally {
+    document.body.classList.remove("ennie-thinking");
+    if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+    voiceStream = null;
+    isListening = false;
+    updateVoiceButton(false);
+    document.body.classList.remove("listening");
+  }
+}
+
+function removeVoiceDraft() {
+  if (voiceDraftTimer) clearInterval(voiceDraftTimer);
+  voiceDraftTimer = null;
+  if (voiceDraftElement) voiceDraftElement.remove();
+  voiceDraftElement = null;
+  voiceDraftText = "";
+  const bin = $("#voiceTrashZone");
+  if (bin) bin.classList.remove("visible", "drag-over");
+}
+
+function showVoiceDraft(text) {
+  removeVoiceDraft();
+  voiceDraftText = text;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "message message-user voice-draft-message";
+  wrapper.draggable = true;
+  wrapper.innerHTML = `
+    <div class="message-avatar">Я</div>
+    <div class="message-body voice-draft-body">
+      <div class="message-author">ТВОЁ СООБЩЕНИЕ</div>
+      <div class="message-text voice-draft-text"></div>
+      <div class="voice-draft-countdown">Отправка через <b>3</b> сек.</div>
+    </div>
+    <button class="voice-draft-trash" type="button" aria-label="Удалить распознанное сообщение" title="Удалить">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg>
+    </button>`;
+  wrapper.querySelector(".voice-draft-text").textContent = text;
+  messages.appendChild(wrapper);
+  voiceDraftElement = wrapper;
+
+  const bin = $("#voiceTrashZone");
+  if (bin) bin.classList.add("visible");
+
+  const discard = () => {
+    removeVoiceDraft();
+    showToast("Сообщение удалено", "success");
+  };
+
+  let touchDrag = null;
+  wrapper.addEventListener("pointerdown", event => {
+    if (event.target.closest(".voice-draft-trash")) return;
+    touchDrag = { x:event.clientX, y:event.clientY, moved:false };
+    wrapper.setPointerCapture?.(event.pointerId);
+  });
+  wrapper.addEventListener("pointermove", event => {
+    if (!touchDrag) return;
+    const dx = event.clientX - touchDrag.x;
+    const dy = event.clientY - touchDrag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 10) {
+      touchDrag.moved = true;
+      if (bin) bin.classList.add("visible");
+      wrapper.style.transform = `translate(${dx}px,${dy}px) scale(.97)`;
+      const rect = bin?.getBoundingClientRect();
+      if (rect && event.clientX >= rect.left && event.clientX <= rect.right &&
+          event.clientY >= rect.top && event.clientY <= rect.bottom) {
+        bin.classList.add("drag-over");
+      } else if (bin) bin.classList.remove("drag-over");
+    }
+  });
+  wrapper.addEventListener("pointerup", event => {
+    if (!touchDrag) return;
+    const wasMoved = touchDrag.moved;
+    touchDrag = null;
+    const rect = bin?.getBoundingClientRect();
+    const droppedInBin = wasMoved && rect &&
+      event.clientX >= rect.left && event.clientX <= rect.right &&
+      event.clientY >= rect.top && event.clientY <= rect.bottom;
+    wrapper.style.transform = "";
+    if (droppedInBin) discard();
+    else if (bin) bin.classList.remove("drag-over");
+  });
+
+  wrapper.querySelector(".voice-draft-trash").addEventListener("click", discard);
+
+  wrapper.addEventListener("dragstart", event => {
+    event.dataTransfer?.setData("text/plain", "ennie-voice-draft");
+    if (bin) bin.classList.add("visible");
+  });
+  if (bin) {
+    bin.ondragover = event => { event.preventDefault(); bin.classList.add("drag-over"); };
+    bin.ondragleave = () => bin.classList.remove("drag-over");
+    bin.ondrop = event => {
+      event.preventDefault();
+      if (voiceDraftElement === wrapper) discard();
+    };
+  }
+
+  let seconds = 3;
+  const counter = wrapper.querySelector(".voice-draft-countdown b");
+  voiceDraftTimer = setInterval(() => {
+    seconds -= 1;
+    if (counter) counter.textContent = String(Math.max(0, seconds));
+    if (seconds <= 0) {
+      clearInterval(voiceDraftTimer);
+      voiceDraftTimer = null;
+      if (voiceDraftElement !== wrapper) return;
+      const finalText = voiceDraftText;
+      removeVoiceDraft();
+      messageInput.value = finalText;
+      messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+      sendMessage();
+    }
+  }, 1000);
+
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+$("#micBtn").addEventListener("click", () => {
+  if (voiceRecorder && voiceRecorder.state === "recording") {
+    finishVoiceRecording(true);
+    return;
+  }
+  if (voiceDraftElement) {
+    showToast("Подожди завершения или удали распознанный текст.", "info");
+    return;
+  }
+  startVoiceRecording();
 });
 
 
