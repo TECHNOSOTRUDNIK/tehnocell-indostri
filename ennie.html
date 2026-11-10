@@ -4840,10 +4840,6 @@ console.log("ENNIE V11 — all interface systems loaded.");
     void orb.offsetWidth;
     orb.classList.add("touching");
     window.setTimeout(() => orb.classList.remove("touching"), 900);
-    try {
-      // A slightly stronger pulse; supported Android browsers vibrate only after a real user gesture.
-      if (navigator.vibrate) navigator.vibrate(isHold ? [28, 35, 28] : [24, 22, 18]);
-    } catch (_) {}
     if (!greeting) return;
     const phrase = isHold ? "М-м… как нежно. Спасибо, мой хороший." : chooseReaction();
     greeting.textContent = phrase;
@@ -4861,8 +4857,10 @@ console.log("ENNIE V11 — all interface systems loaded.");
   orb.addEventListener("dragstart", event => event.preventDefault());
 
   orb.addEventListener("pointerdown", () => {
-    // Fire vibration immediately inside the trusted touch gesture.
-    try { if (navigator.vibrate) navigator.vibrate([24, 22, 18]); } catch (_) {}
+    // Fire one vibration inside the trusted gesture, but respect the recharge lock.
+    if (Date.now() - lastTouchAt >= 1800) {
+      try { if (navigator.vibrate) navigator.vibrate([24, 22, 18]); } catch (_) {}
+    }
     holdTriggered = false;
     clearTimeout(touchTimer);
     touchTimer = setTimeout(() => {
