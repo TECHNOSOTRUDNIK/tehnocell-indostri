@@ -1734,6 +1734,13 @@ voiceEnabled = localStorage.getItem("ennie_voice_output") !== null
   : localStorage.getItem("ennie-voice") !== "false";
 
 $("#voiceOutputToggle").checked = voiceEnabled;
+localStorage.setItem("ennie_voice_output", String(voiceEnabled));
+window.addEventListener("storage", (event) => {
+  if (event.key !== "ennie_voice_output") return;
+  voiceEnabled = event.newValue === "true";
+  $("#voiceOutputToggle").checked = voiceEnabled;
+  if (!voiceEnabled) stopEnnieVoice();
+});
 
 $("#voiceOutputToggle").addEventListener("change", (event) => {
   voiceEnabled = event.target.checked;
