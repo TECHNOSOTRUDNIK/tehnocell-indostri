@@ -151,8 +151,9 @@
   }
 
   function showFirstVisitWelcome() {
-    const path = location.pathname;
-    if (path !== "/" && path !== "/index.html") return;
+    const pathParts = location.pathname.split("/").filter(Boolean);
+    const isHomePage = pathParts.length === 0 || (pathParts.length === 1 && pathParts[0] === "tehnocell-indostri") || (pathParts.length === 2 && pathParts[0] === "tehnocell-indostri" && pathParts[1] === "index.html");
+    if (!isHomePage) return;
     const key = "ennie_site_intro_seen_v1";
     if (localStorage.getItem(key)) return;
     localStorage.setItem(key, "true");
