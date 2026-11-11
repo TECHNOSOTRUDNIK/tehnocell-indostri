@@ -167,6 +167,13 @@
       #ennie-everywhere-root .ee-head-orb,#ennie-everywhere-root .ee-orb-halo{animation:none!important}
     }
 `;
+  style.textContent += `
+    /* ENNIE WAKE — explicit opt-in phrase activation */
+    #ennie-everywhere-root .ee-wake-toggle{height:34px;padding:0 11px;border-radius:20px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.13);font-size:10px;white-space:nowrap}
+    #ennie-everywhere-root .ee-wake-toggle.ee-enabled{color:#111;background:#fff;border-color:#fff}
+    #ennie-everywhere-root .ee-panel.ee-wake-active .ee-head-sub:before{background:#fff;box-shadow:0 0 10px #fff}
+    @media(max-width:390px){#ennie-everywhere-root .ee-wake-toggle{padding:0 8px;font-size:9px}#ennie-everywhere-root .ee-voice-toggle{padding:0 8px;font-size:9px}}
+  `;
   document.head.appendChild(style);
 
   const launch = document.createElement("button");
@@ -184,6 +191,7 @@
         <div class="ee-head-title">ENNIE</div>
         <div class="ee-head-sub">Я рядом</div>
       </div>
+      <button class="ee-wake-toggle" type="button" aria-pressed="false" aria-label="Включить активацию по фразе">Фраза: выкл.</button>
       <button class="ee-voice-toggle" type="button" aria-pressed="false" aria-label="Включить озвучивание ответов">Звук: выкл.</button>
       <button class="ee-expand" type="button" aria-label="Развернуть чат" title="Развернуть чат" hidden>□</button>
       <button class="ee-close" type="button" aria-label="Закрыть ENNIE">×</button>
@@ -214,6 +222,7 @@
   const state = panel.querySelector(".ee-state");
   const close = panel.querySelector(".ee-close");
   const voiceToggle = panel.querySelector(".ee-voice-toggle");
+  const wakeToggle = panel.querySelector(".ee-wake-toggle");
   const expandButton = panel.querySelector(".ee-expand");
   const resizeHandle = panel.querySelector(".ee-resize");
   let voiceOutputEnabled = localStorage.getItem("ennie_voice_output") === "true";
@@ -245,6 +254,117 @@
     voiceToggle.setAttribute("aria-label", voiceOutputEnabled ? "Выключить озвучивание ответов" : "Включить озвучивание ответов");
   }
   updateVoiceToggle();
+
+  // Voice wake phrase works only after the user explicitly enables it.
+  // Browser support varies; it is active only while this page is visible.
+  const WakeRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const WAKE_PREF_KEY = "ennie_mini_wake_enabled_v1";
+  let wakeEnabled = localStorage.getItem(WAKE_PREF_KEY) === "true";
+  let wakeRecognition = null;
+  let wakeAwaitingCommand = false;
+  let wakeRestartTimer = null;
+  let wakeStarting = false;
+
+  function updateWakeToggle() {
+    wakeToggle.classList.toggle("ee-enabled", wakeEnabled);
+    wakeToggle.textContent = wakeEnabled ? "Фраза: вкл." : "Фраза: выкл.";
+    wakeToggle.setAttribute("aria-pressed", String(wakeEnabled));
+    wakeToggle.setAttribute("aria-label", wakeEnabled ? "Выключить активацию по фразе" : "Включить активацию по фразе");
+    panel.classList.toggle("ee-wake-active", wakeEnabled);
+  }
+
+  function stopWakeRecognition() {
+    if (wakeRestartTimer) clearTimeout(wakeRestartTimer);
+    wakeRestartTimer = null;
+    if (wakeRecognition) {
+      try { wakeRecognition.onend = null; wakeRecognition.stop(); } catch (_) {}
+    }
+    wakeRecognition = null;
+    wakeStarting = false;
+  }
+
+  function startWakeRecognition() {
+    if (!wakeEnabled || !WakeRecognition || document.visibilityState !== "visible" || wakeStarting || wakeRecognition) return;
+    try {
+      wakeStarting = true;
+      const recognition = new WakeRecognition();
+      wakeRecognition = recognition;
+      recognition.lang = "ru-RU";
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onstart = () => { wakeStarting = false; };
+      recognition.onresult = event => {
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (!event.results[i].isFinal) continue;
+          const transcript = String(event.results[i][0] && event.results[i][0].transcript || "").trim();
+          if (!transcript) continue;
+          if (!wakeAwaitingCommand) {
+            const match = transcript.match(/энни[\s,!.—-]*(?:помоги|посмотри|слушай|ты здесь)/i);
+            if (!match) continue;
+            const command = transcript.slice(match.index + match[0].length).replace(/^[\s,!.—-]+/, "").trim();
+            if (command.length >= 2) {
+              stopWakeRecognition();
+              openPanel();
+              setMode("thinking", "Услышала тебя. Сейчас разберусь…");
+              sendMessage(command);
+              return;
+            }
+            wakeAwaitingCommand = true;
+            openPanel();
+            setMode("listening", "Я здесь. Скажи, что тебе нужно.");
+          } else {
+            wakeAwaitingCommand = false;
+            stopWakeRecognition();
+            setMode("thinking", "Услышала. Сейчас посмотрю…");
+            sendMessage(transcript);
+            return;
+          }
+        }
+      };
+      recognition.onerror = event => {
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          wakeEnabled = false;
+          localStorage.setItem(WAKE_PREF_KEY, "false");
+          updateWakeToggle();
+          setMode("", "Браузер не разрешил голосовую активацию. Проверь доступ к микрофону.");
+        }
+      };
+      recognition.onend = () => {
+        if (wakeRecognition === recognition) wakeRecognition = null;
+        wakeStarting = false;
+        if (wakeEnabled && document.visibilityState === "visible") {
+          wakeRestartTimer = setTimeout(startWakeRecognition, 650);
+        }
+      };
+      recognition.start();
+    } catch (error) {
+      wakeStarting = false;
+      wakeRecognition = null;
+      console.warn("ENNIE wake phrase unavailable:", error);
+    }
+  }
+
+  wakeToggle.addEventListener("click", () => {
+    if (!WakeRecognition) {
+      setMode("", "В этом браузере активация по фразе не поддерживается. Ввод голосом по кнопке микрофона остаётся доступен.");
+      return;
+    }
+    wakeEnabled = !wakeEnabled;
+    localStorage.setItem(WAKE_PREF_KEY, String(wakeEnabled));
+    wakeAwaitingCommand = false;
+    updateWakeToggle();
+    if (wakeEnabled) {
+      setMode("listening", "Голосовая активация включена. Скажи: «Энни, помоги».");
+      startWakeRecognition();
+    } else {
+      stopWakeRecognition();
+      setMode("", "Голосовая активация выключена.");
+    }
+  });
+  updateWakeToggle();
+  if (wakeEnabled && WakeRecognition) startWakeRecognition();
+
   const SIZE_KEY="ennie_mini_size_v1";
   function savePanelSize(width,height){
     const size={width:Math.round(Math.max(280,Math.min(innerWidth-16,width))),height:Math.round(Math.max(300,Math.min(innerHeight-96,height)))};
@@ -374,6 +494,7 @@
   }
   launch.addEventListener("click", () => panel.classList.contains("ee-open") ? closePanel() : openPanel());
   close.addEventListener("click", closePanel);
+  window.addEventListener("beforeunload", stopWakeRecognition);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && panel.classList.contains("ee-open")) closePanel(); });
   const orb = panel.querySelector(".ee-head-orb");
   orb.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); reactToOrb(); } });
@@ -819,9 +940,11 @@
           const recognized = String(result.text || "").trim();
           if (!recognized) throw new Error("Я не расслышала слова. Попробуй ещё раз.");
           await sendMessage(recognized);
+          if (wakeEnabled) startWakeRecognition();
         } catch (error) {
           addBubble(error.message || "Не удалось распознать голос.", "assistant");
           setMode("", "Попробуй записать ещё раз.");
+          if (wakeEnabled) startWakeRecognition();
         }
       };
       active.stop();
@@ -834,6 +957,7 @@
     }
   }
   async function startRecording() {
+    stopWakeRecognition();
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
       addBubble("Голосовой ввод не поддерживается в этом браузере. Попробуй открыть сайт в актуальном Chrome.", "assistant");
       return;
@@ -863,7 +987,8 @@
   });
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stopRecording(false);
+    if (document.hidden) { stopRecording(false); stopWakeRecognition(); }
+    else if (wakeEnabled) startWakeRecognition();
   });
 
   restoreChat().finally(() => showFirstVisitWelcome());
