@@ -8,8 +8,6 @@
   const root = document.createElement("div");
   root.id = "ennie-everywhere-root";
   document.body.appendChild(root);
-  root.style.cssText = "position:fixed;inset:0;z-index:2147483001;pointer-events:none!important;";
-  document.documentElement.classList.remove("ee-modal-open");
 
   const style = document.createElement("style");
   style.textContent = `
@@ -25,6 +23,10 @@
     .ee-head-orb{width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%);box-shadow:0 0 15px rgba(255,255,255,.65);flex-shrink:0}
     .ee-head-copy{flex:1;min-width:0}.ee-head-title{font-size:13px;font-weight:750;letter-spacing:2px}.ee-head-sub{font-size:10px;color:#999;margin-top:4px;display:flex;align-items:center;gap:6px}.ee-head-sub:before{content:"";width:5px;height:5px;border-radius:50%;background:#e8e8e8;box-shadow:0 0 8px rgba(255,255,255,.55)}
     .ee-close{width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:#aaa;font-size:22px;cursor:pointer;flex-shrink:0}.ee-expand{width:32px;height:32px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:#1b1b1b;color:#aaa;font-size:16px;cursor:pointer;flex-shrink:0}.ee-resize{position:absolute;left:0;bottom:0;width:30px;height:30px;z-index:4;touch-action:none;cursor:nesw-resize;border:0;background:transparent}.ee-resize:before{content:"";position:absolute;left:9px;bottom:9px;width:10px;height:10px;border-left:2px solid #777;border-bottom:2px solid #777;opacity:.8}.ee-panel.ee-expanded{right:8px!important;bottom:8px!important;width:calc(100vw - 16px)!important;height:calc(100dvh - 16px)!important;max-width:none;max-height:none;border-radius:17px}.ee-voice-toggle{height:34px;padding:0 10px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:#1b1b1b;color:#aaa;font-size:10px;cursor:pointer;white-space:nowrap}.ee-voice-toggle.ee-enabled{color:#fff;border-color:rgba(255,255,255,.5);background:#292929}
+    .ee-wake-toggle{height:34px;padding:0 9px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:#1b1b1b;color:#aaa;font-size:10px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+    .ee-wake-toggle.ee-enabled{color:#fff;border-color:rgba(255,255,255,.5);background:#292929;box-shadow:0 0 12px rgba(255,255,255,.08)}
+    .ee-panel.ee-wake-active .ee-head-sub:before{background:#fff;box-shadow:0 0 9px rgba(255,255,255,.9)}
+
     .ee-messages{flex:1;min-height:0;overflow:auto;padding:17px 14px 14px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth;overscroll-behavior:contain}
     .ee-bubble{max-width:88%;padding:12px 14px;border-radius:17px;font-size:13px;line-height:1.58;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 3px 14px rgba(0,0,0,.12);animation:ee-bubble-in .2s ease-out both}
     .ee-bubble.assistant{align-self:flex-start;background:linear-gradient(145deg,#242424,#1b1b1b);border:1px solid rgba(255,255,255,.075);border-bottom-left-radius:6px}
@@ -59,239 +61,8 @@
     @keyframes ee-think{0%,100%{transform:scale(.9);filter:brightness(.9)}50%{transform:scale(1.17);filter:brightness(1.25)}}
     @keyframes ee-speak{from{transform:scale(.94)}to{transform:scale(1.18)}}
     @keyframes ee-target-pulse{0%,100%{outline-offset:4px}50%{outline-offset:9px}}
-    @media(max-width:480px){.ee-launch{right:13px;bottom:14px;width:54px;height:54px}.ee-panel{right:8px;bottom:77px;width:var(--ee-panel-width,calc(100vw - 16px));height:var(--ee-panel-height,min(520px,calc(100dvh - 94px)));border-radius:20px}.ee-head{gap:7px;padding:0 9px}.ee-head-title{font-size:12px}.ee-voice-toggle{padding:0 7px;font-size:9px}.ee-expand{width:29px;height:29px}.ee-close{width:30px;height:30px}}
+    @media(max-width:480px){.ee-launch{right:13px;bottom:14px;width:54px;height:54px}.ee-panel{right:8px;bottom:77px;width:var(--ee-panel-width,calc(100vw - 16px));height:var(--ee-panel-height,min(520px,calc(100dvh - 94px)));border-radius:20px}.ee-head{gap:7px;padding:0 9px}.ee-head-title{font-size:12px}.ee-voice-toggle{padding:0 6px;font-size:9px}.ee-wake-toggle{padding:0 6px;font-size:9px}.ee-expand{width:29px;height:29px}.ee-close{width:30px;height:30px}}
     @media(prefers-reduced-motion:reduce){.ee-orb,.ee-launch:after,.ee-target-highlight{animation:none!important}.ee-panel,.ee-launch{transition:none}}
-  `;
-  style.textContent += `
-    /* ENNIE 2.0 — immersive full-screen companion */
-    /* ENNIE 2.0.1 — allow page scrolling through the transparent center */
-    html.ee-modal-open,html.ee-modal-open body{
-      overflow:auto!important;
-      overscroll-behavior:auto!important;
-    }
-    #ennie-everywhere-root .ee-panel.ee-open{
-      pointer-events:none!important;
-      touch-action:pan-y!important;
-    }
-    #ennie-everywhere-root .ee-head,
-    #ennie-everywhere-root .ee-messages,
-    #ennie-everywhere-root .ee-compose,
-    #ennie-everywhere-root .ee-head-orb,
-    #ennie-everywhere-root .ee-close,
-    #ennie-everywhere-root .ee-wake-toggle,
-    #ennie-everywhere-root .ee-voice-toggle,
-    #ennie-everywhere-root .ee-mic,
-    #ennie-everywhere-root .ee-send,
-    #ennie-everywhere-root .ee-input{
-      pointer-events:auto!important;
-    }
-    #ennie-everywhere-root .ee-stage,
-    #ennie-everywhere-root .ee-orb-halo,
-    #ennie-everywhere-root .ee-state{
-      pointer-events:none!important;
-      touch-action:pan-y!important;
-    }
-    #ennie-everywhere-root .ee-head-orb{touch-action:pan-y!important}
-
-    html.ee-modal-open,html.ee-modal-open body{overflow:hidden!important}
-    #ennie-everywhere-root .ee-panel{
-      position:fixed!important;inset:0!important;right:0!important;bottom:0!important;
-      z-index:2147483001!important;width:100vw!important;height:100dvh!important;
-      max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;
-      padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
-      border:0!important;border-radius:0!important;
-      background:radial-gradient(ellipse at 50% 34%,rgba(42,42,42,.24),transparent 48%),#080808!important;
-      box-shadow:none!important;backdrop-filter:none!important;
-      opacity:0;transform:scale(1.025)!important;pointer-events:none;
-      transition:opacity .32s ease,transform .42s cubic-bezier(.2,.8,.2,1)!important;
-      overflow:hidden!important;
-    }
-    #ennie-everywhere-root .ee-panel.ee-open{opacity:1;transform:scale(1)!important;pointer-events:auto}
-    #ennie-everywhere-root .ee-panel:before{
-      content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
-      background:radial-gradient(ellipse at center,transparent 34%,rgba(255,255,255,.025) 58%,rgba(255,255,255,.13) 100%);
-    }
-    #ennie-everywhere-root .ee-head{
-      position:absolute;z-index:4;top:calc(env(safe-area-inset-top) + 8px);left:0;right:0;
-      height:54px;padding:0 18px;border:0;background:transparent;gap:10px;
-    }
-    #ennie-everywhere-root .ee-head-copy{padding-left:3px}
-    #ennie-everywhere-root .ee-head-title{font-size:12px;letter-spacing:3px;color:#fff}
-    #ennie-everywhere-root .ee-head-sub{font-size:10px;color:rgba(255,255,255,.52)}
-    #ennie-everywhere-root .ee-head-sub:before{background:#fff}
-    #ennie-everywhere-root .ee-voice-toggle{
-      height:34px;padding:0 12px;border-radius:20px;background:rgba(255,255,255,.07);
-      color:rgba(255,255,255,.76);border:1px solid rgba(255,255,255,.13);font-size:10px;
-    }
-    #ennie-everywhere-root .ee-close{
-      width:38px;height:38px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);
-      color:#fff;font-size:24px;border-radius:50%;
-    }
-    #ennie-everywhere-root .ee-stage{
-      position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;
-      justify-content:flex-start;padding-top:clamp(125px,23vh,220px);pointer-events:none;
-    }
-    #ennie-everywhere-root .ee-orb-halo{
-      position:absolute;top:clamp(75px,15vh,145px);left:50%;width:clamp(180px,48vw,280px);
-      aspect-ratio:1;transform:translateX(-50%);border-radius:50%;pointer-events:none;
-      background:radial-gradient(circle,rgba(255,255,255,.12),rgba(255,255,255,.035) 42%,transparent 72%);
-      filter:blur(13px);animation:ee-halo-breathe 4.2s ease-in-out infinite;
-    }
-    #ennie-everywhere-root .ee-head-orb{
-      position:relative;z-index:2;width:clamp(112px,31vw,168px);height:auto;aspect-ratio:1;
-      margin:0 auto 22px;cursor:pointer;pointer-events:auto;border-radius:50%;
-      background:radial-gradient(circle at 34% 27%,#fff 0%,#fff 25%,#f1f1f1 48%,#c9c9c9 68%,#888 86%,#eee 100%);
-      box-shadow:inset -12px -16px 28px rgba(0,0,0,.15),0 0 22px rgba(255,255,255,.48),0 0 75px rgba(255,255,255,.16);
-      animation:ee-main-orb 4.5s ease-in-out infinite;
-      outline:none;
-    }
-    #ennie-everywhere-root .ee-head-orb:after{
-      content:"";position:absolute;inset:9%;border-radius:50%;
-      background:radial-gradient(circle at 34% 25%,rgba(255,255,255,.9),transparent 48%);
-      filter:blur(7px);opacity:.8;
-    }
-    #ennie-everywhere-root .ee-state{
-      position:relative;z-index:3;min-height:34px;padding:0 20px;text-align:center;
-      color:rgba(255,255,255,.92);font-size:clamp(21px,5.5vw,34px);font-weight:400;
-      letter-spacing:-.6px;line-height:1.25;text-shadow:0 2px 22px rgba(0,0,0,.4);
-      pointer-events:none;
-    }
-    #ennie-everywhere-root .ee-messages{
-      position:absolute;left:0;right:0;top:49%;bottom:calc(104px + env(safe-area-inset-bottom));
-      background:linear-gradient(180deg,rgba(8,8,8,.98),rgba(8,8,8,.96));border-radius:22px 22px 0 0;
-      z-index:3;display:flex;flex-direction:column;align-items:stretch;gap:9px;
-      width:min(760px,100%);margin:0 auto;padding:12px 18px 18px;overflow:auto;
-      pointer-events:auto;overscroll-behavior:contain;scrollbar-width:thin;
-    }
-    #ennie-everywhere-root .ee-bubble{font-size:14px;line-height:1.55;max-width:88%;padding:11px 14px;border-radius:17px}
-    #ennie-everywhere-root .ee-bubble.assistant{background:rgba(38,38,38,.78);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px)}
-    #ennie-everywhere-root .ee-bubble.user{background:#f4f4f4;color:#111}
-    #ennie-everywhere-root .ee-compose{
-      position:absolute;z-index:5;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));
-      width:auto;margin:0;padding:10px 11px;min-height:66px;align-items:center;gap:9px;
-      border:1px solid rgba(255,255,255,.13);border-radius:30px;
-      background:rgba(45,45,45,.94);backdrop-filter:blur(22px);
-      box-shadow:0 12px 42px rgba(0,0,0,.36);
-    }
-    #ennie-everywhere-root .ee-input{
-      min-height:42px;max-height:110px;padding:10px 5px;border:0!important;background:transparent!important;
-      font-size:16px;line-height:1.4;resize:none;box-shadow:none!important;
-    }
-    #ennie-everywhere-root .ee-input::placeholder{color:rgba(255,255,255,.48)}
-    #ennie-everywhere-root .ee-iconbtn{width:44px;height:44px;border:0;background:transparent;color:#fff}
-    #ennie-everywhere-root .ee-send{background:#fff;color:#111;width:44px;height:44px}
-    #ennie-everywhere-root .ee-mic.ee-recording{background:#fff;color:#111;box-shadow:0 0 0 6px rgba(255,255,255,.12)}
-    #ennie-everywhere-root .ee-launch{z-index:2147483000}
-    #ennie-everywhere-root .ee-panel.ee-listening .ee-head-orb{animation:ee-listen-orb 1.15s ease-in-out infinite}
-    #ennie-everywhere-root .ee-panel.ee-thinking .ee-head-orb{animation:ee-think 1s ease-in-out infinite}
-    #ennie-everywhere-root .ee-panel.ee-speaking .ee-head-orb{animation:ee-speak .42s ease-in-out infinite alternate}
-    #ennie-everywhere-root .ee-resize,#ennie-everywhere-root .ee-expand{display:none!important}
-    @keyframes ee-main-orb{0%,100%{transform:scale(.96);filter:brightness(.98)}50%{transform:scale(1.035);filter:brightness(1.08)}}
-    @keyframes ee-halo-breathe{0%,100%{opacity:.45;transform:translateX(-50%) scale(.92)}50%{opacity:.95;transform:translateX(-50%) scale(1.1)}}
-    @keyframes ee-listen-orb{0%,100%{transform:scale(.98);box-shadow:0 0 22px rgba(255,255,255,.5),0 0 55px rgba(255,255,255,.15)}50%{transform:scale(1.08);box-shadow:0 0 34px rgba(255,255,255,.9),0 0 100px rgba(255,255,255,.3)}}
-    @media(max-width:480px){
-      #ennie-everywhere-root .ee-stage{padding-top:clamp(135px,24vh,205px)}
-      #ennie-everywhere-root .ee-messages{top:48%;bottom:calc(94px + env(safe-area-inset-bottom));padding-left:14px;padding-right:14px}
-      #ennie-everywhere-root .ee-compose{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));min-height:62px}
-      #ennie-everywhere-root .ee-head{padding:0 13px}
-    }
-    @media(prefers-reduced-motion:reduce){
-      #ennie-everywhere-root .ee-head-orb,#ennie-everywhere-root .ee-orb-halo{animation:none!important}
-    }
-`;
-  style.textContent += `
-    /* ENNIE WAKE — explicit opt-in phrase activation */
-    #ennie-everywhere-root .ee-wake-toggle{height:34px;padding:0 11px;border-radius:20px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.13);font-size:10px;white-space:nowrap}
-    #ennie-everywhere-root .ee-wake-toggle.ee-enabled{color:#111;background:#fff;border-color:#fff}
-    #ennie-everywhere-root .ee-panel.ee-wake-active .ee-head-sub:before{background:#fff;box-shadow:0 0 10px #fff}
-    @media(max-width:390px){#ennie-everywhere-root .ee-wake-toggle{padding:0 8px;font-size:9px}#ennie-everywhere-root .ee-voice-toggle{padding:0 8px;font-size:9px}}
-  `;
-
-  style.textContent += `
-    /* ENNIE 2.0.2 — interactive controls + page pass-through */
-    html.ee-modal-open,html.ee-modal-open body{
-      overflow:auto!important;overscroll-behavior:auto!important;touch-action:pan-y!important;
-    }
-    #ennie-everywhere-root .ee-panel.ee-open{
-      pointer-events:none!important;touch-action:pan-y!important;
-    }
-    #ennie-everywhere-root .ee-head{
-      position:absolute!important;top:env(safe-area-inset-top)!important;left:0!important;right:0!important;
-      z-index:20!important;pointer-events:none!important;
-    }
-    #ennie-everywhere-root .ee-head button,
-    #ennie-everywhere-root .ee-head [role="button"]{
-      position:relative!important;z-index:21!important;pointer-events:auto!important;touch-action:manipulation!important;
-    }
-    #ennie-everywhere-root .ee-messages{
-      z-index:8!important;pointer-events:auto!important;touch-action:pan-y!important;
-    }
-    #ennie-everywhere-root .ee-compose{
-      z-index:22!important;pointer-events:auto!important;touch-action:manipulation!important;
-    }
-    #ennie-everywhere-root .ee-compose button,
-    #ennie-everywhere-root .ee-compose textarea{
-      position:relative!important;z-index:23!important;pointer-events:auto!important;touch-action:manipulation!important;
-    }
-    #ennie-everywhere-root .ee-stage,
-    #ennie-everywhere-root .ee-orb-halo,
-    #ennie-everywhere-root .ee-state{pointer-events:none!important}
-    #ennie-everywhere-root .ee-head-orb{pointer-events:auto!important;touch-action:manipulation!important}
-  `;
-
-  style.textContent += `
-    /* ENNIE 2.1 — true page pass-through, independent controls */
-    #ennie-everywhere-root{pointer-events:none!important}
-    #ennie-everywhere-root .ee-launch{pointer-events:auto!important}
-    #ennie-everywhere-root .ee-panel,
-    #ennie-everywhere-root .ee-panel.ee-open{
-      pointer-events:none!important;
-      background:rgba(5,5,5,.48)!important;
-      backdrop-filter:blur(4px)!important;
-      -webkit-backdrop-filter:blur(4px)!important;
-    }
-    #ennie-everywhere-root .ee-panel:before{pointer-events:none!important}
-    #ennie-everywhere-root .ee-head{
-      pointer-events:none!important;
-      left:16px!important;right:auto!important;width:160px!important;
-      top:calc(env(safe-area-inset-top) + 12px)!important;
-      padding:0!important;
-    }
-    #ennie-everywhere-root .ee-head-copy{pointer-events:none!important}
-    #ennie-everywhere-root .ee-close{
-      pointer-events:auto!important;
-      position:absolute!important;left:105px!important;right:auto!important;top:0!important;
-      width:38px!important;height:38px!important;
-    }
-    #ennie-everywhere-root .ee-wake-toggle,
-    #ennie-everywhere-root .ee-voice-toggle{
-      pointer-events:auto!important;
-      position:fixed!important;top:auto!important;bottom:calc(91px + env(safe-area-inset-bottom))!important;
-      z-index:30!important;
-    }
-    #ennie-everywhere-root .ee-voice-toggle{right:14px!important}
-    #ennie-everywhere-root .ee-wake-toggle{right:126px!important}
-    #ennie-everywhere-root .ee-stage{pointer-events:none!important}
-    #ennie-everywhere-root .ee-orb-halo,
-    #ennie-everywhere-root .ee-state{pointer-events:none!important}
-    #ennie-everywhere-root .ee-head-orb{pointer-events:auto!important;touch-action:manipulation!important}
-    #ennie-everywhere-root .ee-messages{
-      pointer-events:none!important;
-      background:rgba(8,8,8,.96)!important;
-      touch-action:pan-y!important;
-    }
-    #ennie-everywhere-root .ee-bubble{pointer-events:auto!important}
-    #ennie-everywhere-root .ee-compose,
-    #ennie-everywhere-root .ee-compose button,
-    #ennie-everywhere-root .ee-compose textarea{
-      pointer-events:auto!important;touch-action:manipulation!important;
-    }
-    #ennie-everywhere-root .ee-panel.ee-open{overflow:visible!important}
-    html.ee-modal-open,html.ee-modal-open body{overflow-y:auto!important;touch-action:pan-y!important}
-    @media(max-width:390px){
-      #ennie-everywhere-root .ee-wake-toggle{right:116px!important}
-      #ennie-everywhere-root .ee-voice-toggle{right:12px!important}
-    }
   `;
   document.head.appendChild(style);
 
@@ -306,32 +77,25 @@
   panel.setAttribute("aria-label", "ENNIE MINI");
   panel.innerHTML = `
     <div class="ee-head">
-      <div class="ee-head-copy">
-        <div class="ee-head-title">ENNIE</div>
-        <div class="ee-head-sub">Я рядом</div>
-      </div>
+      <div class="ee-head-orb" aria-hidden="true"></div>
+      <div class="ee-head-copy"><div class="ee-head-title">ENNIE</div><div class="ee-head-sub">Твоя помощница рядом</div></div>
       <button class="ee-wake-toggle" type="button" aria-pressed="false" aria-label="Включить активацию по фразе">Фраза: выкл.</button>
       <button class="ee-voice-toggle" type="button" aria-pressed="false" aria-label="Включить озвучивание ответов">Звук: выкл.</button>
-      <button class="ee-expand" type="button" aria-label="Развернуть чат" title="Развернуть чат" hidden>□</button>
-      <button class="ee-close" type="button" aria-label="Закрыть ENNIE">×</button>
+      <button class="ee-expand" type="button" aria-label="Развернуть чат" title="Развернуть чат">□</button>
+      <button class="ee-close" type="button" aria-label="Закрыть">×</button>
     </div>
-    <main class="ee-stage">
-      <div class="ee-orb-halo" aria-hidden="true"></div>
-      <div class="ee-head-orb" aria-label="ENNIE — коснись, чтобы поздороваться" role="button" tabindex="0"></div>
-      <div class="ee-state" aria-live="polite">Слушаю тебя, когда ты обращаешься ко мне.</div>
-      <div class="ee-messages" aria-live="polite" aria-label="Переписка с ENNIE"></div>
-    </main>
+    <div class="ee-messages" aria-live="polite"></div>
+    <div class="ee-state">Я рядом, если понадобится помощь.</div>
     <form class="ee-compose">
-      <button class="ee-iconbtn ee-mic" type="button" aria-label="Начать голосовой ввод" title="Голосовой ввод">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"/></svg>
+      <button class="ee-iconbtn ee-mic" type="button" aria-label="Голосовой ввод" title="Голосовой ввод">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"/></svg>
       </button>
-      <textarea class="ee-input" rows="1" maxlength="1200" placeholder="Напиши мне…" aria-label="Сообщение для ENNIE"></textarea>
-      <button class="ee-iconbtn ee-send" type="submit" aria-label="Отправить сообщение">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 16-8-5 16-3-7-8-1Z"/><path d="m12 13 8-9"/></svg>
+      <textarea class="ee-input" rows="1" maxlength="1200" placeholder="Скажи или напиши мне…"></textarea>
+      <button class="ee-iconbtn ee-send" type="submit" aria-label="Отправить">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 16-8-5 16-3-7-8-1Z"/><path d="m12 13 8-9"/></svg>
       </button>
-    </form>
-    <button class="ee-resize" type="button" aria-label="Изменить размер" hidden></button>`; 
-    root.append(launch, panel);
+    </form><button class="ee-resize" type="button" aria-label="Изменить размер окна" title="Потяни, чтобы изменить размер"></button>`;
+  root.append(launch, panel);
 
   const messagesBox = panel.querySelector(".ee-messages");
   const input = panel.querySelector(".ee-input");
@@ -373,9 +137,6 @@
     voiceToggle.setAttribute("aria-label", voiceOutputEnabled ? "Выключить озвучивание ответов" : "Включить озвучивание ответов");
   }
   updateVoiceToggle();
-
-  // Voice wake phrase works only after the user explicitly enables it.
-  // Browser support varies; it is active only while this page is visible.
   const WakeRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const WAKE_PREF_KEY = "ennie_mini_wake_enabled_v1";
   let wakeEnabled = localStorage.getItem(WAKE_PREF_KEY) === "true";
@@ -614,6 +375,9 @@
   window.addEventListener("beforeunload", stopWakeRecognition);
   document.addEventListener("keydown", event => { if (event.key === "Escape" && panel.classList.contains("ee-open")) closePanel(); });
   const orb = panel.querySelector(".ee-head-orb");
+  orb.setAttribute("role", "button");
+  orb.setAttribute("tabindex", "0");
+  orb.setAttribute("aria-label", "ENNIE — коснись, чтобы поздороваться");
   orb.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); reactToOrb(); } });
 
   function ensureSdk() {
@@ -1033,7 +797,6 @@
         panel.classList.remove("ee-listening");
         if (!shouldTranscribe || blob.size < 1200) {
           setMode("", "Запись остановлена.");
-          if (wakeEnabled && document.visibilityState === "visible") startWakeRecognition();
           return;
         }
         try {
@@ -1052,11 +815,9 @@
           const recognized = String(result.text || "").trim();
           if (!recognized) throw new Error("Я не расслышала слова. Попробуй ещё раз.");
           await sendMessage(recognized);
-          if (wakeEnabled) startWakeRecognition();
         } catch (error) {
           addBubble(error.message || "Не удалось распознать голос.", "assistant");
           setMode("", "Попробуй записать ещё раз.");
-          if (wakeEnabled) startWakeRecognition();
         }
       };
       active.stop();
@@ -1066,7 +827,6 @@
       recorder = null;
       mic.classList.remove("ee-recording");
       panel.classList.remove("ee-listening");
-      if (wakeEnabled && document.visibilityState === "visible") startWakeRecognition();
     }
   }
   async function startRecording() {
