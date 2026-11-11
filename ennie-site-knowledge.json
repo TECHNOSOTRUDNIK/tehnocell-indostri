@@ -1,73 +1,1562 @@
 {
-  "version": 2,
-  "source": "TEHNOCELL INDOSTRI GitHub Pages",
-  "updated_at": "2026-11-10T20:30:08.375Z",
-  "documents": [
+  "version": 3,
+  "source": "TEHNOCELL INDOSTRI GitHub Pages — generated from current HTML source and enriched with live DOM context by ENNIE MINI",
+  "updated_at": "2026-11-11T15:14:56.564Z",
+  "site_map": [
     {
       "slug": "index.html",
       "title": "TEHNOCELL INDOSTRI — Technology Company",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/index.html",
-      "content": "TEHNOCELL INDOSTRI — Technology Company T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗ 04 / AUDIO F TEHNOCELLFM Музыкальное направление и цифровые аудиосервисы. В ПЛАНАХ ↗ 05 / AUTOMOTIVE C TEHNOCELLCAR Автомобильные технологии и цифровые решения. В ПЛАНАХ ↗ 06 / NETWORK M TEHNOCELL MESSENGER Коммуникационные сервисы и цифровое взаимодействие. В ПЛАНАХ ↗ 07 / SECURITY V TEHNOCELLVPN Сетевые технологии и инструменты конфиденциальности. В ПЛАНАХ ↗ 02 / PROJECTS Создаём собственные цифровые продукты. Каждое направление развивается как часть единой технологической экосистемы. TEHNOCELL ECOSYSTEM Будущее начинается с разработки. Мы постепенно создаём собственные приложения, сервисы и игровые проекты. Это только начало развития TEHNOCELL INDOSTRI. ↗ T I. 03 / ABOUT US Больше, чем просто разработка. TEHNOCELL INDOSTRI — независимая технологическая компания, ориентированная на создание собственных цифровых продуктов и развитие различных технологических направлений. Наша цель — постепенно сформировать единую экосистему, в которой программное обеспечение, игровые проекты и другие технологии будут дополнять друг друга. 04 / CONTACT Есть идея? Свяжитесь с нами. Мы открыты к общению, предложениям и новым возможностям. tehnocellindostri@gmail.com НАПИСАТЬ НАМ → TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI"
+      "description": "TEHNOCELL INDOSTRI — независимая технологическая компания."
     },
     {
       "slug": "account.html",
       "title": "TEHNOCELL ID — Личный кабинет",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/account.html",
-      "content": "TEHNOCELL ID — Личный кабинет TEHNOCELL ID ← На главную Обзор Настройки Выйти ↗ Обзор аккаунта Центр управления TEHNOCELL INDOSTRI T Пользователь ✓ Добро пожаловать в TEHNOCELL. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор аккаунта Загрузка... Ваш уникальный TEHNOCELL ID Электронная почта Загрузка... Почта вашего аккаунта Дата регистрации Загрузка... Дата создания TEHNOCELL ID Профиль T Пользователь ✓ Ваша фотография профиля TEHNOCELL ID. Изменить фото Удалить фото Поддерживаются JPG, PNG и WEBP. Максимальный размер — 5 МБ. Личные данные Отображаемое имя О себе Сохранить изменения Внешний вид Тема оформления Выберите оформление личного кабинета. ☀ Дневная ☾ Ночная Уведомления Управление уведомлениями Управляйте настройками уведомлений. Включить Выключить Пауза 1 час Пауза 8 часов Пауза 24 часа Уведомления включены. Безопасность Изменение пароля Новый пароль Изменить пароль Аккаунт Информация об аккаунте Электронная почта TEHNOCELL ID Выйти из аккаунта"
+      "description": ""
     },
     {
       "slug": "login.html",
       "title": "Вход — TEHNOCELL ID",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/login.html",
-      "content": "Вход — TEHNOCELL ID TEHNOCELL ID С возвращением Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL. Электронная почта Пароль Войти в аккаунт Ещё нет аккаунта? Зарегистрироваться TEHNOCELL INDOSTRI © 2026"
+      "description": ""
     },
     {
       "slug": "register.html",
       "title": "Регистрация — TEHNOCELL ID",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/register.html",
-      "content": "Регистрация — TEHNOCELL ID TEHNOCELL ID Создать аккаунт Присоединяйтесь к экосистеме TEHNOCELL INDOSTRI. Имя пользователя Электронная почта Пароль Повторите пароль Создать аккаунт Уже есть аккаунт? Войти TEHNOCELL INDOSTRI © 2026"
+      "description": ""
     },
     {
       "slug": "game.html",
       "title": "TEHNOCELLGAME | TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/game.html",
-      "content": "TEHNOCELLGAME | TEHNOCELL INDOSTRI TEHNOCELL GAME Главная Игры О подразделении TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умения и побеждай могущественных боссов. Тебя ждут динамичные битвы, необычные способности и разнообразные испытания. В игре появятся как знакомые стенды из JoJo, так и оригинальные персонажи с собственными силами. ПЛАТФОРМЫ Android / Windows ЖАНР 2D Action РЕЛИЗ БЕТЫ Ноябрь 2026* Android — скоро Windows — скоро *Ориентировочная дата. Может измениться. Подробнее об игре → GAME PREVIEW Скриншоты игры Взгляни на игровой мир Stand Ascension. Скриншоты скоро появятся Галерея находится в разработке. WHO WE ARE О TEHNOCELLGAME TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI, занимающееся разработкой и развитием игровых проектов. Наша цель — создавать интересные игровые продукты, экспериментировать с механиками и предлагать игрокам новые впечатления. © 2026 TEHNOCELL INDOSTRI. TEHNOCELL INDOSTRI — официальный сайт."
+      "description": "TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI."
     },
     {
       "slug": "soft.html",
       "title": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/soft.html",
-      "content": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI TEHNOCELL . О НАС ПРОДУКТЫ ГЛАВНАЯ SOFTWARE DEVELOPMENT DIVISION TEHNOCELL SOFT Подразделение TEHNOCELL INDOSTRI, занимающееся разработкой программного обеспечения, приложений и цифровых продуктов. НАШИ ПРОДУКТЫ 01 / О ПОДРАЗДЕЛЕНИИ Создаём цифровые решения. TEHNOCELLSOFT — программное подразделение TEHNOCELL INDOSTRI. Наша деятельность направлена на создание приложений, программных продуктов и цифровых инструментов. Каждый проект — это возможность воплотить новую идею в реальность. TS. 02 / НАШИ ПРОДУКТЫ Разработки TEHNOCELLSOFT Ознакомьтесь с нашими программными продуктами и проектами. ANDROID APPLICATION · 01 TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Текущие условия, почасовой прогноз, прогноз на 7 дней, атмосферные показатели и качество воздуха — всё в одном приложении. WEATHER APPLICATION ОТКРЫТЬ ПРОЕКТ → 03 / TEHNOCELL INDOSTRI Технологии. Идеи. Разработка. TEHNOCELLSOFT продолжает развиваться, создавая новые программные продукты в рамках TEHNOCELL INDOSTRI. © 2026 TEHNOCELL INDOSTRI ГЛАВНАЯ СТРАНИЦА TEHNOCELLSOFT"
+      "description": ""
     },
     {
       "slug": "tehnosellsoft.html",
       "title": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/tehnosellsoft.html",
-      "content": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI ← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT Наши программы TEHNOCELL WEATHER Утилита для точного отслеживания погодных условий и метеорологических данных. Минималистичный интерфейс, мгновенное обновление информации и высокая оптимизация для стабильной работы. Платформа: Windows / Android Версия: 1.0.0 (Релиз) Статус: Доступно для скачивания Скачать приложение © 2026 TEHNOCELL INDOSTRI. Все права защищены."
+      "description": ""
     },
     {
       "slug": "stand-ascension.html",
       "title": "Stand Ascension: The Tower",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/stand-ascension.html",
-      "content": "Stand Ascension: The Tower TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON | NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 / ABILITIES Способности стендов Используй уникальные силы и подбирай подходящий стиль сражения. 03 / BOSSES Могущественные боссы Приготовься к сложным противникам, которые проверят твои навыки. 04 / PROGRESSION Развитие персонажа Становись сильнее, открывай новые умения и совершенствуй свои возможности. GAME INFORMATION Информация об игре Проект находится в разработке. Следи за новостями, чтобы узнать о новых возможностях и выходе бета-версии. Название Stand Ascension: The Tower Разработчик Stand Ascension Жанр 2D Action Платформы Android / Windows Статус В разработке Бета Ноябрь 2026* VISUAL EXPERIENCE Галерея игры Загляни в мир Stand Ascension. Настоящие игровые скриншоты появятся здесь по мере разработки. Игровой скриншот №1 Скоро появится Игровой скриншот №2 Скоро появится Игровой скриншот №3 Скоро появится DEVELOPMENT Путь к вершине. Stand Ascension: The Tower находится в разработке. Мы постепенно готовим проект к бета-тестированию. Подготовка проекта Подробности о ходе разработки появятся позже. YOUR ASCENSION AWAITS Готов подняться? Бета-версия игры пока не выпущена. Следи за обновлениями и будь готов к началу своего пути. ANDROID — СКОРО WINDOWS — СКОРО TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм"
+      "description": ""
     },
     {
       "slug": "weather.html",
       "title": "TEHNOCELL WEATHER",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather.html",
-      "content": "TEHNOCELL WEATHER TEHNOCELL WEATHER --:-- Загрузка... Найти ⌖ Избранные города + В избранное Пока нет сохранённых городов Загрузка погоды... Москва --° Загрузка... Ощущается как --° Ожидание данных... Почасовой прогноз Прогноз на 7 дней Влажность --% Относительная влажность Ветер -- Скорость ветра Давление -- Гектопаскали Видимость -- Километры УФ-индекс -- Ультрафиолет Вероятность осадков --% В ближайший час Точка росы --° Температура точки росы Осадки -- Миллиметры в час Солнце Восход --:-- Закат --:-- Качество воздуха -- Загрузка данных... PM2.5: -- · PM10: -- TEHNOCELL INTELLIGENCE TEHNOCELL INDOSTRI · WEATHER"
+      "description": ""
     },
     {
       "slug": "weather-app.html",
       "title": "TEHNOCELL WEATHER — TEHNOCELLSOFT",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html",
-      "content": "TEHNOCELL WEATHER — TEHNOCELLSOFT TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW. 02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения. 03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранного города. 09 Поиск городов Находите нужные города и получайте информацию о погоде. 04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓ СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0 © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER"
+      "description": ""
     },
     {
-      "slug": "ennie-faq-weather-download",
-      "title": "Как скачать TEHNOCELL WEATHER — официальная инструкция",
-      "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html#download",
-      "content": "Если пользователь спрашивает, как скачать TEHNOCELL WEATHER, не отвечай, что не знаешь. Открой страницу проекта TEHNOCELL WEATHER: https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html . Прокрути к разделу «04 / ЗАГРУЗКА» или открой напрямую https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html#download. Там есть кнопка «СКАЧАТЬ APK». Она скачивает Android установочный файл версии 1.0.0 по официальной ссылке GitHub Releases: https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/v1.0.0/default.TEHNOCELL-WEATHER.apk. На Android после загрузки открой APK и следуй системным подсказкам установки; если браузер или Android предупредит о неизвестном источнике, устанавливай только если уверен, что файл получен с официальной страницы TEHNOCELL. Не обещай версию Windows: текущая страница загрузки прямо говорит, что приложение доступно для Android. Важно: старая страница tehnosellsoft.html содержит placeholder ССЫЛКА_НА_СКАЧИВАНИЕ_ФАЙЛА и не является правильной страницей загрузки. Для скачивания используй именно weather-app.html#download."
+      "slug": "ennie.html",
+      "title": "ENNIE — TEHNOCELL AI",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/ennie.html",
+      "description": ""
+    }
+  ],
+  "documents": [
+    {
+      "slug": "index.html",
+      "title": "TEHNOCELL INDOSTRI — Technology Company",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/index.html",
+      "description": "TEHNOCELL INDOSTRI — независимая технологическая компания.",
+      "content": "TEHNOCELL INDOSTRI — Technology Company T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗ 04 / AUDIO F TEHNOCELLFM Музыкальное направление и цифровые аудиосервисы. В ПЛАНАХ ↗ 05 / AUTOMOTIVE C TEHNOCELLCAR Автомобильные технологии и цифровые решения. В ПЛАНАХ ↗ 06 / NETWORK M TEHNOCELL MESSENGER Коммуникационные сервисы и цифровое взаимодействие. В ПЛАНАХ ↗ 07 / SECURITY V TEHNOCELLVPN Сетевые технологии и инструменты конфиденциальности. В ПЛАНАХ ↗ 02 / PROJECTS Создаём собственные цифровые продукты. Каждое направление развивается как часть единой технологической экосистемы. TEHNOCELL ECOSYSTEM Будущее начинается с разработки. Мы постепенно создаём собственные приложения, сервисы и игровые проекты. Это только начало развития TEHNOCELL INDOSTRI. ↗ T I. 03 / ABOUT US Больше, чем просто разработка. TEHNOCELL INDOSTRI — независимая технологическая компания, ориентированная на создание собственных цифровых продуктов и развитие различных технологических направлений. Наша цель — постепенно сформировать единую экосистему, в которой программное обеспечение, игровые проекты и другие технологии будут дополнять друг друга. 04 / CONTACT Есть идея? Свяжитесь с нами. Мы открыты к общению, предложениям и новым возможностям. tehnocellindostri@gmail.com НАПИСАТЬ НАМ → TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗ 04 / AUDIO F TEHNOCELLFM Музыкальное направление и цифровые аудиосервисы. В ПЛАНАХ ↗ 05 / AUTOMOTIVE C TEHNOCELLCAR Автомобильные технологии и цифровые решения. В ПЛАНАХ ↗ 06 / NETWORK M TEHNOCELL MESSENGER Коммуникационные сервисы и цифровое взаимодействие. В ПЛАНАХ ↗ 07 / SECURITY V TEHNOCELLVPN Сетевые технологии и инструменты конфиденциальности. В ПЛАНАХ ↗ 02 / PROJECTS Создаём собственные цифровые продукты. Каждое направление развивается как часть единой технологической экосистемы. TEHNOCELL ECOSYSTEM Будущее начинается с разработки. Мы постепенно создаём собственные приложения, сервисы и игровые проекты. Это только начало развития TEHNOCELL INDOSTRI. ↗ T I. 03 / ABOUT US Больше, чем просто разработка. TEHNOCELL INDOSTRI — независимая технологическая компания, ориентированная на создание собственных цифровых продуктов и развитие различных технологических направлений. Наша цель — постепенно сформировать единую экосистему, в которой программное обеспечение, игровые проекты и другие технологии будут дополнять друг друга. 04 / CONTACT Есть идея? Свяжитесь с нами. Мы открыты к общению, предложениям и новым возможностям. tehnocellindostri@gmail.com НАПИСАТЬ НАМ → TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "TEHNOCELL INDOSTRI."
+          },
+          {
+            "level": "h2",
+            "text": "Наши подразделения"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELLSOFT"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELLGAME"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL WEATHER"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELLFM"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELLCAR"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL MESSENGER"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELLVPN"
+          },
+          {
+            "level": "h2",
+            "text": "Создаём собственные цифровые продукты."
+          },
+          {
+            "level": "h3",
+            "text": "Будущее начинается с разработки."
+          },
+          {
+            "level": "h2",
+            "text": "Больше, чем просто разработка."
+          },
+          {
+            "level": "h2",
+            "text": "Есть идея?"
+          }
+        ],
+        "links": [
+          {
+            "text": "T TEHNOCELL INDOSTRI",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Главная",
+            "href": "#home",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Подразделения",
+            "href": "#divisions",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Проекты",
+            "href": "#projects",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О компании",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Контакты",
+            "href": "#contact",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "? Войти",
+            "href": "login.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "НАШИ НАПРАВЛЕНИЯ →",
+            "href": "#divisions",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О КОМПАНИИ",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗",
+            "href": "soft.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗",
+            "href": "game.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗",
+            "href": "weather.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "tehnocellindostri@gmail.com",
+            "href": "mailto:tehnocellindostri@gmail.com",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "НАПИСАТЬ НАМ →",
+            "href": "mailto:tehnocellindostri@gmail.com",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Главная",
+            "href": "#home",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Подразделения",
+            "href": "#divisions",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О компании",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "header",
+            "id": "",
+            "text": "T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти"
+          },
+          {
+            "tag": "main",
+            "id": "",
+            "text": "Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жиз"
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI"
+          }
+        ]
+      },
+      "source_sha": "e8c3fc1ff34b94b708b705a913edf2b79a54996d"
+    },
+    {
+      "slug": "account.html",
+      "title": "TEHNOCELL ID — Личный кабинет",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/account.html",
+      "description": "",
+      "content": "TEHNOCELL ID — Личный кабинет TEHNOCELL ID ← На главную Обзор Настройки Выйти ↗ Обзор аккаунта Центр управления TEHNOCELL INDOSTRI T Пользователь ✓ Добро пожаловать в TEHNOCELL. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор аккаунта Загрузка... Ваш уникальный TEHNOCELL ID Электронная почта Загрузка... Почта вашего аккаунта Дата регистрации Загрузка... Дата создания TEHNOCELL ID Профиль T Пользователь ✓ Ваша фотография профиля TEHNOCELL ID. Изменить фото Удалить фото Поддерживаются JPG, PNG и WEBP. Максимальный размер — 5 МБ. Личные данные Отображаемое имя О себе Сохранить изменения Внешний вид Тема оформления Выберите оформление личного кабинета. ☀ Дневная ☾ Ночная Уведомления Управление уведомлениями Управляйте настройками уведомлений. Включить Выключить Пауза 1 час Пауза 8 часов Пауза 24 часа Уведомления включены. Безопасность Изменение пароля Новый пароль Изменить пароль Аккаунт Информация об аккаунте Электронная почта TEHNOCELL ID Выйти из аккаунта TEHNOCELL ID ← На главную Обзор Настройки Выйти ↗ Обзор аккаунта Центр управления TEHNOCELL INDOSTRI T Пользователь ✓ Добро пожаловать в TEHNOCELL. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор аккаунта Загрузка... Ваш уникальный TEHNOCELL ID Электронная почта Загрузка... Почта вашего аккаунта Дата регистрации Загрузка... Дата создания TEHNOCELL ID Профиль T Пользователь ✓ Ваша фотография профиля TEHNOCELL ID. Изменить фото Удалить фото Поддерживаются JPG, PNG и WEBP. Максимальный размер — 5 МБ. Личные данные Отображаемое имя О себе Сохранить изменения Внешний вид Тема оформления Выберите оформление личного кабинета. ☀ Дневная ☾ Ночная Уведомления Управление уведомлениями Управляйте настройками уведомлений. Включить Выключить Пауза 1 час Пауза 8 часов Пауза 24 часа Уведомления включены. Безопасность Изменение пароля Новый пароль Изменить пароль Аккаунт Информация об аккаунте Электронная почта TEHNOCELL ID Выйти из аккаунта",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "Обзор аккаунта"
+          },
+          {
+            "level": "h2",
+            "text": "Пользователь ✓"
+          },
+          {
+            "level": "h2",
+            "text": "Добро пожаловать, Пользователь ✓"
+          },
+          {
+            "level": "h2",
+            "text": "Информация об аккаунте"
+          },
+          {
+            "level": "h2",
+            "text": "Профиль"
+          },
+          {
+            "level": "h2",
+            "text": "Пользователь ✓"
+          },
+          {
+            "level": "h3",
+            "text": "Личные данные"
+          },
+          {
+            "level": "h2",
+            "text": "Внешний вид"
+          },
+          {
+            "level": "h3",
+            "text": "Тема оформления"
+          },
+          {
+            "level": "h2",
+            "text": "Уведомления"
+          },
+          {
+            "level": "h3",
+            "text": "Управление уведомлениями"
+          },
+          {
+            "level": "h2",
+            "text": "Безопасность"
+          },
+          {
+            "level": "h3",
+            "text": "Изменение пароля"
+          },
+          {
+            "level": "h2",
+            "text": "Аккаунт"
+          },
+          {
+            "level": "h3",
+            "text": "Информация об аккаунте"
+          }
+        ],
+        "links": [
+          {
+            "text": "← На главную",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "logoutButton",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "choosePhoto",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "removePhoto",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "file",
+            "label": "",
+            "id": "photoInput",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "Введите имя",
+            "id": "nameInput",
+            "name": "",
+            "placeholder": "Введите имя",
+            "disabled": false
+          },
+          {
+            "tag": "textarea",
+            "type": "",
+            "label": "Расскажите немного о себе...",
+            "id": "bioInput",
+            "name": "",
+            "placeholder": "Расскажите немного о себе...",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "saveProfile",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "lightTheme",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "darkTheme",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "notificationsOn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "notificationsOff",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "pause1",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "pause8",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "pause24",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "password",
+            "label": "Введите новый пароль",
+            "id": "passwordInput",
+            "name": "",
+            "placeholder": "Введите новый пароль",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "changePassword",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "",
+            "id": "settingsEmail",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "",
+            "id": "settingsUserId",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "settingsLogout",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          }
+        ],
+        "sections": [
+          {
+            "tag": "header",
+            "id": "",
+            "text": "TEHNOCELL ID ← На главную Обзор Настройки Выйти ↗"
+          },
+          {
+            "tag": "main",
+            "id": "",
+            "text": "Обзор аккаунта Центр управления TEHNOCELL INDOSTRI T Пользователь ✓ Добро пожаловать в TEHNOCELL. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор аккаунта Загрузка... Ваш уникальный TEHNOCELL ID Электронная почта Загрузка... Почта вашего аккаунта Дата регистрации Загрузка... Дата создания TEHNOCELL ID Профиль T Пользователь ✓ Ваша фотография профиля TEHNOCELL ID. Изменить фото Удалить фото Поддерживаются JPG, PNG и WEBP. Максимальный размер — 5 МБ. Личные данные Отображаемое имя О себе Сохранить изменения Внешний вид Тема оформления Выберите оформление личного кабинета. ☀ Дневная ☾ Ночная Уведомл"
+          }
+        ]
+      },
+      "source_sha": "2918f3522fceec3aa11d347c838ad1a08684d930"
+    },
+    {
+      "slug": "login.html",
+      "title": "Вход — TEHNOCELL ID",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/login.html",
+      "description": "",
+      "content": "Вход — TEHNOCELL ID TEHNOCELL ID С возвращением Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL. Электронная почта Пароль Войти в аккаунт Ещё нет аккаунта? Зарегистрироваться TEHNOCELL INDOSTRI © 2026 TEHNOCELL ID С возвращением Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL. Электронная почта Пароль Войти в аккаунт Ещё нет аккаунта? Зарегистрироваться TEHNOCELL INDOSTRI © 2026",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "С возвращением"
+          }
+        ],
+        "links": [
+          {
+            "text": "Зарегистрироваться",
+            "href": "register.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [
+          {
+            "tag": "input",
+            "type": "email",
+            "label": "name@example.com",
+            "id": "email",
+            "name": "",
+            "placeholder": "name@example.com",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "password",
+            "label": "Введите пароль",
+            "id": "password",
+            "name": "",
+            "placeholder": "Введите пароль",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "label": "",
+            "id": "loginButton",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          }
+        ],
+        "sections": []
+      },
+      "source_sha": "4856627358f23a0af7f47bddac5d8d4a9bd19461"
+    },
+    {
+      "slug": "register.html",
+      "title": "Регистрация — TEHNOCELL ID",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/register.html",
+      "description": "",
+      "content": "Регистрация — TEHNOCELL ID TEHNOCELL ID Создать аккаунт Присоединяйтесь к экосистеме TEHNOCELL INDOSTRI. Имя пользователя Электронная почта Пароль Повторите пароль Создать аккаунт Уже есть аккаунт? Войти TEHNOCELL INDOSTRI © 2026 TEHNOCELL ID Создать аккаунт Присоединяйтесь к экосистеме TEHNOCELL INDOSTRI. Имя пользователя Электронная почта Пароль Повторите пароль Создать аккаунт Уже есть аккаунт? Войти TEHNOCELL INDOSTRI © 2026",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "Создать аккаунт"
+          }
+        ],
+        "links": [
+          {
+            "text": "Войти",
+            "href": "login.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "Как к вам обращаться",
+            "id": "name",
+            "name": "",
+            "placeholder": "Как к вам обращаться",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "email",
+            "label": "name@example.com",
+            "id": "email",
+            "name": "",
+            "placeholder": "name@example.com",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "password",
+            "label": "Минимум 6 символов",
+            "id": "password",
+            "name": "",
+            "placeholder": "Минимум 6 символов",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "password",
+            "label": "Введите пароль ещё раз",
+            "id": "confirmPassword",
+            "name": "",
+            "placeholder": "Введите пароль ещё раз",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "label": "",
+            "id": "registerButton",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          }
+        ],
+        "sections": []
+      },
+      "source_sha": "72fede8473c52f55c9ca1ecaff8add73c5e29735"
+    },
+    {
+      "slug": "game.html",
+      "title": "TEHNOCELLGAME | TEHNOCELL INDOSTRI",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/game.html",
+      "description": "TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI.",
+      "content": "TEHNOCELLGAME | TEHNOCELL INDOSTRI TEHNOCELL GAME Главная Игры О подразделении TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умения и побеждай могущественных боссов. Тебя ждут динамичные битвы, необычные способности и разнообразные испытания. В игре появятся как знакомые стенды из JoJo, так и оригинальные персонажи с собственными силами. ПЛАТФОРМЫ Android / Windows ЖАНР 2D Action РЕЛИЗ БЕТЫ Ноябрь 2026* Android — скоро Windows — скоро *Ориентировочная дата. Может измениться. Подробнее об игре → GAME PREVIEW Скриншоты игры Взгляни на игровой мир Stand Ascension. Скриншоты скоро появятся Галерея находится в разработке. WHO WE ARE О TEHNOCELLGAME TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI, занимающееся разработкой и развитием игровых проектов. Наша цель — создавать интересные игровые продукты, экспериментировать с механиками и предлагать игрокам новые впечатления. © 2026 TEHNOCELL INDOSTRI. TEHNOCELL INDOSTRI — официальный сайт. TEHNOCELL GAME Главная Игры О подразделении TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умения и побеждай могущественных боссов. Тебя ждут динамичные битвы, необычные способности и разнообразные испытания. В игре появятся как знакомые стенды из JoJo, так и оригинальные персонажи с собственными силами. ПЛАТФОРМЫ Android / Windows ЖАНР 2D Action РЕЛИЗ БЕТЫ Ноябрь 2026* Android — скоро Windows — скоро *Ориентировочная дата. Может измениться. Подробнее об игре → GAME PREVIEW Скриншоты игры Взгляни на игровой мир Stand Ascension. Скриншоты скоро появятся Галерея находится в разработке. WHO WE ARE О TEHNOCELLGAME TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI, занимающееся разработкой и развитием игровых проектов. Наша цель — создавать интересные игровые продукты, экспериментировать с механиками и предлагать игрокам новые впечатления. © 2026 TEHNOCELL INDOSTRI. TEHNOCELL INDOSTRI — официальный сайт.",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "TEHNOCELLGAME"
+          },
+          {
+            "level": "h2",
+            "text": "Наши игры"
+          },
+          {
+            "level": "h3",
+            "text": "STAND ASCENSION THE TOWER"
+          },
+          {
+            "level": "h3",
+            "text": "Stand Ascension: The Tower"
+          },
+          {
+            "level": "h2",
+            "text": "Скриншоты игры"
+          },
+          {
+            "level": "h2",
+            "text": "О TEHNOCELLGAME"
+          }
+        ],
+        "links": [
+          {
+            "text": "TEHNOCELL GAME",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Главная",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Игры",
+            "href": "#games",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О подразделении",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — ",
+            "href": "stand-ascension.html",
+            "aria": "Открыть страницу Stand Ascension: The Tower",
+            "title": ""
+          },
+          {
+            "text": "TEHNOCELL INDOSTRI",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "header",
+            "id": "",
+            "text": "TEHNOCELL GAME Главная Игры О подразделении"
+          },
+          {
+            "tag": "main",
+            "id": "",
+            "text": "TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умения и побеждай могущественных боссов. Тебя ждут динамичные битвы, необычные способности и разнообразн"
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "© 2026 TEHNOCELL INDOSTRI. TEHNOCELL INDOSTRI — официальный сайт."
+          }
+        ]
+      },
+      "source_sha": "d6a9ccce7aa6f7f00a4787cc4f1e4bb647bd83c1"
+    },
+    {
+      "slug": "soft.html",
+      "title": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/soft.html",
+      "description": "",
+      "content": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI TEHNOCELL . О НАС ПРОДУКТЫ ГЛАВНАЯ SOFTWARE DEVELOPMENT DIVISION TEHNOCELL SOFT Подразделение TEHNOCELL INDOSTRI, занимающееся разработкой программного обеспечения, приложений и цифровых продуктов. НАШИ ПРОДУКТЫ 01 / О ПОДРАЗДЕЛЕНИИ Создаём цифровые решения. TEHNOCELLSOFT — программное подразделение TEHNOCELL INDOSTRI. Наша деятельность направлена на создание приложений, программных продуктов и цифровых инструментов. Каждый проект — это возможность воплотить новую идею в реальность. TS. 02 / НАШИ ПРОДУКТЫ Разработки TEHNOCELLSOFT Ознакомьтесь с нашими программными продуктами и проектами. ANDROID APPLICATION · 01 TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Текущие условия, почасовой прогноз, прогноз на 7 дней, атмосферные показатели и качество воздуха — всё в одном приложении. WEATHER APPLICATION ОТКРЫТЬ ПРОЕКТ → 03 / TEHNOCELL INDOSTRI Технологии. Идеи. Разработка. TEHNOCELLSOFT продолжает развиваться, создавая новые программные продукты в рамках TEHNOCELL INDOSTRI. © 2026 TEHNOCELL INDOSTRI ГЛАВНАЯ СТРАНИЦА TEHNOCELLSOFT TEHNOCELL . О НАС ПРОДУКТЫ ГЛАВНАЯ SOFTWARE DEVELOPMENT DIVISION TEHNOCELL SOFT Подразделение TEHNOCELL INDOSTRI, занимающееся разработкой программного обеспечения, приложений и цифровых продуктов. НАШИ ПРОДУКТЫ 01 / О ПОДРАЗДЕЛЕНИИ Создаём цифровые решения. TEHNOCELLSOFT — программное подразделение TEHNOCELL INDOSTRI. Наша деятельность направлена на создание приложений, программных продуктов и цифровых инструментов. Каждый проект — это возможность воплотить новую идею в реальность. TS. 02 / НАШИ ПРОДУКТЫ Разработки TEHNOCELLSOFT Ознакомьтесь с нашими программными продуктами и проектами. ANDROID APPLICATION · 01 TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Текущие условия, почасовой прогноз, прогноз на 7 дней, атмосферные показатели и качество воздуха — всё в одном приложении. WEATHER APPLICATION ОТКРЫТЬ ПРОЕКТ → 03 / TEHNOCELL INDOSTRI Технологии. Идеи. Разработка. TEHNOCELLSOFT продолжает развиваться, создавая новые программные продукты в рамках TEHNOCELL INDOSTRI. © 2026 TEHNOCELL INDOSTRI ГЛАВНАЯ СТРАНИЦА TEHNOCELLSOFT",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "TEHNOCELL SOFT"
+          },
+          {
+            "level": "h2",
+            "text": "Создаём цифровые решения."
+          },
+          {
+            "level": "h2",
+            "text": "Разработки TEHNOCELLSOFT"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL WEATHER"
+          },
+          {
+            "level": "h2",
+            "text": "Технологии. Идеи. Разработка."
+          }
+        ],
+        "links": [
+          {
+            "text": "TEHNOCELL .",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О НАС",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ПРОДУКТЫ",
+            "href": "#products",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ГЛАВНАЯ",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "НАШИ ПРОДУКТЫ",
+            "href": "#products",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ANDROID APPLICATION · 01 TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Текущие условия, почасовой прогноз, прогноз на 7 дней, атмосферные показатели и качеств",
+            "href": "weather-app.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ГЛАВНАЯ СТРАНИЦА",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "nav",
+            "id": "",
+            "text": "TEHNOCELL . О НАС ПРОДУКТЫ ГЛАВНАЯ"
+          },
+          {
+            "tag": "header",
+            "id": "",
+            "text": "SOFTWARE DEVELOPMENT DIVISION TEHNOCELL SOFT Подразделение TEHNOCELL INDOSTRI, занимающееся разработкой программного обеспечения, приложений и цифровых продуктов. НАШИ ПРОДУКТЫ"
+          },
+          {
+            "tag": "section",
+            "id": "about",
+            "text": "01 / О ПОДРАЗДЕЛЕНИИ Создаём цифровые решения. TEHNOCELLSOFT — программное подразделение TEHNOCELL INDOSTRI. Наша деятельность направлена на создание приложений, программных продуктов и цифровых инструментов. Каждый проект — это возможность воплотить новую идею в реальность. TS."
+          },
+          {
+            "tag": "section",
+            "id": "products",
+            "text": "02 / НАШИ ПРОДУКТЫ Разработки TEHNOCELLSOFT Ознакомьтесь с нашими программными продуктами и проектами. ANDROID APPLICATION · 01 TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Текущие условия, почасовой прогноз, прогноз на 7 дней, атмосферные показатели и качество воздуха — всё в одном приложении. WEATHER APPLICATION ОТКРЫТЬ ПРОЕКТ →"
+          },
+          {
+            "tag": "section",
+            "id": "",
+            "text": "03 / TEHNOCELL INDOSTRI Технологии. Идеи. Разработка. TEHNOCELLSOFT продолжает развиваться, создавая новые программные продукты в рамках TEHNOCELL INDOSTRI."
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "© 2026 TEHNOCELL INDOSTRI ГЛАВНАЯ СТРАНИЦА TEHNOCELLSOFT"
+          }
+        ]
+      },
+      "source_sha": "127bde451d27a74fd4008ee0a78b307bb3715aea"
+    },
+    {
+      "slug": "tehnosellsoft.html",
+      "title": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/tehnosellsoft.html",
+      "description": "",
+      "content": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI ← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT Наши программы TEHNOCELL WEATHER Утилита для точного отслеживания погодных условий и метеорологических данных. Минималистичный интерфейс, мгновенное обновление информации и высокая оптимизация для стабильной работы. Платформа: Windows / Android Версия: 1.0.0 (Релиз) Статус: Доступно для скачивания Скачать приложение © 2026 TEHNOCELL INDOSTRI. Все права защищены. ← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT Наши программы TEHNOCELL WEATHER Утилита для точного отслеживания погодных условий и метеорологических данных. Минималистичный интерфейс, мгновенное обновление информации и высокая оптимизация для стабильной работы. Платформа: Windows / Android Версия: 1.0.0 (Релиз) Статус: Доступно для скачивания Скачать приложение &copy; 2026 TEHNOCELL INDOSTRI. Все права защищены.",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "TEHNOCELLSOFT"
+          },
+          {
+            "level": "h2",
+            "text": "Наши программы"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL WEATHER"
+          }
+        ],
+        "links": [
+          {
+            "text": "← Главная",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Скачать приложение",
+            "href": "ССЫЛКА_НА_СКАЧИВАНИЕ_ФАЙЛА",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "header",
+            "id": "",
+            "text": "← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT"
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "&copy; 2026 TEHNOCELL INDOSTRI. Все права защищены."
+          }
+        ]
+      },
+      "source_sha": "48e2650ab28d0e77dc39081c486e950d5c71c0d8"
+    },
+    {
+      "slug": "stand-ascension.html",
+      "title": "Stand Ascension: The Tower",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/stand-ascension.html",
+      "description": "",
+      "content": "Stand Ascension: The Tower TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON | NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 / ABILITIES Способности стендов Используй уникальные силы и подбирай подходящий стиль сражения. 03 / BOSSES Могущественные боссы Приготовься к сложным противникам, которые проверят твои навыки. 04 / PROGRESSION Развитие персонажа Становись сильнее, открывай новые умения и совершенствуй свои возможности. GAME INFORMATION Информация об игре Проект находится в разработке. Следи за новостями, чтобы узнать о новых возможностях и выходе бета-версии. Название Stand Ascension: The Tower Разработчик Stand Ascension Жанр 2D Action Платформы Android / Windows Статус В разработке Бета Ноябрь 2026* VISUAL EXPERIENCE Галерея игры Загляни в мир Stand Ascension. Настоящие игровые скриншоты появятся здесь по мере разработки. Игровой скриншот №1 Скоро появится Игровой скриншот №2 Скоро появится Игровой скриншот №3 Скоро появится DEVELOPMENT Путь к вершине. Stand Ascension: The Tower находится в разработке. Мы постепенно готовим проект к бета-тестированию. Подготовка проекта Подробности о ходе разработки появятся позже. YOUR ASCENSION AWAITS Готов подняться? Бета-версия игры пока не выпущена. Следи за обновлениями и будь готов к началу своего пути. ANDROID — СКОРО WINDOWS — СКОРО TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON | NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 / ABILITIES Способности стендов Используй уникальные силы и подбирай подходящий стиль сражения. 03 / BOSSES Могущественные боссы Приготовься к сложным противникам, которые проверят твои навыки. 04 / PROGRESSION Развитие персонажа Становись сильнее, открывай новые умения и совершенствуй свои возможности. GAME INFORMATION Информация об игре Проект находится в разработке. Следи за новостями, чтобы узнать о новых возможностях и выходе бета-версии. Название Stand Ascension: The Tower Разработчик Stand Ascension Жанр 2D Action Платформы Android / Windows Статус В разработке Бета Ноябрь 2026* VISUAL EXPERIENCE Галерея игры Загляни в мир Stand Ascension. Настоящие игровые скриншоты появятся здесь по мере разработки. Игровой скриншот №1 Скоро появится Игровой скриншот №2 Скоро появится Игровой скриншот №3 Скоро появится DEVELOPMENT Путь к вершине. Stand Ascension: The Tower находится в разработке. Мы постепенно готовим проект к бета-тестированию. Подготовка проекта Подробности о ходе разработки появятся позже. YOUR ASCENSION AWAITS Готов подняться? Бета-версия игры пока не выпущена. Следи за обновлениями и будь готов к началу своего пути. ANDROID — СКОРО WINDOWS — СКОРО TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "STAND ASCENSION"
+          },
+          {
+            "level": "h2",
+            "text": "Твоя история начинается здесь."
+          },
+          {
+            "level": "h2",
+            "text": "Что тебя ожидает?"
+          },
+          {
+            "level": "h3",
+            "text": "100 этажей"
+          },
+          {
+            "level": "h3",
+            "text": "Способности стендов"
+          },
+          {
+            "level": "h3",
+            "text": "Могущественные боссы"
+          },
+          {
+            "level": "h3",
+            "text": "Развитие персонажа"
+          },
+          {
+            "level": "h2",
+            "text": "Информация об игре"
+          },
+          {
+            "level": "h2",
+            "text": "Галерея игры"
+          },
+          {
+            "level": "h2",
+            "text": "Путь к вершине."
+          },
+          {
+            "level": "h2",
+            "text": "Готов подняться?"
+          }
+        ],
+        "links": [
+          {
+            "text": "TEHNOCELL .",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ИГРЫ",
+            "href": "game.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ОСОБЕННОСТИ",
+            "href": "#features",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ГАЛЕРЕЯ",
+            "href": "#gallery",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "СКАЧАТЬ",
+            "href": "#download",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ОБ ИГРЕ →",
+            "href": "#features",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ГАЛЕРЕЯ",
+            "href": "#gallery",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "← Назад к играм",
+            "href": "game.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "header",
+            "id": "",
+            "text": "TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ"
+          },
+          {
+            "tag": "main",
+            "id": "",
+            "text": "TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON   |   NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 "
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм"
+          }
+        ]
+      },
+      "source_sha": "8e6bc100bb19a74d68aaae40cf9faf5fecb02295"
+    },
+    {
+      "slug": "weather.html",
+      "title": "TEHNOCELL WEATHER",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather.html",
+      "description": "",
+      "content": "TEHNOCELL WEATHER TEHNOCELL WEATHER --:-- Загрузка... Найти ⌖ Избранные города + В избранное Пока нет сохранённых городов Загрузка погоды... Москва --° Загрузка... Ощущается как --° Ожидание данных... Почасовой прогноз Прогноз на 7 дней Влажность --% Относительная влажность Ветер -- Скорость ветра Давление -- Гектопаскали Видимость -- Километры УФ-индекс -- Ультрафиолет Вероятность осадков --% В ближайший час Точка росы --° Температура точки росы Осадки -- Миллиметры в час Солнце Восход --:-- Закат --:-- Качество воздуха -- Загрузка данных... PM2.5: -- · PM10: -- TEHNOCELL INTELLIGENCE TEHNOCELL INDOSTRI · WEATHER TEHNOCELL WEATHER --:-- Загрузка... Найти ⌖ Избранные города + В избранное Пока нет сохранённых городов Загрузка погоды... Москва --° Загрузка... Ощущается как --° Ожидание данных... Почасовой прогноз Прогноз на 7 дней Влажность --% Относительная влажность Ветер -- Скорость ветра Давление -- Гектопаскали Видимость -- Километры УФ-индекс -- Ультрафиолет Вероятность осадков --% В ближайший час Точка росы --° Температура точки росы Осадки -- Миллиметры в час Солнце Восход --:-- Закат --:-- Качество воздуха -- Загрузка данных... PM2.5: -- · PM10: -- TEHNOCELL INTELLIGENCE TEHNOCELL INDOSTRI · WEATHER",
+      "structure": {
+        "headings": [],
+        "links": [],
+        "controls": [
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "Введите город...",
+            "id": "cityInput",
+            "name": "",
+            "placeholder": "Введите город...",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Моё местоположение",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "",
+            "id": "favoriteAdd",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          }
+        ],
+        "sections": [
+          {
+            "tag": "main",
+            "id": "",
+            "text": "TEHNOCELL WEATHER --:-- Загрузка... Найти ⌖ Избранные города + В избранное Пока нет сохранённых городов Загрузка погоды... Москва --° Загрузка... Ощущается как --° Ожидание данных... Почасовой прогноз Прогноз на 7 дней Влажность --% Относительная влажность Ветер -- Скорость ветра Давление -- Гектопаскали Видимость -- Километры УФ-индекс -- Ультрафиолет Вероятность осадков --% В ближайший час Точка росы --° Температура точки росы Осадки -- Миллиметры в час Солнце Восход --:-- Закат --:-- Качество воздуха -- Загрузка данных... PM2.5: -- · PM10: -- TEHNOCELL INTELLIGENCE TEHNOCELL INDOSTRI · WEATHER"
+          }
+        ]
+      },
+      "source_sha": "a13bf4514e441ec2fb4e41c31cfd6be10bae9948"
+    },
+    {
+      "slug": "weather-app.html",
+      "title": "TEHNOCELL WEATHER — TEHNOCELLSOFT",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html",
+      "description": "",
+      "content": "TEHNOCELL WEATHER — TEHNOCELLSOFT TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW. 02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения. 03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранного города. 09 Поиск городов Находите нужные города и получайте информацию о погоде. 04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓ СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0 © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW. 02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения. 03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранного города. 09 Поиск городов Находите нужные города и получайте информацию о погоде. 04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓ СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0 © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "TEHNOCELL WEATHER"
+          },
+          {
+            "level": "h2",
+            "text": "Погода. Без лишнего."
+          },
+          {
+            "level": "h2",
+            "text": "Интерфейс приложения"
+          },
+          {
+            "level": "h2",
+            "text": "Больше, чем прогноз."
+          },
+          {
+            "level": "h3",
+            "text": "Текущая погода"
+          },
+          {
+            "level": "h3",
+            "text": "Почасовой прогноз"
+          },
+          {
+            "level": "h3",
+            "text": "Прогноз на 7 дней"
+          },
+          {
+            "level": "h3",
+            "text": "Атмосферные показатели"
+          },
+          {
+            "level": "h3",
+            "text": "Качество воздуха"
+          },
+          {
+            "level": "h3",
+            "text": "Weather Intelligence"
+          },
+          {
+            "level": "h3",
+            "text": "УФ-индекс"
+          },
+          {
+            "level": "h3",
+            "text": "Восход и закат"
+          },
+          {
+            "level": "h3",
+            "text": "Поиск городов"
+          },
+          {
+            "level": "h2",
+            "text": "Попробуйте TEHNOCELL WEATHER."
+          }
+        ],
+        "links": [
+          {
+            "text": "TEHNOCELL .",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О ПРОЕКТЕ",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ОБЗОР",
+            "href": "#preview",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ВОЗМОЖНОСТИ",
+            "href": "#features",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "СКАЧАТЬ",
+            "href": "#download",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "СКАЧАТЬ ПРИЛОЖЕНИЕ",
+            "href": "#download",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "УЗНАТЬ БОЛЬШЕ",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "↓   СКАЧАТЬ APK",
+            "href": "https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/v1.0.0/default.TEHNOCELL-WEATHER.apk",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "TEHNOCELL INDOSTRI",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "nav",
+            "id": "",
+            "text": "TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ"
+          },
+          {
+            "tag": "header",
+            "id": "",
+            "text": "ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ"
+          },
+          {
+            "tag": "section",
+            "id": "about",
+            "text": "01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW."
+          },
+          {
+            "tag": "section",
+            "id": "preview",
+            "text": "02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения."
+          },
+          {
+            "tag": "section",
+            "id": "features",
+            "text": "03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранн"
+          },
+          {
+            "tag": "section",
+            "id": "download",
+            "text": "04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓   СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0"
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "© 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER"
+          }
+        ]
+      },
+      "source_sha": "1b796063d9c12ba3c5054be78cba90e3c3ac3518"
+    },
+    {
+      "slug": "ennie.html",
+      "title": "ENNIE — TEHNOCELL AI",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/ennie.html",
+      "description": "",
+      "content": "E ENNIE TEHNOCELL AI Новый диалог ТВОИ ДИАЛОГИ Здесь пока пусто E TEHNOCELL ID Проверка аккаунта... ENNIE TEHNOCELL AI ENNIE ONLINE YOUR PERSONAL AI ASSISTANT Привет. Я ENNIE . Ну что, мой хороший, какие сегодня планы? Я рядом. Можем поговорить, разобраться с задачами или просто провести немного времени вместе. ТВОЁ ПРОСТРАНСТВО Что будем делать? Мой день Планы и задачи ↗ Моя память Идеи и заметки ↗ TC HUB Экосистема TEHNOCELL ↗ TC NEWS Новости компании ↗ TC STATUS Состояние сервисов ↗ Быстрые действия Создать что-нибудь ↗ E ENNIE ENNIE может ошибаться. Проверяй важную информацию. ENNIE — TEHNOCELL AI ENNIE CONTROL Настройки E TEHNOCELL ID Аккаунт не подключён TC-ID: проверка... Открыть профиль Копировать email ВНЕШНИЙ ВИД Тёмная тема Оформление интерфейса ГОЛОС ENNIE Голосовые ответы ENNIE сможет отвечать голосом БЕЗОПАСНОСТЬ Очистить историю диалогов → Выйти из аккаунта → ENNIE — TEHNOCELL AI PERSONAL ASSISTANT ! Ты уверена? Это действие нельзя будет отменить. Отмена Продолжить ENNIE SPACE Мой день",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "Привет. Я ENNIE ."
+          },
+          {
+            "level": "h2",
+            "text": "Что будем делать?"
+          },
+          {
+            "level": "h2",
+            "text": "Настройки"
+          },
+          {
+            "level": "h2",
+            "text": "Ты уверена?"
+          },
+          {
+            "level": "h2",
+            "text": "Мой день"
+          }
+        ],
+        "links": [
+          {
+            "text": "Открыть профиль",
+            "href": "https://technosotrudnik.github.io/tehnocell-indostri/account.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Закрыть меню",
+            "id": "sidebarClose",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "newChatBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Настройки",
+            "id": "settingsBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Открыть меню",
+            "id": "menuToggle",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Настройки",
+            "id": "topSettingsBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Прикрепить изображение",
+            "id": "attachBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "file",
+            "label": "",
+            "id": "imageInput",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "textarea",
+            "type": "",
+            "label": "Напиши мне что-нибудь...",
+            "id": "messageInput",
+            "name": "",
+            "placeholder": "Напиши мне что-нибудь...",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Голосовой ввод",
+            "id": "micBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Отправить",
+            "id": "sendBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Перетащить сюда, чтобы удалить",
+            "id": "voiceTrashZone",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Закрыть",
+            "id": "closeSettings",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "",
+            "id": "copyAccountEmail",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "",
+            "id": "themeToggle",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "",
+            "id": "voiceOutputToggle",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "clearHistoryBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "logoutBtn",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "confirmCancel",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "",
+            "id": "confirmAccept",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Закрыть",
+            "id": "closeWidgetModal",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Удалить распознанное сообщение",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "disabled": false
+          }
+        ],
+        "sections": [
+          {
+            "tag": "main",
+            "id": "",
+            "text": "ENNIE TEHNOCELL AI ENNIE ONLINE YOUR PERSONAL AI ASSISTANT Привет. Я ENNIE . Ну что, мой хороший, какие сегодня планы? Я рядом. Можем поговорить, разобраться с задачами или просто провести немного времени вместе. ТВОЁ ПРОСТРАНСТВО Что будем делать? Мой день Планы и задачи ↗ Моя память Идеи и заметки ↗ TC HUB Экосистема TEHNOCELL ↗ TC NEWS Новости компании ↗ TC STATUS Состояние сервисов ↗ Быстрые действия Создать что-нибудь ↗ E ENNIE ENNIE может ошибаться. Проверяй важную информацию. ENNIE — TEHNOCELL AI"
+          },
+          {
+            "tag": "section",
+            "id": "",
+            "text": "E TEHNOCELL ID Аккаунт не подключён TC-ID: проверка... Открыть профиль Копировать email"
+          }
+        ]
+      },
+      "source_sha": "4bc40b890ec3c092c39d59b55dacdee7bc900465"
     }
   ]
 }
