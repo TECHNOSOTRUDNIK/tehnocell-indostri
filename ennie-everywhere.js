@@ -62,6 +62,35 @@
   `;
   style.textContent += `
     /* ENNIE 2.0 — immersive full-screen companion */
+    /* ENNIE 2.0.1 — allow page scrolling through the transparent center */
+    html.ee-modal-open,html.ee-modal-open body{
+      overflow:auto!important;
+      overscroll-behavior:auto!important;
+    }
+    #ennie-everywhere-root .ee-panel.ee-open{
+      pointer-events:none!important;
+      touch-action:pan-y!important;
+    }
+    #ennie-everywhere-root .ee-head,
+    #ennie-everywhere-root .ee-messages,
+    #ennie-everywhere-root .ee-compose,
+    #ennie-everywhere-root .ee-head-orb,
+    #ennie-everywhere-root .ee-close,
+    #ennie-everywhere-root .ee-wake-toggle,
+    #ennie-everywhere-root .ee-voice-toggle,
+    #ennie-everywhere-root .ee-mic,
+    #ennie-everywhere-root .ee-send,
+    #ennie-everywhere-root .ee-input{
+      pointer-events:auto!important;
+    }
+    #ennie-everywhere-root .ee-stage,
+    #ennie-everywhere-root .ee-orb-halo,
+    #ennie-everywhere-root .ee-state{
+      pointer-events:none!important;
+      touch-action:pan-y!important;
+    }
+    #ennie-everywhere-root .ee-head-orb{touch-action:pan-y!important}
+
     html.ee-modal-open,html.ee-modal-open body{overflow:hidden!important}
     #ennie-everywhere-root .ee-panel{
       position:fixed!important;inset:0!important;right:0!important;bottom:0!important;
