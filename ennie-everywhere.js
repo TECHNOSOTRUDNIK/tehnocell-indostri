@@ -786,6 +786,33 @@
     input.value = "";
     input.style.height = "auto";
     addBubble(value, "user");
+
+    // Explicit navigation commands: descriptions remain ordinary questions,
+    // while direct requests to open a known site page perform navigation.
+    const commandText = value.toLowerCase().replace(/ё/g, "е");
+    const wantsOpen = /\\b(открой|перейди|перейти|зайди|запусти|открывай)\\b|покажи\\s+(?:мне\\s+)?(?:страниц|сайт)/i.test(commandText);
+    const siteRoutes = [
+      { match: /stand\\s*ascension|стенд\\s*аскенсион|стенд\\s*асценсион|stand ascension/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
+      { match: /tehnocell\\s*game|техноселл\\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
+      { match: /tehnocell\\s*weather|техноселл\\s*ветер|погода/i, path: "weather-app.html", title: "TEHNOCELL WEATHER" },
+      { match: /tehnocell\\s*soft|техноселл\\s*софт/i, path: "soft.html", title: "TEHNOCELLSOFT" }
+    ];
+    const requestedRoute = wantsOpen ? siteRoutes.find(route => route.match.test(commandText)) : null;
+    if (requestedRoute) {
+      const targetUrl = new URL(requestedRoute.path, location.href);
+      if (targetUrl.origin === location.origin) {
+        const actionReply = "Конечно. Сейчас открою «" + requestedRoute.title + "».";
+        history.push({ role: "user", content: value });
+        history.push({ role: "assistant", content: actionReply });
+        while (history.length > 10) history.shift();
+        persistChat();
+        addBubble(actionReply, "assistant");
+        setMode("thinking", "Перехожу на нужную страницу…");
+        setTimeout(() => { location.assign(targetUrl.href); }, 420);
+        return;
+      }
+    }
+
     const page = buildPageContext();
     const onAccountPage=location.pathname.toLowerCase().endsWith("account.html")||location.pathname.toLowerCase().includes("tehnocell-id");
     const asksAvatar=/аватар|фото профил|картинк.*профил|поменять.*фото|изменить.*фото/i.test(value);
