@@ -271,7 +271,7 @@
           const transcript = String(event.results[i][0] && event.results[i][0].transcript || "").trim();
           if (!transcript) continue;
           if (!wakeAwaitingCommand) {
-            const match = transcript.match(/энни[\s,!.—-]*(?:помоги|посмотри|слушай|ты здесь|открой|открыть|перейди|перейти|зайди|запусти|покажи|включи)/i);
+            const match = transcript.match(/энни[\s,!.—-]*(?:помоги|посмотри|слушай|ты здесь|ты тут|проснись|будь рядом|мне нужна помощь|есть минутка|открой|открыть|перейди|перейти|зайди|запусти|покажи|включи)/i);
             if (!match) continue;
             const trigger = match[0].replace(/^энни[\s,!.—-]*/i, "").trim();
             const remainder = transcript.slice(match.index + match[0].length).replace(/^[\s,!.—-]+/, "").trim();
@@ -280,14 +280,12 @@
               : remainder;
             if (command.length >= 2) {
               stopWakeRecognition();
-              openPanel();
               setMode("thinking", "Услышала тебя. Сейчас разберусь…");
               sendMessage(command);
               return;
             }
             wakeAwaitingCommand = true;
-            openPanel();
-            setMode("listening", "Я здесь. Скажи, что тебе нужно.");
+            setMode("listening", "Я слушаю. Говори, что нужно.");
           } else {
             wakeAwaitingCommand = false;
             stopWakeRecognition();
