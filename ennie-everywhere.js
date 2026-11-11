@@ -792,7 +792,14 @@
       setMode("speaking", "Я отвечаю тебе голосом…");
       utterance.onend = () => {
         setMode("", "Можешь продолжать, я слушаю.");
-        if (wakeEnabled) startWakeRecognition();
+        if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
+          setTimeout(startWakeRecognition, 900);
+        }
+      };
+      utterance.onerror = () => {
+        if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
+          setTimeout(startWakeRecognition, 900);
+        }
       };
       window.speechSynthesis.speak(utterance);
     }
@@ -811,25 +818,29 @@
     // Explicit navigation commands: descriptions remain ordinary questions,
     // while direct requests to open a known site page perform navigation.
     const commandText = value.toLowerCase().replace(/ё/g, "е");
-    const wantsOpen = /\b(открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)\b|(?:мне\s+)?(?:нужна|нужен)\s+(?:страниц|сайт)/i.test(commandText);
+    const wantsOpen = /(?:^|\\s)(?:открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)(?=\\s|$)|(?:мне\\s+)?(?:нужна|нужен)\\s+(?:страница|сайт)/i.test(commandText);
     const siteRoutes = [
       { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
       { match: /tehnocell\s*game|техноселл?\s*гейм|техноселгейм|техно\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
       { match: /tehnocell\s*weather|техноселл?\s*(?:везер|ветер|уэзер)|техносел\s*weather|техносел\s*везер|техносел\s*ветер|техносел\s*уэзер|техноселл?\s*weather|weather|везер|погод(?:а|ный раздел)/i, path: "weather.html", title: "TEHNOCELL WEATHER" },
       { match: /tehnocell\s*soft|техноселл?\s*софт|техносел\s*софт|техносел\s*soft|техно\s*софт|технософт|софт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
     ];
-    const requestedRoute = wantsOpen ? siteRoutes.find(route => route.match.test(commandText)) : null;
-    if (requestedRoute) {
+    const requestedRoute = siteRoutes.find(route => route.match.test(commandText));
+    const isExplicitOpen = wantsOpen || /^(?:энни[,! ]+)?(?:открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)\\s+/i.test(commandText);
+    if (requestedRoute && isExplicitOpen) {
       const targetUrl = new URL(requestedRoute.path, location.href);
       if (targetUrl.origin === location.origin) {
-        const actionReply = "Конечно. Сейчас открою «" + requestedRoute.title + "».";
+        const actionReply = "Открываю " + requestedRoute.title + ".";
         history.push({ role: "user", content: value });
         history.push({ role: "assistant", content: actionReply });
         while (history.length > 10) history.shift();
         persistChat();
         addBubble(actionReply, "assistant");
-        setMode("thinking", "Перехожу на нужную страницу…");
-        setTimeout(() => { location.assign(targetUrl.href); }, 420);
+        setMode("thinking", "Открываю страницу…");
+        isBusy = false;
+        send.disabled = false;
+        mic.disabled = false;
+        setTimeout(() => { location.assign(targetUrl.href); }, 250);
         return;
       }
     }
@@ -904,8 +915,8 @@
       send.disabled = false;
       mic.disabled = false;
       // Keep hands-free conversation armed after every completed answer.
-      if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
-        setTimeout(startWakeRecognition, 700);
+      if (wakeEnabled && WakeRecognition && document.visibilityState === "visible" && !narrationAudio && !window.speechSynthesis?.speaking) {
+        setTimeout(startWakeRecognition, 900);
       }
     }
   }
