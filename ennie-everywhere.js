@@ -255,7 +255,7 @@
   }
 
   function startWakeRecognition() {
-    if (!wakeEnabled || !WakeRecognition || document.visibilityState !== "visible" || wakeStarting || wakeRecognition) return;
+    if (!wakeEnabled || !WakeRecognition || document.visibilityState !== "visible" || wakeStarting || wakeRecognition || (narrationAudio && !narrationAudio.ended && !narrationAudio.paused)) return;
     try {
       wakeStarting = true;
       const recognition = new WakeRecognition();
@@ -684,27 +684,36 @@
     }
   }
   function playNarration(data) {
-    if (!voiceOutputEnabled || !data.audio) return;
-    try {
-      if (narrationAudio) narrationAudio.pause();
-      narrationAudio = new Audio(data.audio);
-      narrationAudio.playbackRate = 1.06;
-      narrationAudio.currentTime = Math.max(0, Number(data.position) || 0);
-      narrationAudio.onended = clearNarration;
-      narrationAudio.onplay = () => setCinematicSpeaking(true);
-      narrationAudio.onpause = () => setCinematicSpeaking(false);
-      narrationAudio.play().then(() => {
-        setCinematicSpeaking(true);
-        if (narrationTimer) clearInterval(narrationTimer);
-        narrationTimer = setInterval(() => {
-          if (!narrationAudio || narrationAudio.paused) return;
-          data.position = narrationAudio.currentTime;
-          saveNarration(data);
-        }, 350);
-      }).catch(error => console.warn("ENNIE narration playback blocked:", error));
-    } catch (error) {
-      console.warn("ENNIE narration resume failed:", error);
-    }
+    if (!voiceOutputEnabled || !data.audio) return Promise.resolve();
+    stopWakeRecognition();
+    return new Promise(resolve => {
+      try {
+        if (narrationAudio) narrationAudio.pause();
+        narrationAudio = new Audio(data.audio);
+        const currentAudio = narrationAudio;
+        currentAudio.playbackRate = 1.06;
+        currentAudio.currentTime = Math.max(0, Number(data.position) || 0);
+        currentAudio.onended = () => { clearNarration(); resolve(); };
+        currentAudio.onerror = () => { clearNarration(); resolve(); };
+        currentAudio.onplay = () => setCinematicSpeaking(true);
+        currentAudio.onpause = () => setCinematicSpeaking(false);
+        currentAudio.play().then(() => {
+          setCinematicSpeaking(true);
+          if (narrationTimer) clearInterval(narrationTimer);
+          narrationTimer = setInterval(() => {
+            if (!narrationAudio || narrationAudio.paused) return;
+            data.position = narrationAudio.currentTime;
+            saveNarration(data);
+          }, 350);
+        }).catch(error => {
+          console.warn("ENNIE narration playback blocked:", error);
+          resolve();
+        });
+      } catch (error) {
+        console.warn("ENNIE narration resume failed:", error);
+        resolve();
+      }
+    });
   }
   async function presentAnswer(answer) {
     const fullText = String(answer).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").trim();
@@ -770,7 +779,7 @@
         launch.style.display = "none";
         showCinematic();
         setMode("speaking", "Я отвечаю тебе голосом…");
-        playNarration(narration);
+        await playNarration(narration);
         return;
       }
     } catch (error) {
@@ -806,8 +815,8 @@
     const siteRoutes = [
       { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
       { match: /tehnocell\s*game|техноселл?\s*гейм|техноселгейм|техно\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
-      { match: /tehnocell\s*weather|техноселл?\s*(?:везер|ветер|уэзер)|техносел\s*weather|техносел\s*везер|техносел\s*ветер|техно\s*везер|weather|погод(?:а|ный раздел)/i, path: "weather.html", title: "TEHNOCELL WEATHER" },
-      { match: /tehnocell\s*soft|техноселл?\s*софт|техносел\s*софт|техносел\s*soft|техно\s*софт|технософт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
+      { match: /tehnocell\s*weather|техноселл?\s*(?:везер|ветер|уэзер)|техносел\s*weather|техносел\s*везер|техносел\s*ветер|техносел\s*уэзер|техноселл?\s*weather|weather|везер|погод(?:а|ный раздел)/i, path: "weather.html", title: "TEHNOCELL WEATHER" },
+      { match: /tehnocell\s*soft|техноселл?\s*софт|техносел\s*софт|техносел\s*soft|техно\s*софт|технософт|софт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
     ];
     const requestedRoute = wantsOpen ? siteRoutes.find(route => route.match.test(commandText)) : null;
     if (requestedRoute) {
