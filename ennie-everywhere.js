@@ -204,6 +204,38 @@
     #ennie-everywhere-root .ee-panel.ee-wake-active .ee-head-sub:before{background:#fff;box-shadow:0 0 10px #fff}
     @media(max-width:390px){#ennie-everywhere-root .ee-wake-toggle{padding:0 8px;font-size:9px}#ennie-everywhere-root .ee-voice-toggle{padding:0 8px;font-size:9px}}
   `;
+
+  style.textContent += `
+    /* ENNIE 2.0.2 — interactive controls + page pass-through */
+    html.ee-modal-open,html.ee-modal-open body{
+      overflow:auto!important;overscroll-behavior:auto!important;touch-action:pan-y!important;
+    }
+    #ennie-everywhere-root .ee-panel.ee-open{
+      pointer-events:none!important;touch-action:pan-y!important;
+    }
+    #ennie-everywhere-root .ee-head{
+      position:absolute!important;top:env(safe-area-inset-top)!important;left:0!important;right:0!important;
+      z-index:20!important;pointer-events:none!important;
+    }
+    #ennie-everywhere-root .ee-head button,
+    #ennie-everywhere-root .ee-head [role="button"]{
+      position:relative!important;z-index:21!important;pointer-events:auto!important;touch-action:manipulation!important;
+    }
+    #ennie-everywhere-root .ee-messages{
+      z-index:8!important;pointer-events:auto!important;touch-action:pan-y!important;
+    }
+    #ennie-everywhere-root .ee-compose{
+      z-index:22!important;pointer-events:auto!important;touch-action:manipulation!important;
+    }
+    #ennie-everywhere-root .ee-compose button,
+    #ennie-everywhere-root .ee-compose textarea{
+      position:relative!important;z-index:23!important;pointer-events:auto!important;touch-action:manipulation!important;
+    }
+    #ennie-everywhere-root .ee-stage,
+    #ennie-everywhere-root .ee-orb-halo,
+    #ennie-everywhere-root .ee-state{pointer-events:none!important}
+    #ennie-everywhere-root .ee-head-orb{pointer-events:auto!important;touch-action:manipulation!important}
+  `;
   document.head.appendChild(style);
 
   const launch = document.createElement("button");
