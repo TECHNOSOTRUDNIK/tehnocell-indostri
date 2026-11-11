@@ -98,8 +98,8 @@
       max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;
       padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
       border:0!important;border-radius:0!important;
-      background:radial-gradient(ellipse at 50% 34%,rgba(62,62,62,.38),transparent 46%),rgba(4,4,4,.91)!important;
-      box-shadow:none!important;backdrop-filter:blur(13px)!important;
+      background:radial-gradient(ellipse at 50% 34%,rgba(42,42,42,.24),transparent 48%),#080808!important;
+      box-shadow:none!important;backdrop-filter:none!important;
       opacity:0;transform:scale(1.025)!important;pointer-events:none;
       transition:opacity .32s ease,transform .42s cubic-bezier(.2,.8,.2,1)!important;
       overflow:hidden!important;
@@ -156,6 +156,7 @@
     }
     #ennie-everywhere-root .ee-messages{
       position:absolute;left:0;right:0;top:49%;bottom:calc(104px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg,rgba(8,8,8,.98),rgba(8,8,8,.96));border-radius:22px 22px 0 0;
       z-index:3;display:flex;flex-direction:column;align-items:stretch;gap:9px;
       width:min(760px,100%);margin:0 auto;padding:12px 18px 18px;overflow:auto;
       pointer-events:auto;overscroll-behavior:contain;scrollbar-width:thin;
