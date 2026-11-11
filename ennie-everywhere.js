@@ -8,6 +8,8 @@
   const root = document.createElement("div");
   root.id = "ennie-everywhere-root";
   document.body.appendChild(root);
+  root.style.cssText = "position:fixed;inset:0;z-index:2147483001;pointer-events:none!important;";
+  document.documentElement.classList.remove("ee-modal-open");
 
   const style = document.createElement("style");
   style.textContent = `
@@ -235,6 +237,61 @@
     #ennie-everywhere-root .ee-orb-halo,
     #ennie-everywhere-root .ee-state{pointer-events:none!important}
     #ennie-everywhere-root .ee-head-orb{pointer-events:auto!important;touch-action:manipulation!important}
+  `;
+
+  style.textContent += `
+    /* ENNIE 2.1 — true page pass-through, independent controls */
+    #ennie-everywhere-root{pointer-events:none!important}
+    #ennie-everywhere-root .ee-launch{pointer-events:auto!important}
+    #ennie-everywhere-root .ee-panel,
+    #ennie-everywhere-root .ee-panel.ee-open{
+      pointer-events:none!important;
+      background:rgba(5,5,5,.48)!important;
+      backdrop-filter:blur(4px)!important;
+      -webkit-backdrop-filter:blur(4px)!important;
+    }
+    #ennie-everywhere-root .ee-panel:before{pointer-events:none!important}
+    #ennie-everywhere-root .ee-head{
+      pointer-events:none!important;
+      left:16px!important;right:auto!important;width:160px!important;
+      top:calc(env(safe-area-inset-top) + 12px)!important;
+      padding:0!important;
+    }
+    #ennie-everywhere-root .ee-head-copy{pointer-events:none!important}
+    #ennie-everywhere-root .ee-close{
+      pointer-events:auto!important;
+      position:absolute!important;left:105px!important;right:auto!important;top:0!important;
+      width:38px!important;height:38px!important;
+    }
+    #ennie-everywhere-root .ee-wake-toggle,
+    #ennie-everywhere-root .ee-voice-toggle{
+      pointer-events:auto!important;
+      position:absolute!important;top:auto!important;bottom:calc(91px + env(safe-area-inset-bottom))!important;
+      z-index:30!important;
+    }
+    #ennie-everywhere-root .ee-voice-toggle{right:14px!important}
+    #ennie-everywhere-root .ee-wake-toggle{right:126px!important}
+    #ennie-everywhere-root .ee-stage{pointer-events:none!important}
+    #ennie-everywhere-root .ee-orb-halo,
+    #ennie-everywhere-root .ee-state{pointer-events:none!important}
+    #ennie-everywhere-root .ee-head-orb{pointer-events:auto!important;touch-action:manipulation!important}
+    #ennie-everywhere-root .ee-messages{
+      pointer-events:none!important;
+      background:rgba(8,8,8,.96)!important;
+      touch-action:pan-y!important;
+    }
+    #ennie-everywhere-root .ee-bubble{pointer-events:auto!important}
+    #ennie-everywhere-root .ee-compose,
+    #ennie-everywhere-root .ee-compose button,
+    #ennie-everywhere-root .ee-compose textarea{
+      pointer-events:auto!important;touch-action:manipulation!important;
+    }
+    #ennie-everywhere-root .ee-panel.ee-open{overflow:visible!important}
+    html.ee-modal-open,html.ee-modal-open body{overflow-y:auto!important;touch-action:pan-y!important}
+    @media(max-width:390px){
+      #ennie-everywhere-root .ee-wake-toggle{right:116px!important}
+      #ennie-everywhere-root .ee-voice-toggle{right:12px!important}
+    }
   `;
   document.head.appendChild(style);
 
@@ -506,7 +563,6 @@
   }
   function openPanel(suppressReturnGreeting = false) {
     panel.classList.add("ee-open");
-    document.documentElement.classList.add("ee-modal-open");
     if (!messagesBox.children.length) {
       addBubble("Привет. Я здесь, рядом с тобой. Могу подсказать, найти нужное и показать прямо на странице.", "assistant");
     }
@@ -549,7 +605,6 @@
   }
   function closePanel() {
     panel.classList.remove("ee-open");
-    document.documentElement.classList.remove("ee-modal-open");
     stopRecording(false);
     stopAudio();
     setMode("", "Я рядом, если понадобится помощь.");
