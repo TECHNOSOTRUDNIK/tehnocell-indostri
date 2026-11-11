@@ -266,7 +266,7 @@
     #ennie-everywhere-root .ee-wake-toggle,
     #ennie-everywhere-root .ee-voice-toggle{
       pointer-events:auto!important;
-      position:absolute!important;top:auto!important;bottom:calc(91px + env(safe-area-inset-bottom))!important;
+      position:fixed!important;top:auto!important;bottom:calc(91px + env(safe-area-inset-bottom))!important;
       z-index:30!important;
     }
     #ennie-everywhere-root .ee-voice-toggle{right:14px!important}
