@@ -271,7 +271,7 @@
           const transcript = String(event.results[i][0] && event.results[i][0].transcript || "").trim();
           if (!transcript) continue;
           if (!wakeAwaitingCommand) {
-            const match = transcript.match(/энни[\s,!.—-]*(?:помоги|посмотри|слушай|ты здесь)/i);
+            const match = transcript.match(/энни[\s,!.—-]*(?:помоги|посмотри|слушай|ты здесь|открой|открыть|перейди|перейти|зайди|запусти|покажи|включи)/i);
             if (!match) continue;
             const command = transcript.slice(match.index + match[0].length).replace(/^[\s,!.—-]+/, "").trim();
             if (command.length >= 2) {
@@ -334,7 +334,9 @@
     }
   });
   updateWakeToggle();
-  if (wakeEnabled && WakeRecognition) startWakeRecognition();
+  if (wakeEnabled && WakeRecognition) setTimeout(() => {
+    if (!readNarration()) startWakeRecognition();
+  }, 900);
 
   const SIZE_KEY="ennie_mini_size_v1";
   function savePanelSize(width,height){
@@ -457,8 +459,8 @@
   }
   function closePanel() {
     panel.classList.remove("ee-open");
+    // Closing the chat hides only the window. ENNIE's current spoken answer continues.
     stopRecording(false);
-    stopAudio();
     setMode("", "Я рядом, если понадобится помощь.");
   }
   launch.addEventListener("click", () => panel.classList.contains("ee-open") ? closePanel() : openPanel());
@@ -602,6 +604,9 @@
     const old = document.querySelector(".ee-cinematic");
     if (old) old.remove();
     launch.style.display = "";
+    if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
+      setTimeout(startWakeRecognition, 500);
+    }
   }
   function showCinematic() {
     let layer = document.querySelector(".ee-cinematic");
@@ -722,19 +727,19 @@
     data.position = narrationAudio.currentTime || data.position || 0;
     saveNarration(data);
   });
-  window.addEventListener("pageshow", event => {
-    if (!event.persisted) return;
+  window.addEventListener("pageshow", () => {
     const data = readNarration();
     if (!data || !data.audio || !voiceOutputEnabled) return;
     launch.style.display = "none";
     showCinematic();
-    setTimeout(() => resumeNarrationIfNeeded(true), 120);
+    setTimeout(() => resumeNarrationIfNeeded(true), 350);
   });
   async function speak(text) {
     if (!voiceOutputEnabled) return;
     const clean = String(text).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").replace(/https?:\/\/\S+/g, "ссылка").trim();
     if (!clean) return;
     stopAudio();
+    stopWakeRecognition();
     try {
       const session = await getSession();
       if (session) {
@@ -750,18 +755,18 @@
         if (!response.ok) throw new Error("voice " + response.status);
         const blob = await response.blob();
         if (!blob.size) throw new Error("empty audio");
-        audioObjectUrl = URL.createObjectURL(blob);
-        const audio = new Audio(audioObjectUrl);
-        audio.playbackRate = 1.08;
-        setMode("speaking", "Я отвечаю тебе голосом…");
-        await new Promise((resolve, reject) => {
-          audio.onended = resolve;
-          audio.onerror = reject;
-          audio.play().catch(reject);
+        const reader = new FileReader();
+        const audioData = await new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
         });
-        URL.revokeObjectURL(audioObjectUrl);
-        audioObjectUrl = null;
-        setMode("", "Можешь продолжать, я слушаю.");
+        const narration = { speechText: clean, audio: audioData, position: 0, createdAt: Date.now() };
+        saveNarration(narration);
+        launch.style.display = "none";
+        showCinematic();
+        setMode("speaking", "Я отвечаю тебе голосом…");
+        playNarration(narration);
         return;
       }
     } catch (error) {
@@ -772,7 +777,10 @@
       utterance.lang = "ru-RU";
       utterance.rate = 1.12;
       setMode("speaking", "Я отвечаю тебе голосом…");
-      utterance.onend = () => setMode("", "Можешь продолжать, я слушаю.");
+      utterance.onend = () => {
+        setMode("", "Можешь продолжать, я слушаю.");
+        if (wakeEnabled) startWakeRecognition();
+      };
       window.speechSynthesis.speak(utterance);
     }
   }
@@ -790,12 +798,12 @@
     // Explicit navigation commands: descriptions remain ordinary questions,
     // while direct requests to open a known site page perform navigation.
     const commandText = value.toLowerCase().replace(/ё/g, "е");
-    const wantsOpen = /\b(открой|перейди|перейти|зайди|запусти|открывай)\b|покажи\s+(?:мне\s+)?(?:страниц|сайт)/i.test(commandText);
+    const wantsOpen = /\b(открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)\b|(?:мне\s+)?(?:нужна|нужен)\s+(?:страниц|сайт)/i.test(commandText);
     const siteRoutes = [
-      { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион|stand ascension/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
-      { match: /tehnocell\s*game|техноселл\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
-      { match: /tehnocell\s*weather|техноселл\s*ветер|погода/i, path: "weather-app.html", title: "TEHNOCELL WEATHER" },
-      { match: /tehnocell\s*soft|техноселл\s*софт/i, path: "soft.html", title: "TEHNOCELLSOFT" }
+      { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
+      { match: /tehnocell\s*game|техноселл?\s*гейм|техноселгейм|техно\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
+      { match: /tehnocell\s*weather|техноселл?\s*(?:везер|ветер|уэзер)|техно\s*везер|weather|погод(?:а|ный раздел)/i, path: "weather.html", title: "TEHNOCELL WEATHER" },
+      { match: /tehnocell\s*soft|техноселл?\s*софт|техно\s*софт|технософт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
     ];
     const requestedRoute = wantsOpen ? siteRoutes.find(route => route.match.test(commandText)) : null;
     if (requestedRoute) {
