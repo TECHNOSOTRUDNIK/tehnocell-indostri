@@ -273,7 +273,11 @@
           if (!wakeAwaitingCommand) {
             const match = transcript.match(/энни[\s,!.—-]*(?:помоги|посмотри|слушай|ты здесь|открой|открыть|перейди|перейти|зайди|запусти|покажи|включи)/i);
             if (!match) continue;
-            const command = transcript.slice(match.index + match[0].length).replace(/^[\s,!.—-]+/, "").trim();
+            const trigger = match[0].replace(/^энни[\s,!.—-]*/i, "").trim();
+            const remainder = transcript.slice(match.index + match[0].length).replace(/^[\s,!.—-]+/, "").trim();
+            const command = /^(?:открой|открыть|перейди|перейти|зайди|запусти|покажи|включи)/i.test(trigger)
+              ? [trigger, remainder].filter(Boolean).join(" ")
+              : remainder;
             if (command.length >= 2) {
               stopWakeRecognition();
               openPanel();
