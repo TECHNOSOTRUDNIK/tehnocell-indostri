@@ -608,9 +608,6 @@
     const old = document.querySelector(".ee-cinematic");
     if (old) old.remove();
     launch.style.display = "";
-    if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
-      setTimeout(startWakeRecognition, 500);
-    }
   }
   function showCinematic() {
     let layer = document.querySelector(".ee-cinematic");
@@ -793,12 +790,12 @@
       utterance.onend = () => {
         setMode("", "Можешь продолжать, я слушаю.");
         if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
-          setTimeout(startWakeRecognition, 900);
+          setTimeout(startWakeRecognition, 1400);
         }
       };
       utterance.onerror = () => {
         if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
-          setTimeout(startWakeRecognition, 900);
+          setTimeout(startWakeRecognition, 1400);
         }
       };
       window.speechSynthesis.speak(utterance);
