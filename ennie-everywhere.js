@@ -113,7 +113,8 @@
   let client = null;
   let activeChatKey = null;
   let restoredChat = false;
-  let returnGreetingShown = false;
+  let hasSavedChat = false;
+  let returnGreetingShown = sessionStorage.getItem("ennie_mini_return_greeted_v1") === "1";
   let recorder = null;
   let stream = null;
   let chunks = [];
@@ -183,6 +184,7 @@
       activeChatKey = "ennie_mini_chat_v1_" + session.user.id;
       const saved = JSON.parse(localStorage.getItem(activeChatKey) || "null");
       if (saved && Array.isArray(saved.messages)) {
+        hasSavedChat = saved.messages.length > 0;
         history.splice(0, history.length, ...(Array.isArray(saved.history) ? saved.history.slice(-10) : []));
         messagesBox.replaceChildren();
         saved.messages.slice(-40).forEach(item => {
@@ -211,8 +213,9 @@
     if (!messagesBox.children.length) {
       addBubble("Привет. Я здесь, рядом с тобой. Могу подсказать, найти нужное и показать прямо на странице.", "assistant");
     }
-    if (!suppressReturnGreeting && restoredChat && !returnGreetingShown && messagesBox.children.length) {
+    if (!suppressReturnGreeting && restoredChat && hasSavedChat && !returnGreetingShown && messagesBox.children.length) {
       returnGreetingShown = true;
+      try { sessionStorage.setItem("ennie_mini_return_greeted_v1", "1"); } catch (_) {}
       if (voiceOutputEnabled) {
         setMode("", "Я здесь. Рада, что ты вернулся.");
         window.setTimeout(() => speak("Что-то случилось?"), 260);
@@ -232,6 +235,7 @@
     window.setTimeout(() => {
       if (document.visibilityState !== "visible") return;
       returnGreetingShown = true;
+      try { sessionStorage.setItem("ennie_mini_return_greeted_v1", "1"); } catch (_) {}
       openPanel(true);
       messagesBox.replaceChildren();
       addBubble("Привет! Я ENNIE, помощница TEHNOCELL INDOSTRI. Рада знакомству. Здесь можно изучить подразделения и проекты компании, открыть TEHNOCELLSOFT и посмотреть доступные приложения, перейти к TEHNOCELL WEATHER, познакомиться с играми TEHNOCELLGAME, а через TEHNOCELL ID — войти в аккаунт и управлять профилем.\n\nЕсли потеряешься, просто напиши мне, что хочешь найти: я объясню и, где получится, прокручу страницу к нужному месту. Можешь закрыть это окно в любой момент. Микрофон включается только вручную, а мой голос сейчас выключен.", "assistant");
