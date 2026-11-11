@@ -64,6 +64,97 @@
     @media(max-width:480px){.ee-launch{right:13px;bottom:14px;width:54px;height:54px}.ee-panel{right:8px;bottom:77px;width:var(--ee-panel-width,calc(100vw - 16px));height:var(--ee-panel-height,min(520px,calc(100dvh - 94px)));border-radius:20px}.ee-head{gap:7px;padding:0 9px}.ee-head-title{font-size:12px}.ee-voice-toggle{padding:0 6px;font-size:9px}.ee-wake-toggle{padding:0 6px;font-size:9px}.ee-expand{width:29px;height:29px}.ee-close{width:30px;height:30px}}
     @media(prefers-reduced-motion:reduce){.ee-orb,.ee-launch:after,.ee-target-highlight{animation:none!important}.ee-panel,.ee-launch{transition:none}}
   `;
+
+  style.textContent += `
+    /* ENNIE MINI — refreshed compact chat UI */
+    #ennie-everywhere-root .ee-panel{
+      background:linear-gradient(155deg,rgba(22,22,22,.99),rgba(7,7,7,.995) 76%)!important;
+      border:1px solid rgba(255,255,255,.19)!important;
+      border-radius:25px!important;
+      box-shadow:0 24px 85px rgba(0,0,0,.58),0 0 34px rgba(255,255,255,.045)!important;
+      backdrop-filter:blur(24px)!important;
+      -webkit-backdrop-filter:blur(24px)!important;
+    }
+    #ennie-everywhere-root .ee-head{
+      min-height:66px!important;height:66px!important;
+      padding:0 12px!important;gap:8px!important;
+      border-bottom:1px solid rgba(255,255,255,.095)!important;
+      background:linear-gradient(90deg,rgba(255,255,255,.045),transparent)!important;
+    }
+    #ennie-everywhere-root .ee-head-orb{
+      width:34px!important;height:34px!important;flex:0 0 34px!important;
+      background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%)!important;
+      box-shadow:0 0 14px rgba(255,255,255,.65)!important;
+    }
+    #ennie-everywhere-root .ee-head-title{font-size:13px!important;letter-spacing:2.5px!important}
+    #ennie-everywhere-root .ee-head-sub{font-size:10px!important;color:rgba(255,255,255,.53)!important}
+    #ennie-everywhere-root .ee-voice-toggle,
+    #ennie-everywhere-root .ee-wake-toggle{
+      height:31px!important;padding:0 8px!important;
+      border-radius:17px!important;background:rgba(255,255,255,.055)!important;
+      border:1px solid rgba(255,255,255,.13)!important;
+      color:rgba(255,255,255,.72)!important;font-size:9px!important;
+    }
+    #ennie-everywhere-root .ee-voice-toggle.ee-enabled,
+    #ennie-everywhere-root .ee-wake-toggle.ee-enabled{
+      color:#fff!important;background:rgba(255,255,255,.13)!important;border-color:rgba(255,255,255,.38)!important;
+    }
+    #ennie-everywhere-root .ee-expand{
+      width:30px!important;height:30px!important;border-radius:10px!important;
+      background:rgba(255,255,255,.07)!important;color:#eee!important;
+    }
+    #ennie-everywhere-root .ee-close{
+      width:30px!important;height:30px!important;border-radius:50%!important;
+      background:rgba(255,255,255,.055)!important;color:#ddd!important;font-size:20px!important;
+    }
+    #ennie-everywhere-root .ee-messages{
+      padding:17px 14px 13px!important;gap:12px!important;
+      background:linear-gradient(180deg,rgba(255,255,255,.012),transparent 30%)!important;
+      scroll-behavior:smooth!important;
+    }
+    #ennie-everywhere-root .ee-bubble{
+      max-width:89%!important;padding:11px 14px!important;
+      border-radius:17px!important;font-size:13px!important;line-height:1.55!important;
+    }
+    #ennie-everywhere-root .ee-bubble.assistant{
+      background:linear-gradient(145deg,#252525,#191919)!important;
+      border:1px solid rgba(255,255,255,.085)!important;border-bottom-left-radius:6px!important;
+    }
+    #ennie-everywhere-root .ee-bubble.user{
+      background:linear-gradient(145deg,#fff,#e9e9e9)!important;color:#111!important;
+      border-bottom-right-radius:6px!important;
+    }
+    #ennie-everywhere-root .ee-state{
+      min-height:23px!important;padding:2px 15px 7px!important;
+      color:rgba(255,255,255,.47)!important;font-size:10px!important;
+    }
+    #ennie-everywhere-root .ee-compose{
+      padding:10px 11px max(11px,env(safe-area-inset-bottom))!important;
+      gap:8px!important;border-top:1px solid rgba(255,255,255,.10)!important;
+      background:rgba(0,0,0,.28)!important;align-items:center!important;
+    }
+    #ennie-everywhere-root .ee-input{
+      min-height:42px!important;max-height:104px!important;
+      border-radius:16px!important;background:#202020!important;
+      border:1px solid rgba(255,255,255,.11)!important;
+      padding:11px 13px!important;font-size:13px!important;
+    }
+    #ennie-everywhere-root .ee-input:focus{border-color:rgba(255,255,255,.35)!important;background:#242424!important}
+    #ennie-everywhere-root .ee-iconbtn{
+      width:41px!important;height:41px!important;border-radius:50%!important;
+      border:1px solid rgba(255,255,255,.13)!important;background:#202020!important;
+    }
+    #ennie-everywhere-root .ee-send{background:#f4f4f4!important;color:#111!important;border-color:#fff!important}
+    #ennie-everywhere-root .ee-resize{opacity:.72!important}
+    @media(max-width:480px){
+      #ennie-everywhere-root .ee-panel{right:8px!important;bottom:77px!important;width:var(--ee-panel-width,calc(100vw - 16px))!important;height:var(--ee-panel-height,min(540px,calc(100dvh - 94px)))!important}
+      #ennie-everywhere-root .ee-head{gap:6px!important;padding:0 8px!important}
+      #ennie-everywhere-root .ee-wake-toggle,#ennie-everywhere-root .ee-voice-toggle{padding:0 6px!important;font-size:8px!important}
+      #ennie-everywhere-root .ee-head-copy{min-width:42px!important}
+      #ennie-everywhere-root .ee-expand{width:27px!important;height:27px!important}
+      #ennie-everywhere-root .ee-close{width:28px!important;height:28px!important}
+    }
+  `;
   document.head.appendChild(style);
 
   const launch = document.createElement("button");
