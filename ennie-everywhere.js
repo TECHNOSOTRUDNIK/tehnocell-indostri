@@ -17,32 +17,32 @@
     .ee-launch:active{transform:scale(.92)}
     .ee-orb{width:25px;height:25px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%);box-shadow:0 0 12px rgba(255,255,255,.9),0 0 27px rgba(255,255,255,.32);animation:ee-breathe 3s ease-in-out infinite}
     .ee-launch:after{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.16);border-radius:50%;animation:ee-ring 4s ease-out infinite}
-    .ee-panel{position:fixed;right:16px;bottom:88px;z-index:2147483000;width:var(--ee-panel-width,min(370px,calc(100vw - 24px)));height:var(--ee-panel-height,min(540px,calc(100dvh - 112px)));max-width:calc(100vw - 16px);max-height:calc(100dvh - 96px);min-width:min(280px,calc(100vw - 16px));min-height:300px;background:rgba(13,13,13,.97);border:1px solid rgba(255,255,255,.15);border-radius:23px;box-shadow:0 18px 70px rgba(0,0,0,.42),0 0 35px rgba(255,255,255,.07);backdrop-filter:blur(22px);display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(16px) scale(.97);pointer-events:none;transition:opacity .24s,transform .24s}
+    .ee-panel{position:fixed;right:16px;bottom:88px;z-index:2147483000;width:var(--ee-panel-width,min(370px,calc(100vw - 24px)));height:var(--ee-panel-height,min(540px,calc(100dvh - 112px)));max-width:calc(100vw - 16px);max-height:calc(100dvh - 96px);min-width:min(280px,calc(100vw - 16px));min-height:300px;background:linear-gradient(155deg,rgba(23,23,23,.985),rgba(9,9,9,.99) 72%);border:1px solid rgba(255,255,255,.17);border-radius:25px;box-shadow:0 20px 75px rgba(0,0,0,.48),0 0 38px rgba(255,255,255,.055);backdrop-filter:blur(22px);display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(16px) scale(.97);pointer-events:none;transition:opacity .24s,transform .24s}
     .ee-panel.ee-open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-    .ee-head{height:67px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 15px;border-bottom:1px solid rgba(255,255,255,.09)}
+    .ee-head{height:64px;flex-shrink:0;display:flex;align-items:center;gap:11px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.085);background:linear-gradient(90deg,rgba(255,255,255,.035),transparent)}
     .ee-head-orb{width:35px;height:35px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#fff 0%,#fff 28%,#e9e9e9 53%,#a7a7a7 78%,#fff 100%);box-shadow:0 0 15px rgba(255,255,255,.65);flex-shrink:0}
-    .ee-head-copy{flex:1;min-width:0}.ee-head-title{font-size:13px;font-weight:750;letter-spacing:2px}.ee-head-sub{font-size:10px;color:#929292;margin-top:4px}
+    .ee-head-copy{flex:1;min-width:0}.ee-head-title{font-size:13px;font-weight:750;letter-spacing:2px}.ee-head-sub{font-size:10px;color:#999;margin-top:4px;display:flex;align-items:center;gap:6px}.ee-head-sub:before{content:"";width:5px;height:5px;border-radius:50%;background:#e8e8e8;box-shadow:0 0 8px rgba(255,255,255,.55)}
     .ee-close{width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:#aaa;font-size:22px;cursor:pointer;flex-shrink:0}.ee-expand{width:32px;height:32px;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:#1b1b1b;color:#aaa;font-size:16px;cursor:pointer;flex-shrink:0}.ee-resize{position:absolute;left:0;bottom:0;width:30px;height:30px;z-index:4;touch-action:none;cursor:nesw-resize;border:0;background:transparent}.ee-resize:before{content:"";position:absolute;left:9px;bottom:9px;width:10px;height:10px;border-left:2px solid #777;border-bottom:2px solid #777;opacity:.8}.ee-panel.ee-expanded{right:8px!important;bottom:8px!important;width:calc(100vw - 16px)!important;height:calc(100dvh - 16px)!important;max-width:none;max-height:none;border-radius:17px}.ee-voice-toggle{height:34px;padding:0 10px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:#1b1b1b;color:#aaa;font-size:10px;cursor:pointer;white-space:nowrap}.ee-voice-toggle.ee-enabled{color:#fff;border-color:rgba(255,255,255,.5);background:#292929}
-    .ee-messages{flex:1;min-height:0;overflow:auto;padding:15px 13px;display:flex;flex-direction:column;gap:10px}
-    .ee-bubble{max-width:88%;padding:11px 13px;border-radius:15px;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
-    .ee-bubble.assistant{align-self:flex-start;background:#202020;border:1px solid rgba(255,255,255,.07);border-bottom-left-radius:5px}
-    .ee-bubble.user{align-self:flex-end;background:#f2f2f2;color:#111;border-bottom-right-radius:5px}
+    .ee-messages{flex:1;min-height:0;overflow:auto;padding:17px 14px 14px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth;overscroll-behavior:contain}
+    .ee-bubble{max-width:88%;padding:12px 14px;border-radius:17px;font-size:13px;line-height:1.58;white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:0 3px 14px rgba(0,0,0,.12);animation:ee-bubble-in .2s ease-out both}
+    .ee-bubble.assistant{align-self:flex-start;background:linear-gradient(145deg,#242424,#1b1b1b);border:1px solid rgba(255,255,255,.075);border-bottom-left-radius:6px}
+    .ee-bubble.user{align-self:flex-end;background:linear-gradient(145deg,#fff,#e7e7e7);color:#111;border-bottom-right-radius:6px}
     .ee-bubble a{color:inherit;text-decoration:underline}
     .ee-state{font-size:10px;color:#929292;padding:0 15px 8px;min-height:18px}
-    .ee-compose{padding:10px 11px 12px;border-top:1px solid rgba(255,255,255,.09);display:flex;align-items:flex-end;gap:7px}
-    .ee-input{flex:1;min-width:0;max-height:100px;resize:none;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:#1b1b1b;color:white;padding:12px;font:13px Inter,Arial,sans-serif;outline:none}
-    .ee-input:focus{border-color:rgba(255,255,255,.4)}.ee-input::placeholder{color:#777}
+    .ee-compose{padding:11px 12px max(12px,env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.16);display:flex;align-items:flex-end;gap:8px}
+    .ee-input{flex:1;min-width:0;max-height:110px;resize:none;border:1px solid rgba(255,255,255,.13);border-radius:17px;background:rgba(34,34,34,.92);color:white;padding:12px 13px;font:13px Inter,Arial,sans-serif;outline:none;transition:border-color .2s,background .2s}
+    .ee-input:focus{border-color:rgba(255,255,255,.42);background:#242424}.ee-input::placeholder{color:#858585}
     .ee-iconbtn{width:42px;height:42px;flex-shrink:0;border:1px solid rgba(255,255,255,.13);border-radius:50%;background:#1b1b1b;color:white;display:grid;place-items:center;cursor:pointer}
     .ee-iconbtn:disabled{opacity:.45;cursor:default}.ee-send{background:#f2f2f2;color:#111;border-color:#fff}
     .ee-mic.ee-recording{background:#fff;color:#111;box-shadow:0 0 0 5px rgba(255,255,255,.12)}
     .ee-login{color:#ddd;text-decoration:underline}
     .ee-cinematic{position:fixed;inset:0;z-index:2147482500;pointer-events:none;opacity:0;transition:opacity .65s ease}
     .ee-cinematic.ee-cinematic-visible{opacity:1}
-    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0) 18%,rgba(255,255,255,.08) 43%,rgba(255,255,255,.24) 70%,rgba(255,255,255,.52) 112%);opacity:.88;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
-    .ee-cinematic.ee-speaking .ee-vignette{animation:ee-vignette-speak 1.55s ease-in-out infinite;opacity:1}
-    .ee-cinematic.ee-paused .ee-vignette{animation:none;opacity:.55}
+    .ee-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(255,255,255,0) 23%,rgba(255,255,255,.045) 46%,rgba(255,255,255,.15) 72%,rgba(255,255,255,.38) 112%);opacity:.76;transition:opacity .35s ease;animation:ee-vignette-in .9s ease both}
+    .ee-cinematic.ee-speaking .ee-vignette{animation:ee-vignette-speak 1.55s ease-in-out infinite;opacity:.88}
+    .ee-cinematic.ee-paused .ee-vignette{animation:none;opacity:.42}
     .ee-cinematic-stop{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(0,0,0,.28);color:rgba(255,255,255,.8);font-size:20px;line-height:1;pointer-events:auto;cursor:pointer;backdrop-filter:blur(8px)}
-    @keyframes ee-vignette-in{from{opacity:0}to{opacity:.88}}
+    @keyframes ee-vignette-in{from{opacity:0}to{opacity:.76}}
     @keyframes ee-vignette-speak{0%,100%{opacity:.72}50%{opacity:1}}
     @media(prefers-reduced-motion:reduce){.ee-cinematic,.ee-vignette{animation:none!important;transition:none!important}}
     .ee-thinking .ee-head-orb{animation:ee-think 1s ease-in-out infinite}
@@ -51,6 +51,7 @@
     .ee-speaking .ee-head-orb{animation:ee-speak .42s ease-in-out infinite alternate}
     .ee-listening .ee-head-orb{box-shadow:0 0 0 7px rgba(255,255,255,.09),0 0 24px rgba(255,255,255,.9)}
     .ee-target-highlight{position:relative!important;z-index:2147482000!important;outline:3px solid rgba(255,255,255,.95)!important;outline-offset:5px!important;box-shadow:0 0 0 9px rgba(255,255,255,.12),0 0 30px rgba(255,255,255,.5)!important;border-radius:8px!important;animation:ee-target-pulse 1.1s ease-in-out 3!important}
+    @keyframes ee-bubble-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
     @keyframes ee-breathe{0%,100%{transform:scale(.94);filter:brightness(.96)}50%{transform:scale(1.08);filter:brightness(1.12)}}
     @keyframes ee-ring{0%{transform:scale(.75);opacity:.55}100%{transform:scale(1.28);opacity:0}}
     @keyframes ee-think{0%,100%{transform:scale(.9);filter:brightness(.9)}50%{transform:scale(1.17);filter:brightness(1.25)}}
@@ -110,6 +111,9 @@
   });
   const history = [];
   let client = null;
+  let activeChatKey = null;
+  let restoredChat = false;
+  let returnGreetingShown = false;
   let recorder = null;
   let stream = null;
   let chunks = [];
@@ -162,18 +166,59 @@
     panel.classList.toggle("ee-speaking", mode === "speaking");
     if (message) state.textContent = message;
   }
+  function persistChat() {
+    if (!activeChatKey) return;
+    try {
+      const messages = Array.from(messagesBox.querySelectorAll(".ee-bubble")).map(node => ({
+        role: node.classList.contains("user") ? "user" : "assistant",
+        content: node.textContent || ""
+      })).slice(-40);
+      localStorage.setItem(activeChatKey, JSON.stringify({ messages, history: history.slice(-10), updatedAt: Date.now() }));
+    } catch (error) { console.warn("ENNIE MINI chat save failed:", error); }
+  }
+  async function restoreChat() {
+    try {
+      const session = await getSession();
+      if (!session || !session.user || !session.user.id) return;
+      activeChatKey = "ennie_mini_chat_v1_" + session.user.id;
+      const saved = JSON.parse(localStorage.getItem(activeChatKey) || "null");
+      if (saved && Array.isArray(saved.messages)) {
+        history.splice(0, history.length, ...(Array.isArray(saved.history) ? saved.history.slice(-10) : []));
+        messagesBox.replaceChildren();
+        saved.messages.slice(-40).forEach(item => {
+          if (!item || !item.content) return;
+          const bubble = document.createElement("div");
+          bubble.className = "ee-bubble " + (item.role === "user" ? "user" : "assistant");
+          bubble.textContent = String(item.content);
+          messagesBox.appendChild(bubble);
+        });
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      }
+      restoredChat = true;
+    } catch (error) { console.warn("ENNIE MINI chat restore failed:", error); }
+  }
   function addBubble(text, role) {
     const bubble = document.createElement("div");
     bubble.className = "ee-bubble " + role;
     bubble.textContent = text;
     messagesBox.appendChild(bubble);
     messagesBox.scrollTop = messagesBox.scrollHeight;
+    persistChat();
     return bubble;
   }
-  function openPanel() {
+  function openPanel(suppressReturnGreeting = false) {
     panel.classList.add("ee-open");
     if (!messagesBox.children.length) {
       addBubble("Привет. Я здесь, рядом с тобой. Могу подсказать, найти нужное и показать прямо на странице.", "assistant");
+    }
+    if (!suppressReturnGreeting && restoredChat && !returnGreetingShown && messagesBox.children.length) {
+      returnGreetingShown = true;
+      if (voiceOutputEnabled) {
+        setMode("", "Я здесь. Рада, что ты вернулся.");
+        window.setTimeout(() => speak("Что-то случилось?"), 260);
+      } else {
+        addBubble("С возвращением. Что сегодня будем делать?", "assistant");
+      }
     }
   }
 
@@ -186,10 +231,12 @@
     localStorage.setItem(key, "true");
     window.setTimeout(() => {
       if (document.visibilityState !== "visible") return;
-      openPanel();
+      returnGreetingShown = true;
+      openPanel(true);
       messagesBox.replaceChildren();
       addBubble("Привет! Я ENNIE, помощница TEHNOCELL INDOSTRI. Рада знакомству. Здесь можно изучить подразделения и проекты компании, открыть TEHNOCELLSOFT и посмотреть доступные приложения, перейти к TEHNOCELL WEATHER, познакомиться с играми TEHNOCELLGAME, а через TEHNOCELL ID — войти в аккаунт и управлять профилем.\n\nЕсли потеряешься, просто напиши мне, что хочешь найти: я объясню и, где получится, прокручу страницу к нужному месту. Можешь закрыть это окно в любой момент. Микрофон включается только вручную, а мой голос сейчас выключен.", "assistant");
       setMode("", "Добро пожаловать в TEHNOCELL INDOSTRI.");
+      persistChat();
     }, 1400);
   }
   function stopAudio() {
@@ -400,7 +447,7 @@
       if ("speechSynthesis" in window && voiceOutputEnabled && data.speechText) {
         const utterance = new SpeechSynthesisUtterance(data.speechText);
         utterance.lang = "ru-RU";
-        utterance.rate = 1.04;
+        utterance.rate = 1.12;
         utterance.onstart = () => setCinematicSpeaking(true);
         utterance.onend = () => { setCinematicSpeaking(false); clearNarration(); };
         window.speechSynthesis.speak(utterance);
@@ -412,6 +459,7 @@
     try {
       if (narrationAudio) narrationAudio.pause();
       narrationAudio = new Audio(data.audio);
+      narrationAudio.playbackRate = 1.06;
       narrationAudio.currentTime = Math.max(0, Number(data.position) || 0);
       narrationAudio.onended = clearNarration;
       narrationAudio.onplay = () => setCinematicSpeaking(true);
@@ -490,6 +538,7 @@
         if (!blob.size) throw new Error("empty audio");
         audioObjectUrl = URL.createObjectURL(blob);
         const audio = new Audio(audioObjectUrl);
+        audio.playbackRate = 1.08;
         setMode("speaking", "Я отвечаю тебе голосом…");
         await new Promise((resolve, reject) => {
           audio.onended = resolve;
@@ -507,7 +556,7 @@
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(clean);
       utterance.lang = "ru-RU";
-      utterance.rate = 1.02;
+      utterance.rate = 1.12;
       setMode("speaking", "Я отвечаю тебе голосом…");
       utterance.onend = () => setMode("", "Можешь продолжать, я слушаю.");
       window.speechSynthesis.speak(utterance);
@@ -532,7 +581,7 @@
       const target=page.elements.findIndex(item=>item.label.toLowerCase().includes(label.toLowerCase()));
       const answer=settingsOpen?"Чтобы поменять аватар, нажми «Изменить фото» в разделе «Профиль», выбери JPG, PNG или WEBP размером до 5 МБ и дождись подтверждения.":"Сначала открой вкладку «Настройки», затем в разделе «Профиль» нажми «Изменить фото», выбери JPG, PNG или WEBP размером до 5 МБ и дождись подтверждения.";
       addBubble(answer,"assistant");if(target>=0)processMarkers("[[ENNIE_SHOW:"+target+"]]");
-      history.push({role:"assistant",content:answer});while(history.length>10)history.shift();setMode("","Помогаю с настройками TEHNOCELL ID.");isBusy=false;send.disabled=false;mic.disabled=false;return;
+      history.push({role:"assistant",content:answer});while(history.length>10)history.shift();persistChat();setMode("","Помогаю с настройками TEHNOCELL ID.");isBusy=false;send.disabled=false;mic.disabled=false;return;
     }
 
     const pageText = [
@@ -545,6 +594,7 @@
     ].join("\n");
     history.push({ role: "user", content: value + "\n\n" + pageText });
     while (history.length > 10) history.shift();
+    persistChat();
     setMode("thinking", "Сейчас посмотрю, где это находится…");
     try {
       const session = await getSession();
@@ -579,6 +629,7 @@
       const answer = processMarkers(String(raw));
       history.push({ role: "assistant", content: answer });
       addBubble(answer, "assistant");
+      persistChat();
       setMode("", "Я подготовила объяснение.");
       await presentAnswer(answer);
     } catch (error) {
@@ -687,6 +738,5 @@
     if (document.hidden) stopRecording(false);
   });
 
-  resumeNarrationIfNeeded();
-  showFirstVisitWelcome();
+  restoreChat().finally(() => showFirstVisitWelcome());
 })();
