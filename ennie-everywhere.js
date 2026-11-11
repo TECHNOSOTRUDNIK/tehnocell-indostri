@@ -790,12 +790,12 @@
     // Explicit navigation commands: descriptions remain ordinary questions,
     // while direct requests to open a known site page perform navigation.
     const commandText = value.toLowerCase().replace(/ё/g, "е");
-    const wantsOpen = /\\b(открой|перейди|перейти|зайди|запусти|открывай)\\b|покажи\\s+(?:мне\\s+)?(?:страниц|сайт)/i.test(commandText);
+    const wantsOpen = /\b(открой|перейди|перейти|зайди|запусти|открывай)\b|покажи\s+(?:мне\s+)?(?:страниц|сайт)/i.test(commandText);
     const siteRoutes = [
-      { match: /stand\\s*ascension|стенд\\s*аскенсион|стенд\\s*асценсион|stand ascension/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
-      { match: /tehnocell\\s*game|техноселл\\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
-      { match: /tehnocell\\s*weather|техноселл\\s*ветер|погода/i, path: "weather-app.html", title: "TEHNOCELL WEATHER" },
-      { match: /tehnocell\\s*soft|техноселл\\s*софт/i, path: "soft.html", title: "TEHNOCELLSOFT" }
+      { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион|stand ascension/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
+      { match: /tehnocell\s*game|техноселл\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
+      { match: /tehnocell\s*weather|техноселл\s*ветер|погода/i, path: "weather-app.html", title: "TEHNOCELL WEATHER" },
+      { match: /tehnocell\s*soft|техноселл\s*софт/i, path: "soft.html", title: "TEHNOCELLSOFT" }
     ];
     const requestedRoute = wantsOpen ? siteRoutes.find(route => route.match.test(commandText)) : null;
     if (requestedRoute) {
