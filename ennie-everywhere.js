@@ -308,9 +308,8 @@
       recognition.onend = () => {
         if (wakeRecognition === recognition) wakeRecognition = null;
         wakeStarting = false;
-        if (wakeEnabled && document.visibilityState === "visible") {
-          wakeRestartTimer = setTimeout(startWakeRecognition, 650);
-        }
+        // Do not restart on every spontaneous Android onend: this causes repeated microphone beeps.
+        // Listening is re-armed after ENNIE finishes processing and speaking a reply.
       };
       recognition.start();
     } catch (error) {
@@ -815,7 +814,7 @@
     // Explicit navigation commands: descriptions remain ordinary questions,
     // while direct requests to open a known site page perform navigation.
     const commandText = value.toLowerCase().replace(/ё/g, "е");
-    const wantsOpen = /(?:^|\\s)(?:открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)(?=\\s|$)|(?:мне\\s+)?(?:нужна|нужен)\\s+(?:страница|сайт)/i.test(commandText);
+    const wantsOpen = /(?:^|\s)(?:открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)(?=\s|$)|(?:мне\s+)?(?:нужна|нужен)\s+(?:страница|страничку|сайт)/i.test(commandText);
     const siteRoutes = [
       { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
       { match: /tehnocell\s*game|техноселл?\s*гейм|техноселгейм|техно\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
@@ -823,7 +822,7 @@
       { match: /tehnocell\s*soft|техноселл?\s*софт|техносел\s*софт|техносел\s*soft|техно\s*софт|технософт|софт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
     ];
     const requestedRoute = siteRoutes.find(route => route.match.test(commandText));
-    const isExplicitOpen = wantsOpen || /^(?:энни[,! ]+)?(?:открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)\\s+/i.test(commandText);
+    const isExplicitOpen = wantsOpen || /^(?:энни[,! ]+)?(?:открой|открыть|перейди|перейти|зайди|запусти|открывай|покажи|переключи)\s+/i.test(commandText);
     if (requestedRoute && isExplicitOpen) {
       const targetUrl = new URL(requestedRoute.path, location.href);
       if (targetUrl.origin === location.origin) {
@@ -837,6 +836,7 @@
         isBusy = false;
         send.disabled = false;
         mic.disabled = false;
+        sessionStorage.setItem("ennie_open_after_navigation_v1", "1");
         setTimeout(() => { location.assign(targetUrl.href); }, 250);
         return;
       }
@@ -1015,5 +1015,11 @@
     else if (wakeEnabled) startWakeRecognition();
   });
 
-  restoreChat().finally(() => showFirstVisitWelcome());
+  restoreChat().finally(() => {
+    showFirstVisitWelcome();
+    if (sessionStorage.getItem("ennie_open_after_navigation_v1") === "1") {
+      sessionStorage.removeItem("ennie_open_after_navigation_v1");
+      openPanel(true);
+    }
+  });
 })();
