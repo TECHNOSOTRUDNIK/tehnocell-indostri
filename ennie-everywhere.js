@@ -806,8 +806,8 @@
     const siteRoutes = [
       { match: /stand\s*ascension|стенд\s*аскенсион|стенд\s*асценсион/i, path: "stand-ascension.html", title: "Stand Ascension: The Tower" },
       { match: /tehnocell\s*game|техноселл?\s*гейм|техноселгейм|техно\s*гейм|игровое подразделение/i, path: "game.html", title: "TEHNOCELLGAME" },
-      { match: /tehnocell\s*weather|техноселл?\s*(?:везер|ветер|уэзер)|техно\s*везер|weather|погод(?:а|ный раздел)/i, path: "weather.html", title: "TEHNOCELL WEATHER" },
-      { match: /tehnocell\s*soft|техноселл?\s*софт|техно\s*софт|технософт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
+      { match: /tehnocell\s*weather|техноселл?\s*(?:везер|ветер|уэзер)|техносел\s*weather|техносел\s*везер|техносел\s*ветер|техно\s*везер|weather|погод(?:а|ный раздел)/i, path: "weather.html", title: "TEHNOCELL WEATHER" },
+      { match: /tehnocell\s*soft|техноселл?\s*софт|техносел\s*софт|техносел\s*soft|техно\s*софт|технософт|программное подразделение/i, path: "soft.html", title: "TEHNOCELLSOFT" }
     ];
     const requestedRoute = wantsOpen ? siteRoutes.find(route => route.match.test(commandText)) : null;
     if (requestedRoute) {
@@ -894,6 +894,10 @@
       isBusy = false;
       send.disabled = false;
       mic.disabled = false;
+      // Keep hands-free conversation armed after every completed answer.
+      if (wakeEnabled && WakeRecognition && document.visibilityState === "visible") {
+        setTimeout(startWakeRecognition, 700);
+      }
     }
   }
 
