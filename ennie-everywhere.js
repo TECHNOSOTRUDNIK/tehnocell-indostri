@@ -729,14 +729,8 @@
     const fullText = String(answer).replace(/\[\[ENNIE_SHOW:\d+\]\]/g, "").trim();
     const speechText = makeSpeakableText(fullText);
     if (!voiceOutputEnabled || !speechText) return;
-    const data = { text: fullText, speechText, position: 0, audio: null };
-    stopAudio();
-    if (narrationTimer) clearInterval(narrationTimer);
-    saveNarration(data);
-    panel.classList.remove("ee-open");
-    launch.style.display = "none";
-    showCinematic();
-    await makeNarrationAudio(data);
+    // Keep the immersive ENNIE interface visible while she speaks.
+    await speak(speechText);
   }
   function resumeNarrationIfNeeded(forceResume) {
     const data = readNarration();
@@ -922,6 +916,7 @@
         panel.classList.remove("ee-listening");
         if (!shouldTranscribe || blob.size < 1200) {
           setMode("", "Запись остановлена.");
+          if (wakeEnabled && document.visibilityState === "visible") startWakeRecognition();
           return;
         }
         try {
@@ -954,6 +949,7 @@
       recorder = null;
       mic.classList.remove("ee-recording");
       panel.classList.remove("ee-listening");
+      if (wakeEnabled && document.visibilityState === "visible") startWakeRecognition();
     }
   }
   async function startRecording() {
