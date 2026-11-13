@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050609">
 <title>TEHNOCELL WEATHER</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
 
 <style>
 :root {
@@ -354,6 +356,7 @@ header {
   margin-top:7px;
 }
 
+.weather-map{height:300px;width:100%;border-radius:17px;overflow:hidden;background:#151820;border:1px solid var(--line);z-index:1}.map-controls{display:flex;gap:8px;margin-bottom:12px}.map-control{border:1px solid var(--line);background:var(--card2);color:#fff;padding:9px 12px;border-radius:11px;font-size:11px}.map-control.active{background:#fff;color:#08090c}.map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}.leaflet-container{font:12px sans-serif}
 /* WEEK FORECAST */
 
 .days {
@@ -545,6 +548,37 @@ footer {
 }
 
 
+
+function initWeatherMap(){
+  if(!window.L||weatherMap)return;
+  weatherMap=L.map("weatherMap",{scrollWheelZoom:false}).setView([latitude,longitude],7);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(weatherMap);
+  weatherMarker=L.marker([latitude,longitude]).addTo(weatherMap).bindPopup("Выбранное местоположение");
+  weatherMap.on("click",async e=>{
+    latitude=e.latlng.lat;longitude=e.latlng.lng;currentCity="Выбранная точка";
+    weatherMarker.setLatLng(e.latlng);await loadWeather();
+    try{const p=await fetchJSON("https://geocoding-api.open-meteo.com/v1/reverse?latitude="+latitude+"&longitude="+longitude+"&language=ru&format=json");if(p.results?.[0])currentCity=p.results[0].name+(p.results[0].country?", "+p.results[0].country:"");$("cityName").textContent=currentCity;weatherMarker.setPopupContent(currentCity);}catch(_){}
+  });
+  $("mapBaseBtn").addEventListener("click",()=>setWeatherMapLayer(false));
+  $("mapRainBtn").addEventListener("click",()=>setWeatherMapLayer(true));
+}
+async function setWeatherMapLayer(showRain){
+  $("mapBaseBtn").classList.toggle("active",!showRain);$("mapRainBtn").classList.toggle("active",showRain);
+  if(rainLayer){weatherMap.removeLayer(rainLayer);rainLayer=null;}
+  if(!showRain)return;
+  try{
+    const r=await fetchJSON("https://api.rainviewer.com/public/weather-maps.json");
+    const frames=r.radar?.past||[];const frame=frames[frames.length-1];if(!frame)throw Error();
+    rainLayer=L.tileLayer("https://tilecache.rainviewer.com"+frame.path+"/256/{z}/{x}/{y}/2/1_1.png",{opacity:.65,attribution:'Radar &copy; RainViewer'}).addTo(weatherMap);
+  }catch(_){$("status").textContent="Радар осадков временно недоступен";$("mapRainBtn").classList.remove("active");$("mapBaseBtn").classList.add("active");}
+}
+function updateWeatherMap(){
+  if(!window.L)return;if(!weatherMap)initWeatherMap();
+  weatherMap.setView([latitude,longitude],weatherMap.getZoom()||7);
+  if(weatherMarker)weatherMarker.setLatLng([latitude,longitude]);
+  setTimeout(()=>weatherMap.invalidateSize(),120);
+}
+
 /* FAVORITE CITIES */
 .favorites {
   margin-bottom:18px;
@@ -715,6 +749,13 @@ footer {
 </section>
 
 <section class="card">
+  <div class="section-title">Интерактивная карта погоды</div>
+  <div class="map-controls"><button class="map-control active" id="mapBaseBtn" type="button">Карта</button><button class="map-control" id="mapRainBtn" type="button">Радар осадков</button></div>
+  <div class="weather-map" id="weatherMap"></div>
+  <div class="map-hint">Перемещай и масштабируй карту. Нажми на точку, чтобы загрузить прогноз для этого места.</div>
+</section>
+
+<section class="card">
   <div class="section-title">Прогноз на 7 дней</div>
   <div class="days" id="days"></div>
 </section>
@@ -823,6 +864,7 @@ let currentCity = "Москва";
 const forecastURL = "https://api.open-meteo.com/v1/forecast";
 const geoURL = "https://geocoding-api.open-meteo.com/v1/search";
 const airURL = "https://air-quality-api.open-meteo.com/v1/air-quality";
+let weatherMap=null,weatherMarker=null,rainLayer=null;
 
 async function fetchJSON(url) {
   const response = await fetch(url);
@@ -961,7 +1003,7 @@ async function loadWeather() {
     const url = forecastURL +
       `?latitude=${latitude}&longitude=${longitude}` +
       "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,visibility,uv_index,dew_point_2m" +
-      "&hourly=temperature_2m,precipitation_probability,weather_code" +
+      "&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl,visibility,dew_point_2m" +
       "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max" +
       "&forecast_days=7&timezone=auto";
 
@@ -1015,8 +1057,10 @@ function showWeather(data) {
   $("sunrise").textContent = formatTime(d.sunrise[0]);
   $("sunset").textContent = formatTime(d.sunset[0]);
 
+  window.lastWeatherHourly=h;
   showHourly(h,nextHour);
   showDays(d);
+  updateWeatherMap();
   showAdvice(c,d);
 
   effects(type);
@@ -1043,7 +1087,8 @@ function showHourly(data,start) {
         <div class="hour-time">${time}</div>
         <div class="hour-icon">${icon(type)}</div>
         <div class="hour-temp">${Math.round(data.temperature_2m[i])}°</div>
-        <div class="hour-rain">${data.precipitation_probability[i] ?? 0}%</div>
+        <div class="hour-rain">${data.precipitation_probability[i] ?? 0}% осадки</div>
+        <div class="hour-rain">${Math.round(data.wind_speed_10m?.[i] ?? 0)} км/ч ветер</div>
       </div>`;
   }
 }
@@ -1085,7 +1130,8 @@ function showDays(data) {
 
     $("airDetails").textContent =
       "PM2.5: " + Number(air.pm2_5).toFixed(1) +
-      " · PM10: " + Number(air.pm10).toFixed(1);
+      " · PM10: " + Number(air.pm10).toFixed(1) + " мкг/м³";
+    $("airDetails").textContent += " · концентрации частиц";
 
   } catch (error) {
     $("airStatus").textContent = "Данные о качестве воздуха недоступны";
@@ -1161,6 +1207,11 @@ function showAdvice(c,d) {
     });
   }
 
+  const clothing = c.apparent_temperature <= 0 ? "Ощущается холодно: пригодятся тёплая куртка, шапка и перчатки." : c.apparent_temperature < 12 ? "Прохладно: лучше взять куртку или плотную кофту." : c.apparent_temperature < 20 ? "Комфортнее будет в лёгкой верхней одежде." : "Подойдёт лёгкая одежда по погоде; не забывай пить воду.";
+  messages.push({icon:"Одежда",text:clothing});
+  if(c.relative_humidity_2m>=80) messages.push({icon:"Влажность",text:"Высокая влажность может усиливать ощущение духоты или прохлады."});
+  const future=(window.lastWeatherHourly?.time||[]).map((t,i)=>({t,i})).filter(x=>new Date(x.t).getTime()>=Date.now() && (window.lastWeatherHourly.precipitation_probability[x.i]??100)<25).slice(0,8);
+  if(future.length) messages.push({icon:"Прогулка",text:"Ближайшее окно с небольшой вероятностью осадков — около "+future[0].t.slice(11,16)+". Это ориентир по прогнозу."});
   messages.forEach(item => {
     box.innerHTML += `
       <div class="advice">
