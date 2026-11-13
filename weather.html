@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050609">
 <title>TEHNOCELL WEATHER</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
 :root {
@@ -356,7 +356,18 @@ header {
   margin-top:7px;
 }
 
-.weather-map{height:300px;width:100%;border-radius:17px;overflow:hidden;background:#151820;border:1px solid var(--line);z-index:1}.map-controls{display:flex;gap:8px;margin-bottom:12px}.map-control{border:1px solid var(--line);background:var(--card2);color:#fff;padding:9px 12px;border-radius:11px;font-size:11px}.map-control.active{background:#fff;color:#08090c}.map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}.leaflet-container{font:12px sans-serif}
+.weather-map{height:360px;width:100%;border-radius:18px;overflow:hidden;background:#080b10;border:1px solid var(--line);z-index:1}
+.map-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.map-control{border:1px solid var(--line);background:var(--card2);color:#fff;padding:10px 13px;border-radius:12px;font-size:11px;transition:.2s}
+.map-control.active{background:#fff;color:#08090c;border-color:#fff}
+.map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}
+.leaflet-container{font:12px sans-serif;background:#080b10}
+.leaflet-tile{filter:grayscale(1) invert(.91) contrast(1.12) brightness(.72) sepia(.08) hue-rotate(175deg) saturate(.65)}
+.leaflet-control-zoom a{background:#11151c!important;color:#fff!important;border-color:#343943!important}
+.leaflet-control-attribution{background:rgba(5,6,9,.78)!important;color:#aeb3bd!important}
+.leaflet-control-attribution a{color:#d5d9e0!important}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#11151c;color:#fff}
+@media(max-width:480px){.weather-map{height:320px}}
 /* WEEK FORECAST */
 
 .days {
@@ -720,9 +731,9 @@ footer {
 
 <section class="card">
   <div class="section-title">Интерактивная карта погоды</div>
-  <div class="map-controls"><button class="map-control active" id="mapBaseBtn" type="button">Карта</button><button class="map-control" id="mapRainBtn" type="button">Радар осадков</button></div>
+  <div class="map-controls"><button class="map-control active" id="mapBaseBtn" type="button">Мир</button><button class="map-control" id="mapRainBtn" type="button">Осадки</button><button class="map-control" id="mapCenterBtn" type="button">Моё место</button></div>
   <div class="weather-map" id="weatherMap"></div>
-  <div class="map-hint">Перемещай и масштабируй карту. Нажми на точку, чтобы загрузить прогноз для этого места.</div>
+  <div class="map-hint">TEHNOCELL MAP · Единая тёмная картографическая тема. Перемещай карту, меняй масштаб и выбирай точку для просмотра местного прогноза. Слой осадков показывает радарные данные.</div>
 </section>
 
 <section class="card">
@@ -1132,6 +1143,7 @@ function showAdvice(c,d) {
   box.innerHTML = "";
 
   const temp = c.temperature_2m;
+  const feels = Number.isFinite(c.apparent_temperature) ? c.apparent_temperature : temp;
   const wind = c.wind_speed_10m;
   const code = c.weather_code;
   const rain = c.precipitation;
@@ -1187,7 +1199,15 @@ function showAdvice(c,d) {
     });
   }
 
-  const clothing = c.apparent_temperature <= 0 ? "Ощущается холодно: пригодятся тёплая куртка, шапка и перчатки." : c.apparent_temperature < 12 ? "Прохладно: лучше взять куртку или плотную кофту." : c.apparent_temperature < 20 ? "Комфортнее будет в лёгкой верхней одежде." : "Подойдёт лёгкая одежда по погоде; не забывай пить воду.";
+  let clothing;
+  if (feels <= 0) clothing = "Ощущается холодно: тёплая куртка, шапка и перчатки.";
+  else if (feels < 8) clothing = "Холодно: выбирай утеплённую куртку и тёплый слой.";
+  else if (feels < 14) clothing = "Прохладно: подойдут куртка и закрытая обувь.";
+  else if (feels < 19) clothing = "При " + Math.round(feels) + "°C лучше надеть кофту или лёгкую куртку. Если ветрено — выбирай верхний слой потеплее.";
+  else if (feels < 24) clothing = "Умеренно тепло: подойдёт лёгкая одежда, но захвати тонкую кофту на вечер.";
+  else clothing = "Тепло: выбирай лёгкую дышащую одежду и пей достаточно воды.";
+  if (wind >= 20 && feels < 20) clothing += " Ветер усилит ощущение прохлады.";
+  if (rain > 0 || [51,53,55,61,63,65,80,81,82].includes(code)) clothing += " Из-за осадков пригодится непромокаемый верхний слой.";
   messages.push({icon:"Одежда",text:clothing});
   if(c.relative_humidity_2m>=80) messages.push({icon:"Влажность",text:"Высокая влажность может усиливать ощущение духоты или прохлады."});
   const future=(window.lastWeatherHourly?.time||[]).map((t,i)=>({t,i})).filter(x=>new Date(x.t).getTime()>=Date.now() && (window.lastWeatherHourly.precipitation_probability[x.i]??100)<25).slice(0,8);
@@ -1203,7 +1223,7 @@ function showAdvice(c,d) {
 
 function initWeatherMap(){
   if(!window.L||weatherMap)return;
-  weatherMap=L.map("weatherMap",{scrollWheelZoom:false}).setView([latitude,longitude],7);
+  weatherMap=L.map("weatherMap",{scrollWheelZoom:false,worldCopyJump:true,minZoom:2,maxZoom:18}).setView([latitude,longitude],2);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(weatherMap);
   weatherMarker=L.marker([latitude,longitude]).addTo(weatherMap).bindPopup("Выбранное местоположение");
   weatherMap.on("click",async e=>{
@@ -1213,6 +1233,7 @@ function initWeatherMap(){
   });
   $("mapBaseBtn").addEventListener("click",()=>setWeatherMapLayer(false));
   $("mapRainBtn").addEventListener("click",()=>setWeatherMapLayer(true));
+  $("mapCenterBtn").addEventListener("click",()=>{weatherMap.setView([latitude,longitude],7);weatherMarker.openPopup();});
 }
 async function setWeatherMapLayer(showRain){
   $("mapBaseBtn").classList.toggle("active",!showRain);$("mapRainBtn").classList.toggle("active",showRain);
@@ -1226,7 +1247,7 @@ async function setWeatherMapLayer(showRain){
 }
 function updateWeatherMap(){
   if(!window.L)return;if(!weatherMap)initWeatherMap();
-  weatherMap.setView([latitude,longitude],weatherMap.getZoom()||7);
+  weatherMap.setView([latitude,longitude],weatherMap.getZoom()||2);
   if(weatherMarker)weatherMarker.setLatLng([latitude,longitude]);
   setTimeout(()=>weatherMap.invalidateSize(),120);
 }
