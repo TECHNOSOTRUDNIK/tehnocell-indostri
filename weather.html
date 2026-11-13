@@ -557,7 +557,7 @@ function initWeatherMap(){
   weatherMap.on("click",async e=>{
     latitude=e.latlng.lat;longitude=e.latlng.lng;currentCity="Выбранная точка";
     weatherMarker.setLatLng(e.latlng);await loadWeather();
-    try{const p=await fetchJSON("https://geocoding-api.open-meteo.com/v1/reverse?latitude="+latitude+"&longitude="+longitude+"&language=ru&format=json");if(p.results?.[0])currentCity=p.results[0].name+(p.results[0].country?", "+p.results[0].country:"");$("cityName").textContent=currentCity;weatherMarker.setPopupContent(currentCity);}catch(_){}
+    $("cityName").textContent=currentCity;$("status").textContent="Показан прогноз для выбранной точки на карте";weatherMarker.setPopupContent(currentCity);
   });
   $("mapBaseBtn").addEventListener("click",()=>setWeatherMapLayer(false));
   $("mapRainBtn").addEventListener("click",()=>setWeatherMapLayer(true));
