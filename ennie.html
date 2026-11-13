@@ -2569,9 +2569,10 @@ async function sendMessage() {
       content: userContent
     });
 
-    const savedUserMessage = await saveMessage("user", userContent);
-
+    // Показываем индикатор сразу, не заставляя ждать сохранения сообщения.
     setTyping(true);
+
+    const savedUserMessage = await saveMessage("user", userContent);
 
     const { data: sessionData } =
       await supabaseClient.auth.getSession();
