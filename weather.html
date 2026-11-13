@@ -360,6 +360,11 @@ header {
 .map-control{border:1px solid var(--line);background:var(--card2);color:#fff;padding:10px 13px;border-radius:12px;font-size:11px;transition:background .15s}
 .map-control.active{background:#fff;color:#08090c;border-color:#fff}
 .map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}
+.tc-location-marker{width:30px;height:30px;display:grid;place-items:center;background:transparent;filter:drop-shadow(0 2px 4px #0005)}
+.tc-location-marker svg{width:30px;height:30px;display:block}
+.maplibregl-ctrl-attrib{font-size:8px!important;line-height:1.35!important;background:rgba(255,255,255,.94)!important;color:#222!important;border-radius:4px!important;padding:3px 6px!important;box-shadow:0 1px 4px #0002!important}
+.maplibregl-ctrl-attrib a{color:#222!important;text-decoration:underline!important}
+.maplibregl-ctrl-attrib-button{display:none!important}
 .tc-location-marker{width:22px;height:22px;border:2px solid #fff;border-radius:50%;background:#111;box-shadow:0 0 0 2px #111,0 2px 8px #0005;position:relative}
 .tc-location-marker:after{content:"";position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;left:6px;top:6px}
 .maplibregl-ctrl-group{border-radius:9px!important;overflow:hidden;box-shadow:0 1px 5px #0002!important}
@@ -1246,7 +1251,7 @@ function loadMapLibrary(){
 function tcMapSetMarker(lat,lon){
  if(!weatherMap||!window.maplibregl)return;
  var point=[Number(lon),Number(lat)];
- if(!weatherMarker){var el=document.createElement("div");el.className="tc-location-marker";el.setAttribute("aria-label","Выбранное местоположение");weatherMarker=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat(point).addTo(weatherMap);}
+ if(!weatherMarker){var el=document.createElement("div");el.className="tc-location-marker";el.setAttribute("aria-label","Выбранное местоположение");el.innerHTML='<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2.8 35 11.4v17.2L20 37.2 5 28.6V11.4Z" fill="#fff" stroke="#111" stroke-width="2.6" stroke-linejoin="round"/><path d="M20 9.5 24.2 18l8.3 2-8.3 2L20 30.5 15.8 22l-8.3-2 8.3-2Z" fill="#111"/><circle cx="20" cy="20" r="2.4" fill="#fff"/></svg>';weatherMarker=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat(point).addTo(weatherMap);}
  else weatherMarker.setLngLat(point);
 }
 function tcMapRenderOverlay(){
@@ -1274,10 +1279,11 @@ function initWeatherMap(){
   weatherMap=new maplibregl.Map({
    container:canvas,style:"https://tiles.openfreemap.org/styles/positron",
    center:[longitude,latitude],zoom:1.6,minZoom:1,maxZoom:19,
-   attributionControl:true,cooperativeGestures:true,renderWorldCopies:false,
+   attributionControl:false,cooperativeGestures:true,renderWorldCopies:false,
    fadeDuration:0,refreshExpiredTiles:false
   });
   weatherMap.addControl(new maplibregl.NavigationControl({showCompass:false,visualizePitch:false}),"top-right");
+  weatherMap.addControl(new maplibregl.AttributionControl({compact:false,customAttribution:"© OpenFreeMap · © OpenStreetMap contributors"}),"bottom-left");
   weatherMap.on("load",function(){tcMapSetMarker(latitude,longitude);tcMapRenderOverlay();weatherMap.resize();});
   weatherMap.on("click",async function(event){
    latitude=event.lngLat.lat;longitude=event.lngLat.lng;currentCity="Выбранная точка";
