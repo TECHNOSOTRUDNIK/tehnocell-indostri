@@ -373,8 +373,6 @@ header {
 .maplibregl-ctrl-attrib{font-size:8px!important;line-height:1.35!important;background:rgba(255,255,255,.94)!important;color:#222!important;border-radius:4px!important;padding:3px 6px!important;box-shadow:0 1px 4px #0002!important}
 .maplibregl-ctrl-attrib a{color:#222!important;text-decoration:underline!important}
 .maplibregl-ctrl-attrib-button{display:none!important}
-.tc-location-marker{width:22px;height:22px;border:2px solid #fff;border-radius:50%;background:#111;box-shadow:0 0 0 2px #111,0 2px 8px #0005;position:relative}
-.tc-location-marker:after{content:"";position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;left:6px;top:6px}
 .maplibregl-ctrl-group{border-radius:9px!important;overflow:hidden;box-shadow:0 1px 5px #0002!important}
 .maplibregl-ctrl-group button{width:30px!important;height:30px!important}
 .maplibregl-ctrl-attrib{font-size:9px!important;background:rgba(255,255,255,.88)!important;color:#222!important}
@@ -1313,6 +1311,45 @@ function tcTempColor(value){
  for(var i=0;i<stops.length-1;i++)if(value<=stops[i+1][0]){var t=Math.max(0,Math.min(1,(value-stops[i][0])/(stops[i+1][0]-stops[i][0]))),a=stops[i][1],b=stops[i+1][1];return "rgba("+a.map((v,j)=>Math.round(v+(b[j]-v)*t)).join(",")+",0.56)";}
  return "rgba(174,48,64,.56)";
 }
+function tcDrawRainField(ctx,points,w,h){
+ var scale=.28,rw=Math.max(1,Math.ceil(w*scale)),rh=Math.max(1,Math.ceil(h*scale));
+ var image=ctx.createImageData(rw,rh),data=image.data;
+ var valid=points.filter(function(p){return Number.isFinite(p.precipitation);});
+ if(!valid.length)return;
+ var cellX=w/6,cellY=h/4,sigmaX=cellX*.88,sigmaY=cellY*.88;
+ for(var py=0;py<rh;py++){
+  for(var px=0;px<rw;px++){
+   var x=px/scale,y=py/scale,weighted=0,total=0,peak=0;
+   for(var i=0;i<valid.length;i++){
+    var p=valid[i],dx=(x-p.x)/sigmaX,dy=(y-p.y)/sigmaY,d2=dx*dx+dy*dy;
+    var weight=Math.exp(-d2*1.15);
+    weighted+=Math.max(0,p.precipitation)*weight;total+=weight;
+    if(d2<2.8)peak=Math.max(peak,Math.max(0,p.precipitation)*Math.exp(-d2*.65));
+   }
+   var value=total?weighted/total:0;
+   value=Math.max(value,peak*.62);
+   if(value<.12)continue;
+   var intensity=Math.min(1,Math.pow(value/3.2,.62));
+   var alpha=Math.round(Math.min(.88,.22+intensity*.68)*255);
+   var r,g,b;
+   if(intensity<.32){var t=intensity/.32;r=Math.round(32+30*t);g=Math.round(150+75*t);b=255;}
+   else if(intensity<.72){var t=(intensity-.32)/.4;r=Math.round(62-28*t);g=225;b=255;}
+   else{var t=(intensity-.72)/.28;r=34;g=Math.round(225+30*t);b=255;}
+   var index=(py*rw+px)*4;
+   data[index]=r;data[index+1]=g;data[index+2]=b;data[index+3]=alpha;
+  }
+ }
+ var raster=document.createElement("canvas");raster.width=rw;raster.height=rh;
+ raster.getContext("2d").putImageData(image,0,0);
+ ctx.save();
+ ctx.globalCompositeOperation="screen";
+ ctx.filter="blur(5px)";
+ ctx.drawImage(raster,0,0,w,h);
+ ctx.filter="none";
+ ctx.globalAlpha=.9;
+ ctx.drawImage(raster,0,0,w,h);
+ ctx.restore();
+}
 function tcDrawWeatherOverlay(){
  if(!tcWeatherOverlayCanvas||!tcWeatherOverlayContext||!weatherMap)return;
  var ctx=tcWeatherOverlayContext,rect=$("weatherMap").getBoundingClientRect(),w=rect.width,h=rect.height;
@@ -1321,14 +1358,17 @@ function tcDrawWeatherOverlay(){
  var points=tcProjectWeatherPoints();
  if(tcMapLayer==="temp"||tcMapLayer==="rain"){
   tcStopWindAnimation();var spacing=Math.max(42,Math.min(115,Math.min(w/6,h/4)*1.05));
-  points.forEach(function(p){
-   var value=tcMapLayer==="temp"?p.temperature:p.precipitation;
-   if(!Number.isFinite(value)||(tcMapLayer==="rain"&&value<0.05))return;
-   var radius=spacing*(tcMapLayer==="temp"?1.05:Math.min(1.15,.42+Math.sqrt(value)*.36)),gradient=ctx.createRadialGradient(p.x,p.y,2,p.x,p.y,radius);
-   if(tcMapLayer==="temp"){gradient.addColorStop(0,tcTempColor(value));gradient.addColorStop(1,"rgba(255,255,255,0)");}
-   else{var alpha=Math.min(.78,.28+value*.12);gradient.addColorStop(0,"rgba(30,135,235,"+alpha+")");gradient.addColorStop(.55,"rgba(45,175,220,"+(alpha*.58)+")");gradient.addColorStop(1,"rgba(45,175,220,0)");}
-   ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fill();
-  });
+  if(tcMapLayer==="rain"){
+   tcDrawRainField(ctx,points,w,h);
+  }else{
+   points.forEach(function(p){
+    var value=p.temperature;
+    if(!Number.isFinite(value))return;
+    var radius=spacing*1.05,gradient=ctx.createRadialGradient(p.x,p.y,2,p.x,p.y,radius);
+    gradient.addColorStop(0,tcTempColor(value));gradient.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fill();
+   });
+  }
  }else if(tcMapLayer==="wind")tcStartWindAnimation();
  tcWeatherLegend.hidden=false;
  var title=tcMapLayer==="temp"?"Температура воздуха":tcMapLayer==="rain"?"Интенсивность осадков":"Ветер · направление и скорость";
@@ -1364,7 +1404,7 @@ function tcStartWindAnimation(){
 }
 function tcMapRenderOverlay(){
  if(!weatherMap)return;
- var labels={base:"Обычная карта: страны, города, дороги и географические объекты.",rain:"Осадки: текущие расчётные значения в мм/ч по погодной сетке Open-Meteo.",temp:"Температура: текущие данные прогноза в °C по погодной сетке Open-Meteo.",wind:"Ветер: скорость и направление по погодной сетке; частицы показывают движение потока."};
+ var labels={base:"Обычная карта: страны, города, дороги и географические объекты.",rain:"Осадки: светящиеся области показывают интенсивность текущих осадков по погодной сетке Open-Meteo.",temp:"Температура: текущие данные прогноза в °C по погодной сетке Open-Meteo.",wind:"Ветер: скорость и направление по погодной сетке; частицы показывают движение потока."};
  $("tcMapHint").textContent=labels[tcMapLayer]||labels.base;tcEnsureWeatherOverlay();tcDrawWeatherOverlay();
  if(tcMapLayer!=="base"&&(!tcWeatherGrid.length||Date.now()-tcWeatherGridUpdated>8*60*1000))tcLoadWeatherGrid(false);
 }
@@ -1382,7 +1422,7 @@ function initWeatherMap(){
   weatherMap=new maplibregl.Map({
    container:canvas,style:"https://tiles.openfreemap.org/styles/positron",
    center:[longitude,latitude],zoom:1.6,minZoom:1,maxZoom:19,
-   attributionControl:false,cooperativeGestures:true,renderWorldCopies:false,
+   attributionControl:false,cooperativeGestures:false,dragPan:true,touchZoomRotate:true,renderWorldCopies:false,
    fadeDuration:0,refreshExpiredTiles:false
   });
   weatherMap.addControl(new maplibregl.NavigationControl({showCompass:false,visualizePitch:false}),"top-right");
