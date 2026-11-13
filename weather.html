@@ -364,11 +364,12 @@ header {
 .tc-land{fill:#d8dde5;fill-opacity:.12;stroke:#cbd2dd;stroke-opacity:.58;stroke-width:1.25;stroke-linejoin:round}
 .tc-border{fill:none;stroke:#aeb8c7;stroke-opacity:.22;stroke-width:.8;stroke-dasharray:2 2}
 .tc-graticule{fill:none;stroke:#8d9bad;stroke-opacity:.12;stroke-width:1}
-.tc-map-point{fill:#fff;stroke:#0b0d12;stroke-width:3}
-.tc-map-pulse{fill:none;stroke:#fff;stroke-opacity:.65;stroke-width:2;animation:tcPulse 2s ease-out infinite}
+.tc-map-point{fill:#fff;stroke:#0b0d12;stroke-width:2.5;stroke-linejoin:round}
+.tc-map-pulse{fill:none;stroke:#fff;stroke-opacity:.55;stroke-width:1.5;animation:tcPulse 2s ease-out infinite}
+.tc-map-pointer{fill:#fff;stroke:#080b10;stroke-width:2.5;stroke-linejoin:round;filter:drop-shadow(0 2px 7px #000)}
+.tc-map-core{fill:#080b10;stroke:#fff;stroke-width:1.5}
 .tc-weather-mark{fill:#fff;fill-opacity:.13;stroke:#fff;stroke-opacity:.75;stroke-width:1.5}
 .tc-map-label{fill:#dce2eb;fill-opacity:.7;font-size:11px;letter-spacing:2px;pointer-events:none}
-.tc-map-badge{position:absolute;left:12px;bottom:12px;padding:7px 10px;border:1px solid #ffffff24;border-radius:9px;background:#080b10dd;color:#cbd2dd;font-size:9px;letter-spacing:1.5px;pointer-events:none}
 .tc-map-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
 .tc-map-zoom button{width:32px;height:32px;border:1px solid #ffffff30;border-radius:9px;background:#080b10dd;color:white;font-size:18px}
 @keyframes tcPulse{0%{r:7;opacity:.9}100%{r:23;opacity:0}}
@@ -774,7 +775,6 @@ footer {
       </g>
     </svg>
     <div class="tc-map-zoom"><button type="button" id="tcZoomIn" aria-label="Приблизить">+</button><button type="button" id="tcZoomOut" aria-label="Отдалить">−</button></div>
-    <div class="tc-map-badge">TEHNOCELL · WORLD VECTOR 01</div>
   </div>
   <div class="map-hint" id="tcMapHint">Авторская векторная карта TEHNOCELL. Перетаскивай карту, приближай и выбирай точку, чтобы посмотреть местную погоду. Погодные показатели загружаются отдельно.</div>
 </section>
@@ -1281,7 +1281,7 @@ function tcMapUnproject(x,y){
 }
 function tcMapSetMarker(lat,lon){
   const p=tcMapProject(lat,lon),g=$("tcSelectedPoint");
-  g.innerHTML='<circle class="tc-map-pulse" cx="'+p.x+'" cy="'+p.y+'" r="7"/><circle class="tc-map-point" cx="'+p.x+'" cy="'+p.y+'" r="5"/>';
+  g.innerHTML='<circle class="tc-map-pulse" cx="'+p.x+'" cy="'+p.y+'" r="8"/><path class="tc-map-pointer" d="M '+p.x+' '+(p.y-18)+' L '+(p.x+12)+' '+(p.y+12)+' L '+p.x+' '+(p.y+6)+' L '+(p.x-12)+' '+(p.y+12)+' Z"/><circle class="tc-map-core" cx="'+p.x+'" cy="'+(p.y+1)+'" r="3"/>';
   tcMapRenderOverlay();
 }
 function tcMapRenderOverlay(){
