@@ -1925,26 +1925,19 @@ document.addEventListener("click", (event) => {
 function addMessage(role, text, imageUrl = null) {
   const wrapper = document.createElement("div");
   wrapper.className = "message message-" + role;
-
   const avatar = document.createElement("div");
   avatar.className = "message-avatar";
   avatar.textContent = role === "assistant" ? "E" : "Я";
-
   const body = document.createElement("div");
   body.className = "message-body";
-
   const author = document.createElement("div");
   author.className = "message-author";
   author.textContent = "ENNIE";
-
   const content = document.createElement("div");
   content.className = "message-text";
   const visibleText = String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
   content.textContent = visibleText;
-
-  // В сообщениях пользователя не показываем подпись «Ты».
   if (role === "assistant") body.append(author);
-
   if (imageUrl) {
     const image = document.createElement("img");
     image.className = "message-image";
@@ -1952,17 +1945,62 @@ function addMessage(role, text, imageUrl = null) {
     image.alt = "Прикреплённое изображение";
     body.append(image);
   }
-
   body.append(content);
+
+  if (role === "assistant" && visibleText) {
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
+    actions.setAttribute("role", "toolbar");
+    actions.setAttribute("aria-label", "Действия с ответом ENNIE");
+    actions.innerHTML = `
+      <button class="message-action-btn" type="button" data-message-action="play" aria-label="Прослушать сообщение" title="Прослушать"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+      <button class="message-action-btn" type="button" data-message-action="repeat" aria-label="Повторить сообщение" title="Повторить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.7-2L20 12M4 12l2.7 5a7 7 0 0 0 11.7-2"/></svg></button>
+      <button class="message-action-btn" type="button" data-message-action="copy" aria-label="Копировать сообщение" title="Копировать"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg></button>
+      <button class="message-action-btn" type="button" data-message-action="more" aria-label="Дополнительные действия" title="Ещё"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>`;
+    const more = document.createElement("div");
+    more.className = "message-more-menu";
+    more.hidden = true;
+    more.innerHTML = '<button type="button" data-message-action="select">Выделить текст</button><button type="button" data-message-action="ask">Спросить ENNIE об этом</button>';
+    actions.appendChild(more);
+    actions.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-message-action]");
+      if (!button) return;
+      const action = button.dataset.messageAction;
+      if (action === "play" || action === "repeat") {
+        if (action === "play" && activeVoiceMessageElement === wrapper && !voicePaused) pauseEnnieVoice();
+        else if (action === "play" && activeVoiceMessageElement === wrapper && voicePaused) resumeEnnieVoice();
+        else void speakText(visibleText, wrapper, true);
+      } else if (action === "copy") {
+        try {
+          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(visibleText);
+          else {
+            const area = document.createElement("textarea"); area.value = visibleText;
+            area.style.position = "fixed"; area.style.opacity = "0"; document.body.appendChild(area);
+            area.select(); document.execCommand("copy"); area.remove();
+          }
+          button.classList.add("action-done"); button.title = "Скопировано";
+          showToast("Сообщение скопировано", "success");
+          setTimeout(() => { button.classList.remove("action-done"); button.title = "Копировать"; }, 1300);
+        } catch (_) { showError("Не удалось скопировать сообщение."); }
+      } else if (action === "more") more.hidden = !more.hidden;
+      else if (action === "select") {
+        const range = document.createRange(); range.selectNodeContents(content);
+        const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+        more.hidden = true;
+      } else if (action === "ask") {
+        messageInput.value = "Помоги разобраться с этим ответом:\n\n" + visibleText;
+        messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+        more.hidden = true; sendMessage();
+      }
+    });
+    body.append(actions);
+  }
   wrapper.append(avatar, body);
-
   messages.appendChild(wrapper);
-
   requestAnimationFrame(() => {
     wrapper.classList.add("message-visible");
     chatArea.scrollTop = chatArea.scrollHeight;
   });
-
   return wrapper;
 }
 
@@ -2587,13 +2625,13 @@ async function sendMessage() {
       content: answer
     });
 
-    addMessage("assistant", answer);
-
-    await saveMessage("assistant", answer);
+    const assistantMessageElement = addMessage("assistant", answer);
 
     if (voiceEnabled) {
-      speakText(answer);
+      void speakText(answer, assistantMessageElement, false);
     }
+
+    await saveMessage("assistant", answer);
 
     await loadChats();
 
@@ -4038,177 +4076,164 @@ let isListening = false;
 let activeEnnieAudio = null;
 let activeEnnieAudioUrl = null;
 let activeEnnieAudioResolve = null;
+let voiceRunToken = 0;
+let voiceAbortController = null;
+let voicePaused = false;
+let activeVoiceMessageElement = null;
 
+function refreshMessageVoiceControls() {
+  document.querySelectorAll(".message-assistant .message-actions").forEach((bar) => {
+    const wrapper = bar.closest(".message-assistant");
+    const button = bar.querySelector('[data-message-action="play"]');
+    if (!button) return;
+    const isCurrent = wrapper === activeVoiceMessageElement;
+    button.innerHTML = isCurrent && !voicePaused
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM15 5h3v14h-3z"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    button.setAttribute("aria-label", isCurrent && !voicePaused ? "Приостановить озвучивание" : "Прослушать сообщение");
+    button.title = isCurrent && !voicePaused ? "Пауза" : "Прослушать";
+  });
+}
 function stopEnnieVoice() {
-  if (activeEnnieAudio) {
-    activeEnnieAudio.pause();
-    activeEnnieAudio.removeAttribute("src");
-    activeEnnieAudio.load();
-  }
-  if (activeEnnieAudioUrl) {
-    URL.revokeObjectURL(activeEnnieAudioUrl);
-  }
-  if (activeEnnieAudioResolve) {
-    activeEnnieAudioResolve();
-  }
-  activeEnnieAudio = null;
-  activeEnnieAudioUrl = null;
-  activeEnnieAudioResolve = null;
-  document.body.classList.remove("speaking");
+  voiceRunToken += 1;
+  if (voiceAbortController) { try { voiceAbortController.abort(); } catch (_) {} voiceAbortController = null; }
+  if (activeEnnieAudio) { activeEnnieAudio.pause(); activeEnnieAudio.removeAttribute("src"); activeEnnieAudio.load(); }
+  if (activeEnnieAudioUrl) URL.revokeObjectURL(activeEnnieAudioUrl);
+  if (activeEnnieAudioResolve) activeEnnieAudioResolve();
+  activeEnnieAudio = null; activeEnnieAudioUrl = null; activeEnnieAudioResolve = null;
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  voicePaused = false; activeVoiceMessageElement = null;
+  document.body.classList.remove("speaking"); refreshMessageVoiceControls();
 }
-
-function speakWithBrowser(text) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = "ru-RU";
-  utterance.rate = 1;
-  utterance.pitch = 1.08;
-  utterance.volume = 1;
-
-  const voices = window.speechSynthesis.getVoices();
-  const russianVoices = voices.filter(voice =>
-    voice.lang.toLowerCase().startsWith("ru")
-  );
-  const femaleVoice = russianVoices.find(voice =>
-    /female|жен|milena|alena|irina|anna/i.test(voice.name)
-  );
-
-  if (femaleVoice) utterance.voice = femaleVoice;
-  else if (russianVoices.length) utterance.voice = russianVoices[0];
-
-  utterance.onstart = () => document.body.classList.add("speaking");
-  utterance.onend = () => document.body.classList.remove("speaking");
-  utterance.onerror = () => document.body.classList.remove("speaking");
-  window.speechSynthesis.speak(utterance);
+function pauseEnnieVoice() {
+  if (!activeVoiceMessageElement) return;
+  voicePaused = true;
+  if (activeEnnieAudio) activeEnnieAudio.pause();
+  if ("speechSynthesis" in window) window.speechSynthesis.pause();
+  document.body.classList.remove("speaking"); refreshMessageVoiceControls();
 }
-
-function splitVoiceText(text, maxLength = 2700) {
+function resumeEnnieVoice() {
+  if (!activeVoiceMessageElement) return;
+  voicePaused = false;
+  if (activeEnnieAudio) activeEnnieAudio.play().catch(error => console.warn("ENNIE audio resume:", error));
+  if ("speechSynthesis" in window) window.speechSynthesis.resume();
+  refreshMessageVoiceControls();
+}
+async function waitForVoiceResume(token) {
+  while (voicePaused && token === voiceRunToken) await new Promise(resolve => setTimeout(resolve, 120));
+  return token === voiceRunToken;
+}
+function splitVoiceText(text, maxLength = 560) {
   const sentences = text.match(/[^.!?…]+[.!?…]*/gu) || [text];
-  const chunks = [];
-  let current = "";
-
+  const chunks = []; let current = "";
   for (const sentence of sentences) {
-    if ((current + " " + sentence).trim().length <= maxLength) {
-      current = (current + " " + sentence).trim();
-      continue;
-    }
-
+    const candidate = (current + " " + sentence).trim();
+    if (candidate.length <= maxLength) { current = candidate; continue; }
     if (current) chunks.push(current);
-    current = "";
-
-    let rest = sentence.trim();
+    current = ""; let rest = sentence.trim();
     while (rest.length > maxLength) {
-      const cut = rest.lastIndexOf(" ", maxLength);
-      const index = cut > 0 ? cut : maxLength;
-      chunks.push(rest.slice(0, index).trim());
-      rest = rest.slice(index).trim();
+      let cut = rest.lastIndexOf(" ", maxLength);
+      if (cut < Math.floor(maxLength * 0.55)) cut = maxLength;
+      chunks.push(rest.slice(0, cut).trim()); rest = rest.slice(cut).trim();
     }
     current = rest;
   }
-
   if (current) chunks.push(current);
   return chunks.filter(Boolean);
 }
-
-function playEnnieAudio(blob) {
+function playEnnieAudio(blob, token) {
   return new Promise((resolve, reject) => {
-    stopEnnieVoice();
-
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    activeEnnieAudio = audio;
-    activeEnnieAudioUrl = url;
-
-    let finished = false;
-    const finish = (error) => {
-      if (finished) return;
-      finished = true;
-
-      audio.onended = null;
-      audio.onerror = null;
-      document.body.classList.remove("speaking");
-
-      if (activeEnnieAudio === audio) {
-        activeEnnieAudio = null;
-        activeEnnieAudioUrl = null;
-        activeEnnieAudioResolve = null;
-      }
-
-      URL.revokeObjectURL(url);
-      if (error) reject(error);
-      else resolve();
+    if (token !== voiceRunToken) return resolve();
+    const url = URL.createObjectURL(blob); const audio = new Audio(url);
+    activeEnnieAudio = audio; activeEnnieAudioUrl = url; let finished = false;
+    const finish = error => {
+      if (finished) return; finished = true; audio.onended = null; audio.onerror = null;
+      if (activeEnnieAudio === audio) { activeEnnieAudio = null; activeEnnieAudioUrl = null; activeEnnieAudioResolve = null; }
+      URL.revokeObjectURL(url); document.body.classList.remove("speaking");
+      if (error) reject(error); else resolve();
     };
-
     activeEnnieAudioResolve = () => finish();
-    audio.onplay = () => document.body.classList.add("speaking");
+    audio.onplay = () => { if (token === voiceRunToken) document.body.classList.add("speaking"); };
     audio.onended = () => finish();
     audio.onerror = () => finish(new Error("Не удалось воспроизвести голос ENNIE."));
-
-    audio.play().catch(finish);
+    audio.play().then(() => { if (voicePaused) audio.pause(); }).catch(finish);
   });
 }
-
-async function speakText(text) {
-  if (!voiceEnabled) return;
-
-  const cleanText = String(text)
-    .replace(/\`\`\`[\s\S]*?\`\`\`/g, " ")
-    .replace(/https?:\/\/\S+/g, "ссылка")
-    .replace(/[*_#`]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
+function speakWithBrowser(text, token) {
+  return new Promise((resolve, reject) => {
+    if (!("speechSynthesis" in window)) { reject(new Error("На устройстве недоступно системное озвучивание.")); return; }
+    const chunks = splitVoiceText(text, 420);
+    const voices = window.speechSynthesis.getVoices();
+    const russianVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith("ru"));
+    const femaleVoice = russianVoices.find(voice => /female|жен|milena|alena|irina|anna/i.test(voice.name));
+    let index = 0;
+    const next = () => {
+      if (token !== voiceRunToken || index >= chunks.length) { document.body.classList.remove("speaking"); resolve(); return; }
+      const utterance = new SpeechSynthesisUtterance(chunks[index++]);
+      utterance.lang = "ru-RU"; utterance.rate = 1; utterance.pitch = 1.08; utterance.volume = 1;
+      if (femaleVoice) utterance.voice = femaleVoice; else if (russianVoices.length) utterance.voice = russianVoices[0];
+      utterance.onstart = () => { if (token === voiceRunToken && !voicePaused) document.body.classList.add("speaking"); };
+      utterance.onend = () => { document.body.classList.remove("speaking"); next(); };
+      utterance.onerror = event => {
+        document.body.classList.remove("speaking");
+        if (event.error === "canceled" || token !== voiceRunToken) resolve();
+        else reject(new Error("Системный голос не смог дочитать сообщение."));
+      };
+      window.speechSynthesis.speak(utterance);
+      if (voicePaused) window.speechSynthesis.pause();
+    };
+    next();
+  });
+}
+async function speakText(text, messageElement = null, force = false) {
+  if (!force && !voiceEnabled) return;
+  const cleanText = String(text || "").replace(/\`\`\`[\s\S]*?\`\`\`/g, " ")
+    .replace(/https?:\/\/\S+/g, "ссылка").replace(/[*_#\`]/g, " ")
+    .replace(/\s+/g, " ").trim();
   if (!cleanText) return;
-
   stopEnnieVoice();
-  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-
+  const token = voiceRunToken; activeVoiceMessageElement = messageElement; voicePaused = false;
+  refreshMessageVoiceControls();
   try {
-    const { data: sessionData, error: sessionError } =
-      await supabaseClient.auth.getSession();
-
+    const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
     if (sessionError) throw sessionError;
-
     const accessToken = sessionData.session?.access_token;
     if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
-
     const chunks = splitVoiceText(cleanText);
-
-    for (const chunk of chunks) {
-      if (!voiceEnabled) break;
-
-      const response = await fetch(
-        SUPABASE_URL + "/functions/v1/ennie-voice",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": "Bearer " + accessToken
-          },
-          body: JSON.stringify({ text: chunk })
-        }
-      );
-
+    for (let index = 0; index < chunks.length; index++) {
+      if (token !== voiceRunToken || !(await waitForVoiceResume(token))) return;
+      voiceAbortController = new AbortController();
+      const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + accessToken },
+        body: JSON.stringify({ text: chunks[index] }), signal: voiceAbortController.signal
+      });
+      voiceAbortController = null;
+      if (token !== voiceRunToken) return;
       if (!response.ok) {
         let message = "Голосовой сервер вернул ошибку " + response.status;
-        try {
-          const details = await response.json();
-          if (details.error) message = details.error;
-        } catch (_) {}
+        try { const details = await response.json(); if (details.error) message = details.error; } catch (_) {}
         throw new Error(message);
       }
-
       const audioBlob = await response.blob();
       if (!audioBlob.size) throw new Error("Голосовой сервер вернул пустое аудио.");
-      await playEnnieAudio(audioBlob);
+      if (!(await waitForVoiceResume(token))) return;
+      await playEnnieAudio(audioBlob, token);
     }
   } catch (error) {
-    console.warn("ENNIE natural voice unavailable; using device voice:", error);
-    stopEnnieVoice();
-    speakWithBrowser(cleanText);
+    if (token !== voiceRunToken || error?.name === "AbortError") return;
+    console.warn("ENNIE natural voice unavailable; switching to device voice:", error);
+    try { await speakWithBrowser(cleanText, token); }
+    catch (fallbackError) {
+      console.error("ENNIE fallback voice failed:", fallbackError);
+      if (token === voiceRunToken) showToast("Не удалось озвучить сообщение целиком.", "error");
+    }
+  } finally {
+    if (token === voiceRunToken) {
+      activeVoiceMessageElement = null; activeEnnieAudio = null; activeEnnieAudioUrl = null;
+      activeEnnieAudioResolve = null; voiceAbortController = null; voicePaused = false;
+      document.body.classList.remove("speaking"); refreshMessageVoiceControls();
+    }
   }
 }
 
@@ -4913,5 +4938,26 @@ console.log("ENNIE V11 — all interface systems loaded.");
   });
 })();
 </script>
+
+<style id="ennie-message-controls-style">
+.message-actions{display:flex;align-items:center;gap:5px;margin-top:8px;position:relative;min-height:30px}
+.message-action-btn{width:31px;height:29px;display:grid;place-items:center;border:1px solid transparent;border-radius:9px;background:transparent;color:#777;padding:0;transition:background .18s,color .18s,border-color .18s,transform .18s}
+.message-action-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.message-action-btn:hover,.message-action-btn:focus-visible{color:#f5f5f5;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1)}
+.message-action-btn:active{transform:scale(.92)}
+.message-action-btn.action-done{color:#fff}
+.message-more-menu{position:absolute;left:0;top:35px;z-index:40;min-width:190px;padding:5px;background:#181818;border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:0 12px 35px rgba(0,0,0,.4)}
+.message-more-menu[hidden]{display:none}
+.message-more-menu button{display:block;width:100%;padding:10px 11px;border:0;border-radius:8px;background:transparent;color:#ddd;text-align:left;font-size:12px}
+.message-more-menu button:hover{background:#292929}
+.typing-content>span{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.typing-content{display:flex;align-items:center;min-height:22px}
+@media(max-width:700px){.message-actions{gap:3px;margin-top:7px}.message-action-btn{width:30px;height:30px}.message-more-menu{min-width:175px}}
+body.light-theme .message-action-btn{color:#777}
+body.light-theme .message-action-btn:hover{color:#111;background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.1)}
+body.light-theme .message-more-menu{background:#fff;border-color:rgba(0,0,0,.12);box-shadow:0 12px 35px rgba(0,0,0,.15)}
+body.light-theme .message-more-menu button{color:#222}
+body.light-theme .message-more-menu button:hover{background:#f0f0f0}
+</style>
 </body>
 </html>
