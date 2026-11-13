@@ -1282,7 +1282,7 @@ body.light-theme.listening::after {
       <div class="messages" id="messages"></div>
 
       <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite" aria-label="ENNIE готовит ответ">
-        <div class="typing-orb" aria-hidden="true"><i></i><b></b></div>
+        <div class="typing-keys" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div class="typing-status-text" id="typingStatusText">Секундочку, я собираю мысли…</div>
       </div>
 
@@ -4993,7 +4993,7 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
 </style>
 
 <style id="ennie-thinking-indicator-v2">
-/* Индикатор закреплён внизу области чата и больше не путешествует по сообщениям. */
+/* Компактная анимация печати ENNIE — без сфер и светящихся объектов. */
 .chat-area{position:relative;overscroll-behavior:contain}
 .typing-indicator{
   position:sticky!important;
@@ -5003,49 +5003,45 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
   flex:0 0 auto!important;
   align-self:stretch;
   width:100%;
-  min-height:58px;
+  min-height:54px;
   box-sizing:border-box;
   align-items:center;
   gap:12px;
   margin: auto 0 0!important;
-  padding:13px 12px 9px!important;
-  background:linear-gradient(to bottom,rgba(8,8,8,0),rgba(8,8,8,.94) 28%,#080808 100%);
+  padding:12px 12px 8px!important;
+  background:var(--bg,#090909);
   pointer-events:none;
 }
-.typing-orb{
-  position:relative;
-  width:25px;height:25px;flex:0 0 25px;
-  display:grid;place-items:center;
-  border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#fff 0,#ddd 27%,#777 62%,#222 100%);
-  box-shadow:0 0 12px rgba(255,255,255,.28),0 0 25px rgba(255,255,255,.12);
-  animation:ennieThinkingBreath 1.8s ease-in-out infinite;
+.typing-keys{
+  height:19px;width:25px;flex:0 0 25px;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.typing-orb i{
-  position:absolute;inset:-5px;border:1px solid rgba(255,255,255,.48);
-  border-radius:50%;transform:scale(.82);animation:ennieThinkingRing 2s ease-out infinite;
+.typing-keys i{
+  display:block;width:3px;height:8px;border-radius:2px;
+  background:var(--text,#eee);
+  opacity:.35;
+  transform:scaleY(.65);
+  transform-origin:center;
+  animation:ennieKeyStroke .82s ease-in-out infinite;
 }
-.typing-orb b{
-  position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;
-  top:-4px;right:1px;box-shadow:0 0 7px #fff;
-  transform-origin:-7px 16px;animation:ennieThinkingOrbit 2.8s linear infinite;
+.typing-keys i:nth-child(2){animation-delay:.14s}
+.typing-keys i:nth-child(3){animation-delay:.28s}
+.typing-keys i:nth-child(4){animation-delay:.42s}
+@keyframes ennieKeyStroke{
+  0%,100%{height:7px;opacity:.3;transform:scaleY(.8)}
+  45%{height:18px;opacity:1;transform:scaleY(1)}
 }
 .typing-status-text{
-  color:#aaa;font-size:12px;line-height:1.45;letter-spacing:.1px;
+  color:var(--muted,#999);font-size:12px;line-height:1.45;letter-spacing:.1px;
   opacity:1;transform:translateY(0);transition:opacity .18s ease,transform .18s ease;
 }
 .typing-status-text.phrase-changing{opacity:0;transform:translateY(3px)}
-@keyframes ennieThinkingBreath{0%,100%{transform:scale(.88);filter:brightness(.9)}50%{transform:scale(1.08);filter:brightness(1.2)}}
-@keyframes ennieThinkingRing{0%{transform:scale(.72);opacity:.65}100%{transform:scale(1.55);opacity:0}}
-@keyframes ennieThinkingOrbit{to{transform:rotate(360deg)}}
 @media(max-width:700px){
- .typing-indicator{min-height:60px;padding:12px 8px 8px!important}
+ .typing-indicator{min-height:52px;padding:11px 8px 7px!important}
  .typing-status-text{font-size:11px}
 }
-body.light-theme .typing-indicator{background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.95) 28%,#fff 100%)}
-body.light-theme .typing-status-text{color:#666}
 @media(prefers-reduced-motion:reduce){
- .typing-orb,.typing-orb i,.typing-orb b{animation:none!important}
+ .typing-keys i{animation:none!important;opacity:.8;transform:none;height:10px}
 }
 </style>
 </body>
