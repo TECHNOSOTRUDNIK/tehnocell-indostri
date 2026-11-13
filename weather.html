@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#050609">
 <title>TEHNOCELL WEATHER</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
 :root {
@@ -549,36 +549,6 @@ footer {
 
 
 
-function initWeatherMap(){
-  if(!window.L||weatherMap)return;
-  weatherMap=L.map("weatherMap",{scrollWheelZoom:false}).setView([latitude,longitude],7);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(weatherMap);
-  weatherMarker=L.marker([latitude,longitude]).addTo(weatherMap).bindPopup("Выбранное местоположение");
-  weatherMap.on("click",async e=>{
-    latitude=e.latlng.lat;longitude=e.latlng.lng;currentCity="Выбранная точка";
-    weatherMarker.setLatLng(e.latlng);await loadWeather();
-    $("cityName").textContent=currentCity;$("status").textContent="Показан прогноз для выбранной точки на карте";weatherMarker.setPopupContent(currentCity);
-  });
-  $("mapBaseBtn").addEventListener("click",()=>setWeatherMapLayer(false));
-  $("mapRainBtn").addEventListener("click",()=>setWeatherMapLayer(true));
-}
-async function setWeatherMapLayer(showRain){
-  $("mapBaseBtn").classList.toggle("active",!showRain);$("mapRainBtn").classList.toggle("active",showRain);
-  if(rainLayer){weatherMap.removeLayer(rainLayer);rainLayer=null;}
-  if(!showRain)return;
-  try{
-    const r=await fetchJSON("https://api.rainviewer.com/public/weather-maps.json");
-    const frames=r.radar?.past||[];const frame=frames[frames.length-1];if(!frame)throw Error();
-    rainLayer=L.tileLayer("https://tilecache.rainviewer.com"+frame.path+"/256/{z}/{x}/{y}/2/1_1.png",{opacity:.65,attribution:'Radar &copy; RainViewer'}).addTo(weatherMap);
-  }catch(_){$("status").textContent="Радар осадков временно недоступен";$("mapRainBtn").classList.remove("active");$("mapBaseBtn").classList.add("active");}
-}
-function updateWeatherMap(){
-  if(!window.L)return;if(!weatherMap)initWeatherMap();
-  weatherMap.setView([latitude,longitude],weatherMap.getZoom()||7);
-  if(weatherMarker)weatherMarker.setLatLng([latitude,longitude]);
-  setTimeout(()=>weatherMap.invalidateSize(),120);
-}
-
 /* FAVORITE CITIES */
 .favorites {
   margin-bottom:18px;
@@ -867,7 +837,11 @@ const airURL = "https://air-quality-api.open-meteo.com/v1/air-quality";
 let weatherMap=null,weatherMarker=null,rainLayer=null;
 
 async function fetchJSON(url) {
-  const response = await fetch(url);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  let response;
+  try { response = await fetch(url, { signal: controller.signal }); }
+  finally { clearTimeout(timer); }
 
   if (!response.ok) {
     throw new Error("Ошибка загрузки данных");
@@ -1017,7 +991,8 @@ async function loadWeather() {
       new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
 
   } catch (error) {
-    $("status").textContent = "Не удалось загрузить погоду. Попробуйте позже.";
+    console.error("WEATHER forecast error:", error);
+    $("status").textContent = error.name === "AbortError" ? "Сервер погоды отвечает слишком долго. Попробуй ещё раз." : "Не удалось загрузить погоду. Проверь интернет и попробуй ещё раз.";
   }
 }
 
@@ -1060,7 +1035,7 @@ function showWeather(data) {
   window.lastWeatherHourly=h;
   showHourly(h,nextHour);
   showDays(d);
-  updateWeatherMap();
+  try { updateWeatherMap(); } catch (mapError) { console.warn("Weather map unavailable:", mapError); }
   showAdvice(c,d);
 
   effects(type);
@@ -1113,6 +1088,9 @@ function showDays(data) {
   }
 }
   async function loadAirQuality() {
+  $("airStatus").textContent = "Загрузка данных...";
+  $("airValue").textContent = "--";
+  $("airDetails").textContent = "PM2.5: -- · PM10: --";
   try {
     const url = airURL +
       `?latitude=${latitude}&longitude=${longitude}` +
@@ -1134,7 +1112,9 @@ function showDays(data) {
     $("airDetails").textContent += " · концентрации частиц";
 
   } catch (error) {
-    $("airStatus").textContent = "Данные о качестве воздуха недоступны";
+    console.warn("WEATHER air-quality error:", error);
+    $("airStatus").textContent = "Данные о качестве воздуха временно недоступны";
+    $("airDetails").textContent = "Попробуй обновить прогноз позже.";
   }
 }
 
@@ -1220,6 +1200,37 @@ function showAdvice(c,d) {
       </div>`;
   });
 }
+
+function initWeatherMap(){
+  if(!window.L||weatherMap)return;
+  weatherMap=L.map("weatherMap",{scrollWheelZoom:false}).setView([latitude,longitude],7);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(weatherMap);
+  weatherMarker=L.marker([latitude,longitude]).addTo(weatherMap).bindPopup("Выбранное местоположение");
+  weatherMap.on("click",async e=>{
+    latitude=e.latlng.lat;longitude=e.latlng.lng;currentCity="Выбранная точка";
+    weatherMarker.setLatLng(e.latlng);await loadWeather();
+    $("cityName").textContent=currentCity;$("status").textContent="Показан прогноз для выбранной точки на карте";weatherMarker.setPopupContent(currentCity);
+  });
+  $("mapBaseBtn").addEventListener("click",()=>setWeatherMapLayer(false));
+  $("mapRainBtn").addEventListener("click",()=>setWeatherMapLayer(true));
+}
+async function setWeatherMapLayer(showRain){
+  $("mapBaseBtn").classList.toggle("active",!showRain);$("mapRainBtn").classList.toggle("active",showRain);
+  if(rainLayer){weatherMap.removeLayer(rainLayer);rainLayer=null;}
+  if(!showRain)return;
+  try{
+    const r=await fetchJSON("https://api.rainviewer.com/public/weather-maps.json");
+    const frames=r.radar?.past||[];const frame=frames[frames.length-1];if(!frame)throw Error();
+    rainLayer=L.tileLayer("https://tilecache.rainviewer.com"+frame.path+"/256/{z}/{x}/{y}/2/1_1.png",{opacity:.65,attribution:'Radar &copy; RainViewer'}).addTo(weatherMap);
+  }catch(_){$("status").textContent="Радар осадков временно недоступен";$("mapRainBtn").classList.remove("active");$("mapBaseBtn").classList.add("active");}
+}
+function updateWeatherMap(){
+  if(!window.L)return;if(!weatherMap)initWeatherMap();
+  weatherMap.setView([latitude,longitude],weatherMap.getZoom()||7);
+  if(weatherMarker)weatherMarker.setLatLng([latitude,longitude]);
+  setTimeout(()=>weatherMap.invalidateSize(),120);
+}
+
 
 /* FAVORITE CITIES */
 
