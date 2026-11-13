@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050609">
 <title>TEHNOCELL WEATHER</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
 :root {
@@ -356,17 +354,24 @@ header {
   margin-top:7px;
 }
 
-.weather-map{height:360px;width:100%;border-radius:18px;overflow:hidden;background:#080b10;border:1px solid var(--line);z-index:1}
+.weather-map{height:360px;width:100%;border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#131a24 0%,#080b10 72%);border:1px solid var(--line);position:relative;touch-action:pan-y}
 .map-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .map-control{border:1px solid var(--line);background:var(--card2);color:#fff;padding:10px 13px;border-radius:12px;font-size:11px;transition:.2s}
 .map-control.active{background:#fff;color:#08090c;border-color:#fff}
 .map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}
-.leaflet-container{font:12px sans-serif;background:#080b10}
-.leaflet-tile{filter:grayscale(1) invert(.91) contrast(1.12) brightness(.72) sepia(.08) hue-rotate(175deg) saturate(.65)}
-.leaflet-control-zoom a{background:#11151c!important;color:#fff!important;border-color:#343943!important}
-.leaflet-control-attribution{background:rgba(5,6,9,.78)!important;color:#aeb3bd!important}
-.leaflet-control-attribution a{color:#d5d9e0!important}
-.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#11151c;color:#fff}
+.tc-world-svg{width:100%;height:100%;display:block;cursor:grab;user-select:none}
+.tc-world-svg.dragging{cursor:grabbing}
+.tc-land{fill:#d8dde5;fill-opacity:.12;stroke:#cbd2dd;stroke-opacity:.58;stroke-width:1.25;stroke-linejoin:round}
+.tc-border{fill:none;stroke:#aeb8c7;stroke-opacity:.22;stroke-width:.8;stroke-dasharray:2 2}
+.tc-graticule{fill:none;stroke:#8d9bad;stroke-opacity:.12;stroke-width:1}
+.tc-map-point{fill:#fff;stroke:#0b0d12;stroke-width:3}
+.tc-map-pulse{fill:none;stroke:#fff;stroke-opacity:.65;stroke-width:2;animation:tcPulse 2s ease-out infinite}
+.tc-weather-mark{fill:#fff;fill-opacity:.13;stroke:#fff;stroke-opacity:.75;stroke-width:1.5}
+.tc-map-label{fill:#dce2eb;fill-opacity:.7;font-size:11px;letter-spacing:2px;pointer-events:none}
+.tc-map-badge{position:absolute;left:12px;bottom:12px;padding:7px 10px;border:1px solid #ffffff24;border-radius:9px;background:#080b10dd;color:#cbd2dd;font-size:9px;letter-spacing:1.5px;pointer-events:none}
+.tc-map-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.tc-map-zoom button{width:32px;height:32px;border:1px solid #ffffff30;border-radius:9px;background:#080b10dd;color:white;font-size:18px}
+@keyframes tcPulse{0%{r:7;opacity:.9}100%{r:23;opacity:0}}
 @media(max-width:480px){.weather-map{height:320px}}
 /* WEEK FORECAST */
 
@@ -731,9 +736,47 @@ footer {
 
 <section class="card">
   <div class="section-title">Интерактивная карта погоды</div>
-  <div class="map-controls"><button class="map-control active" id="mapBaseBtn" type="button">Мир</button><button class="map-control" id="mapRainBtn" type="button">Осадки</button><button class="map-control" id="mapCenterBtn" type="button">Моё место</button></div>
-  <div class="weather-map" id="weatherMap"></div>
-  <div class="map-hint">TEHNOCELL MAP · Единая тёмная картографическая тема. Перемещай карту, меняй масштаб и выбирай точку для просмотра местного прогноза. Слой осадков показывает радарные данные.</div>
+  <div class="map-controls">
+    <button class="map-control active" id="mapBaseBtn" type="button">Мир</button>
+    <button class="map-control" id="mapRainBtn" type="button">Осадки</button>
+    <button class="map-control" id="mapTempBtn" type="button">Температура</button>
+    <button class="map-control" id="mapWindBtn" type="button">Ветер</button>
+    <button class="map-control" id="mapCenterBtn" type="button">Моё место</button>
+  </div>
+  <div class="weather-map" id="weatherMap">
+    <svg class="tc-world-svg" id="tcWorldSvg" viewBox="0 0 1000 500" role="img" aria-label="Авторская векторная карта мира TEHNOCELL">
+      <defs>
+        <pattern id="tcOceanGrid" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M50 0H0V50" class="tc-graticule"/></pattern>
+      </defs>
+      <rect width="1000" height="500" fill="url(#tcOceanGrid)"/>
+      <g id="tcWorldViewport">
+        <g class="tc-land">
+          <path d="M82 92 L112 63 151 49 184 61 205 83 234 91 249 119 235 143 215 155 204 184 180 201 168 230 145 242 129 218 111 209 102 179 82 157 66 126Z"/>
+          <path d="M205 238 L229 250 245 276 240 308 257 333 245 363 231 392 218 432 198 458 184 430 188 397 172 368 177 338 164 307 176 276Z"/>
+          <path d="M280 90 L315 73 348 77 369 65 407 73 431 91 462 88 487 102 516 98 545 111 575 101 608 113 638 105 668 118 699 114 731 132 759 129 785 147 815 143 842 160 865 185 850 208 822 208 802 225 774 221 751 241 724 234 700 252 675 245 649 259 624 244 604 225 576 220 555 197 527 193 510 171 486 180 468 159 442 170 420 151 393 159 370 144 348 153 329 132 305 141 288 119Z"/>
+          <path d="M451 207 L481 199 508 213 526 240 540 272 533 303 516 330 501 365 480 393 462 373 449 342 434 315 428 281 435 247Z"/>
+          <path d="M620 273 L650 260 682 268 704 286 716 316 703 342 681 359 657 347 638 327 622 303Z"/>
+          <path d="M758 328 L788 317 815 327 833 349 819 369 793 375 770 360Z"/>
+          <path d="M862 390 L885 381 908 391 918 409 901 425 878 420Z"/>
+          <path d="M35 45 L50 38 62 48 57 66 42 67Z"/>
+          <path d="M931 258 L951 248 968 260 961 278 942 281Z"/>
+        </g>
+        <g class="tc-border">
+          <path d="M120 75L137 122 124 174M169 63L174 119 202 150M92 145L145 151 206 136M188 260L215 296 203 349M204 348L235 370M311 92L325 125 361 143M370 80L382 117 420 143M432 105L444 145 477 162M493 111L505 151 536 184M555 120L564 165 600 198M619 120L633 169 674 193M684 135L697 182 730 211M747 145L759 186 795 205M464 225L488 259 481 315 501 352M512 224L520 275 499 333M649 275L662 313 692 331"/>
+        </g>
+        <g class="tc-map-label">
+          <text x="145" y="180">NORTH AMERICA</text><text x="190" y="340">SOUTH AMERICA</text>
+          <text x="405" y="115">EUROPE</text><text x="505" y="280">AFRICA</text>
+          <text x="690" y="185">ASIA</text><text x="680" y="325">OCEANIA</text>
+        </g>
+        <g id="tcWeatherOverlay"></g>
+        <g id="tcSelectedPoint"><circle class="tc-map-pulse" cx="500" cy="250" r="7"/><circle class="tc-map-point" cx="500" cy="250" r="5"/></g>
+      </g>
+    </svg>
+    <div class="tc-map-zoom"><button type="button" id="tcZoomIn" aria-label="Приблизить">+</button><button type="button" id="tcZoomOut" aria-label="Отдалить">−</button></div>
+    <div class="tc-map-badge">TEHNOCELL · WORLD VECTOR 01</div>
+  </div>
+  <div class="map-hint" id="tcMapHint">Авторская векторная карта TEHNOCELL. Перетаскивай карту, приближай и выбирай точку, чтобы посмотреть местную погоду. Погодные показатели загружаются отдельно.</div>
 </section>
 
 <section class="card">
@@ -1009,6 +1052,7 @@ async function loadWeather() {
 
 function showWeather(data) {
   const c = data.current;
+  window.lastWeatherCurrent=c;
   const h = data.hourly;
   const d = data.daily;
 
@@ -1221,37 +1265,73 @@ function showAdvice(c,d) {
   });
 }
 
-function initWeatherMap(){
-  if(!window.L||weatherMap)return;
-  weatherMap=L.map("weatherMap",{scrollWheelZoom:false,worldCopyJump:true,minZoom:2,maxZoom:18}).setView([latitude,longitude],2);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(weatherMap);
-  weatherMarker=L.marker([latitude,longitude]).addTo(weatherMap).bindPopup("Выбранное местоположение");
-  weatherMap.on("click",async e=>{
-    latitude=e.latlng.lat;longitude=e.latlng.lng;currentCity="Выбранная точка";
-    weatherMarker.setLatLng(e.latlng);await loadWeather();
-    $("cityName").textContent=currentCity;$("status").textContent="Показан прогноз для выбранной точки на карте";weatherMarker.setPopupContent(currentCity);
-  });
-  $("mapBaseBtn").addEventListener("click",()=>setWeatherMapLayer(false));
-  $("mapRainBtn").addEventListener("click",()=>setWeatherMapLayer(true));
-  $("mapCenterBtn").addEventListener("click",()=>{weatherMap.setView([latitude,longitude],7);weatherMarker.openPopup();});
+
+let tcMapScale=1,tcMapX=0,tcMapY=0,tcMapDrag=null,tcMapLayer="base";
+function tcMapApplyTransform(){
+  const g=$("tcWorldViewport");if(g)g.setAttribute("transform","translate("+tcMapX+" "+tcMapY+") scale("+tcMapScale+")");
 }
-async function setWeatherMapLayer(showRain){
-  $("mapBaseBtn").classList.toggle("active",!showRain);$("mapRainBtn").classList.toggle("active",showRain);
-  if(rainLayer){weatherMap.removeLayer(rainLayer);rainLayer=null;}
-  if(!showRain)return;
-  try{
-    const r=await fetchJSON("https://api.rainviewer.com/public/weather-maps.json");
-    const frames=r.radar?.past||[];const frame=frames[frames.length-1];if(!frame)throw Error();
-    rainLayer=L.tileLayer("https://tilecache.rainviewer.com"+frame.path+"/256/{z}/{x}/{y}/2/1_1.png",{opacity:.65,attribution:'Radar &copy; RainViewer'}).addTo(weatherMap);
-  }catch(_){$("status").textContent="Радар осадков временно недоступен";$("mapRainBtn").classList.remove("active");$("mapBaseBtn").classList.add("active");}
+function tcMapSetScale(next){
+  tcMapScale=Math.max(1,Math.min(4,next));tcMapApplyTransform();
+}
+function tcMapProject(lat,lon){
+  return {x:(lon+180)/360*1000,y:(90-lat)/180*500};
+}
+function tcMapUnproject(x,y){
+  return {latitude:Math.max(-85,Math.min(85,90-y/500*180)),longitude:Math.max(-180,Math.min(180,x/1000*360-180))};
+}
+function tcMapSetMarker(lat,lon){
+  const p=tcMapProject(lat,lon),g=$("tcSelectedPoint");
+  g.innerHTML='<circle class="tc-map-pulse" cx="'+p.x+'" cy="'+p.y+'" r="7"/><circle class="tc-map-point" cx="'+p.x+'" cy="'+p.y+'" r="5"/>';
+  tcMapRenderOverlay();
+}
+function tcMapRenderOverlay(){
+  const g=$("tcWeatherOverlay");if(!g)return;g.innerHTML="";
+  const p=tcMapProject(latitude,longitude);
+  const val=Number(window.lastWeatherCurrent?.precipitation??0);
+  if(tcMapLayer==="rain"){
+    const r=Math.max(12,Math.min(34,12+val*5));
+    g.innerHTML='<circle class="tc-weather-mark" cx="'+p.x+'" cy="'+p.y+'" r="'+r+'"/><text class="tc-map-label" x="'+(p.x+16)+'" y="'+(p.y-15)+'">ОСАДКИ '+val.toFixed(1)+' мм</text>';
+  }else if(tcMapLayer==="temp"){
+    const t=Number(window.lastWeatherCurrent?.temperature_2m??0);
+    g.innerHTML='<circle class="tc-weather-mark" cx="'+p.x+'" cy="'+p.y+'" r="22"/><text class="tc-map-label" x="'+(p.x+17)+'" y="'+(p.y-16)+'">'+Math.round(t)+'°C</text>';
+  }else if(tcMapLayer==="wind"){
+    const w=Number(window.lastWeatherCurrent?.wind_speed_10m??0);
+    g.innerHTML='<circle class="tc-weather-mark" cx="'+p.x+'" cy="'+p.y+'" r="22"/><text class="tc-map-label" x="'+(p.x+17)+'" y="'+(p.y-16)+'">ВЕТЕР '+Math.round(w)+' км/ч</text>';
+  }
+}
+function tcMapSelectLayer(layer){
+  tcMapLayer=layer;
+  ["Base","Rain","Temp","Wind"].forEach((name)=>$("map"+name+"Btn")?.classList.toggle("active",name.toLowerCase()===layer));
+  const hints={base:"Авторская векторная карта TEHNOCELL. Выбери любую точку мира для загрузки прогноза.",rain:"Слой показывает фактические данные об осадках в выбранной точке, а не глобальную радарную мозаику.",temp:"Температура в выбранной точке по последнему загруженному прогнозу.",wind:"Скорость ветра в выбранной точке по последнему загруженному прогнозу."};
+  $("tcMapHint").textContent=hints[layer];tcMapRenderOverlay();
+}
+function initWeatherMap(){
+  const svg=$("tcWorldSvg");if(!svg||svg.dataset.ready==="1")return;svg.dataset.ready="1";
+  tcMapSetMarker(latitude,longitude);
+  $("mapBaseBtn").addEventListener("click",()=>tcMapSelectLayer("base"));
+  $("mapRainBtn").addEventListener("click",()=>tcMapSelectLayer("rain"));
+  $("mapTempBtn").addEventListener("click",()=>tcMapSelectLayer("temp"));
+  $("mapWindBtn").addEventListener("click",()=>tcMapSelectLayer("wind"));
+  $("mapCenterBtn").addEventListener("click",()=>{tcMapSetScale(1);tcMapX=tcMapY=0;tcMapApplyTransform();tcMapSetMarker(latitude,longitude);});
+  $("tcZoomIn").addEventListener("click",()=>tcMapSetScale(tcMapScale*1.35));
+  $("tcZoomOut").addEventListener("click",()=>tcMapSetScale(tcMapScale/1.35));
+  svg.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;tcMapDrag={x:e.clientX,y:e.clientY,moved:false,tx:tcMapX,ty:tcMapY};svg.setPointerCapture(e.pointerId);});
+  svg.addEventListener("pointermove",e=>{if(!tcMapDrag)return;const dx=e.clientX-tcMapDrag.x,dy=e.clientY-tcMapDrag.y;if(Math.abs(dx)+Math.abs(dy)>5)tcMapDrag.moved=true;if(tcMapDrag.moved){const rect=svg.getBoundingClientRect();tcMapX=tcMapDrag.tx+dx/rect.width*1000;tcMapY=tcMapDrag.ty+dy/rect.height*500;tcMapApplyTransform();}});
+  svg.addEventListener("pointerup",async e=>{
+    if(!tcMapDrag)return;const moved=tcMapDrag.moved;tcMapDrag=null;if(moved)return;
+    const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const local=pt.matrixTransform(svg.getScreenCTM().inverse());
+    const x=(local.x-tcMapX)/tcMapScale,y=(local.y-tcMapY)/tcMapScale;
+    if(x<0||x>1000||y<0||y>500)return;
+    const coords=tcMapUnproject(x,y);latitude=coords.latitude;longitude=coords.longitude;currentCity="Выбранная точка";
+    tcMapSetMarker(latitude,longitude);$("cityName").textContent=currentCity;renderFavorites();
+    $("status").textContent="Загружаем погоду для выбранной точки…";await loadWeather();
+    $("tcMapHint").textContent="Прогноз загружен для выбранной точки. Выбери слой, чтобы увидеть показатели.";
+  });
+  svg.addEventListener("wheel",e=>{e.preventDefault();tcMapSetScale(tcMapScale*(e.deltaY<0?1.15:1/1.15));},{passive:false});
 }
 function updateWeatherMap(){
-  if(!window.L)return;if(!weatherMap)initWeatherMap();
-  weatherMap.setView([latitude,longitude],weatherMap.getZoom()||2);
-  if(weatherMarker)weatherMarker.setLatLng([latitude,longitude]);
-  setTimeout(()=>weatherMap.invalidateSize(),120);
+  initWeatherMap();tcMapSetMarker(latitude,longitude);tcMapRenderOverlay();
 }
-
 
 /* FAVORITE CITIES */
 
