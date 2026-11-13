@@ -1372,7 +1372,6 @@ function tcMapSelectLayer(layer){
  tcMapLayer=layer;
  ["Base","Rain","Temp","Wind"].forEach(function(name){var button=$("map"+name+"Btn");if(button)button.classList.toggle("active",name.toLowerCase()===layer);});
  tcMapRenderOverlay();
- if(layer!=="base")tcLoadWeatherGrid(false);
 }
 function initWeatherMap(){
  if(weatherMap)return Promise.resolve(weatherMap);
@@ -1395,7 +1394,7 @@ function initWeatherMap(){
    latitude=event.lngLat.lat;longitude=event.lngLat.lng;currentCity="Выбранная точка";
    tcMapSetMarker(latitude,longitude);$("cityName").textContent=currentCity;renderFavorites();
    $("status").textContent="Загружаем погоду для выбранной точки…";
-   await loadWeather();$("tcMapHint").textContent="Погода обновлена для выбранной точки.";
+   await loadWeather();tcMapRenderOverlay();
   });
   weatherMap.on("error",function(event){if(event&&event.error)console.warn("WEATHER map tile error:",event.error);});
   return weatherMap;
