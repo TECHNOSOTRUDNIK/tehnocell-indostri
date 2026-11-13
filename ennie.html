@@ -1283,7 +1283,7 @@ body.light-theme.listening::after {
 
       <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite" aria-label="ENNIE готовит ответ">
         <div class="typing-keys" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div class="typing-status-text" id="typingStatusText">Секундочку, я собираю мысли…</div>
+        
       </div>
 
     </section>
@@ -2005,47 +2005,19 @@ function addMessage(role, text, imageUrl = null) {
    ИНДИКАТОР ПЕЧАТИ
 ========================================== */
 
-let typingPhraseTimer = null;
-let typingPhraseIndex = 0;
-const typingPhrases = [
-  "Секундочку, я собираю мысли…",
-  "Ещё чуть-чуть, я почти закончила…",
-  "Потерпи немного, мой хороший…",
-  "Проверяю детали, чтобы не ошибиться…",
-  "Уже формирую ответ…"
-];
-
 function setTyping(active) {
   if (!typingIndicator) return;
   typingIndicator.style.display = active ? "flex" : "none";
 
-  if (typingPhraseTimer) {
-    clearInterval(typingPhraseTimer);
-    typingPhraseTimer = null;
-  }
-
   if (active) {
-    const phraseNode = document.getElementById("typingStatusText");
-    typingPhraseIndex = 0;
-    if (phraseNode) phraseNode.textContent = typingPhrases[typingPhraseIndex];
-
-    typingPhraseTimer = setInterval(() => {
-      if (!phraseNode || !typingIndicator || typingIndicator.style.display === "none") return;
-      typingPhraseIndex = (typingPhraseIndex + 1) % typingPhrases.length;
-      phraseNode.classList.add("phrase-changing");
-      setTimeout(() => {
-        if (phraseNode) {
-          phraseNode.textContent = typingPhrases[typingPhraseIndex];
-          phraseNode.classList.remove("phrase-changing");
-        }
-      }, 180);
-    }, 2600);
-
     requestAnimationFrame(() => {
-      chatArea.scrollTop = chatArea.scrollHeight;
+      if (typingIndicator.style.display !== "none") {
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
     });
   }
 }
+
 
 
 /* ==========================================
@@ -5031,14 +5003,10 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
   0%,100%{height:7px;opacity:.3;transform:scaleY(.8)}
   45%{height:18px;opacity:1;transform:scaleY(1)}
 }
-.typing-status-text{
-  color:var(--muted,#999);font-size:12px;line-height:1.45;letter-spacing:.1px;
-  opacity:1;transform:translateY(0);transition:opacity .18s ease,transform .18s ease;
-}
-.typing-status-text.phrase-changing{opacity:0;transform:translateY(3px)}
+
 @media(max-width:700px){
  .typing-indicator{min-height:52px;padding:11px 8px 7px!important}
- .typing-status-text{font-size:11px}
+
 }
 @media(prefers-reduced-motion:reduce){
  .typing-keys i{animation:none!important;opacity:.8;transform:none;height:10px}
