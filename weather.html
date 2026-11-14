@@ -1460,7 +1460,7 @@ function initWeatherMap(){
    container:canvas,style:"https://tiles.openfreemap.org/styles/dark",
    center:[longitude,latitude],zoom:1.6,minZoom:1,maxZoom:19,
    attributionControl:false,cooperativeGestures:false,dragPan:true,touchZoomRotate:true,renderWorldCopies:false,
-   fadeDuration:0,refreshExpiredTiles:false
+   fadeDuration:140,refreshExpiredTiles:false,antialias:false
   });
   weatherMap.addControl(new maplibregl.NavigationControl({showCompass:false,visualizePitch:false}),"top-right");
   weatherMap.addControl(new maplibregl.AttributionControl({compact:false,customAttribution:"OpenFreeMap © OpenMapTiles · Data from OpenStreetMap"}),"bottom-left");
@@ -1468,14 +1468,38 @@ function initWeatherMap(){
     try{
      var styleLayers=weatherMap.getStyle().layers||[];
      styleLayers.forEach(function(layer){
-      var sourceLayer=layer["source-layer"]||"";
-      if(layer.type==="background"){weatherMap.setPaintProperty(layer.id,"background-color","#080808");}
-      if(layer.type==="fill"&&/water/.test(sourceLayer)){weatherMap.setPaintProperty(layer.id,"fill-color","#101214");}
-      if(layer.type==="fill"&&/landcover|landuse|park|land\.use/.test(sourceLayer)){weatherMap.setPaintProperty(layer.id,"fill-color","#0b0c0d");}
+      var sourceLayer=layer["source-layer"]||"",id=String(layer.id||"").toLowerCase();
+      var filterText=JSON.stringify(layer.filter||[]).toLowerCase();
+      if(layer.type==="background")weatherMap.setPaintProperty(layer.id,"background-color","#080a0d");
+      if(layer.type==="fill"&&/water/.test(sourceLayer)){
+       weatherMap.setPaintProperty(layer.id,"fill-color","#0d1116");
+       if(layer.paint&&layer.paint["fill-outline-color"]!==undefined)weatherMap.setPaintProperty(layer.id,"fill-outline-color","#171d24");
+      }
+      if(layer.type==="fill"&&/landcover|landuse|park|land\.use/.test(sourceLayer))weatherMap.setPaintProperty(layer.id,"fill-color","#0b0e12");
       if(layer.type==="line"&&sourceLayer==="transportation"){
-       var isCasing=/case|casing|outline/i.test(layer.id);
-       weatherMap.setPaintProperty(layer.id,"line-color",isCasing?"#242628":"#f1f1f1");
-       weatherMap.setPaintProperty(layer.id,"line-opacity",isCasing?0.9:0.88);
+       var casing=/case|casing|outline/.test(id);
+       var path=/path|pedestrian|track/.test(id)||/path|pedestrian|track/.test(filterText);
+       var major=/motorway|trunk/.test(id)||/motorway|trunk/.test(filterText);
+       var primary=/primary/.test(id)||/primary/.test(filterText);
+       var secondary=/secondary|tertiary/.test(id)||/secondary|tertiary/.test(filterText);
+       var roadColor=casing?"#171b20":path?"#3d454f":major?"#aeb6c1":primary?"#929ca8":secondary?"#737e8a":"#59636f";
+       var roadOpacity=casing?0.88:path?0.42:major?0.76:primary?0.66:secondary?0.54:0.46;
+       weatherMap.setPaintProperty(layer.id,"line-color",roadColor);
+       weatherMap.setPaintProperty(layer.id,"line-opacity",roadOpacity);
+      }
+      if(layer.type==="line"&&sourceLayer==="boundary"){
+       weatherMap.setPaintProperty(layer.id,"line-color","#343b44");
+       weatherMap.setPaintProperty(layer.id,"line-opacity",0.58);
+      }
+      if(layer.type==="line"&&/waterway/.test(sourceLayer)){
+       weatherMap.setPaintProperty(layer.id,"line-color","#1a222c");
+       weatherMap.setPaintProperty(layer.id,"line-opacity",0.82);
+      }
+      if(layer.type==="symbol"&&layer.layout&&layer.layout["text-field"]!==undefined){
+       weatherMap.setPaintProperty(layer.id,"text-color","#c5cad2");
+       weatherMap.setPaintProperty(layer.id,"text-halo-color","#080a0d");
+       weatherMap.setPaintProperty(layer.id,"text-halo-width",1.15);
+       weatherMap.setPaintProperty(layer.id,"text-halo-blur",0.25);
       }
      });
     }catch(styleError){console.warn("TEHNOCELL map styling:",styleError);}
