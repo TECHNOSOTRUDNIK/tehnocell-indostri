@@ -1009,6 +1009,10 @@ body.light-theme.listening::after {
 }
 
 
+/* Suppress the browser's long-press callout on selectable ENNIE conversation text. */
+.message, .message *, .welcome, .welcome *, .widget-section, .widget-section * {
+  -webkit-touch-callout:none;
+}
 /* ENNIE native-feel text selection */
 ::selection { background: rgba(255,255,255,.22); color:#fff; text-shadow:none; }
 .message-text::selection, .welcome::selection, .widget-section::selection { text-shadow:none; }
@@ -5287,6 +5291,18 @@ console.log("ENNIE V11 — all interface systems loaded.");
     bubble.style.top = top + 'px';
     bubble.style.visibility = 'visible';
   };
+  // Keep Android/Chrome's generic Copy/Paste context panel from covering ENNIE's own selection UI.
+  // Limit this to selectable conversation/content text; input fields retain their normal paste menu.
+  document.addEventListener('contextmenu', event => {
+    const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+    const selectableArea = target?.closest('.message, .message-text, .welcome, .widget-section');
+    if (selectableArea && getSelectionText()) {
+      event.preventDefault();
+      event.stopPropagation();
+      clearTimeout(hideTimer);
+      show();
+    }
+  }, true);
   document.addEventListener('selectionchange', () => {
     clearTimeout(hideTimer);
     hideTimer = setTimeout(show, 90);
