@@ -421,6 +421,45 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 .modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:23px}.modal-actions button{padding:11px 17px;border-radius:22px;font-size:10px;font-weight:800}
 .modal-cancel{background:#242424;color:#ccc;border:1px solid #444}.modal-create{background:#fff;color:#111}
 @media(max-width:520px){.search-suggestions{left:-4px;right:-4px}.modal-card{padding:23px 19px}}
+
+/* MIVO COLOR SYSTEM */
+:root{--accent:#a8ff60;--mivo-glow:#a8ff60}
+body{background:radial-gradient(ellipse at 78% 0%,#25311f 0,transparent 32%),radial-gradient(ellipse at 4% 45%,#172c34 0,transparent 35%),#080a0e;transition:background .4s}
+body[data-mivo-theme="aurora"]{--accent:#a8ff60;background:radial-gradient(ellipse at 80% 0%,#354d25,transparent 35%),radial-gradient(ellipse at 5% 55%,#163b49,transparent 38%),#080a0e}
+body[data-mivo-theme="violet"]{--accent:#c69aff;background:radial-gradient(ellipse at 80% 0%,#492a68,transparent 38%),radial-gradient(ellipse at 5% 55%,#27204e,transparent 40%),#090710}
+body[data-mivo-theme="sunset"]{--accent:#ffad72;background:radial-gradient(ellipse at 80% 0%,#693523,transparent 38%),radial-gradient(ellipse at 5% 55%,#44213e,transparent 40%),#100909}
+body[data-mivo-theme="ocean"]{--accent:#65dcff;background:radial-gradient(ellipse at 80% 0%,#14516a,transparent 38%),radial-gradient(ellipse at 5% 55%,#173d5d,transparent 40%),#060c12}
+body[data-mivo-theme="mono"]{--accent:#fff;background:#080808}
+body{--accent:var(--custom-accent,var(--accent))}
+.brand-mark,.login:not(.signed-in),.primary,.modal-create,.control.main-play{background:var(--accent)!important;color:#101010!important}
+.nav button.active .ico,.text-btn:hover,.np-live,.kicker,.hero h1 span{color:var(--accent)!important}
+.hero{background:linear-gradient(112deg,color-mix(in srgb,var(--accent) 22%,#111 78%),#090a0d 65%,#17131b)!important}
+.hero:before{background:radial-gradient(circle at 40% 40%,var(--accent),transparent 70%)!important;opacity:.36}
+.quick,.music-card,.mix,.feature,.upload-panel{background:color-mix(in srgb,var(--accent) 6%,#15171c 94%)}
+.music-card{border-color:color-mix(in srgb,var(--accent) 13%,transparent)}
+.music-card:hover,.music-card.is-playing{border-color:color-mix(in srgb,var(--accent) 55%,transparent);box-shadow:0 12px 35px color-mix(in srgb,var(--accent) 12%,transparent)}
+.card-play{background:var(--accent)!important}.mix:after{background:var(--mix,var(--accent))}
+.player{background:rgba(8,10,13,.94);border-top-color:color-mix(in srgb,var(--accent) 32%,transparent)}
+input[type=range]{accent-color:var(--accent)}
+.customize-trigger{display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border-radius:22px;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 12%,#111);color:var(--accent);font-size:9px;font-weight:900;white-space:nowrap}
+.customize-trigger:hover{background:var(--accent);color:#111}
+.custom-label{display:block;color:#aaa;font-size:9px;font-weight:800;letter-spacing:1.2px;margin:15px 0 7px}
+.color-input{height:48px;padding:6px;cursor:pointer}.customize-card{max-width:460px}
+.np-lyrics-btn{background:color-mix(in srgb,var(--accent) 14%,#171717)!important;border:1px solid color-mix(in srgb,var(--accent) 40%,transparent)!important;color:var(--accent)!important;border-radius:20px;padding:10px 13px;font-size:10px;font-weight:900}
+.lyrics-modal{position:fixed;inset:0;z-index:130;background:#050609ef;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:18px}
+.lyrics-modal.open{display:flex;animation:npIn .25s ease}
+.lyrics-panel{width:min(760px,100%);max-height:86vh;display:flex;flex-direction:column;border:1px solid #ffffff20;border-radius:24px;background:linear-gradient(145deg,#1b2027,#0c0e13);box-shadow:0 30px 100px #000b;padding:25px}
+.lyrics-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;border-bottom:1px solid #ffffff18;padding-bottom:17px}
+.lyrics-head h3{font:700 25px "Space Grotesk";margin-top:7px}.lyrics-head p{font-size:11px;color:#aaa;margin-top:5px}
+.lyrics-head button{width:38px;height:38px;border-radius:50%;background:#ffffff12;font-size:25px}
+.lyrics-content{overflow:auto;min-height:250px;padding:24px 8px;text-align:center;scroll-behavior:smooth}
+.lyrics-line{display:block;width:100%;background:none;color:#777;padding:9px 5px;font:600 clamp(15px,2.5vw,21px) "Space Grotesk";line-height:1.45;transition:.2s}
+.lyrics-line.active{color:var(--accent);font-size:clamp(18px,3vw,26px);text-shadow:0 0 25px color-mix(in srgb,var(--accent) 40%,transparent)}
+.lyrics-loading{color:#aaa;padding:60px 10px;font-size:12px;line-height:1.8}
+.lyrics-foot{border-top:1px solid #ffffff18;padding-top:13px;color:#777;font-size:9px;line-height:1.6}
+body.mivo-compact .cards{gap:9px}body.mivo-compact .music-card{padding:3px;border-radius:9px}body.mivo-compact .cover{border-radius:8px}body.mivo-compact .music-card strong{margin-top:7px;font-size:10px}
+@media(max-width:520px){.customize-trigger{padding:9px 10px;font-size:8px}.customize-trigger span{display:none}.lyrics-panel{padding:19px 15px;border-radius:18px}.lyrics-head h3{font-size:20px}.np-lyrics-btn{padding:8px 10px}}
+
 </style>
 </head>
 <body>
@@ -447,7 +486,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
   <header class="topbar">
     <div class="history"><button class="circle-btn" aria-label="Назад">‹</button><button class="circle-btn" aria-label="Вперёд">›</button></div>
     <label class="search"><span class="search-symbol">⌕</span><input id="searchInput" type="text" placeholder="Ищи треки, исполнителей и альбомы..." autocomplete="off"><kbd class="search-shortcut">Ctrl K</kbd><button class="search-clear" id="searchClear" type="button" aria-label="Очистить поиск">×</button><div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Результаты поиска"></div></label>
-    <div class="top-actions"><button class="quality" id="qualityBtn">音  HI-RES READY</button><a class="login" id="authButton" href="login.html" aria-label="Войти в TEHNOCELL ID"><span class="auth-dot" id="authDot">M</span><span id="authLabel">ВОЙТИ</span></a></div>
+    <div class="top-actions"><button class="customize-trigger" id="openCustomize" type="button">✦ <span>ОФОРМЛЕНИЕ</span></button><button class="quality" id="qualityBtn">音  HI-RES READY</button><a class="login" id="authButton" href="login.html" aria-label="Войти в TEHNOCELL ID"><span class="auth-dot" id="authDot">M</span><span id="authLabel">ВОЙТИ</span></a></div>
   </header>
 
   <section class="hero" id="hero">
@@ -531,7 +570,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
       <div class="np-info"><div class="np-eyebrow">ТВОЙ МУЗЫКАЛЬНЫЙ МОМЕНТ</div><h2 id="npTitle">Выбери трек</h2><p id="npArtist">MIVO</p><div class="np-tags"><span id="npGenre">МУЗЫКА</span><span>·</span><span>ПУЛЬС MIVO</span></div>
         <div class="np-progress"><span id="npCurrent">0:00</span><input id="npProgress" type="range" min="0" max="100" value="0"><span id="npDuration">0:00</span></div>
         <div class="np-controls"><button id="npShuffle" aria-label="Случайный порядок">⤨</button><button id="npPrev" aria-label="Предыдущий трек">◀</button><button class="np-play" id="npPlay" aria-label="Воспроизвести">▶</button><button id="npNext" aria-label="Следующий трек">▶</button><button id="npRepeat" aria-label="Повтор">↻</button></div>
-        <div class="np-extra"><button id="npLike">♡ <span>В избранное</span></button><div class="np-volume">ГРОМКОСТЬ <input id="npVolume" type="range" min="0" max="1" step=".01" value=".8"></div></div>
+        <div class="np-extra"><button id="npLike">♡ <span>В избранное</span></button><button id="openLyrics" class="np-lyrics-btn" type="button">≋ <span>ТЕКСТ ПЕСНИ</span></button><div class="np-volume">ГРОМКОСТЬ <input id="npVolume" type="range" min="0" max="1" step=".01" value=".8"></div></div>
         <div class="np-signature"><b>ПУЛЬС MIVO</b><span>Обложка превращается в живую звуковую сцену. Это пространство твоего прослушивания.</span></div>
       </div>
     </div>
@@ -544,7 +583,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 <input class="modal-input" id="playlistNameInput" type="text" maxlength="48" placeholder="Например, Ночной город" autocomplete="off">
 <div class="modal-counter"><span>Название плейлиста</span><span id="playlistNameCount">0 / 48</span></div>
 <div class="modal-actions"><button class="modal-cancel" id="playlistCancel" type="button">ОТМЕНА</button><button class="modal-create" id="playlistCreate" type="button">СОЗДАТЬ</button></div>
-</div></div><div class="toast" id="toast"></div>
+</div></div><div class="mivo-modal" id="customizeModal" aria-hidden="true"><div class="modal-card customize-card"><div class="modal-kicker">MIVO / YOUR SPACE</div><h3>Настрой свою MIVO</h3><p>Выбери атмосферу, цвет и плотность карточек. Настройки сохранятся на этом устройстве.</p><label class="custom-label">Атмосфера</label><select class="modal-input" id="themeSelect"><option value="aurora">Северное сияние</option><option value="violet">Неоновый фиолетовый</option><option value="sunset">Тёплый закат</option><option value="ocean">Океан</option><option value="mono">Чёрно-белая классика</option></select><label class="custom-label">Свой цвет акцента</label><input class="modal-input color-input" id="accentPicker" type="color" value="#a8ff60"><label class="custom-label">Вид карточек</label><select class="modal-input" id="densitySelect"><option value="comfortable">Просторные</option><option value="compact">Компактные</option></select><div class="modal-actions"><button class="modal-cancel" id="resetCustomize">СБРОСИТЬ</button><button class="modal-create" id="saveCustomize">СОХРАНИТЬ</button></div></div></div><div class="lyrics-modal" id="lyricsModal" aria-hidden="true"><div class="lyrics-panel"><div class="lyrics-head"><div><div class="modal-kicker">MIVO / LYRICS</div><h3 id="lyricsTrackTitle">Текст композиции</h3><p id="lyricsTrackArtist"></p></div><button id="closeLyrics" type="button">×</button></div><div class="lyrics-content" id="lyricsContent"><div class="lyrics-loading">Выбери композицию, чтобы найти её текст.</div></div><div class="lyrics-foot">Текст доступен не для каждой песни. Источник — открытая база LRCLIB.</div></div></div><div class="toast" id="toast"></div>
 <audio id="audio" preload="none"></audio>
 
 <script>
@@ -836,6 +875,55 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
 })();
 
 </script>
-<script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
+<script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer>
+/* MIVO PERSONALIZATION + LYRICS */
+(function(){
+ const defaults={theme:"aurora",accent:"#a8ff60",density:"comfortable"};
+ let prefs=Object.assign({},defaults,readStore("mivo_appearance_v1",{}));
+ function applyPrefs(){
+  document.body.dataset.mivoTheme=prefs.theme||"aurora";
+  document.documentElement.style.setProperty("--custom-accent",prefs.accent||defaults.accent);
+  document.body.classList.toggle("mivo-compact",prefs.density==="compact");
+  $("themeSelect").value=prefs.theme||"aurora";$("accentPicker").value=prefs.accent||defaults.accent;$("densitySelect").value=prefs.density||"comfortable";
+ }
+ function closeCustomize(){$("customizeModal").classList.remove("open");$("customizeModal").setAttribute("aria-hidden","true")}
+ $("openCustomize").addEventListener("click",()=>$("customizeModal").classList.add("open"));
+ $("saveCustomize").addEventListener("click",()=>{prefs={theme:$("themeSelect").value,accent:$("accentPicker").value,density:$("densitySelect").value};writeStore("mivo_appearance_v1",prefs);applyPrefs();closeCustomize();toast("Оформление MIVO сохранено")});
+ $("resetCustomize").addEventListener("click",()=>{prefs=Object.assign({},defaults);writeStore("mivo_appearance_v1",prefs);applyPrefs();toast("Стандартное оформление восстановлено")});
+ $("customizeModal").addEventListener("click",e=>{if(e.target.id==="customizeModal")closeCustomize()});
+ applyPrefs();
+ let lyricLines=[],lyricToken=0;
+ function message(text){const box=$("lyricsContent");box.replaceChildren();const p=document.createElement("div");p.className="lyrics-loading";p.textContent=text;box.appendChild(p)}
+ function parseLyrics(text){return text.split(/\r?\n/).map(line=>{const m=line.match(/^\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]\s*(.*)$/);return m?{time:Number(m[1])*60+Number(m[2])+Number("0."+(m[3]||"0")),text:m[4]}:null}).filter(x=>x&&x.text).sort((a,b)=>a.time-b.time)}
+ async function loadLyrics(){
+  const token=++lyricToken,t=allTracks()[current];$("lyricsModal").classList.add("open");$("lyricsModal").setAttribute("aria-hidden","false");
+  if(!t){message("Сначала выбери композицию.");return}
+  $("lyricsTrackTitle").textContent=t.title;$("lyricsTrackArtist").textContent=t.artist;message("Ищем текст песни…");
+  try{
+   const url="https://lrclib.net/api/search?track_name="+encodeURIComponent(t.title)+"&artist_name="+encodeURIComponent(t.artist);
+   const response=await fetch(url,{headers:{"Accept":"application/json"}});if(!response.ok)throw new Error("lyrics");
+   const results=await response.json();if(token!==lyricToken)return;
+   if(!Array.isArray(results)||!results.length){message("Текст этой композиции пока не найден.");return}
+   const item=results.find(x=>String(x.trackName||"").toLowerCase()===String(t.title).toLowerCase())||results[0];
+   lyricLines=parseLyrics(item.syncedLyrics||"");const box=$("lyricsContent");box.replaceChildren();
+   if(lyricLines.length){lyricLines.forEach((line,i)=>{const el=document.createElement("button");el.type="button";el.className="lyrics-line";el.textContent=line.text;el.addEventListener("click",()=>{if(Number.isFinite(audio.duration))audio.currentTime=line.time});box.appendChild(el)});highlightLyrics()}
+   else if(item.plainLyrics){item.plainLyrics.split(/\r?\n/).filter(Boolean).forEach(line=>{const el=document.createElement("div");el.className="lyrics-line";el.textContent=line;box.appendChild(el)})}
+   else message("Для этой версии песни текст не найден.");
+  }catch(e){if(token===lyricToken)message("Не удалось загрузить текст. Проверь интернет и попробуй ещё раз.")}
+ }
+ function highlightLyrics(){
+  if(!lyricLines.length||!$("lyricsModal").classList.contains("open"))return;
+  let active=-1;for(let i=0;i<lyricLines.length;i++){if(lyricLines[i].time<=audio.currentTime)active=i;else break}
+  const nodes=$("lyricsContent").querySelectorAll(".lyrics-line");nodes.forEach((node,i)=>node.classList.toggle("active",i===active));
+  if(active>=0&&nodes[active])nodes[active].scrollIntoView({block:"center",behavior:"smooth"});
+ }
+ $("openLyrics").addEventListener("click",loadLyrics);
+ $("closeLyrics").addEventListener("click",()=>{$("lyricsModal").classList.remove("open");$("lyricsModal").setAttribute("aria-hidden","true");lyricToken++});
+ $("lyricsModal").addEventListener("click",e=>{if(e.target.id==="lyricsModal")$("closeLyrics").click()});
+ audio.addEventListener("timeupdate",highlightLyrics);
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCustomize();$("closeLyrics").click()}});
+})();
+
+</script>
 </body>
 </html>
