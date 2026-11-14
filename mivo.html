@@ -204,7 +204,11 @@ const demoTracks=[
  {title:"Blue Geometry",artist:"Lunar Arcade",genre:"Ambient",style:"c11",symbol:"BG",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"},
  {title:"Slow Fire",artist:"June Avenue",genre:"Indie",style:"c12",symbol:"SF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3"}
 ];
-let localTracks=[],queue=[...demoTracks],current=-1,liked=new Set(),repeat=false,shuffle=false;
+let localTracks=[],queue=[...demoTracks],current=-1,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),repeat=false,shuffle=false;
+function readStore(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||"null");return value??fallback}catch(_){return fallback}}
+function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(_){toast("Не удалось сохранить данные в этом браузере")}}
+function trackKey(t){return t.url||t.title+"::"+t.artist}
+function saveRecent(t){const key=trackKey(t);recent=[key,...recent.filter(x=>x!==key)].slice(0,40);writeStore("mivo_recent_v1",recent)}
 const audio=document.getElementById("audio"),grid=document.getElementById("trackGrid"),localGrid=document.getElementById("localGrid");
 const $=id=>document.getElementById(id);
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
@@ -213,14 +217,14 @@ function card(t,i,local=false){const d=document.createElement("div");d.className
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(list=demoTracks){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block"}
 function renderLocal(){localGrid.replaceChildren();localTracks.forEach((t,i)=>localGrid.appendChild(card(t,i,true)))}
-function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];audio.src=t.url;audio.load();audio.play().then(()=>{$("play").textContent="Ⅱ"}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶"});$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+t.genre;$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(t.title));}
+function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];saveRecent(t);audio.src=t.url;audio.load();audio.play().then(()=>{$("play").textContent="Ⅱ"}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶"});$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+t.genre;$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));}
 function togglePlay(){if(!audio.src){playTrack(0);return}if(audio.paused){audio.play().then(()=>$("play").textContent="Ⅱ").catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶"}}
 function move(step){let n=current+step;if(shuffle&&allTracks().length>1){n=Math.floor(Math.random()*allTracks().length)}else if(n<0)n=allTracks().length-1;else if(n>=allTracks().length)n=0;playTrack(n)}
 function fmt(s){if(!Number.isFinite(s))return"0:00";return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0")}
 $("play").onclick=togglePlay;$("next").onclick=()=>move(1);$("prev").onclick=()=>{if(audio.currentTime>3){audio.currentTime=0}else move(-1)};
 $("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.color=shuffle?"var(--accent)":"#888";toast(shuffle?"Перемешивание включено":"Обычный порядок")};
 $("repeat").onclick=()=>{repeat=!repeat;audio.loop=repeat;$("repeat").style.color=repeat?"var(--accent)":"#888"};
-$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current];liked.has(t.title)?liked.delete(t.title):liked.add(t.title);$("likeBtn").classList.toggle("on",liked.has(t.title));toast(liked.has(t.title)?"Добавлено в избранное":"Удалено из избранного")};
+$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current],key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);$("likeBtn").classList.toggle("on",liked.has(key));toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
 audio.addEventListener("timeupdate",()=>{if(audio.duration){$("progress").value=audio.currentTime/audio.duration*100;$("currentTime").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration)}});
 $("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
 $("volume").oninput=e=>audio.volume=e.target.value;audio.volume=.8;
@@ -234,7 +238,7 @@ $("uploadBtn").onclick=$("uploadHero").onclick=()=>$("fileInput").click();
 $("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{const url=URL.createObjectURL(f);localTracks.push({title:f.name.replace(/\.[^.]+$/,""),artist:"Твоя медиатека",genre:"Local",style:"c"+(1+Math.floor(Math.random()*12)),symbol:"♪",url})});renderLocal();toast("Добавлено файлов: "+files.length);e.target.value=""};
 $("qualityBtn").onclick=()=>toast("Hi-Res — в планах. Сейчас качество зависит от исходного аудиофайла.");
 document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
-document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const target=b.dataset.view==="home"?"hero":b.dataset.view==="discover"?"discover":b.dataset.view==="library"?"library":b.dataset.view==="liked"?"discover":b.dataset.view==="recent"?"discover":"library";if(b.dataset.view==="liked"){render(allTracks().filter(t=>liked.has(t.title)));}else if(b.dataset.view!=="home"&&b.dataset.view!=="library"){render()}$(target).scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":"discover";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover"||view==="playlists")render();if(view==="playlists")toast("Создание пользовательских плейлистов — следующий этап MIVO");$(target).scrollIntoView({behavior:"smooth"})});
 render();renderLocal();
 </script>
 <script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
