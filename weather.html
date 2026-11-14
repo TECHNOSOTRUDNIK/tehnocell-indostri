@@ -557,6 +557,23 @@ header {
   to {transform:translate3d(-24px,138vh,0) rotate(11deg);}
 }
 
+.snow-flake {
+  position:absolute;
+  top:-8vh;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:rgba(245,249,255,.88);
+  box-shadow:0 0 5px rgba(225,238,255,.28);
+  will-change:transform;
+  animation:snowfall 5s linear infinite;
+}
+@keyframes snowfall {
+  0% { transform:translate3d(0,-8vh,0); }
+  50% { transform:translate3d(22px,52vh,0); }
+  100% { transform:translate3d(-8px,112vh,0); }
+}
+
 .fog-layer {
   position:absolute;
   width:150%;
@@ -690,11 +707,11 @@ footer {
 }
 
 @media(prefers-reduced-motion:reduce) {
-  *,*::before,*::after {
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    scroll-behavior:auto !important;
+  /* Keep live weather particles moving; reduce only non-essential page motion. */
+  .app, .card, .temperature, .description {
+    animation-duration:.35s !important;
   }
+  html { scroll-behavior:auto !important; }
 }
 </style>
 </head>
@@ -1006,7 +1023,7 @@ function windDirection(degrees) {
   function effects(type) {
   const box = $("weatherEffects");
 
-  box.querySelectorAll(".rain-drop,.fog-layer").forEach(el => el.remove());
+  box.querySelectorAll(".rain-drop,.snow-flake,.fog-layer").forEach(el => el.remove());
 
   if (type === "rain" || type === "storm") {
     const count = Math.min(34, Math.max(22, Math.round(window.innerWidth / 13)));
@@ -1021,6 +1038,23 @@ function windDirection(degrees) {
       // Start each drop at a different point in its fall, never as a fresh row at the top.
       drop.style.animationDelay = (-Math.random() * duration).toFixed(2) + "s";
       box.appendChild(drop);
+    }
+  }
+
+  if (type === "snow") {
+    const count = Math.min(42, Math.max(26, Math.round(window.innerWidth / 10)));
+    for (let i = 0; i < count; i++) {
+      const flake = document.createElement("div");
+      const duration = 4.2 + Math.random() * 3.8;
+      flake.className = "snow-flake";
+      const size = 2 + Math.random() * 3.5;
+      flake.style.left = Math.random() * 100 + "%";
+      flake.style.width = size.toFixed(1) + "px";
+      flake.style.height = size.toFixed(1) + "px";
+      flake.style.opacity = (0.35 + Math.random() * 0.55).toFixed(2);
+      flake.style.animationDuration = duration.toFixed(2) + "s";
+      flake.style.animationDelay = (-Math.random() * duration).toFixed(2) + "s";
+      box.appendChild(flake);
     }
   }
 
