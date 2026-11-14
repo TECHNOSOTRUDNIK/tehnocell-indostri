@@ -1276,7 +1276,7 @@ function tcEnsureWeatherOverlay(){
 }
 function tcResizeWeatherOverlay(){
  if(!tcWeatherOverlayCanvas)return;
- var rect=$("weatherMap").getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,1.5);
+ var rect=$("weatherMap").getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,1);
  tcWeatherOverlayCanvas.width=Math.max(1,Math.round(rect.width*ratio));
  tcWeatherOverlayCanvas.height=Math.max(1,Math.round(rect.height*ratio));
  tcWeatherOverlayCanvas.style.width=rect.width+"px";tcWeatherOverlayCanvas.style.height=rect.height+"px";
@@ -1291,7 +1291,7 @@ function tcGridBounds(){
 async function tcLoadWeatherGrid(force){
  if(!weatherMap||tcMapLayer==="base")return;
  if(!force&&Date.now()-tcWeatherGridUpdated<8*60*1000&&tcWeatherGrid.length)return;
- var requestId=++tcWeatherGridRequest,bounds=tcGridBounds(),columns=9,rows=7,points=[];
+ var requestId=++tcWeatherGridRequest,bounds=tcGridBounds(),columns=7,rows=5,points=[];
  for(var y=0;y<rows;y++)for(var x=0;x<columns;x++)points.push({latitude:bounds.north+(bounds.south-bounds.north)*(y/(rows-1)),longitude:bounds.west+(bounds.east-bounds.west)*(x/(columns-1))});
  var latitudes=points.map(p=>p.latitude.toFixed(3)).join(","),longitudes=points.map(p=>p.longitude.toFixed(3)).join(",");
  var url=forecastURL+"?latitude="+latitudes+"&longitude="+longitudes+"&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m&wind_speed_unit=kmh&timezone=auto";
@@ -1302,7 +1302,7 @@ async function tcLoadWeatherGrid(force){
   tcWeatherGridUpdated=Date.now();tcWeatherGridError=false;tcDrawWeatherOverlay();
  }catch(error){if(requestId===tcWeatherGridRequest){tcWeatherGridError=true;console.warn("WEATHER map overlay data error:",error);tcDrawWeatherOverlay();}}
 }
-function tcScheduleWeatherGrid(){clearTimeout(tcWeatherGridTimer);tcWeatherGridTimer=setTimeout(function(){tcLoadWeatherGrid(true);},650);}
+function tcScheduleWeatherGrid(){clearTimeout(tcWeatherGridTimer);tcWeatherGridTimer=setTimeout(function(){tcLoadWeatherGrid(true);},950);}
 function tcProjectWeatherPoints(){
  if(!weatherMap)return [];
  return tcWeatherGrid.map(function(p){var point=weatherMap.project([p.longitude,p.latitude]);return {x:point.x,y:point.y,temperature:p.temperature,humidity:p.humidity,precipitation:p.precipitation,windSpeed:p.windSpeed,windDirection:p.windDirection};});
@@ -1313,43 +1313,28 @@ function tcTempColor(value){
  return "rgba(174,48,64,.56)";
 }
 function tcDrawRainField(ctx,points,w,h){
- var scale=.28,rw=Math.max(1,Math.ceil(w*scale)),rh=Math.max(1,Math.ceil(h*scale));
+ /* Low-resolution raster: calculated once after map movement, never per animation frame. */
+ var scale=.14,rw=Math.max(1,Math.ceil(w*scale)),rh=Math.max(1,Math.ceil(h*scale));
  var image=ctx.createImageData(rw,rh),data=image.data;
  var valid=points.filter(function(p){return Number.isFinite(p.precipitation);});
  if(!valid.length)return;
- var cellX=w/8,cellY=h/6,sigmaX=cellX*.82,sigmaY=cellY*.82;
- for(var py=0;py<rh;py++){
-  for(var px=0;px<rw;px++){
-   var x=px/scale,y=py/scale,weighted=0,total=0,peak=0;
-   for(var i=0;i<valid.length;i++){
-    var p=valid[i],dx=(x-p.x)/sigmaX,dy=(y-p.y)/sigmaY,d2=dx*dx+dy*dy;
-    var weight=Math.exp(-d2*1.15);
-    weighted+=Math.max(0,p.precipitation)*weight;total+=weight;
-    if(d2<2.8)peak=Math.max(peak,Math.max(0,p.precipitation)*Math.exp(-d2*.65));
-   }
-   var value=total?weighted/total:0;
-   value=Math.max(value,peak*.62);
-   if(value<.12)continue;
-   var intensity=Math.min(1,Math.pow(value/3.2,.62));
-   var alpha=Math.round(Math.min(.88,.22+intensity*.68)*255);
-   var r,g,b;
-   if(intensity<.32){var t=intensity/.32;r=Math.round(32+30*t);g=Math.round(150+75*t);b=255;}
-   else if(intensity<.72){var t=(intensity-.32)/.4;r=Math.round(62-28*t);g=225;b=255;}
-   else{var t=(intensity-.72)/.28;r=34;g=Math.round(225+30*t);b=255;}
-   var index=(py*rw+px)*4;
-   data[index]=r;data[index+1]=g;data[index+2]=b;data[index+3]=alpha;
+ var sigmaX=Math.max(28,w/7),sigmaY=Math.max(28,h/5),weights=valid.map(function(p){return {p:p,x:p.x,y:p.y};});
+ for(var py=0;py<rh;py++)for(var px=0;px<rw;px++){
+  var x=px/scale,y=py/scale,total=0,weighted=0;
+  for(var i=0;i<weights.length;i++){
+   var q=weights[i],dx=(x-q.x)/sigmaX,dy=(y-q.y)/sigmaY,d2=dx*dx+dy*dy;
+   if(d2>8)continue;
+   var wt=Math.exp(-d2*1.35);total+=wt;weighted+=Math.max(0,q.p.precipitation)*wt;
   }
+  var value=total?weighted/total:0;if(value<.12)continue;
+  var intensity=Math.min(1,Math.pow(value/3.5,.65)),idx=(py*rw+px)*4;
+  data[idx]=Math.round(35+intensity*15);data[idx+1]=Math.round(145+intensity*80);data[idx+2]=255;
+  data[idx+3]=Math.round((.12+intensity*.58)*255);
  }
  var raster=document.createElement("canvas");raster.width=rw;raster.height=rh;
- raster.getContext("2d").putImageData(image,0,0);
- ctx.save();
- ctx.globalCompositeOperation="screen";
- ctx.filter="blur(5px)";
- ctx.drawImage(raster,0,0,w,h);
- ctx.filter="none";
- ctx.globalAlpha=.9;
- ctx.drawImage(raster,0,0,w,h);
- ctx.restore();
+ var rctx=raster.getContext("2d");rctx.putImageData(image,0,0);
+ ctx.save();ctx.globalCompositeOperation="source-over";ctx.imageSmoothingEnabled=true;
+ ctx.globalAlpha=.88;ctx.drawImage(raster,0,0,w,h);ctx.restore();
 }
 function tcDrawWeatherOverlay(){
  if(!tcWeatherOverlayCanvas||!tcWeatherOverlayContext||!weatherMap)return;
@@ -1358,7 +1343,7 @@ function tcDrawWeatherOverlay(){
  if(tcMapLayer==="base"){tcWeatherLegend.hidden=true;tcStopWindAnimation();return;}
  var points=tcProjectWeatherPoints();
  if(tcMapLayer==="temp"||tcMapLayer==="rain"||tcMapLayer==="humidity"){
-  tcStopWindAnimation();var spacing=Math.max(42,Math.min(115,Math.min(w/6,h/4)*1.05));
+  tcStopWindAnimation();var spacing=Math.max(48,Math.min(125,Math.min(w/6,h/4)*1.12));
   if(tcMapLayer==="rain"){
    tcDrawRainField(ctx,points,w,h);
   }else{
@@ -1386,44 +1371,28 @@ function tcDrawWeatherOverlay(){
  else{var avg=tcWeatherGrid.reduce((sum,p)=>sum+(Number.isFinite(p.windSpeed)?p.windSpeed:0),0)/tcWeatherGrid.length;tcWeatherLegend.innerHTML="<strong>"+title+"</strong>Средняя скорость в видимой области: "+Math.round(avg)+" км/ч";}
 }
 function tcStopWindAnimation(){if(tcWindAnimation){cancelAnimationFrame(tcWindAnimation);tcWindAnimation=null;}tcWindParticles=[];}
-function tcRandomWindParticle(){
- var b=tcGridBounds();return {lng:b.west+Math.random()*(b.east-b.west),lat:b.south+Math.random()*(b.north-b.south),life:Math.random()*12,px:0,py:0};
-}
 function tcStartWindAnimation(){
- if(tcWindAnimation||!tcWeatherOverlayCanvas)return;
- var width=$("weatherMap").clientWidth;
- if(!tcWindParticles.length)tcWindParticles=Array.from({length:Math.min(82,Math.max(38,Math.round(width/5)))},tcRandomWindParticle);
- var last=0;
- function frame(time){
-  if(tcMapLayer!=="wind"||!tcWeatherOverlayContext){tcWindAnimation=null;return;}
-  if(time-last<32){tcWindAnimation=requestAnimationFrame(frame);return;}
-  var dt=Math.min(.09,Math.max(.016,(time-last)/1000||.032));last=time;
-  var ctx=tcWeatherOverlayContext,points=tcWeatherGrid,w=$("weatherMap").clientWidth,h=$("weatherMap").clientHeight;ctx.clearRect(0,0,w,h);
-  var bounds=tcGridBounds();
-  tcWindParticles.forEach(function(p){
-   var nearest=null,best=Infinity;
-   for(var i=0;i<points.length;i++){
-    var q=points[i],dx=(q.longitude-p.lng)*Math.cos(p.lat*Math.PI/180),dy=q.latitude-p.lat,d=dx*dx+dy*dy;
-    if(d<best&&Number.isFinite(q.windSpeed)&&Number.isFinite(q.windDirection)){best=d;nearest=q;}
-   }
-   if(!nearest||nearest.windSpeed<.5){if(!nearest||p.life++>140)Object.assign(p,tcRandomWindParticle());return;}
-   /* Open-Meteo wind_direction is the direction wind comes FROM; flow moves 180° onward. */
-   var bearing=(nearest.windDirection+180)*Math.PI/180;
-   var distance=(nearest.windSpeed/3.6)*dt*0.72;
-   var latRad=p.lat*Math.PI/180,cosLat=Math.max(.15,Math.cos(latRad));
-   p.lat+=(Math.cos(bearing)*distance)/111320;
-   p.lng+=(Math.sin(bearing)*distance)/(111320*cosLat);
-   p.life++;
-   var projected=weatherMap.project([p.lng,p.lat]);
-   if(p.life>210||p.lng<bounds.west-.08||p.lng>bounds.east+.08||p.lat<bounds.south-.08||p.lat>bounds.north+.08||projected.x<-24||projected.x>w+24||projected.y<-24||projected.y>h+24){Object.assign(p,tcRandomWindParticle());return;}
-   var tail=weatherMap.project([p.lng-Math.sin(bearing)*.035/Math.max(.15,Math.cos(latRad)),p.lat-Math.cos(bearing)*.035]);
-   ctx.beginPath();ctx.moveTo(tail.x,tail.y);ctx.lineTo(projected.x,projected.y);
-   ctx.strokeStyle="rgba(20,35,52,.58)";ctx.lineWidth=1.35;ctx.lineCap="round";ctx.stroke();
-   ctx.beginPath();ctx.arc(projected.x,projected.y,1.35,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.92)";ctx.fill();
-  });
-  tcWindAnimation=requestAnimationFrame(frame);
+ /* Lightweight geographic streamlines: static between map moves, no requestAnimationFrame loop. */
+ if(!tcWeatherOverlayContext||!weatherMap)return;
+ var ctx=tcWeatherOverlayContext,w=$("weatherMap").clientWidth,h=$("weatherMap").clientHeight;
+ var points=tcProjectWeatherPoints().filter(function(p){return Number.isFinite(p.windSpeed)&&Number.isFinite(p.windDirection);});
+ if(!points.length)return;
+ function nearestAt(x,y){var best=null,dist=Infinity;for(var i=0;i<points.length;i++){var dx=points[i].x-x,dy=points[i].y-y,d=dx*dx+dy*dy;if(d<dist){dist=d;best=points[i];}}return best;}
+ ctx.save();ctx.lineCap="round";ctx.lineJoin="round";
+ var count=Math.min(34,Math.max(16,Math.round(w/13)));
+ for(var n=0;n<count;n++){
+  var sx=((n*73+31)%997)/997*w,sy=((n*137+17)%991)/991*h,x=sx,y=sy;
+  ctx.beginPath();ctx.moveTo(x,y);
+  for(var step=0;step<9;step++){
+   var q=nearestAt(x,y);if(!q||q.windSpeed<1)break;
+   var a=(q.windDirection+180)*Math.PI/180,stepLen=4+Math.min(5,q.windSpeed*.12);
+   x+=Math.sin(a)*stepLen;y-=Math.cos(a)*stepLen;
+   if(x<-5||x>w+5||y<-5||y>h+5)break;ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle="rgba(24,48,70,.42)";ctx.lineWidth=1.25;ctx.stroke();
+  if(x>=0&&x<=w&&y>=0&&y<=h){ctx.beginPath();ctx.arc(x,y,1.6,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.9)";ctx.fill();}
  }
- tcWindAnimation=requestAnimationFrame(frame);
+ ctx.restore();
 }
 function tcMapRenderOverlay(){
  if(!weatherMap)return;
