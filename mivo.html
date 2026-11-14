@@ -459,10 +459,50 @@ input[type=range]{accent-color:var(--accent)}
 body.mivo-compact .cards{gap:9px}body.mivo-compact .music-card{padding:3px;border-radius:9px}body.mivo-compact .cover{border-radius:8px}body.mivo-compact .music-card strong{margin-top:7px;font-size:10px}
 @media(max-width:520px){.customize-trigger{padding:9px 10px;font-size:8px}.customize-trigger span{display:none}.lyrics-panel{padding:19px 15px;border-radius:18px}.lyrics-head h3{font-size:20px}.np-lyrics-btn{padding:8px 10px}}
 
+
+/* MIVO VISUAL REWORK — PURPLE/BLUE DEFAULT, NO GREEN */
+:root{--accent:#b99cff}
+body{background:#080910!important;color:#f5f4fa}
+body[data-mivo-theme="aurora"]{--accent:#8ddcff!important;background:#080d16!important}
+body[data-mivo-theme="violet"]{--accent:#b99cff!important;background:#0b0814!important}
+body[data-mivo-theme="sunset"]{--accent:#ffad91!important;background:#120a10!important}
+body[data-mivo-theme="ocean"]{--accent:#65d8e8!important;background:#061018!important}
+body[data-mivo-theme="mono"]{--accent:#fff!important;background:#080808!important}
+.mivo-dynamic-backdrop{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;background-size:cover;background-position:center;filter:blur(45px) saturate(1.35);transform:scale(1.12);transition:opacity .8s}
+.mivo-dynamic-backdrop.has-art{opacity:.38}
+.app{position:relative;z-index:1}
+.hero{background:linear-gradient(115deg,#251d38 0%,#111421 50%,#15101d 100%)!important}
+.hero:before{background:radial-gradient(circle at 40% 40%,#a98aff,transparent 70%)!important;opacity:.28}
+.np-backdrop{background:radial-gradient(ellipse at 70% 35%,#51417c88,transparent 42%),radial-gradient(ellipse at 20% 80%,#1c526588,transparent 40%),#080910!important}
+.np-live,.np-eyebrow,.np-tags,.np-signature b{color:var(--accent)!important}
+.np-live i{background:var(--accent)!important;box-shadow:0 0 12px var(--accent)!important}
+.np-orbit{border-color:color-mix(in srgb,var(--accent) 40%,transparent)!important}
+.np-equalizer i{background:linear-gradient(to top,#fff,var(--accent))!important}
+.np-controls .np-play{background:var(--accent)!important;color:#111!important}
+.np-extra button.active{color:var(--accent)!important}
+.np-signature{border-left-color:var(--accent)!important}
+.np-progress input,.np-volume input{accent-color:var(--accent)!important}
+.cover{isolation:isolate}
+.cover-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transition:transform .45s,filter .45s}
+.music-card:hover .cover-photo{transform:scale(1.07);filter:saturate(1.2)}
+.cover-symbol{position:relative;z-index:1;font-size:clamp(35px,5vw,65px);font-weight:800;color:#fff;text-shadow:0 5px 24px #0009}
+.cover-play{position:absolute;z-index:2;right:12px;bottom:12px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#101014;opacity:0;transform:translateY(5px);transition:.2s}
+.music-card:hover .cover-play,.music-card:focus-within .cover-play{opacity:1;transform:none}
+.cover-kind{position:absolute;z-index:2;left:10px;bottom:10px;font-size:7px;letter-spacing:2px;font-weight:900;color:#fff;text-shadow:0 2px 8px #000}
+.now-art{background-position:center!important;background-size:cover!important}
+.mini-lyrics{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#ffffff10;color:var(--accent);font-size:19px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.mini-lyrics:hover{background:var(--accent);color:#111}
+.customize-trigger{color:var(--accent)!important;border-color:color-mix(in srgb,var(--accent) 45%,transparent)!important}
+.brand-mark,.login:not(.signed-in),.primary,.modal-create{background:var(--accent)!important;color:#101014!important}
+.nav button.active .ico,.text-btn:hover{color:var(--accent)!important}
+.card-play{background:var(--accent)!important}
+input[type=range]{accent-color:var(--accent)!important}
+@media(max-width:760px){.mivo-dynamic-backdrop{opacity:.14;filter:blur(35px)}}
+
 </style>
 </head>
 <body>
-<div class="noise"></div>
+<div class="mivo-dynamic-backdrop" id="mivoDynamicBackdrop"></div><div class="noise"></div>
 <div class="app">
 <aside class="sidebar">
   <a class="brand" href="mivo.html"><div class="brand-mark">M</div><div class="brand-name">mivo<span>.</span></div></a>
@@ -556,7 +596,7 @@ body.mivo-compact .cards{gap:9px}body.mivo-compact .music-card{padding:3px;borde
 <footer class="player">
   <div class="now"><div class="now-art" id="nowArt">M</div><div class="now-meta"><strong id="nowTitle">Выбери свой первый трек</strong><small id="nowArtist">ТВОЯ МУЗЫКА · MIVO</small></div><button class="like" id="likeBtn" aria-label="Нравится">♡</button></div>
   <div class="controls"><div class="control-row"><button class="control" id="shuffle" title="Случайный порядок">⤨</button><button class="control" id="prev" title="Предыдущий трек">◀</button><button class="control main-play" id="play" title="Воспроизвести">▶</button><button class="control" id="next" title="Следующий трек">▶</button><button class="control" id="repeat" title="Повторить трек">↻</button></div><div class="progress-row"><span id="currentTime">0:00</span><input class="progress" id="progress" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div></div>
-  <div class="volume"><span>◖</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+  <div class="volume"><button class="mini-lyrics" id="miniLyrics" type="button" title="Текст песни" aria-label="Текст песни">≋</button><span>◖</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
 </footer>
  
 <div class="now-playing" id="nowPlaying" aria-hidden="true">
@@ -582,7 +622,7 @@ body.mivo-compact .cards{gap:9px}body.mivo-compact .music-card{padding:3px;borde
 <input class="modal-input" id="playlistNameInput" type="text" maxlength="48" placeholder="Например, Ночной город" autocomplete="off">
 <div class="modal-counter"><span>Название плейлиста</span><span id="playlistNameCount">0 / 48</span></div>
 <div class="modal-actions"><button class="modal-cancel" id="playlistCancel" type="button">ОТМЕНА</button><button class="modal-create" id="playlistCreate" type="button">СОЗДАТЬ</button></div>
-</div></div><div class="mivo-modal" id="customizeModal" aria-hidden="true"><div class="modal-card customize-card"><div class="modal-kicker">MIVO / YOUR SPACE</div><h3>Настрой свою MIVO</h3><p>Выбери атмосферу, цвет и плотность карточек. Настройки сохранятся на этом устройстве.</p><label class="custom-label">Атмосфера</label><select class="modal-input" id="themeSelect"><option value="aurora">Северное сияние</option><option value="violet">Неоновый фиолетовый</option><option value="sunset">Тёплый закат</option><option value="ocean">Океан</option><option value="mono">Чёрно-белая классика</option></select><label class="custom-label">Свой цвет акцента</label><input class="modal-input color-input" id="accentPicker" type="color" value="#a8ff60"><label class="custom-label">Вид карточек</label><select class="modal-input" id="densitySelect"><option value="comfortable">Просторные</option><option value="compact">Компактные</option></select><div class="modal-actions"><button class="modal-cancel" id="resetCustomize">СБРОСИТЬ</button><button class="modal-create" id="saveCustomize">СОХРАНИТЬ</button></div></div></div><div class="lyrics-modal" id="lyricsModal" aria-hidden="true"><div class="lyrics-panel"><div class="lyrics-head"><div><div class="modal-kicker">MIVO / LYRICS</div><h3 id="lyricsTrackTitle">Текст композиции</h3><p id="lyricsTrackArtist"></p></div><button id="closeLyrics" type="button">×</button></div><div class="lyrics-content" id="lyricsContent"><div class="lyrics-loading">Выбери композицию, чтобы найти её текст.</div></div><div class="lyrics-foot">Текст доступен не для каждой песни. Источник — открытая база LRCLIB.</div></div></div><div class="toast" id="toast"></div>
+</div></div><div class="mivo-modal" id="customizeModal" aria-hidden="true"><div class="modal-card customize-card"><div class="modal-kicker">MIVO / YOUR SPACE</div><h3>Настрой свою MIVO</h3><p>Выбери атмосферу, цвет и плотность карточек. Настройки сохранятся на этом устройстве.</p><label class="custom-label">Атмосфера</label><select class="modal-input" id="themeSelect"><option value="aurora">Ледяное сияние</option><option value="violet">Фиолетовый космос</option><option value="sunset">Тёплый закат</option><option value="ocean">Океан</option><option value="mono">Чёрно-белая классика</option></select><label class="custom-label">Свой цвет акцента</label><input class="modal-input color-input" id="accentPicker" type="color" value="#b99cff"><label class="custom-label">Вид карточек</label><select class="modal-input" id="densitySelect"><option value="comfortable">Просторные</option><option value="compact">Компактные</option></select><div class="modal-actions"><button class="modal-cancel" id="resetCustomize">СБРОСИТЬ</button><button class="modal-create" id="saveCustomize">СОХРАНИТЬ</button></div></div></div><div class="lyrics-modal" id="lyricsModal" aria-hidden="true"><div class="lyrics-panel"><div class="lyrics-head"><div><div class="modal-kicker">MIVO / LYRICS</div><h3 id="lyricsTrackTitle">Текст композиции</h3><p id="lyricsTrackArtist"></p></div><button id="closeLyrics" type="button">×</button></div><div class="lyrics-content" id="lyricsContent"><div class="lyrics-loading">Выбери композицию, чтобы найти её текст.</div></div><div class="lyrics-foot">Текст доступен не для каждой песни. Источник — открытая база LRCLIB.</div></div></div><div class="toast" id="toast"></div>
 <audio id="audio" preload="none"></audio>
 
 <script>
@@ -637,8 +677,10 @@ function restoreHistoryTracks(){
 restoreHistoryTracks();
 function card(t,i,local=false){
  const d=document.createElement("div");d.className="music-card";
- const art=t.artworkUrl100?'background-image:url("'+escapeHtml(t.artworkUrl100.replace("100x100","300x300"))+'");background-size:cover;background-position:center':"";
- d.innerHTML='<div class="cover '+(t.style||"c1")+'" style="'+art+'"><b>'+(t.artworkUrl100?"":escapeHtml(t.symbol||"♪"))+'</b><span class="card-play">▶</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small><button class="card-add" type="button" aria-label="Добавить в плейлист" title="Добавить в плейлист">＋</button>';
+ const art=t.artworkUrl100?escapeHtml(t.artworkUrl100.replace("100x100","300x300")):"";
+ const fallback=t.style||("c"+((Math.abs(String(t.title||"M").split("").reduce((a,c)=>a+c.charCodeAt(0),0))%8)+1));
+ d.innerHTML='<div class="cover '+fallback+'">'+(art?'<img class="cover-photo" loading="lazy" decoding="async" src="'+art+'" alt="Обложка '+escapeHtml(t.title)+'">':'<span class="cover-symbol">'+escapeHtml(t.symbol||"♪")+'</span>')+'<span class="cover-play">▶</span><span class="cover-kind">MIVO</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small><button class="card-add" type="button" aria-label="Добавить в плейлист" title="Добавить в плейлист">＋</button>';
+ const img=d.querySelector(".cover-photo");if(img)img.addEventListener("error",()=>{img.remove();const icon=document.createElement("span");icon.className="cover-symbol";icon.textContent=t.symbol||"♪";d.querySelector(".cover").prepend(icon)});
  d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;playTrack(allTracks().indexOf(t))});
  d.querySelector(".card-add").addEventListener("click",e=>{e.stopPropagation();choosePlaylistForTrack(t)});
  return d;
@@ -877,10 +919,10 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
 <script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer>
 /* MIVO PERSONALIZATION + LYRICS */
 (function(){
- const defaults={theme:"aurora",accent:"#a8ff60",density:"comfortable"};
+ const defaults={theme:"violet",accent:"#b99cff",density:"comfortable"};
  let prefs=Object.assign({},defaults,readStore("mivo_appearance_v1",{}));
  function applyPrefs(){
-  document.body.dataset.mivoTheme=prefs.theme||"aurora";
+  document.body.dataset.mivoTheme=prefs.theme||"violet";
   document.body.style.setProperty("--accent",prefs.accent||defaults.accent);
   document.body.classList.toggle("mivo-compact",prefs.density==="compact");
   $("themeSelect").value=prefs.theme||"aurora";$("accentPicker").value=prefs.accent||defaults.accent;$("densitySelect").value=prefs.density||"comfortable";
@@ -921,6 +963,23 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  $("lyricsModal").addEventListener("click",e=>{if(e.target.id==="lyricsModal")$("closeLyrics").click()});
  audio.addEventListener("timeupdate",highlightLyrics);
  document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCustomize();$("closeLyrics").click()}});
+})();
+
+
+/* MIVO PLAYER ART + LYRICS ENTRYPOINT */
+(function(){
+ const oldSync=syncNowPlaying;
+ syncNowPlaying=function(){
+  oldSync();
+  const t=allTracks()[current];if(!t)return;
+  const art=t.artworkUrl100?t.artworkUrl100.replace("100x100","600x600"):"";
+  const ambient=$("mivoDynamicBackdrop");
+  if(ambient){ambient.style.backgroundImage=art?'linear-gradient(100deg,#080910d9,#080910b8),url("'+art+'")':'radial-gradient(ellipse at 75% 15%,#55407888,transparent 42%),radial-gradient(ellipse at 20% 80%,#174e6988,transparent 45%)';ambient.classList.toggle("has-art",!!art)}
+  $("nowArt").textContent=art?"":(t.symbol||"♪");
+  $("nowArt").style.backgroundImage=art?'url("'+art.replace("600x600","300x300")+'")':"";
+  $("nowArt").style.backgroundSize="cover";$("nowArt").style.backgroundPosition="center";
+ };
+ $("miniLyrics").addEventListener("click",()=>$("openLyrics").click());
 })();
 
 </script>
