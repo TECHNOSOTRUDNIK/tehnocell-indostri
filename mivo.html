@@ -430,7 +430,6 @@ body[data-mivo-theme="violet"]{--accent:#c69aff;background:radial-gradient(ellip
 body[data-mivo-theme="sunset"]{--accent:#ffad72;background:radial-gradient(ellipse at 80% 0%,#693523,transparent 38%),radial-gradient(ellipse at 5% 55%,#44213e,transparent 40%),#100909}
 body[data-mivo-theme="ocean"]{--accent:#65dcff;background:radial-gradient(ellipse at 80% 0%,#14516a,transparent 38%),radial-gradient(ellipse at 5% 55%,#173d5d,transparent 40%),#060c12}
 body[data-mivo-theme="mono"]{--accent:#fff;background:#080808}
-body{--accent:var(--custom-accent,var(--accent))}
 .brand-mark,.login:not(.signed-in),.primary,.modal-create,.control.main-play{background:var(--accent)!important;color:#101010!important}
 .nav button.active .ico,.text-btn:hover,.np-live,.kicker,.hero h1 span{color:var(--accent)!important}
 .hero{background:linear-gradient(112deg,color-mix(in srgb,var(--accent) 22%,#111 78%),#090a0d 65%,#17131b)!important}
@@ -882,7 +881,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  let prefs=Object.assign({},defaults,readStore("mivo_appearance_v1",{}));
  function applyPrefs(){
   document.body.dataset.mivoTheme=prefs.theme||"aurora";
-  document.documentElement.style.setProperty("--custom-accent",prefs.accent||defaults.accent);
+  document.body.style.setProperty("--accent",prefs.accent||defaults.accent);
   document.body.classList.toggle("mivo-compact",prefs.density==="compact");
   $("themeSelect").value=prefs.theme||"aurora";$("accentPicker").value=prefs.accent||defaults.accent;$("densitySelect").value=prefs.density||"comfortable";
  }
