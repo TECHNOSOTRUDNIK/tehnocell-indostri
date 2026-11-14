@@ -2651,24 +2651,46 @@ function ennieWeatherName(code){
  if([95,96,99].includes(code))return "Гроза";return "Переменная погода";
 }
 async function getEnnieWeatherData(){
- let loc=null;try{loc=JSON.parse(localStorage.getItem(ENNIE_WEATHER_LOCATION_KEY)||"null");}catch(_){}
- if(!loc||!Number.isFinite(Number(loc.latitude))||!Number.isFinite(Number(loc.longitude)))
-  return {available:false,reason:"В TEHNOCELL WEATHER ещё не выбран город. Открой Weather, выбери город или местоположение и повтори вопрос."};
+ // 1) Native TEHNOCELL WEATHER bridge (Android app integration).
+ // Expected contract: getSnapshot() -> object or JSON string.
+ const nativeCandidates=[
+  window.TEHNOCELL_WEATHER_BRIDGE,
+  window.TEHNOCELL_WEATHER
+ ];
+ for(const bridge of nativeCandidates){
+  if(!bridge||typeof bridge.getSnapshot!=="function")continue;
+  try{
+   let snapshot=await Promise.race([
+    Promise.resolve(bridge.getSnapshot()),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error("Native WEATHER timeout")),1800))
+   ]);
+   if(typeof snapshot==="string")snapshot=JSON.parse(snapshot);
+   if(snapshot&&snapshot.available===true&&snapshot.current&&snapshot.city){
+    return {...snapshot,source:"TEHNOCELL WEATHER · Android"};
+   }
+  }catch(error){console.warn("Native TEHNOCELL WEATHER bridge unavailable:",error);}
+ }
+ // 2) Web fallback: selected location saved by weather.html in the same browser origin.
+ let loc=null;
+ try{loc=JSON.parse(localStorage.getItem(ENNIE_WEATHER_LOCATION_KEY)||"null");}catch(_){}
+ if(!loc||!Number.isFinite(Number(loc.latitude))||!Number.isFinite(Number(loc.longitude))){
+  return {available:false,reason:"Не удалось получить выбранное местоположение из приложения TEHNOCELL WEATHER. Веб-резерв тоже не содержит сохранённого города. Открой WEATHER, выбери место и обнови данные. Не проси пользователя повторять город, если он уже выбран в WEATHER."};
+ }
  const url="https://api.open-meteo.com/v1/forecast?latitude="+encodeURIComponent(loc.latitude)+"&longitude="+encodeURIComponent(loc.longitude)
  +"&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,uv_index"
  +"&hourly=temperature_2m,precipitation_probability,weather_code"
  +"&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,sunrise,sunset&forecast_days=2&timezone=auto";
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);let response;
  try{response=await fetch(url,{signal:controller.signal});}finally{clearTimeout(timer);}
- if(!response.ok)throw new Error("TEHNOCELL WEATHER временно не отвечает ("+response.status+").");
+ if(!response.ok)throw new Error("Веб-резерв TEHNOCELL WEATHER временно не отвечает ("+response.status+").");
  const raw=await response.json(),c=raw.current,h=raw.hourly,d=raw.daily;
- if(!c||!h||!d)throw new Error("TEHNOCELL WEATHER вернул неполные данные.");
+ if(!c||!h||!d)throw new Error("Веб-резерв TEHNOCELL WEATHER вернул неполные данные.");
  let index=h.time.findIndex(t=>new Date(t).getTime()>=new Date(c.time).getTime());if(index<0)index=0;
  const hours=[];for(let n=index;n<Math.min(index+6,h.time.length);n++)hours.push({
   time:new Date(h.time[n]).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}),
   temperature:Math.round(h.temperature_2m[n]),precipitationProbability:h.precipitation_probability?.[n]??0
  });
- return {available:true,source:"TEHNOCELL WEATHER",city:String(loc.name||"Выбранное место"),
+ return {available:true,source:"TEHNOCELL WEATHER · веб-резерв",city:String(loc.name||"Выбранное место"),
   current:{temperature:Math.round(c.temperature_2m),apparentTemperature:Math.round(c.apparent_temperature),
    condition:ennieWeatherName(c.weather_code),humidity:c.relative_humidity_2m,windSpeed:Math.round(c.wind_speed_10m),
    windDirection:Math.round(c.wind_direction_10m),precipitation:Number(c.precipitation||0),uv:Number(c.uv_index||0)},
@@ -2694,7 +2716,7 @@ function renderEnnieWeatherCard(messageElement,data){
  const hours=document.createElement("div");hours.className="ennie-weather-hours";
  (data.hours||[]).forEach(hour=>{const item=document.createElement("div");item.className="ennie-weather-hour";const t=document.createElement("span"),v=document.createElement("strong"),p=document.createElement("span");
   t.textContent=hour.time;v.textContent=hour.temperature+"°";p.textContent="Осадки "+hour.precipitationProbability+"%";item.append(t,v,p);hours.append(item);});
- const foot=document.createElement("div");foot.className="ennie-weather-foot";const source=document.createElement("span");source.className="ennie-weather-source";source.textContent="Данные TEHNOCELL WEATHER";
+ const foot=document.createElement("div");foot.className="ennie-weather-foot";const source=document.createElement("span");source.className="ennie-weather-source";source.textContent=data.source||"Данные TEHNOCELL WEATHER";
  const link=document.createElement("a");link.className="ennie-weather-open";link.href="https://technosotrudnik.github.io/tehnocell-indostri/weather.html";link.target="_self";link.rel="noopener";link.textContent="Открыть Weather";
  foot.append(source,link);card.append(head,place,main,grid,hours,foot);
  const body=messageElement.querySelector(".message-body"),actions=body?.querySelector(".message-actions");if(actions)body.insertBefore(card,actions);else body?.append(card);
