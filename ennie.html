@@ -2681,7 +2681,7 @@ function renderEnnieWeatherCard(messageElement,data){
  (data.hours||[]).forEach(hour=>{const item=document.createElement("div");item.className="ennie-weather-hour";const t=document.createElement("span"),v=document.createElement("strong"),p=document.createElement("span");
   t.textContent=hour.time;v.textContent=hour.temperature+"°";p.textContent="Осадки "+hour.precipitationProbability+"%";item.append(t,v,p);hours.append(item);});
  const foot=document.createElement("div");foot.className="ennie-weather-foot";const source=document.createElement("span");source.className="ennie-weather-source";source.textContent="Данные TEHNOCELL WEATHER";
- const link=document.createElement("a");link.className="ennie-weather-open";link.href="https://technosotrudnik.github.io/tehnocell-indostri/weather.html";link.target="_blank";link.rel="noopener";link.textContent="Открыть Weather";
+ const link=document.createElement("a");link.className="ennie-weather-open";link.href="https://technosotrudnik.github.io/tehnocell-indostri/weather.html";link.target="_self";link.rel="noopener";link.textContent="Открыть Weather";
  foot.append(source,link);card.append(head,place,main,grid,hours,foot);
  const body=messageElement.querySelector(".message-body"),actions=body?.querySelector(".message-actions");if(actions)body.insertBefore(card,actions);else body?.append(card);
 }
