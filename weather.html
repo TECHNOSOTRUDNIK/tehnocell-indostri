@@ -364,10 +364,23 @@ header {
 .tc-legend-gradient{height:7px;border-radius:8px;margin:5px 0 3px}
 .tc-legend-labels{display:flex;justify-content:space-between;color:#4e535c;font-size:9px}
 .tc-weather-loading{opacity:.75}
-.map-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.map-control{border:1px solid var(--line);background:var(--card2);color:#fff;padding:10px 13px;border-radius:12px;font-size:11px;transition:background .15s}
-.map-control.active{background:#fff;color:#08090c;border-color:#fff}
 .map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}
+.weather-map{margin-top:4px}
+.tc-map-home{position:absolute;z-index:5;right:12px;top:12px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.94);color:#111;border-radius:12px;padding:10px 13px;font-size:11px;font-weight:650;box-shadow:0 2px 10px #0002}
+.tc-atmosphere{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))}
+.tc-atmo-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.tc-atmo-kicker{font-size:9px;letter-spacing:1.5px;color:#aeb2bd;text-transform:uppercase}
+.tc-atmo-time{font-size:13px;font-weight:650;margin-top:5px}
+.tc-atmo-temp{font-size:27px;font-weight:700;letter-spacing:-1px}
+.tc-atmo-track{width:100%;margin:16px 0 5px;accent-color:#fff;cursor:pointer}
+.tc-atmo-range{display:flex;justify-content:space-between;color:#858995;font-size:9px}
+.tc-atmo-event{margin-top:15px;padding-top:13px;border-top:1px solid var(--line);display:flex;gap:11px;align-items:flex-start}
+.tc-atmo-symbol{width:29px;height:29px;flex:0 0 29px;border:1px solid rgba(255,255,255,.18);border-radius:10px;display:grid;place-items:center;font-size:14px}
+.tc-atmo-copy strong{display:block;font-size:12px;margin-bottom:4px}
+.tc-atmo-copy span{font-size:10px;line-height:1.5;color:var(--muted);display:block}
+.tc-atmo-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;color:#b8bbc4;font-size:10px}
+.tc-atmo-stats b{color:#fff;font-weight:650}
+@media(max-width:420px){.tc-atmosphere{padding:13px}.tc-atmo-temp{font-size:24px}}
 .tc-location-marker{width:30px;height:30px;display:grid;place-items:center;background:transparent;filter:drop-shadow(0 2px 4px #0005)}
 .tc-location-marker svg{width:30px;height:30px;display:block}
 .maplibregl-ctrl-attrib{font-size:8px!important;line-height:1.35!important;background:rgba(255,255,255,.94)!important;color:#222!important;border-radius:4px!important;padding:3px 6px!important;box-shadow:0 1px 4px #0002!important}
@@ -741,18 +754,24 @@ footer {
 
 <section class="card">
   <div class="section-title">Интерактивная карта погоды</div>
-  <div class="map-controls">
-    <button class="map-control active" id="mapBaseBtn" type="button">Мир</button>
-    <button class="map-control" id="mapRainBtn" type="button">Осадки</button>
-    <button class="map-control" id="mapTempBtn" type="button">Температура</button>
-    <button class="map-control" id="mapHumidityBtn" type="button">Влажность</button>
-    <button class="map-control" id="mapWindBtn" type="button">Ветер</button>
-    <button class="map-control" id="mapCenterBtn" type="button">Моё место</button>
-  </div>
   <div class="weather-map" id="weatherMap">
-    <div id="weatherMapCanvas" role="application" aria-label="Подробная чёрно-белая карта мира с городами и дорогами"></div>
+    <div id="weatherMapCanvas" role="application" aria-label="Интерактивная карта TEHNOCELL WEATHER. Перемещай карту и выбирай точку."></div>
+    <button class="tc-map-home" id="mapCenterBtn" type="button">◎ Моё место</button>
   </div>
-  <div class="map-hint" id="tcMapHint">Авторская векторная карта TEHNOCELL. Перетаскивай карту, приближай и выбирай точку, чтобы посмотреть местную погоду. Погодные показатели загружаются отдельно.</div>
+  <div class="tc-atmosphere" id="tcAtmosphere">
+    <div class="tc-atmo-top">
+      <div><div class="tc-atmo-kicker">TEHNOCELL · ATMOSPHERE</div><div class="tc-atmo-time" id="tcAtmoTime">Сейчас</div></div>
+      <div class="tc-atmo-temp" id="tcAtmoTemp">--°</div>
+    </div>
+    <input class="tc-atmo-track" id="tcAtmoRange" type="range" min="0" max="12" value="0" step="1" aria-label="Изменение погоды в ближайшие 12 часов">
+    <div class="tc-atmo-range"><span>Сейчас</span><span>+6 часов</span><span>+12 часов</span></div>
+    <div class="tc-atmo-event">
+      <div class="tc-atmo-symbol" id="tcAtmoSymbol">◌</div>
+      <div class="tc-atmo-copy"><strong id="tcAtmoTitle">Анализируем атмосферу</strong><span id="tcAtmoText">Здесь появится краткая картина погодных изменений.</span></div>
+    </div>
+    <div class="tc-atmo-stats" id="tcAtmoStats"><span>Осадки <b>—</b></span><span>Ветер <b>—</b></span><span>Ощущается <b>—</b></span></div>
+  </div>
+  <div class="map-hint" id="tcMapHint">Выбери место на карте. Атмосфера покажет, как изменится погода в ближайшие часы.</div>
 </section>
 
 <section class="card">
@@ -1065,6 +1084,7 @@ function showWeather(data) {
 
   window.lastWeatherHourly=h;
   showHourly(h,nextHour);
+  renderAtmosphereTimeline(0,nextHour);
   showDays(d);
   try { updateWeatherMap(); } catch (mapError) { console.warn("Weather map unavailable:", mapError); }
   showAdvice(c,d);
@@ -1080,6 +1100,31 @@ function uvDescription(value) {
   return "Экстремальный уровень";
 }
 
+function renderAtmosphereTimeline(offset,baseIndex){
+ const slider=$("tcAtmoRange"),h=window.lastWeatherHourly;
+ if(!slider||!h||!h.time||!h.time.length)return;
+ const start=Number.isFinite(baseIndex)?baseIndex:(window.tcAtmoBaseIndex||0);
+ window.tcAtmoBaseIndex=start;
+ const maxOffset=Math.max(0,Math.min(12,h.time.length-1-start));
+ slider.max=maxOffset;slider.value=Math.max(0,Math.min(maxOffset,Number(offset)||0));
+ const i=start+Number(slider.value),temp=Math.round(h.temperature_2m[i]);
+ const rain=Number(h.precipitation_probability?.[i]??0),wind=Math.round(h.wind_speed_10m?.[i]??0);
+ const code=Number(h.weather_code?.[i]??0),label=weatherName(code);
+ const time=new Date(h.time[i]);
+ const now=new Date(h.time[start]);
+ const delta=Math.round((time-now)/3600000);
+ $("tcAtmoTime").textContent=delta===0?"Сейчас":delta===1?"Через час:"+" "+time.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"Через "+delta+" ч · "+time.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+ $("tcAtmoTemp").textContent=temp+"°";
+ let title="Атмосфера спокойна",detail=label+". Существенных погодных сигналов на выбранное время не обнаружено.",symbol="◌";
+ if(rain>=65){title="Высокая вероятность осадков";detail="Вероятность осадков около "+rain+"%. Лучше предусмотреть защиту от дождя.";symbol="〰";}
+ else if(rain>=30){title="Возможны осадки";detail="Вероятность осадков около "+rain+"%. Погодная обстановка может измениться.";symbol="≈";}
+ else if(wind>=35){title="Усиление ветра";detail="Ожидается ветер около "+wind+" км/ч. На открытых участках может быть некомфортно.";symbol="↗";}
+ else if(code>=95){title="Грозовая активность";detail="Прогноз указывает на грозу. Следи за обновлениями и избегай открытых пространств.";symbol="⚡";}
+ else if(code>=71&&code<=77){title="Снежные осадки";detail="Ожидается снег. Учитывай возможное ухудшение видимости.";symbol="✳";}
+ else if(code>=45&&code<=48){title="Снижение видимости";detail="Прогнозируется туман или изморозь. Будь внимателен в дороге.";symbol="≋";}
+ $("tcAtmoSymbol").textContent=symbol;$("tcAtmoTitle").textContent=title;$("tcAtmoText").textContent=detail;
+ $("tcAtmoStats").innerHTML="<span>Осадки <b>"+rain+"%</b></span><span>Ветер <b>"+wind+" км/ч</b></span><span>Ощущается <b>"+Math.round(h.apparent_temperature?.[i]??temp)+"°</b></span>";
+}
 function showHourly(data,start) {
   const box = $("hourly");
   box.innerHTML = "";
@@ -1419,8 +1464,8 @@ function initWeatherMap(){
   });
   weatherMap.addControl(new maplibregl.NavigationControl({showCompass:false,visualizePitch:false}),"top-right");
   weatherMap.addControl(new maplibregl.AttributionControl({compact:false,customAttribution:"© OpenFreeMap · © OpenStreetMap contributors"}),"bottom-left");
-  weatherMap.on("load",function(){tcMapSetMarker(latitude,longitude);tcEnsureWeatherOverlay();tcMapRenderOverlay();weatherMap.resize();tcLoadWeatherGrid(true);});
-  weatherMap.on("moveend",function(){tcResizeWeatherOverlay();if(tcMapLayer!=="base")tcScheduleWeatherGrid();});
+  weatherMap.on("load",function(){tcMapSetMarker(latitude,longitude);weatherMap.resize();});
+  weatherMap.on("moveend",function(){});
   weatherMap.on("resize",function(){tcResizeWeatherOverlay();});
   weatherMap.on("click",async function(event){
    latitude=event.lngLat.lat;longitude=event.lngLat.lng;currentCity="Выбранная точка";
@@ -1439,19 +1484,15 @@ function focusWeatherMap(zoom){
  if(!weatherMap)return;
  weatherMap.flyTo({center:[longitude,latitude],zoom:zoom||8,duration:650,essential:false});tcMapSetMarker(latitude,longitude);
 }
-function updateWeatherMap(){if(weatherMap){tcMapSetMarker(latitude,longitude);tcMapRenderOverlay();if(tcMapLayer!=="base")tcLoadWeatherGrid(false);}}
+function updateWeatherMap(){if(weatherMap)tcMapSetMarker(latitude,longitude);}
 function setupWeatherMap(){
  var section=$("weatherMap");if(!section||section.dataset.observerReady==="1")return;section.dataset.observerReady="1";
  if("IntersectionObserver" in window){
   var observer=new IntersectionObserver(function(entries){if(entries.some(function(entry){return entry.isIntersecting;})){initWeatherMap().then(function(map){if(map)map.resize();});observer.disconnect();}},{rootMargin:"220px 0px"});
   observer.observe(section);
  }else initWeatherMap();
- $("mapBaseBtn").addEventListener("click",function(){tcMapSelectLayer("base");});
- $("mapRainBtn").addEventListener("click",function(){tcMapSelectLayer("rain");});
- $("mapTempBtn").addEventListener("click",function(){tcMapSelectLayer("temp");});
- $("mapHumidityBtn").addEventListener("click",function(){tcMapSelectLayer("humidity");});
- $("mapWindBtn").addEventListener("click",function(){tcMapSelectLayer("wind");});
  $("mapCenterBtn").addEventListener("click",function(){if(weatherMap)weatherMap.flyTo({center:[longitude,latitude],zoom:Math.max(weatherMap.getZoom(),8),duration:500});tcMapSetMarker(latitude,longitude);});
+ $("tcAtmoRange").addEventListener("input",function(){renderAtmosphereTimeline(Number(this.value));});
 }
 setupWeatherMap();
 
