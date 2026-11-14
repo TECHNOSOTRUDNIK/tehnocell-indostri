@@ -920,7 +920,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
 /* MIVO PERSONALIZATION + LYRICS */
 (function(){
  const defaults={theme:"violet",accent:"#b99cff",density:"comfortable"};
- let prefs=Object.assign({},defaults,readStore("mivo_appearance_v1",{}));
+ let prefs=Object.assign({},defaults,readStore("mivo_appearance_v1",{}));if(String(prefs.accent).toLowerCase()==="#a8ff60"){prefs.accent="#b99cff";prefs.theme="violet";writeStore("mivo_appearance_v1",prefs);}
  function applyPrefs(){
   document.body.dataset.mivoTheme=prefs.theme||"violet";
   document.body.style.setProperty("--accent",prefs.accent||defaults.accent);
