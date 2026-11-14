@@ -49,8 +49,12 @@ button {
   inset:0;
   overflow:hidden;
   pointer-events:none;
-  z-index:0;
+  z-index:2;
+  clip-path:inset(0);
+  contain:strict;
 }
+#weatherEffects .light-orb{z-index:0}
+#weatherEffects .rain-drop,#weatherEffects .fog-layer{z-index:1}
 
 .light-orb {
   position:absolute;
@@ -536,15 +540,21 @@ header {
 
 .rain-drop {
   position:absolute;
-  width:1px;
-  height:22px;
-  background:rgba(210,225,255,.4);
-  animation:rainfall linear infinite;
+  top:-18vh;
+  width:1.5px;
+  height:15px;
+  border-radius:2px;
+  background:linear-gradient(to bottom,rgba(210,225,255,0),rgba(210,225,255,.34) 35%,rgba(210,225,255,.58));
+  opacity:.55;
+  transform:rotate(11deg);
+  transform-origin:center;
+  will-change:transform;
+  animation:rainfall 1.45s linear infinite;
 }
 
 @keyframes rainfall {
-  from {transform:translateY(-30px);}
-  to {transform:translateY(110vh);}
+  from {transform:translate3d(0,0,0) rotate(11deg);}
+  to {transform:translate3d(-24px,138vh,0) rotate(11deg);}
 }
 
 .fog-layer {
@@ -999,12 +1009,17 @@ function windDirection(degrees) {
   box.querySelectorAll(".rain-drop,.fog-layer").forEach(el => el.remove());
 
   if (type === "rain" || type === "storm") {
-    for (let i = 0; i < 18; i++) {
+    const count = Math.min(34, Math.max(22, Math.round(window.innerWidth / 13)));
+    for (let i = 0; i < count; i++) {
       const drop = document.createElement("div");
+      const duration = 1.15 + Math.random() * 1.05;
       drop.className = "rain-drop";
-      drop.style.left = Math.random() * 100 + "%";
-      drop.style.animationDuration = (0.7 + Math.random() * 1.2) + "s";
-      drop.style.animationDelay = Math.random() * 2 + "s";
+      drop.style.left = Math.random() * 105 - 2 + "%";
+      drop.style.opacity = (0.22 + Math.random() * 0.32).toFixed(2);
+      drop.style.height = (11 + Math.random() * 10) + "px";
+      drop.style.animationDuration = duration.toFixed(2) + "s";
+      // Start each drop at a different point in its fall, never as a fresh row at the top.
+      drop.style.animationDelay = (-Math.random() * duration).toFixed(2) + "s";
       box.appendChild(drop);
     }
   }
