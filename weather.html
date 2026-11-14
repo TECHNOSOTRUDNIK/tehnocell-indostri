@@ -1069,6 +1069,12 @@ function windDirection(degrees) {
 }
 
 async function loadWeather() {
+  try {
+    localStorage.setItem("tehnocell_weather_current_location", JSON.stringify({
+      latitude:Number(latitude), longitude:Number(longitude),
+      name:String(currentCity || "Выбранное место"), updatedAt:new Date().toISOString()
+    }));
+  } catch (storageError) { console.warn("Weather location share unavailable:", storageError); }
   $("status").textContent = "Обновляем погоду...";
 
   try {
