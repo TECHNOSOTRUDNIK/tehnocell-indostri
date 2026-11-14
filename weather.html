@@ -1463,7 +1463,7 @@ function initWeatherMap(){
    fadeDuration:0,refreshExpiredTiles:false
   });
   weatherMap.addControl(new maplibregl.NavigationControl({showCompass:false,visualizePitch:false}),"top-right");
-  weatherMap.addControl(new maplibregl.AttributionControl({compact:false,customAttribution:"© OpenFreeMap · © OpenStreetMap contributors"}),"bottom-left");
+  weatherMap.addControl(new maplibregl.AttributionControl({compact:false,customAttribution:"OpenFreeMap © OpenMapTiles · Data from OpenStreetMap"}),"bottom-left");
   weatherMap.on("load",function(){
     try{
      var styleLayers=weatherMap.getStyle().layers||[];
