@@ -621,6 +621,12 @@ body[data-mivo-theme]{background:radial-gradient(ellipse at 78% 0%,color-mix(in 
  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
 
+
+/* Real analyser owns bar movement; disable decorative keyframe motion */
+#npEqualizer i,.mini-equalizer i{animation:none!important;transition:transform .055s linear,opacity .08s linear!important;transform-origin:center bottom!important;will-change:transform}
+#npEqualizer i{height:28px!important}
+.mini-equalizer i{height:8px!important}
+
 </style>
 </head>
 <body>
@@ -863,7 +869,7 @@ async function loadMivoHits(force=false){
    return {id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Музыка",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:x.previewUrl||"",previewUrl:x.previewUrl||"",symbol:"♪",style:"c1"};
   }).filter(Boolean);
   hitTracks.forEach((t,i)=>{const node=card(t,i);node.dataset.chartRank=String(i+1);const rank=document.createElement("span");rank.className="hit-rank";rank.textContent=String(i+1).padStart(2,"0");node.querySelector(".cover").appendChild(rank);grid.appendChild(node)});
-  status.textContent=hitTracks.length?"Чарт Apple Music · обновляется регулярно · доступно композиций: "+hitTracks.length:"В чарте пока нет композиций с доступным предпрослушиванием.";
+  status.textContent=hitTracks.length?"Популярные композиции российского чарта · Apple Music · доступно: "+hitTracks.length:"В российском чарте пока нет композиций с доступным предпрослушиванием.";
   status.style.display=hitTracks.length?"block":"none";mivoHitsLoaded=true;
  }catch(error){
   hitTracks=[];status.textContent="Не удалось загрузить чарт. Попробуй обновить страницу позже.";status.style.display="block";
@@ -906,6 +912,7 @@ function renderMixes(){
  const counts={};source.forEach(t=>{const g=t.genre||"Музыка";counts[g]=(counts[g]||0)+1});
  const topGenre=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0];
  const mixes=[
+  {title:"Популярно в России",sub:hitTracks.length?"Актуальный российский чарт Apple Music":"Загружаем российский чарт",list:hitTracks.slice(0,20)},
   {title:"Похоже на то, что ты слушаешь",sub:topGenre?"На основе твоих последних прослушиваний · "+genreRu(topGenre):"Персональная подборка после первых прослушиваний",list:source},
   {title:"Твои любимые",sub:likedTracks.length?"На основе избранных композиций":"Добавляй треки в избранное — соберём микс",list:likedTracks},
   {title:"Недавно звучало",sub:recentTracks.length?"Продолжение музыкальной истории":"Здесь появятся недавно прослушанные треки",list:recentTracks},
@@ -954,7 +961,7 @@ function syncNowPlaying(){const t=allTracks()[current];if(!t)return;$("npTitle")
  $("npArt").style.backgroundImage=art?'url("'+art+'")':"";$("npArt").style.backgroundSize="cover";$("npArt").style.backgroundPosition="center";$("npArt").style.color=art?"transparent":"#fff";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>"}
 function openNowPlaying(){if(current<0&&!allTracks().length){toast("Сначала добавь аудиофайл или найди музыку через поиск");return}if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
 function closeNowPlaying(){$("nowPlaying").classList.remove("open");$("nowPlaying").setAttribute("aria-hidden","true");document.body.style.overflow=""}
-function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];if(!queue.length||!queue.includes(trackKey(t)))queue=tracks.map(trackKey);saveRecent(t);renderMixes();audio.pause();audio.removeAttribute("src");audio.load();$("progress").value=0;$("npProgress").value=0;$("currentTime").textContent="0:00";$("npCurrent").textContent="0:00";$("duration").textContent="0:00";$("npDuration").textContent="0:00";let started=false;const startFromBeginning=()=>{if(started)return;started=true;try{audio.currentTime=0}catch(_){}audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"})};audio.addEventListener("loadedmetadata",startFromBeginning,{once:true});audio.src=t.url;audio.load();if(audio.readyState>=1)startFromBeginning();$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
+function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];if(!queue.length||!queue.includes(trackKey(t)))queue=tracks.map(trackKey);saveRecent(t);renderMixes();audio.pause();audio.removeAttribute("src");audio.load();$("progress").value=0;$("npProgress").value=0;$("currentTime").textContent="0:00";$("npCurrent").textContent="0:00";$("duration").textContent="0:00";$("npDuration").textContent="0:00";let started=false;const startFromBeginning=()=>{if(started)return;started=true;try{audio.currentTime=0}catch(_){}audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"})};audio.addEventListener("loadedmetadata",startFromBeginning,{once:true});audio.crossOrigin="anonymous";audio.src=t.url;audio.load();if(audio.readyState>=1)startFromBeginning();$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
 function togglePlay(){if(!audio.src){if(allTracks().length)playTrack(0);else toast("Добавь аудиофайл или найди трек через поиск");return}if(audio.paused){audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶";$("npPlay").textContent="▶";$("nowPlaying").classList.remove("playing")}}
 function move(step){
  const tracks=allTracks();if(!tracks.length){toast("В медиатеке пока нет музыки");return}
@@ -1249,6 +1256,77 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  paintTrack();updateBars();
 })();
 
+</script>
+<script>
+/* MIVO REAL AUDIO ANALYSER — frequency-reactive equalizer */
+(function(){
+ const media=$("audio");
+ if(!media)return;
+ let context=null,analyser=null,source=null,frame=0,lastPaint=0,bigBars=[],miniBars=[];
+ const data=new Uint8Array(128);
+ function collectBars(){
+  bigBars=[...document.querySelectorAll("#npEqualizer i")];
+  miniBars=[...document.querySelectorAll("#miniEqualizer i")];
+ }
+ collectBars();
+ function setup(){
+  if(analyser)return true;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC)return false;
+  try{
+   context=new AC();
+   analyser=context.createAnalyser();
+   analyser.fftSize=256;
+   analyser.smoothingTimeConstant=.78;
+   analyser.minDecibels=-88;
+   analyser.maxDecibels=-18;
+   source=context.createMediaElementSource(media);
+   source.connect(analyser);
+   analyser.connect(context.destination);
+   return true;
+  }catch(e){return false}
+ }
+ function paint(){
+  frame=0;
+  if(media.paused||media.ended||document.hidden)return;
+  const now=performance.now();
+  if(now-lastPaint<42){frame=requestAnimationFrame(paint);return}
+  lastPaint=now;
+  if(!analyser){frame=requestAnimationFrame(paint);return}
+  analyser.getByteFrequencyData(data);
+  if(!bigBars.length||!miniBars.length)collectBars();
+  const bars=[...bigBars,...miniBars];
+  const count=bigBars.length;
+  bars.forEach((bar,i)=>{
+   const isMini=i>=count,index=isMini?i-count:i;
+   const total=isMini?miniBars.length:count;
+   const start=Math.floor(Math.pow(index/Math.max(1,total),1.55)*62)+2;
+   const end=Math.max(start+2,Math.floor(Math.pow((index+1)/Math.max(1,total),1.55)*90)+4);
+   let sum=0,n=0;
+   for(let j=start;j<Math.min(end,data.length);j++){sum+=data[j];n++}
+   const level=n?sum/n/255:0;
+   const shaped=Math.max(.12,Math.pow(level,.78));
+   const scale=.18+shaped*(isMini?2.15:2.5);
+   bar.style.transform="scaleY("+Math.min(isMini?2.5:2.8,scale).toFixed(2)+")";
+   bar.style.opacity=String(.48+Math.min(.52,level*.7));
+  });
+  frame=requestAnimationFrame(paint);
+ }
+ function start(){
+  if(!setup())return;
+  if(context.state==="suspended")context.resume().catch(()=>{});
+  if(!frame)frame=requestAnimationFrame(paint);
+ }
+ function stop(){
+  if(frame){cancelAnimationFrame(frame);frame=0}
+  [...bigBars,...miniBars].forEach(bar=>{bar.style.transform="scaleY(.18)";bar.style.opacity=".55"});
+ }
+ media.addEventListener("play",start);
+ media.addEventListener("pause",stop);
+ media.addEventListener("ended",stop);
+ document.addEventListener("visibilitychange",()=>{if(document.hidden)stop();else if(!media.paused)start()});
+ window.addEventListener("resize",collectBars,{passive:true});
+})();
 </script>
 </body>
 </html>
