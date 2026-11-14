@@ -463,11 +463,11 @@ body.mivo-compact .cards{gap:9px}body.mivo-compact .music-card{padding:3px;borde
 /* MIVO VISUAL REWORK — PURPLE/BLUE DEFAULT, NO GREEN */
 :root{--accent:#b99cff}
 body{background:#080910!important;color:#f5f4fa}
-body[data-mivo-theme="aurora"]{--accent:#8ddcff!important;background:#080d16!important}
-body[data-mivo-theme="violet"]{--accent:#b99cff!important;background:#0b0814!important}
-body[data-mivo-theme="sunset"]{--accent:#ffad91!important;background:#120a10!important}
-body[data-mivo-theme="ocean"]{--accent:#65d8e8!important;background:#061018!important}
-body[data-mivo-theme="mono"]{--accent:#fff!important;background:#080808!important}
+body[data-mivo-theme="aurora"]{--accent:#8ddcff;background:#080d16!important}
+body[data-mivo-theme="violet"]{--accent:#b99cff;background:#0b0814!important}
+body[data-mivo-theme="sunset"]{--accent:#ffad91;background:#120a10!important}
+body[data-mivo-theme="ocean"]{--accent:#65d8e8;background:#061018!important}
+body[data-mivo-theme="mono"]{--accent:#fff;background:#080808!important}
 .mivo-dynamic-backdrop{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.22;background-size:cover;background-position:center;filter:blur(45px) saturate(1.35);transform:scale(1.12);transition:opacity .8s}
 .mivo-dynamic-backdrop.has-art{opacity:.38}
 .app{position:relative;z-index:1}
@@ -929,6 +929,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  }
  function closeCustomize(){$("customizeModal").classList.remove("open");$("customizeModal").setAttribute("aria-hidden","true")}
  $("openCustomize").addEventListener("click",()=>$("customizeModal").classList.add("open"));
+ const presetAccents={aurora:"#8ddcff",violet:"#b99cff",sunset:"#ffad91",ocean:"#65d8e8",mono:"#ffffff"};$("themeSelect").addEventListener("change",()=>{$("accentPicker").value=presetAccents[$("themeSelect").value]||"#b99cff"});
  $("saveCustomize").addEventListener("click",()=>{prefs={theme:$("themeSelect").value,accent:$("accentPicker").value,density:$("densitySelect").value};writeStore("mivo_appearance_v1",prefs);applyPrefs();closeCustomize();toast("Оформление MIVO сохранено")});
  $("resetCustomize").addEventListener("click",()=>{prefs=Object.assign({},defaults);writeStore("mivo_appearance_v1",prefs);applyPrefs();toast("Стандартное оформление восстановлено")});
  $("customizeModal").addEventListener("click",e=>{if(e.target.id==="customizeModal")closeCustomize()});
