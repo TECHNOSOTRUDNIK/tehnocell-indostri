@@ -408,6 +408,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
   <div class="nav">
     <button class="active" data-view="home"><span class="ico">⌂</span>Главная</button>
     <button data-view="discover"><span class="ico">⌕</span>Обзор музыки</button>
+    <button data-view="mixes"><span class="ico">◈</span>Миксы для тебя</button>
     <button data-view="library"><span class="ico">▤</span>Моя медиатека</button>
     <button data-view="liked"><span class="ico">♡</span>Мне нравится</button>
   </div>
@@ -487,7 +488,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
  <p class="notice">Избранное и история сохраняются в этом браузере. Полный онлайн-каталог будет подключён отдельно после подготовки музыкальных источников и прав на воспроизведение.</p>
  </section>
 </main>
-<nav class="mobile-nav"><button class="active" data-view="home"><span>⌂</span>Главная</button><button data-view="discover"><span>⌕</span>Обзор</button><button data-view="library"><span>▤</span>Медиатека</button><button data-view="liked"><span>♡</span>Любимое</button></nav>
+<nav class="mobile-nav"><button class="active" data-view="home"><span>⌂</span>Главная</button><button data-view="mixes"><span>◈</span>Миксы</button><button data-view="discover"><span>⌕</span>Обзор</button><button data-view="library"><span>▤</span>Медиатека</button><button data-view="playlists"><span>▧</span>Плейлисты</button><button data-view="liked"><span>♡</span>Любимое</button></nav>
 </div>
 
 <footer class="player">
@@ -685,7 +686,7 @@ $("uploadBtn").onclick=$("uploadHero").onclick=()=>$("fileInput").click();
 $("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{const url=URL.createObjectURL(f);localTracks.push({title:f.name.replace(/\.[^.]+$/,""),artist:"Твоя медиатека",genre:"Local",style:"c"+(1+Math.floor(Math.random()*12)),symbol:"♪",url})});renderLocal();renderMixes();toast("Добавлено файлов: "+files.length);e.target.value=""};
 $("qualityBtn").onclick=()=>toast("Звук высокого разрешения — в планах. Сейчас качество зависит от исходного файла.");$("npClose").onclick=closeNowPlaying;$("nowTitle").onclick=openNowPlaying;$("nowArt").onclick=openNowPlaying;document.querySelector(".now").style.cursor="pointer";document.querySelector(".now").addEventListener("click",e=>{if(e.target.closest("button"))return;openNowPlaying()});$("npPlay").onclick=togglePlay;$("npNext").onclick=()=>move(1);$("npPrev").onclick=()=>move(-1);$("npShuffle").onclick=()=>$("shuffle").click();$("npRepeat").onclick=()=>$("repeat").click();$("npLike").onclick=()=>$("likeBtn").click();$("npShuffle").style.color="#888";document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNowPlaying()});
 document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
-document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":view==="playlists"?"playlists":"mivo-music";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover")render(allTracks());else if(view==="playlists")renderPlaylists();$(target).scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":view==="playlists"?"playlists":view==="mixes"?"mixes":"mivo-music";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover")render(allTracks());else if(view==="mixes")renderMixes();else if(view==="playlists")renderPlaylists();$(target).scrollIntoView({behavior:"smooth"})});
 render(allTracks());renderLocal();renderMixes();renderPlaylists();
 
 /* MIVO polish interactions */
@@ -693,6 +694,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  const svg={
   home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
   discover:'<circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/>',
+  mixes:'<path d="M4 7h16M4 12h10M4 17h16"/><circle cx="17" cy="12" r="2"/>',
   library:'<path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
   liked:'<path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11a4.7 4.7 0 0 1 8.8-2.2 4.7 4.7 0 0 1 8.8 2.2z"/>',
   recent:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
