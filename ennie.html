@@ -1009,14 +1009,23 @@ body.light-theme.listening::after {
 }
 
 
-/* Suppress the browser's long-press callout on selectable ENNIE conversation text. */
-.message, .message *, .welcome, .welcome *, .widget-section, .widget-section * {
+/* ENNIE selection: suppress native long-press callouts without disabling text selection. */
+html, body, body * {
   -webkit-touch-callout:none;
 }
-/* ENNIE native-feel text selection */
-::selection { background: rgba(255,255,255,.22); color:#fff; text-shadow:none; }
-.message-text::selection, .welcome::selection, .widget-section::selection { text-shadow:none; }
-::-moz-selection { background: rgba(255,255,255,.24); color:#fff; }
+input, textarea, [contenteditable="true"], [role="textbox"] {
+  -webkit-touch-callout:default;
+  caret-color:#fff;
+  accent-color:#fff;
+}
+/* White selection highlight and white caret/accent where the browser permits it. */
+:root { color-scheme:dark; accent-color:#fff; }
+::selection { background:rgba(255,255,255,.38) !important; color:#fff !important; text-shadow:none; }
+::-moz-selection { background:rgba(255,255,255,.38) !important; color:#fff !important; }
+.message, .message *, .welcome, .welcome *, .widget-section, .widget-section * {
+  -webkit-user-select:text;
+  user-select:text;
+}
 .ennie-selection-bubble {
   position:fixed; z-index:2147483000; display:flex; align-items:center; gap:5px;
   padding:7px; border:1px solid rgba(255,255,255,.22); border-radius:22px;
@@ -1068,7 +1077,7 @@ body.light-theme.listening::after {
   animation:ennieTouchGlow 1.8s ease-out;
 }
 #coreWrap.touching::after { animation:ennieTouchRipple .85s ease-out; }
-#coreWrap.touching { animation:ennieTouchPress .62s cubic-bezier(.2,.8,.2,1); }
+#coreWrap.touching { animation:ennieTouchPress .42s ease-out; }
 #coreWrap.cooldown::before { opacity:.48; }
 @keyframes ennieTouchGlow {
   0% { opacity:.35; filter:blur(12px) brightness(1); }
@@ -1081,8 +1090,8 @@ body.light-theme.listening::after {
 }
 @keyframes ennieTouchPress {
   0%,100% { transform:scale(1); }
-  28% { transform:scale(.965); }
-  58% { transform:scale(1.035); }
+  35% { transform:scale(.992); }
+  70% { transform:scale(1.002); }
 }
 #coreWrap:focus-visible { outline:1px solid rgba(255,255,255,.65); outline-offset:8px; border-radius:50%; }
 @media (prefers-reduced-motion: reduce) {
@@ -5291,16 +5300,18 @@ console.log("ENNIE V11 — all interface systems loaded.");
     bubble.style.top = top + 'px';
     bubble.style.visibility = 'visible';
   };
-  // Keep Android/Chrome's generic Copy/Paste context panel from covering ENNIE's own selection UI.
-  // Limit this to selectable conversation/content text; input fields retain their normal paste menu.
+  // Prevent the browser's native long-press menu across the ENNIE page.
+  // Keep native editing menus available inside inputs and textareas.
   document.addEventListener('contextmenu', event => {
     const target = event.target instanceof Element ? event.target : event.target?.parentElement;
-    const selectableArea = target?.closest('.message, .message-text, .welcome, .widget-section');
-    if (selectableArea && getSelectionText()) {
+    const editable = target?.closest('input, textarea, [contenteditable="true"], [role="textbox"]');
+    if (!editable) {
       event.preventDefault();
       event.stopPropagation();
-      clearTimeout(hideTimer);
-      show();
+      if (getSelectionText()) {
+        clearTimeout(hideTimer);
+        show();
+      }
     }
   }, true);
   document.addEventListener('selectionchange', () => {
