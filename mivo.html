@@ -555,7 +555,7 @@ function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value
 function trackKey(t){return t.id||((t.genre==="Local"?"local:":"track:")+t.title+"::"+t.artist)}
 function saveRecent(t){
  const key=trackKey(t);recent=[key,...recent.filter(x=>x!==key)].slice(0,40);writeStore("mivo_recent_v1",recent);
- const history=readStore("mivo_recent_tracks_v1",{});history[key]={id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.url,symbol:t.symbol,style:t.style};
+ const history=readStore("mivo_recent_tracks_v1",{});history[key]=trackSnapshot(t);
  Object.keys(history).slice(40).forEach(k=>delete history[k]);writeStore("mivo_recent_tracks_v1",history);
 }
 const audio=document.getElementById("audio"),grid=document.getElementById("trackGrid"),localGrid=document.getElementById("localGrid");
@@ -590,10 +590,11 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshMiv
 
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
 function allTracks(){return [...localTracks,...catalogTracks]}
-function persistCatalog(){writeStore("mivo_catalog_cache_v1",catalogTracks.map(t=>({id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.url,symbol:t.symbol,style:t.style})))}
+function trackSnapshot(t){return {id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.url,symbol:t.symbol,style:t.style}}
+function persistCatalog(){const old=readStore("mivo_catalog_cache_v1",[]),map=new Map();[...old,...catalogTracks].forEach(t=>{if(t&&t.id)map.set(t.id,trackSnapshot(t))});writeStore("mivo_catalog_cache_v1",[...map.values()].slice(-100))}
 function restoreHistoryTracks(){
- const history=readStore("mivo_recent_tracks_v1",{}),known=new Set(catalogTracks.map(trackKey));
- recent.forEach(key=>{const t=history[key];if(t&&!known.has(trackKey(t))){catalogTracks.push(t);known.add(trackKey(t))}});
+ const history=readStore("mivo_recent_tracks_v1",{}),savedLikes=readStore("mivo_liked_tracks_v1",{}),known=new Set(catalogTracks.map(trackKey));
+ [...recent,...liked].forEach(key=>{const t=history[key]||savedLikes[key];if(t&&!known.has(trackKey(t))){catalogTracks.push(t);known.add(trackKey(t))}});
 }
 restoreHistoryTracks();
 function card(t,i,local=false){
@@ -701,7 +702,9 @@ function fmt(s){if(!Number.isFinite(s))return"0:00";return Math.floor(s/60)+":"+
 $("play").onclick=togglePlay;$("next").onclick=()=>move(1);$("prev").onclick=()=>{if(audio.currentTime>3){audio.currentTime=0}else move(-1)};
 $("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.color=shuffle?"var(--accent)":"#888";toast(shuffle?"Перемешивание включено":"Обычный порядок")};
 $("repeat").onclick=()=>{repeat=!repeat;audio.loop=repeat;$("repeat").style.color=repeat?"var(--accent)":"#888"};
-$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current],key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);renderMixes();$("likeBtn").classList.toggle("on",liked.has(key));if($("nowPlaying").classList.contains("open"))syncNowPlaying();toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
+$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current],key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);
+ const savedLikes=readStore("mivo_liked_tracks_v1",{});if(liked.has(key))savedLikes[key]=trackSnapshot(t);else delete savedLikes[key];writeStore("mivo_liked_tracks_v1",savedLikes);
+ renderMixes();$("likeBtn").classList.toggle("on",liked.has(key));if($("nowPlaying").classList.contains("open"))syncNowPlaying();toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
 audio.addEventListener("timeupdate",()=>{if(audio.duration){const p=audio.currentTime/audio.duration*100;$("progress").value=p;$("npProgress").value=p;$("currentTime").textContent=fmt(audio.currentTime);$("npCurrent").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration);$("npDuration").textContent=fmt(audio.duration)}});
 $("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};$("npProgress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
 $("volume").oninput=e=>{audio.volume=e.target.value;$("npVolume").value=e.target.value};$("npVolume").oninput=e=>{audio.volume=e.target.value;$("volume").value=e.target.value};audio.volume=.8;
