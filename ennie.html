@@ -1008,6 +1008,32 @@ body.light-theme.listening::after {
   body.speaking::after, body.listening::after { animation: none; }
 }
 
+
+/* ENNIE native-feel text selection */
+::selection { background: rgba(255,255,255,.22); color:#fff; text-shadow:none; }
+.message-text::selection, .welcome::selection, .widget-section::selection { text-shadow:none; }
+::-moz-selection { background: rgba(255,255,255,.24); color:#fff; }
+.ennie-selection-bubble {
+  position:fixed; z-index:2147483000; display:flex; align-items:center; gap:5px;
+  padding:7px; border:1px solid rgba(255,255,255,.22); border-radius:22px;
+  background:rgba(25,25,27,.72); color:#fff;
+  -webkit-backdrop-filter:blur(22px) saturate(135%); backdrop-filter:blur(22px) saturate(135%);
+  box-shadow:0 8px 32px rgba(0,0,0,.48),0 0 22px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.13);
+  opacity:0; transform:translateY(7px) scale(.96); pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.ennie-selection-bubble.visible { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.ennie-selection-action {
+  min-height:39px; display:flex; align-items:center; justify-content:center; gap:7px;
+  padding:0 12px; border:1px solid rgba(255,255,255,.10); border-radius:15px;
+  color:rgba(255,255,255,.94); background:rgba(255,255,255,.055);
+  font:500 12px/1.1 Inter,Arial,sans-serif; white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+.ennie-selection-action.primary { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.25); box-shadow:0 0 14px rgba(255,255,255,.08); }
+.ennie-selection-action svg { width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+@media (prefers-reduced-motion:reduce) { .ennie-selection-bubble {transition:none;} }
+
 </style>
 
 <style id="ennie-touch-styles">
@@ -1296,7 +1322,7 @@ body.light-theme.listening::after {
 
       <div class="composer">
 
-        <button class="composer-btn" id="attachBtn" aria-label="Прикрепить изображение">
+        <button class="composer-btn" id="attachBtn" aria-label="Прикрепить файл или фотографию">
           <svg viewBox="0 0 24 24">
             <path d="M12 5v14M5 12h14"/>
           </svg>
@@ -1305,7 +1331,7 @@ body.light-theme.listening::after {
         <input
           type="file"
           id="imageInput"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,.txt,.md,.csv,.json,.pdf,.docx,text/plain,text/markdown,text/csv,application/json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           hidden
         >
 
@@ -1390,7 +1416,7 @@ body.light-theme.listening::after {
         <div class="settings-profile-id" id="settingsProfileId">TC-ID: проверка...</div>
       </div>
       <div class="settings-account-actions">
-        <a href="https://technosotrudnik.github.io/tehnocell-indostri/account.html" class="settings-account-link" target="_blank" rel="noopener">Открыть профиль</a>
+        <a href="https://technosotrudnik.github.io/tehnocell-indostri/account.html" class="settings-account-link">Открыть профиль</a>
         <button type="button" class="settings-account-copy" id="copyAccountEmail">Копировать email</button>
       </div>
     </section>
@@ -1527,6 +1553,7 @@ let currentChatId = null;
 let currentChatTitle = "Новый диалог";
 let currentMessages = [];
 let attachedImage = null;
+let attachedTextFile = null;
 let isSending = false;
 let voiceEnabled = true;
 let greetingSelected = false;
@@ -1589,6 +1616,16 @@ const welcomeGreetings = [
 function showWelcome() {
   welcome.style.display = "flex";
   chatArea.style.display = "none";
+
+  requestAnimationFrame(() => {
+    const core = document.getElementById("coreWrap");
+    if (core) {
+      const rect = core.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        window.dispatchEvent(new Event("resize"));
+      }
+    }
+  });
 
   if (!greetingSelected) {
     const greeting =
@@ -1854,6 +1891,7 @@ function startNewChat() {
   currentChatTitle = "Новый диалог";
   currentMessages = [];
   attachedImage = null;
+  attachedTextFile = null;
 
   messages.replaceChildren();
   $("#attachmentPreview").replaceChildren();
@@ -1920,19 +1958,25 @@ document.addEventListener("click", (event) => {
 function addMessage(role, text, imageUrl = null) {
   const wrapper = document.createElement("div");
   wrapper.className = "message message-" + role;
+
   const avatar = document.createElement("div");
   avatar.className = "message-avatar";
   avatar.textContent = role === "assistant" ? "E" : "Я";
+
   const body = document.createElement("div");
   body.className = "message-body";
+
   const author = document.createElement("div");
   author.className = "message-author";
   author.textContent = "ENNIE";
+
   const content = document.createElement("div");
   content.className = "message-text";
   const visibleText = String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
   content.textContent = visibleText;
+
   if (role === "assistant") body.append(author);
+
   if (imageUrl) {
     const image = document.createElement("img");
     image.className = "message-image";
@@ -1940,6 +1984,7 @@ function addMessage(role, text, imageUrl = null) {
     image.alt = "Прикреплённое изображение";
     body.append(image);
   }
+
   body.append(content);
 
   if (role === "assistant" && visibleText) {
@@ -1948,14 +1993,24 @@ function addMessage(role, text, imageUrl = null) {
     actions.setAttribute("role", "toolbar");
     actions.setAttribute("aria-label", "Действия с ответом ENNIE");
     actions.innerHTML = `
-      <button class="message-action-btn" type="button" data-message-action="play" aria-label="Прослушать сообщение" title="Прослушать"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
-      <button class="message-action-btn" type="button" data-message-action="repeat" aria-label="Повторить сообщение" title="Повторить"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.7-2L20 12M4 12l2.7 5a7 7 0 0 0 11.7-2"/></svg></button>
-      <button class="message-action-btn" type="button" data-message-action="copy" aria-label="Копировать сообщение" title="Копировать"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg></button>
-      <button class="message-action-btn" type="button" data-message-action="more" aria-label="Дополнительные действия" title="Ещё"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg></button>`;
+      <button class="message-action-btn" type="button" data-message-action="play" aria-label="Прослушать сообщение" title="Прослушать">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="message-action-btn" type="button" data-message-action="repeat" aria-label="Повторить сообщение" title="Повторить">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.7-2L20 12M4 12l2.7 5a7 7 0 0 0 11.7-2"/></svg>
+      </button>
+      <button class="message-action-btn" type="button" data-message-action="copy" aria-label="Копировать сообщение" title="Копировать">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg>
+      </button>
+      <button class="message-action-btn" type="button" data-message-action="more" aria-label="Дополнительные действия" title="Ещё">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+      </button>`;
     const more = document.createElement("div");
     more.className = "message-more-menu";
     more.hidden = true;
-    more.innerHTML = '<button type="button" data-message-action="select">Выделить текст</button><button type="button" data-message-action="ask">Спросить ENNIE об этом</button>';
+    more.innerHTML = `
+      <button type="button" data-message-action="select">Выделить текст</button>
+      <button type="button" data-message-action="ask">Спросить ENNIE об этом</button>`;
     actions.appendChild(more);
     actions.addEventListener("click", async (event) => {
       event.stopPropagation();
@@ -1963,40 +2018,60 @@ function addMessage(role, text, imageUrl = null) {
       if (!button) return;
       const action = button.dataset.messageAction;
       if (action === "play" || action === "repeat") {
-        if (action === "play" && activeVoiceMessageElement === wrapper && !voicePaused) pauseEnnieVoice();
-        else if (action === "play" && activeVoiceMessageElement === wrapper && voicePaused) resumeEnnieVoice();
-        else void speakText(visibleText, wrapper, true);
+        if (action === "play" && activeVoiceMessageElement === wrapper && !voicePaused) {
+          pauseEnnieVoice();
+        } else if (action === "play" && activeVoiceMessageElement === wrapper && voicePaused) {
+          resumeEnnieVoice();
+        } else {
+          void speakText(visibleText, wrapper, true);
+        }
       } else if (action === "copy") {
         try {
           if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(visibleText);
           else {
-            const area = document.createElement("textarea"); area.value = visibleText;
-            area.style.position = "fixed"; area.style.opacity = "0"; document.body.appendChild(area);
-            area.select(); document.execCommand("copy"); area.remove();
+            const area = document.createElement("textarea");
+            area.value = visibleText;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand("copy");
+            area.remove();
           }
-          button.classList.add("action-done"); button.title = "Скопировано";
+          button.classList.add("action-done");
+          button.title = "Скопировано";
           showToast("Сообщение скопировано", "success");
           setTimeout(() => { button.classList.remove("action-done"); button.title = "Копировать"; }, 1300);
-        } catch (_) { showError("Не удалось скопировать сообщение."); }
-      } else if (action === "more") more.hidden = !more.hidden;
-      else if (action === "select") {
-        const range = document.createRange(); range.selectNodeContents(content);
-        const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+        } catch (_) {
+          showError("Не удалось скопировать сообщение.");
+        }
+      } else if (action === "more") {
+        more.hidden = !more.hidden;
+      } else if (action === "select") {
+        const range = document.createRange();
+        range.selectNodeContents(content);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
         more.hidden = true;
       } else if (action === "ask") {
         messageInput.value = "Помоги разобраться с этим ответом:\n\n" + visibleText;
         messageInput.dispatchEvent(new Event("input", { bubbles: true }));
-        more.hidden = true; sendMessage();
+        more.hidden = true;
+        sendMessage();
       }
     });
     body.append(actions);
   }
+
   wrapper.append(avatar, body);
   messages.appendChild(wrapper);
+
   requestAnimationFrame(() => {
     wrapper.classList.add("message-visible");
     chatArea.scrollTop = chatArea.scrollHeight;
   });
+
   return wrapper;
 }
 
@@ -2372,6 +2447,51 @@ async function saveMessage(role, content) {
    ЗАГРУЗКА ИЗОБРАЖЕНИЯ
 ========================================== */
 
+/* ==========================================
+   ИЗВЛЕЧЕНИЕ ТЕКСТА ИЗ ДОКУМЕНТОВ
+========================================== */
+function loadExternalScript(src, globalName) {
+  return new Promise((resolve, reject) => {
+    if (window[globalName]) return resolve(window[globalName]);
+    const existing = document.querySelector('script[data-ennie-lib="' + globalName + '"]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window[globalName]), { once: true });
+      existing.addEventListener("error", reject, { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.dataset.ennieLib = globalName;
+    script.onload = () => window[globalName] ? resolve(window[globalName]) : reject(new Error("Библиотека документа не загрузилась."));
+    script.onerror = () => reject(new Error("Не удалось загрузить модуль чтения документов. Проверь интернет."));
+    document.head.appendChild(script);
+  });
+}
+
+async function extractDocumentText(file, kind) {
+  if (kind.isPdf) {
+    await loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js", "pdfjsLib");
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const pages = [];
+    const pageLimit = Math.min(pdf.numPages, 25);
+    for (let pageNumber = 1; pageNumber <= pageLimit; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent();
+      pages.push("[Страница " + pageNumber + "]\n" + content.items.map(item => item.str || "").join(" "));
+      if (pages.join("\n").length > 12000) break;
+    }
+    return pages.join("\n\n").slice(0, 12000);
+  }
+  if (kind.isDocx) {
+    await loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js", "mammoth");
+    const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+    return String(result.value || "").slice(0, 12000);
+  }
+  return await file.text();
+}
+
 async function uploadImage(file) {
   if (!currentUser) {
     throw new Error("Необходимо войти в аккаунт.");
@@ -2437,36 +2557,53 @@ $("#imageInput").addEventListener("change", async (event) => {
   if (!file) return;
 
   try {
-    attachedImage = await uploadImage(file);
-
     const preview = $("#attachmentPreview");
     preview.replaceChildren();
+    attachedImage = null;
+    attachedTextFile = null;
 
-    const image = document.createElement("img");
-    image.src = attachedImage.url;
-    image.alt = "Предпросмотр изображения";
+    const isImage = ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+    const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+    const isDocx = file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || /\.docx$/i.test(file.name);
+    const allowedText = /\.(txt|md|csv|json)$/i.test(file.name) ||
+      ["text/plain", "text/markdown", "text/csv", "application/json"].includes(file.type);
 
-    const name = document.createElement("span");
-    name.textContent = attachedImage.name;
+    if (file.size > 5 * 1024 * 1024) throw new Error("Максимальный размер файла — 5 МБ.");
 
+    if (isImage) {
+      attachedImage = await uploadImage(file);
+      const image = document.createElement("img");
+      image.src = attachedImage.url;
+      image.alt = "Предпросмотр изображения";
+      preview.append(image);
+    } else if (allowedText || isPdf || isDocx) {
+      const content = await extractDocumentText(file, { isPdf, isDocx });
+      if (!content.trim()) throw new Error("Не удалось извлечь текст. Возможно, документ пустой или состоит из сканов.");
+      if (content.length > 12000) throw new Error("Из документа извлечено слишком много текста. Пока ограничение — 12 000 символов.");
+      attachedTextFile = { name: file.name, content };
+    } else {
+      throw new Error("Поддерживаются фото JPG, PNG, WEBP и документы TXT, MD, CSV, JSON, PDF, DOCX.");
+    }
+
+    const selected = document.createElement("span");
+    selected.textContent = isImage ? attachedImage.name : attachedTextFile.name;
     const remove = document.createElement("button");
     remove.textContent = "×";
-    remove.setAttribute("aria-label", "Убрать изображение");
-
+    remove.setAttribute("aria-label", "Убрать вложение");
     remove.addEventListener("click", () => {
       attachedImage = null;
+      attachedTextFile = null;
       preview.replaceChildren();
       $("#imageInput").value = "";
     });
-
-    preview.append(image, name, remove);
-
-    showToast("Изображение прикреплено", "success");
-
+    preview.append(selected, remove);
+    showToast("Файл прикреплён", "success");
   } catch (error) {
-    showError(error.message || "Не удалось загрузить изображение.");
+    attachedImage = null;
+    attachedTextFile = null;
+    $("#attachmentPreview").replaceChildren();
+    showError(error.message || "Не удалось прикрепить файл.");
   }
-
   event.target.value = "";
 });
 
@@ -2489,6 +2626,66 @@ async function getImageForMessage() {
    ОТПРАВКА СООБЩЕНИЯ
 ========================================== */
 
+
+/* TEHNOCELL WEATHER live bridge */
+const ENNIE_WEATHER_LOCATION_KEY="tehnocell_weather_current_location";
+function isWeatherQuestion(text){return /погод|температур|дожд|снег|ветер|осадк|прогноз|зонт|weather|temperature|rain|snow|wind|forecast/i.test(String(text||""));}
+function ennieWeatherName(code){
+ if(code===0)return "Ясно";if(code===1)return "Преимущественно ясно";if(code===2)return "Переменная облачность";if(code===3)return "Пасмурно";
+ if([45,48].includes(code))return "Туман";if([51,53,55,56,57].includes(code))return "Морось";
+ if([61,63,65,66,67,80,81,82].includes(code))return "Дождь";if([71,73,75,77,85,86].includes(code))return "Снег";
+ if([95,96,99].includes(code))return "Гроза";return "Переменная погода";
+}
+async function getEnnieWeatherData(){
+ let loc=null;try{loc=JSON.parse(localStorage.getItem(ENNIE_WEATHER_LOCATION_KEY)||"null");}catch(_){}
+ if(!loc||!Number.isFinite(Number(loc.latitude))||!Number.isFinite(Number(loc.longitude)))
+  return {available:false,reason:"В TEHNOCELL WEATHER ещё не выбран город. Открой Weather, выбери город или местоположение и повтори вопрос."};
+ const url="https://api.open-meteo.com/v1/forecast?latitude="+encodeURIComponent(loc.latitude)+"&longitude="+encodeURIComponent(loc.longitude)
+ +"&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,uv_index"
+ +"&hourly=temperature_2m,precipitation_probability,weather_code"
+ +"&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,sunrise,sunset&forecast_days=2&timezone=auto";
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);let response;
+ try{response=await fetch(url,{signal:controller.signal});}finally{clearTimeout(timer);}
+ if(!response.ok)throw new Error("TEHNOCELL WEATHER временно не отвечает ("+response.status+").");
+ const raw=await response.json(),c=raw.current,h=raw.hourly,d=raw.daily;
+ if(!c||!h||!d)throw new Error("TEHNOCELL WEATHER вернул неполные данные.");
+ let index=h.time.findIndex(t=>new Date(t).getTime()>=new Date(c.time).getTime());if(index<0)index=0;
+ const hours=[];for(let n=index;n<Math.min(index+6,h.time.length);n++)hours.push({
+  time:new Date(h.time[n]).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}),
+  temperature:Math.round(h.temperature_2m[n]),precipitationProbability:h.precipitation_probability?.[n]??0
+ });
+ return {available:true,source:"TEHNOCELL WEATHER",city:String(loc.name||"Выбранное место"),
+  current:{temperature:Math.round(c.temperature_2m),apparentTemperature:Math.round(c.apparent_temperature),
+   condition:ennieWeatherName(c.weather_code),humidity:c.relative_humidity_2m,windSpeed:Math.round(c.wind_speed_10m),
+   windDirection:Math.round(c.wind_direction_10m),precipitation:Number(c.precipitation||0),uv:Number(c.uv_index||0)},
+  today:{high:Math.round(d.temperature_2m_max[0]),low:Math.round(d.temperature_2m_min[0]),
+   precipitationProbability:d.precipitation_probability_max[0]??0,sunrise:d.sunrise?.[0]||null,sunset:d.sunset?.[0]||null},hours};
+}
+function renderEnnieWeatherCard(messageElement,data){
+ if(!messageElement||!data?.available)return;
+ const card=document.createElement("section");card.className="ennie-weather-card";
+ const head=document.createElement("div");head.className="ennie-weather-head";
+ head.innerHTML='<span class="ennie-weather-brand"><i class="ennie-weather-dot"></i> TEHNOCELL WEATHER</span><span>АКТУАЛЬНО</span>';
+ const place=document.createElement("div");place.className="ennie-weather-place";place.textContent=data.city;
+ const main=document.createElement("div");main.className="ennie-weather-main";
+ const temp=document.createElement("div");temp.className="ennie-weather-temp";temp.textContent=data.current.temperature+"°";
+ const summary=document.createElement("div");summary.innerHTML='<div class="ennie-weather-condition"></div><div class="ennie-weather-feels"></div>';
+ summary.querySelector(".ennie-weather-condition").textContent=data.current.condition;
+ summary.querySelector(".ennie-weather-feels").textContent="Ощущается как "+data.current.apparentTemperature+"°";main.append(temp,summary);
+ const grid=document.createElement("div");grid.className="ennie-weather-grid";
+ [["Ветер",data.current.windSpeed+" км/ч"],["Влажность",data.current.humidity+"%"],["Вероятность осадков",data.today.precipitationProbability+"%"],["Максимум",data.today.high+"°"],["Минимум",data.today.low+"°"],["УФ-индекс",data.current.uv]].forEach(([label,value])=>{
+  const item=document.createElement("div");item.className="ennie-weather-stat";const l=document.createElement("span"),v=document.createElement("strong");
+  l.textContent=label;v.textContent=value;item.append(l,v);grid.append(item);
+ });
+ const hours=document.createElement("div");hours.className="ennie-weather-hours";
+ (data.hours||[]).forEach(hour=>{const item=document.createElement("div");item.className="ennie-weather-hour";const t=document.createElement("span"),v=document.createElement("strong"),p=document.createElement("span");
+  t.textContent=hour.time;v.textContent=hour.temperature+"°";p.textContent="Осадки "+hour.precipitationProbability+"%";item.append(t,v,p);hours.append(item);});
+ const foot=document.createElement("div");foot.className="ennie-weather-foot";const source=document.createElement("span");source.className="ennie-weather-source";source.textContent="Данные TEHNOCELL WEATHER";
+ const link=document.createElement("a");link.className="ennie-weather-open";link.href="https://technosotrudnik.github.io/tehnocell-indostri/weather.html";link.target="_blank";link.rel="noopener";link.textContent="Открыть Weather";
+ foot.append(source,link);card.append(head,place,main,grid,hours,foot);
+ const body=messageElement.querySelector(".message-body"),actions=body?.querySelector(".message-actions");if(actions)body.insertBefore(card,actions);else body?.append(card);
+}
+
 async function sendMessage() {
   if (isSending) return;
 
@@ -2499,7 +2696,7 @@ async function sendMessage() {
 
   const text = messageInput.value.trim();
 
-  if (!text && !attachedImage) return;
+  if (!text && !attachedImage && !attachedTextFile) return;
 
   isSending = true;
   document.body.classList.add("ennie-thinking");
@@ -2507,9 +2704,17 @@ async function sendMessage() {
 
   try {
     const imageData = await getImageForMessage();
+    const textFileToSend = attachedTextFile ? { ...attachedTextFile } : null;
 
     const visibleText = text ||
-      (imageData ? "Посмотри на это изображение." : "");
+      (imageData ? "Посмотри на это изображение." :
+      textFileToSend ? "Посмотри, пожалуйста, этот файл." : "");
+    const weatherQuestion=!imageData&&!textFileToSend&&isWeatherQuestion(visibleText);
+    let weatherContext=null;
+    if(weatherQuestion){try{weatherContext=await getEnnieWeatherData();}catch(weatherError){
+      console.warn("TEHNOCELL WEATHER request failed:",weatherError);
+      weatherContext={available:false,reason:weatherError.message||"Не удалось получить данные TEHNOCELL WEATHER."};
+    }}
 
     if (!currentChatId) {
       await createChat(visibleText);
@@ -2519,7 +2724,7 @@ async function sendMessage() {
 
     addMessage(
       "user",
-      visibleText,
+      visibleText + (textFileToSend ? "\n\nФайл: " + textFileToSend.name : ""),
       attachedImage?.url || null
     );
 
@@ -2529,12 +2734,17 @@ async function sendMessage() {
     messageInput.style.height = "auto";
 
     attachedImage = null;
+    attachedTextFile = null;
     $("#attachmentPreview").replaceChildren();
 
-    const userContent = imageToSend
-      ? visibleText + "\n[IMAGE: " +
-        JSON.stringify(imageToSend) + "]"
+    let userContent = imageToSend
+      ? visibleText + "\n[IMAGE: " + JSON.stringify(imageToSend) + "]"
       : visibleText;
+
+    if (textFileToSend) {
+      userContent += "\n\n[СОДЕРЖИМОЕ ФАЙЛА: " +
+        textFileToSend.name + "]\n" + textFileToSend.content;
+    }
 
     currentMessages.push({
       role: "user",
@@ -2560,7 +2770,8 @@ async function sendMessage() {
     const { data: result, error: functionError } =
       await supabaseClient.functions.invoke(CHAT_FUNCTION, {
         body: {
-          messages: currentMessages
+          messages: currentMessages,
+          weather_context: weatherContext
         }
       });
 
@@ -2629,13 +2840,14 @@ async function sendMessage() {
     });
 
     const assistantMessageElement = addMessage("assistant", answer);
+    if(weatherContext?.available)renderEnnieWeatherCard(assistantMessageElement,weatherContext);
 
+    // Озвучивание стартует сразу; кнопки под сообщением управляют тем же полным чтением.
     if (voiceEnabled) {
       void speakText(answer, assistantMessageElement, false);
     }
 
     await saveMessage("assistant", answer);
-
     await loadChats();
 
   } catch (error) {
@@ -4097,87 +4309,146 @@ function refreshMessageVoiceControls() {
     button.title = isCurrent && !voicePaused ? "Пауза" : "Прослушать";
   });
 }
+
 function stopEnnieVoice() {
   voiceRunToken += 1;
-  if (voiceAbortController) { try { voiceAbortController.abort(); } catch (_) {} voiceAbortController = null; }
-  if (activeEnnieAudio) { activeEnnieAudio.pause(); activeEnnieAudio.removeAttribute("src"); activeEnnieAudio.load(); }
+  if (voiceAbortController) {
+    try { voiceAbortController.abort(); } catch (_) {}
+    voiceAbortController = null;
+  }
+  if (activeEnnieAudio) {
+    activeEnnieAudio.pause();
+    activeEnnieAudio.removeAttribute("src");
+    activeEnnieAudio.load();
+  }
   if (activeEnnieAudioUrl) URL.revokeObjectURL(activeEnnieAudioUrl);
   if (activeEnnieAudioResolve) activeEnnieAudioResolve();
-  activeEnnieAudio = null; activeEnnieAudioUrl = null; activeEnnieAudioResolve = null;
+  activeEnnieAudio = null;
+  activeEnnieAudioUrl = null;
+  activeEnnieAudioResolve = null;
   if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-  voicePaused = false; activeVoiceMessageElement = null;
-  document.body.classList.remove("speaking"); refreshMessageVoiceControls();
+  voicePaused = false;
+  activeVoiceMessageElement = null;
+  document.body.classList.remove("speaking");
+  refreshMessageVoiceControls();
 }
+
 function pauseEnnieVoice() {
   if (!activeVoiceMessageElement) return;
   voicePaused = true;
   if (activeEnnieAudio) activeEnnieAudio.pause();
   if ("speechSynthesis" in window) window.speechSynthesis.pause();
-  document.body.classList.remove("speaking"); refreshMessageVoiceControls();
+  document.body.classList.remove("speaking");
+  refreshMessageVoiceControls();
 }
+
 function resumeEnnieVoice() {
   if (!activeVoiceMessageElement) return;
   voicePaused = false;
-  if (activeEnnieAudio) activeEnnieAudio.play().catch(error => console.warn("ENNIE audio resume:", error));
+  if (activeEnnieAudio) activeEnnieAudio.play().catch((error) => console.warn("ENNIE audio resume:", error));
   if ("speechSynthesis" in window) window.speechSynthesis.resume();
   refreshMessageVoiceControls();
 }
+
 async function waitForVoiceResume(token) {
-  while (voicePaused && token === voiceRunToken) await new Promise(resolve => setTimeout(resolve, 120));
+  while (voicePaused && token === voiceRunToken) {
+    await new Promise(resolve => setTimeout(resolve, 120));
+  }
   return token === voiceRunToken;
 }
+
 function splitVoiceText(text, maxLength = 560) {
   const sentences = text.match(/[^.!?…]+[.!?…]*/gu) || [text];
-  const chunks = []; let current = "";
+  const chunks = [];
+  let current = "";
   for (const sentence of sentences) {
     const candidate = (current + " " + sentence).trim();
-    if (candidate.length <= maxLength) { current = candidate; continue; }
+    if (candidate.length <= maxLength) {
+      current = candidate;
+      continue;
+    }
     if (current) chunks.push(current);
-    current = ""; let rest = sentence.trim();
+    current = "";
+    let rest = sentence.trim();
     while (rest.length > maxLength) {
       let cut = rest.lastIndexOf(" ", maxLength);
       if (cut < Math.floor(maxLength * 0.55)) cut = maxLength;
-      chunks.push(rest.slice(0, cut).trim()); rest = rest.slice(cut).trim();
+      chunks.push(rest.slice(0, cut).trim());
+      rest = rest.slice(cut).trim();
     }
     current = rest;
   }
   if (current) chunks.push(current);
   return chunks.filter(Boolean);
 }
+
 function playEnnieAudio(blob, token) {
   return new Promise((resolve, reject) => {
     if (token !== voiceRunToken) return resolve();
-    const url = URL.createObjectURL(blob); const audio = new Audio(url);
-    activeEnnieAudio = audio; activeEnnieAudioUrl = url; let finished = false;
-    const finish = error => {
-      if (finished) return; finished = true; audio.onended = null; audio.onerror = null;
-      if (activeEnnieAudio === audio) { activeEnnieAudio = null; activeEnnieAudioUrl = null; activeEnnieAudioResolve = null; }
-      URL.revokeObjectURL(url); document.body.classList.remove("speaking");
-      if (error) reject(error); else resolve();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    activeEnnieAudio = audio;
+    activeEnnieAudioUrl = url;
+    let finished = false;
+    const finish = (error) => {
+      if (finished) return;
+      finished = true;
+      audio.onended = null;
+      audio.onerror = null;
+      if (activeEnnieAudio === audio) {
+        activeEnnieAudio = null;
+        activeEnnieAudioUrl = null;
+        activeEnnieAudioResolve = null;
+      }
+      URL.revokeObjectURL(url);
+      document.body.classList.remove("speaking");
+      if (error) reject(error);
+      else resolve();
     };
     activeEnnieAudioResolve = () => finish();
-    audio.onplay = () => { if (token === voiceRunToken) document.body.classList.add("speaking"); };
+    audio.onplay = () => {
+      if (token === voiceRunToken) document.body.classList.add("speaking");
+    };
     audio.onended = () => finish();
     audio.onerror = () => finish(new Error("Не удалось воспроизвести голос ENNIE."));
-    audio.play().then(() => { if (voicePaused) audio.pause(); }).catch(finish);
+    audio.play().then(() => {
+      if (voicePaused) audio.pause();
+    }).catch(finish);
   });
 }
+
 function speakWithBrowser(text, token) {
   return new Promise((resolve, reject) => {
-    if (!("speechSynthesis" in window)) { reject(new Error("На устройстве недоступно системное озвучивание.")); return; }
+    if (!("speechSynthesis" in window)) {
+      reject(new Error("На устройстве недоступно системное озвучивание."));
+      return;
+    }
     const chunks = splitVoiceText(text, 420);
     const voices = window.speechSynthesis.getVoices();
     const russianVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith("ru"));
     const femaleVoice = russianVoices.find(voice => /female|жен|milena|alena|irina|anna/i.test(voice.name));
     let index = 0;
     const next = () => {
-      if (token !== voiceRunToken || index >= chunks.length) { document.body.classList.remove("speaking"); resolve(); return; }
+      if (token !== voiceRunToken || index >= chunks.length) {
+        document.body.classList.remove("speaking");
+        resolve();
+        return;
+      }
       const utterance = new SpeechSynthesisUtterance(chunks[index++]);
-      utterance.lang = "ru-RU"; utterance.rate = 1; utterance.pitch = 1.08; utterance.volume = 1;
-      if (femaleVoice) utterance.voice = femaleVoice; else if (russianVoices.length) utterance.voice = russianVoices[0];
-      utterance.onstart = () => { if (token === voiceRunToken && !voicePaused) document.body.classList.add("speaking"); };
-      utterance.onend = () => { document.body.classList.remove("speaking"); next(); };
-      utterance.onerror = event => {
+      utterance.lang = "ru-RU";
+      utterance.rate = 1;
+      utterance.pitch = 1.08;
+      utterance.volume = 1;
+      if (femaleVoice) utterance.voice = femaleVoice;
+      else if (russianVoices.length) utterance.voice = russianVoices[0];
+      utterance.onstart = () => {
+        if (token === voiceRunToken && !voicePaused) document.body.classList.add("speaking");
+      };
+      utterance.onend = () => {
+        document.body.classList.remove("speaking");
+        next();
+      };
+      utterance.onerror = (event) => {
         document.body.classList.remove("speaking");
         if (event.error === "canceled" || token !== voiceRunToken) resolve();
         else reject(new Error("Системный голос не смог дочитать сообщение."));
@@ -4188,34 +4459,53 @@ function speakWithBrowser(text, token) {
     next();
   });
 }
+
 async function speakText(text, messageElement = null, force = false) {
   if (!force && !voiceEnabled) return;
-  const cleanText = String(text || "").replace(/\`\`\`[\s\S]*?\`\`\`/g, " ")
-    .replace(/https?:\/\/\S+/g, "ссылка").replace(/[*_#\`]/g, " ")
-    .replace(/\s+/g, " ").trim();
+  const cleanText = String(text || "")
+    .replace(/\`\`\`[\s\S]*?\`\`\`/g, " ")
+    .replace(/https?:\/\/\S+/g, "ссылка")
+    .replace(/[*_#\`]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   if (!cleanText) return;
+
   stopEnnieVoice();
-  const token = voiceRunToken; activeVoiceMessageElement = messageElement; voicePaused = false;
+  const token = voiceRunToken;
+  activeVoiceMessageElement = messageElement;
+  voicePaused = false;
   refreshMessageVoiceControls();
+
   try {
     const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
     if (sessionError) throw sessionError;
     const accessToken = sessionData.session?.access_token;
     if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
+
     const chunks = splitVoiceText(cleanText);
     for (let index = 0; index < chunks.length; index++) {
-      if (token !== voiceRunToken || !(await waitForVoiceResume(token))) return;
+      if (token !== voiceRunToken) return;
+      if (!(await waitForVoiceResume(token))) return;
+
       voiceAbortController = new AbortController();
       const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + accessToken },
-        body: JSON.stringify({ text: chunks[index] }), signal: voiceAbortController.signal
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + accessToken
+        },
+        body: JSON.stringify({ text: chunks[index] }),
+        signal: voiceAbortController.signal
       });
       voiceAbortController = null;
       if (token !== voiceRunToken) return;
       if (!response.ok) {
         let message = "Голосовой сервер вернул ошибку " + response.status;
-        try { const details = await response.json(); if (details.error) message = details.error; } catch (_) {}
+        try {
+          const details = await response.json();
+          if (details.error) message = details.error;
+        } catch (_) {}
         throw new Error(message);
       }
       const audioBlob = await response.blob();
@@ -4226,16 +4516,22 @@ async function speakText(text, messageElement = null, force = false) {
   } catch (error) {
     if (token !== voiceRunToken || error?.name === "AbortError") return;
     console.warn("ENNIE natural voice unavailable; switching to device voice:", error);
-    try { await speakWithBrowser(cleanText, token); }
-    catch (fallbackError) {
+    try {
+      await speakWithBrowser(cleanText, token);
+    } catch (fallbackError) {
       console.error("ENNIE fallback voice failed:", fallbackError);
       if (token === voiceRunToken) showToast("Не удалось озвучить сообщение целиком.", "error");
     }
   } finally {
     if (token === voiceRunToken) {
-      activeVoiceMessageElement = null; activeEnnieAudio = null; activeEnnieAudioUrl = null;
-      activeEnnieAudioResolve = null; voiceAbortController = null; voicePaused = false;
-      document.body.classList.remove("speaking"); refreshMessageVoiceControls();
+      activeVoiceMessageElement = null;
+      activeEnnieAudio = null;
+      activeEnnieAudioUrl = null;
+      activeEnnieAudioResolve = null;
+      voiceAbortController = null;
+      voicePaused = false;
+      document.body.classList.remove("speaking");
+      refreshMessageVoiceControls();
     }
   }
 }
@@ -4575,6 +4871,14 @@ function showVoiceDraft(text) {
   }
 
   window.addEventListener("resize", resize);
+  if ("ResizeObserver" in window) {
+    const coreResizeObserver = new ResizeObserver(() => requestAnimationFrame(resize));
+    coreResizeObserver.observe(wrapper);
+  }
+  window.addEventListener("orientationchange", () => setTimeout(resize, 120));
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) requestAnimationFrame(resize);
+  });
   resize();
 
   for (let i = 0; i < particleCount; i++) {
@@ -4942,6 +5246,99 @@ console.log("ENNIE V11 — all interface systems loaded.");
 })();
 </script>
 
+<script id="ennie-glass-selection">
+(() => {
+  if (window.__ennieGlassSelectionReady) return;
+  window.__ennieGlassSelectionReady = true;
+  const bubble = document.createElement('div');
+  bubble.className = 'ennie-selection-bubble';
+  bubble.setAttribute('role','toolbar');
+  bubble.setAttribute('aria-label','Действия с выделенным текстом');
+  bubble.innerHTML = `
+    <button class="ennie-selection-action primary" data-action="ask" type="button">
+      <svg viewBox="0 0 24 24"><path d="M12 3a8 8 0 0 0-6.8 12.2L4 21l5.8-1.5A8 8 0 1 0 12 3Z"/><path d="M8.5 12h7M12 8.5v7"/></svg><span>Спросить ENNIE</span>
+    </button>
+    <button class="ennie-selection-action" data-action="copy" type="button" aria-label="Копировать">
+      <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg><span>Копировать</span>
+    </button>
+    <button class="ennie-selection-action" data-action="all" type="button" aria-label="Выделить всё">
+      <svg viewBox="0 0 24 24"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3M8 8h8v8H8z"/></svg>
+    </button>`;
+  document.body.appendChild(bubble);
+  let selectedText = '';
+  let hideTimer = 0;
+  const hide = () => { bubble.classList.remove('visible'); };
+  const getSelectionText = () => (window.getSelection && window.getSelection().toString() || '').trim();
+  const show = () => {
+    const selection = window.getSelection();
+    selectedText = getSelectionText();
+    if (!selection || !selectedText || !selection.rangeCount) { hide(); return; }
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (!rect || (!rect.width && !rect.height)) { hide(); return; }
+    bubble.style.visibility = 'hidden';
+    bubble.classList.add('visible');
+    const width = bubble.offsetWidth, height = bubble.offsetHeight;
+    const margin = 12;
+    let left = Math.max(margin, Math.min(innerWidth - width - margin, rect.left + rect.width/2 - width/2));
+    let top = rect.top - height - 13;
+    if (top < margin) top = Math.min(innerHeight - height - margin, rect.bottom + 13);
+    bubble.style.left = left + 'px';
+    bubble.style.top = top + 'px';
+    bubble.style.visibility = 'visible';
+  };
+  document.addEventListener('selectionchange', () => {
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(show, 90);
+  });
+  document.addEventListener('scroll', () => { if (bubble.classList.contains('visible')) show(); }, true);
+  document.addEventListener('pointerdown', event => {
+    if (!bubble.contains(event.target)) {
+      const text = getSelectionText();
+      if (!text) hide();
+    }
+  });
+  bubble.addEventListener('pointerdown', event => event.stopPropagation());
+  bubble.addEventListener('click', async event => {
+    const button = event.target.closest('[data-action]');
+    if (!button) return;
+    const action = button.dataset.action;
+    const text = selectedText || getSelectionText();
+    if (action === 'copy') {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+        else {
+          const area = document.createElement('textarea'); area.value = text;
+          area.style.position='fixed'; area.style.opacity='0'; document.body.appendChild(area);
+          area.select(); document.execCommand('copy'); area.remove();
+        }
+        button.querySelector('span').textContent = 'Скопировано';
+        setTimeout(() => { const label=button.querySelector('span'); if(label) label.textContent='Копировать'; }, 1200);
+      } catch (_) {}
+    } else if (action === 'ask') {
+      const input = document.getElementById('messageInput');
+      const send = document.getElementById('sendBtn');
+      if (input && send && text) {
+        input.value = 'Помоги разобраться с этим сообщением:\\n\\n' + text;
+        input.dispatchEvent(new Event('input',{bubbles:true}));
+        send.click();
+      }
+      window.getSelection()?.removeAllRanges();
+      hide();
+    } else if (action === 'all') {
+      const selection = window.getSelection();
+      const root = selection && selection.anchorNode && selection.anchorNode.parentElement?.closest('.message');
+      if (root) {
+        const range = document.createRange(); range.selectNodeContents(root);
+        selection.removeAllRanges(); selection.addRange(range);
+      }
+    }
+  });
+  document.addEventListener('touchend', () => setTimeout(show, 80), {passive:true});
+})();
+</script>
+
+
 <style id="ennie-message-controls-style">
 .message-actions{display:flex;align-items:center;gap:5px;margin-top:8px;position:relative;min-height:30px}
 .message-action-btn{width:31px;height:29px;display:grid;place-items:center;border:1px solid transparent;border-radius:9px;background:transparent;color:#777;padding:0;transition:background .18s,color .18s,border-color .18s,transform .18s}
@@ -4963,6 +5360,7 @@ body.light-theme .message-more-menu{background:#fff;border-color:rgba(0,0,0,.12)
 body.light-theme .message-more-menu button{color:#222}
 body.light-theme .message-more-menu button:hover{background:#f0f0f0}
 </style>
+
 
 <style id="ennie-thinking-indicator-v2">
 /* Компактная анимация печати ENNIE — без сфер и светящихся объектов. */
@@ -5011,6 +5409,30 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
 @media(prefers-reduced-motion:reduce){
  .typing-keys i{animation:none!important;opacity:.8;transform:none;height:10px}
 }
+
+/* TEHNOCELL WEATHER — compact ENNIE card */
+.ennie-weather-card{margin:12px 0 5px;padding:14px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.ennie-weather-head{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#aeb0b8;font-size:10px;letter-spacing:1.25px;font-weight:700}
+.ennie-weather-brand{display:flex;align-items:center;gap:7px}
+.ennie-weather-dot{width:7px;height:7px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 10px rgba(255,255,255,.55)}
+.ennie-weather-place{margin-top:12px;color:#c6c7cc;font-size:12px}
+.ennie-weather-main{display:flex;align-items:center;gap:13px;margin-top:2px}
+.ennie-weather-temp{font-size:42px;line-height:1;font-weight:650;letter-spacing:-2px;color:#fff}
+.ennie-weather-condition{font-size:13px;color:#eee;font-weight:550}
+.ennie-weather-feels{margin-top:5px;font-size:11px;color:#92949c}
+.ennie-weather-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:14px}
+.ennie-weather-stat{padding:9px 8px;border-radius:12px;background:rgba(255,255,255,.045);min-width:0}
+.ennie-weather-stat span{display:block;color:#888b94;font-size:9px}
+.ennie-weather-stat strong{display:block;margin-top:5px;color:#f2f2f2;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ennie-weather-hours{display:flex;gap:7px;overflow-x:auto;margin-top:11px;padding-bottom:2px;scrollbar-width:none}
+.ennie-weather-hour{flex:0 0 auto;min-width:53px;padding:8px 7px;text-align:center;border-radius:11px;background:rgba(255,255,255,.035)}
+.ennie-weather-hour span{display:block;color:#8e9098;font-size:9px}
+.ennie-weather-hour strong{display:block;margin-top:5px;color:#eee;font-size:12px}
+.ennie-weather-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08)}
+.ennie-weather-source{color:#858790;font-size:9px}
+.ennie-weather-open{border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:7px 10px;background:rgba(255,255,255,.07);color:#fff;font-size:10px;text-decoration:none}
+/* ENNIE glass text selection */
+::selection{background:rgba(255,255,255,.22);color:#fff}::-moz-selection{background:rgba(255,255,255,.24);color:#fff}.ennie-selection-bubble{position:fixed;z-index:2147483000;display:flex;gap:5px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(25,25,27,.8);color:#fff;backdrop-filter:blur(22px);box-shadow:0 8px 32px #0008,0 0 22px #fff2;opacity:0;transform:translateY(7px) scale(.96);pointer-events:none;transition:.18s}.ennie-selection-bubble.visible{opacity:1;transform:none;pointer-events:auto}.ennie-selection-action{min-height:38px;padding:0 12px;border:1px solid #ffffff19;border-radius:15px;background:#ffffff0d;color:#fff;font:500 12px Inter,Arial,sans-serif}
 </style>
 </body>
 </html>
