@@ -1032,8 +1032,8 @@ input, textarea, [contenteditable="true"], [role="textbox"] {
   background:rgba(25,25,27,.72); color:#fff;
   -webkit-backdrop-filter:blur(22px) saturate(135%); backdrop-filter:blur(22px) saturate(135%);
   box-shadow:0 8px 32px rgba(0,0,0,.48),0 0 22px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.13);
-  opacity:0; transform:translateY(7px) scale(.96); pointer-events:none;
-  transition:opacity .18s ease,transform .18s ease;
+  opacity:0; transform:none; pointer-events:none;
+  transition:opacity .12s ease;
 }
 .ennie-selection-bubble.visible { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
 .ennie-selection-action {
@@ -5459,7 +5459,7 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
 .ennie-weather-source{color:#858790;font-size:9px}
 .ennie-weather-open{border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:7px 10px;background:rgba(255,255,255,.07);color:#fff;font-size:10px;text-decoration:none}
 /* ENNIE glass text selection */
-::selection{background:rgba(255,255,255,.22);color:#fff}::-moz-selection{background:rgba(255,255,255,.24);color:#fff}.ennie-selection-bubble{position:fixed;z-index:2147483000;display:flex;gap:5px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(25,25,27,.8);color:#fff;backdrop-filter:blur(22px);box-shadow:0 8px 32px #0008,0 0 22px #fff2;opacity:0;transform:translateY(7px) scale(.96);pointer-events:none;transition:.18s}.ennie-selection-bubble.visible{opacity:1;transform:none;pointer-events:auto}.ennie-selection-action{min-height:38px;padding:0 12px;border:1px solid #ffffff19;border-radius:15px;background:#ffffff0d;color:#fff;font:500 12px Inter,Arial,sans-serif}
+::selection{background:rgba(255,255,255,.22);color:#fff}::-moz-selection{background:rgba(255,255,255,.24);color:#fff}.ennie-selection-bubble{position:fixed;z-index:2147483000;display:flex;gap:5px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(25,25,27,.8);color:#fff;backdrop-filter:blur(22px);box-shadow:0 8px 32px #0008,0 0 22px #fff2;opacity:0;transform:none;pointer-events:none;transition:opacity .12s ease}.ennie-selection-bubble.visible{opacity:1;transform:none;pointer-events:auto}.ennie-selection-action{min-height:38px;padding:0 12px;border:1px solid #ffffff19;border-radius:15px;background:#ffffff0d;color:#fff;font:500 12px Inter,Arial,sans-serif}
 </style>
 </body>
 </html>
