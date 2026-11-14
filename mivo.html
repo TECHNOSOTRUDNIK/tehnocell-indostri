@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<meta name="description" content="MIVO — музыка без границ. Музыкальная платформа TEHNOCELL INDOSTRI.">
+<title>MIVO — Music without boundaries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--panel:#111;--panel2:#171717;--line:rgba(255,255,255,.09);--muted:#858585;--white:#f7f7f7;--accent:#d7ff62;--sidebar:238px;--player:94px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:"DM Sans",Arial,sans-serif;min-height:100vh;overflow-x:hidden}
+button,input{font:inherit}button{color:inherit;border:0;cursor:pointer}a{color:inherit;text-decoration:none}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.app{min-height:100vh;padding-bottom:calc(var(--player) + 28px)}
+.sidebar{position:fixed;z-index:30;inset:0 auto 0 0;width:var(--sidebar);padding:27px 18px 25px;background:#0b0b0b;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:11px;padding:0 9px 38px}
+.brand-mark{width:36px;height:36px;border-radius:12px;background:var(--accent);color:#090909;display:grid;place-items:center;font:800 20px "Space Grotesk";transform:rotate(-7deg);box-shadow:0 0 28px #d7ff6230}
+.brand-name{font:700 22px "Space Grotesk";letter-spacing:-1.2px}.brand-name span{color:var(--accent)}
+.nav-label{font-size:9px;color:#666;letter-spacing:2.2px;font-weight:800;padding:0 12px 12px}
+.nav{display:grid;gap:5px;margin-bottom:30px}
+.nav button{background:transparent;text-align:left;padding:12px 13px;border-radius:10px;color:#929292;display:flex;align-items:center;gap:13px;font-size:12px;font-weight:700;transition:.2s}
+.nav button:hover,.nav button.active{background:#1a1a1a;color:white}.nav button.active .ico{color:var(--accent)}
+.ico{width:18px;text-align:center;font-size:17px;color:#777}
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding:20px 8px 0}
+.profile-mini{display:flex;align-items:center;gap:10px}.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#d7ff62,#627b2a);color:#111;display:grid;place-items:center;font-weight:900}
+.profile-mini strong{display:block;font-size:11px}.profile-mini small{display:block;color:#777;font-size:9px;margin-top:3px}
+.main{margin-left:var(--sidebar);padding:0 36px 30px;max-width:1800px}
+.topbar{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:15;background:linear-gradient(#080808 75%,transparent);backdrop-filter:blur(14px)}
+.history{display:flex;gap:8px}.circle-btn{width:34px;height:34px;border-radius:50%;background:#171717;color:#aaa;font-size:17px}
+.search{height:43px;max-width:460px;flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;background:#151515;border:1px solid transparent;border-radius:30px;transition:.25s}
+.search:focus-within{border-color:#555;background:#191919}.search span{color:#777;font-size:17px}.search input{width:100%;background:transparent;border:0;outline:0;color:white;font-size:12px}.search input::placeholder{color:#777}
+.top-actions{display:flex;align-items:center;gap:10px}.quality{border:1px solid #333;background:transparent;padding:9px 12px;border-radius:20px;color:#aaa;font-size:9px;letter-spacing:1px;font-weight:800}
+.login{background:var(--accent);color:#111;border-radius:22px;padding:10px 17px;font-size:10px;font-weight:900}
+.hero{min-height:345px;border-radius:24px;position:relative;overflow:hidden;padding:43px 46px;display:flex;align-items:center;background:linear-gradient(110deg,#1b2111 0%,#11170e 43%,#171717 100%);isolation:isolate}
+.hero:before{content:"";position:absolute;z-index:-1;width:530px;height:530px;right:4%;top:-115px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#d7ff62 0,#93b83d 12%,#536c28 28%,#28351b 48%,transparent 69%);filter:blur(1px);animation:orb 8s ease-in-out infinite alternate}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(0,0,0,.65),transparent 85%),repeating-linear-gradient(0deg,transparent 0 39px,#ffffff08 40px),repeating-linear-gradient(90deg,transparent 0 39px,#ffffff08 40px);mask-image:linear-gradient(90deg,black,transparent)}
+@keyframes orb{to{transform:translate(-30px,20px) scale(1.12);filter:blur(9px);opacity:.78}}
+.hero-copy{max-width:550px;position:relative;z-index:2}
+.kicker{font-size:9px;letter-spacing:3px;color:#c1d79a;font-weight:800;margin-bottom:20px}
+.hero h1{font:700 clamp(45px,6vw,76px)/.94 "Space Grotesk";letter-spacing:-5px;margin-bottom:18px}
+.hero h1 span{color:var(--accent)}
+.hero p{max-width:410px;color:#b2b6a9;font-size:12px;line-height:1.8}
+.hero-buttons{display:flex;gap:10px;margin-top:27px;flex-wrap:wrap}
+.primary{background:var(--accent);color:#111;padding:13px 19px;border-radius:25px;font-size:10px;font-weight:900;transition:.2s}
+.primary:hover{transform:translateY(-3px);box-shadow:0 8px 28px #d7ff6233}
+.secondary{background:#ffffff12;border:1px solid #ffffff2b;color:#eee;padding:12px 18px;border-radius:25px;font-size:10px;font-weight:800}
+.hero-stamp{position:absolute;right:7%;bottom:26px;color:#eaffc0;font:700 10px "Space Grotesk";letter-spacing:4px;writing-mode:vertical-rl;opacity:.65}
+.section{margin-top:42px}.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:19px;gap:20px}
+.section-head h2{font:700 23px "Space Grotesk";letter-spacing:-.8px}.section-head p{color:#777;font-size:10px;margin-top:6px}
+.text-btn{background:none;color:#a7a7a7;font-size:10px;font-weight:800}.text-btn:hover{color:var(--accent)}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.quick{min-height:75px;border-radius:13px;background:#151515;display:flex;align-items:center;gap:13px;overflow:hidden;transition:.25s;border:1px solid transparent}
+.quick:hover{background:#202020;border-color:#383838;transform:translateY(-3px)}
+.quick-art{width:75px;height:75px;flex-shrink:0;display:grid;place-items:center;font:700 22px "Space Grotesk";color:#fff}
+.quick strong{font-size:11px;display:block}.quick small{font-size:9px;color:#777;display:block;margin-top:5px}
+.art1{background:linear-gradient(135deg,#de7b48,#442119)}.art2{background:linear-gradient(135deg,#91a4bd,#222b44)}.art3{background:linear-gradient(135deg,#b9a4d8,#413253)}.art4{background:linear-gradient(135deg,#d3bd67,#5b4920)}
+.cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:17px}
+.music-card{min-width:0;cursor:pointer;position:relative}
+.cover{width:100%;aspect-ratio:1;border-radius:13px;overflow:hidden;position:relative;display:grid;place-items:center;box-shadow:0 10px 30px #0005;transition:.3s}
+.music-card:hover .cover{transform:translateY(-5px);filter:brightness(1.12)}
+.cover:before,.cover:after{content:"";position:absolute;border:1px solid #ffffff30;border-radius:50%;width:75%;height:75%}
+.cover:after{width:48%;height:48%}
+.cover b{position:relative;z-index:1;font:700 clamp(18px,2vw,31px) "Space Grotesk";letter-spacing:-2px;text-shadow:0 3px 18px #0008}
+.c1{background:radial-gradient(circle at 30% 25%,#f1a17c,#7c3038 44%,#24131c)}.c2{background:linear-gradient(145deg,#b3b7a4,#384f48 60%,#101b19)}.c3{background:radial-gradient(circle at 70% 20%,#e9c36e,#6d3d27 48%,#1e1721)}.c4{background:linear-gradient(145deg,#a9a2d2,#46416e 55%,#16152c)}.c5{background:radial-gradient(circle at 35% 30%,#d5e3e2,#5a7478 45%,#15282c)}.c6{background:linear-gradient(145deg,#d28d83,#5a283a 55%,#211321)}
+.c7{background:radial-gradient(circle at 70% 20%,#e5a84e,#6b381b 48%,#1a1110)}.c8{background:linear-gradient(145deg,#9ab6b0,#345b58 55%,#12201f)}.c9{background:linear-gradient(145deg,#d1b0d8,#6a416d 55%,#22142a)}.c10{background:radial-gradient(circle at 50% 30%,#e4df9b,#5d6633 48%,#192014)}.c11{background:linear-gradient(145deg,#9ca8d1,#3c497b 55%,#151a2c)}.c12{background:radial-gradient(circle at 40% 25%,#e5b5a3,#743f49 50%,#21131b)}
+.card-play{position:absolute;right:9px;bottom:9px;width:37px;height:37px;border-radius:50%;background:var(--accent);color:#111;display:grid;place-items:center;font-size:14px;opacity:0;transform:translateY(7px);transition:.2s;box-shadow:0 6px 18px #0008}
+.music-card:hover .card-play{opacity:1;transform:translateY(0)}
+.music-card strong{display:block;font-size:11px;margin-top:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-card small{display:block;color:#777;font-size:9px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mix-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.mix{border:1px solid var(--line);border-radius:15px;min-height:125px;padding:18px;position:relative;overflow:hidden;background:#141414;transition:.25s}
+.mix:hover{border-color:#555;transform:translateY(-3px)}
+.mix:after{content:"";position:absolute;width:140px;height:140px;border-radius:50%;right:-35px;top:-40px;background:var(--mix);filter:blur(1px);opacity:.55}
+.mix small{color:#aaa;font-size:9px;letter-spacing:1.6px;font-weight:800;position:relative;z-index:1}
+.mix strong{display:block;font:700 19px "Space Grotesk";margin-top:13px;position:relative;z-index:1}
+.mix span{display:block;color:#aaa;font-size:9px;margin-top:6px;position:relative;z-index:1}
+.discovery{display:grid;grid-template-columns:1.1fr .9fr;gap:13px}
+.discovery-main{border-radius:18px;min-height:210px;padding:25px;background:linear-gradient(125deg,#292c1c,#131610);position:relative;overflow:hidden}
+.discovery-main:after{content:"M";position:absolute;right:20px;bottom:-65px;font:700 250px "Space Grotesk";color:#d7ff6215}
+.discovery-main small{font-size:9px;letter-spacing:2px;color:#c8d99c;font-weight:800}.discovery-main h3{font:700 27px "Space Grotesk";margin:18px 0 9px}.discovery-main p{font-size:10px;color:#a6ad98;max-width:310px;line-height:1.7}
+.discovery-side{display:grid;gap:12px}.feature{border-radius:14px;background:#151515;padding:17px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line)}
+.feature strong{font-size:11px}.feature small{display:block;color:#777;font-size:9px;margin-top:5px}.feature b{color:var(--accent);font-size:19px}
+.upload-panel{border:1px dashed #444;border-radius:16px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#101010}
+.upload-panel strong{font-size:12px}.upload-panel p{color:#777;font-size:10px;margin-top:6px;line-height:1.6}
+.upload-btn{background:#222;border:1px solid #444;padding:12px 16px;border-radius:22px;font-size:10px;font-weight:800;white-space:nowrap}
+.upload-btn:hover{border-color:var(--accent);color:var(--accent)}
+#fileInput{display:none}
+.notice{font-size:9px;color:#777;line-height:1.7;margin-top:12px}
+.empty{padding:35px;text-align:center;color:#777;font-size:11px;display:none}
+.player{position:fixed;z-index:50;left:0;right:0;bottom:0;height:var(--player);background:rgba(13,13,13,.94);backdrop-filter:blur(22px);border-top:1px solid #ffffff18;display:grid;grid-template-columns:1fr 1.3fr 1fr;align-items:center;padding:0 25px;gap:20px}
+.now{display:flex;align-items:center;gap:12px;min-width:0}.now-art{width:53px;height:53px;border-radius:9px;background:linear-gradient(135deg,#d7ff62,#536b2d);display:grid;place-items:center;color:#111;font:700 18px "Space Grotesk";flex-shrink:0}
+.now-meta{min-width:0}.now-meta strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.now-meta small{display:block;color:#777;font-size:9px;margin-top:5px}
+.like{background:none;color:#777;font-size:17px;margin-left:5px}.like.on{color:var(--accent)}
+.controls{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.control-row{display:flex;align-items:center;gap:20px}.control{background:none;color:#888;font-size:15px}.control:hover{color:white}.control.main-play{width:35px;height:35px;border-radius:50%;background:white;color:#111;font-size:13px}
+.progress-row{width:min(100%,430px);display:flex;align-items:center;gap:9px;color:#777;font-size:8px}
+input[type=range]{accent-color:var(--accent);cursor:pointer}.progress{width:100%;height:3px}
+.volume{display:flex;justify-content:flex-end;align-items:center;gap:10px;color:#888;font-size:15px}.volume input{width:95px;height:3px}
+.mobile-nav{display:none}
+.toast{position:fixed;z-index:80;left:50%;bottom:110px;transform:translate(-50%,15px);background:#222;color:#eee;border:1px solid #444;border-radius:25px;padding:11px 17px;font-size:10px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1200px){.cards{grid-template-columns:repeat(4,minmax(0,1fr))}.quick-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){:root{--player:84px}.sidebar{display:none}.main{margin:0;padding:0 17px 25px}.topbar{height:69px}.history{display:none}.quality{display:none}.hero{min-height:390px;padding:32px 25px}.hero:before{right:-38%;top:8%;width:380px;height:380px}.hero h1{letter-spacing:-3px}.hero-stamp{right:16px}.section{margin-top:35px}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.mix-grid{grid-template-columns:1fr 1fr}.discovery{grid-template-columns:1fr}.player{grid-template-columns:1fr auto;padding:0 13px;gap:8px}.controls{grid-column:2;grid-row:1}.volume{display:none}.control-row{gap:13px}.progress-row{width:145px}.now-art{width:45px;height:45px}.like{display:none}.mobile-nav{display:flex;position:fixed;z-index:35;bottom:var(--player);left:0;right:0;background:#0c0c0c;border-top:1px solid var(--line);padding:9px 12px;justify-content:space-around}.mobile-nav button{background:none;color:#888;font-size:9px;display:grid;gap:4px;justify-items:center}.mobile-nav button span{font-size:17px}.mobile-nav button.active{color:var(--accent)}.app{padding-bottom:calc(var(--player) + 65px)}}
+@media(max-width:480px){.topbar{gap:8px}.search{height:39px}.login{padding:9px 12px}.hero{min-height:375px}.hero p{font-size:11px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.quick-grid{grid-template-columns:1fr 1fr;gap:8px}.quick{min-height:65px;gap:8px}.quick-art{width:62px;height:65px}.quick strong{font-size:9px}.quick small{font-size:8px}.section-head h2{font-size:20px}.mix-grid{grid-template-columns:1fr}.upload-panel{align-items:flex-start;flex-direction:column}.upload-btn{width:100%}.now-meta strong{font-size:10px}.now-meta small{font-size:8px}.control-row{gap:9px}.control{font-size:13px}.control.main-play{width:31px;height:31px}.progress-row{width:120px}.player{height:84px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="app">
+<aside class="sidebar">
+  <a class="brand" href="mivo.html"><div class="brand-mark">M</div><div class="brand-name">mivo<span>.</span></div></a>
+  <div class="nav-label">МУЗЫКА</div>
+  <div class="nav">
+    <button class="active" data-view="home"><span class="ico">⌂</span>Главная</button>
+    <button data-view="discover"><span class="ico">⌕</span>Обзор музыки</button>
+    <button data-view="library"><span class="ico">▤</span>Моя медиатека</button>
+    <button data-view="liked"><span class="ico">♡</span>Мне нравится</button>
+  </div>
+  <div class="nav-label">ТВОЯ КОЛЛЕКЦИЯ</div>
+  <div class="nav">
+    <button data-view="recent"><span class="ico">◷</span>Недавно слушали</button>
+    <button data-view="playlists"><span class="ico">▧</span>Плейлисты</button>
+  </div>
+  <div class="sidebar-bottom"><div class="profile-mini"><div class="avatar">M</div><div><strong>Гость MIVO</strong><small>ТВОЯ МУЗЫКАЛЬНАЯ ВСЕЛЕННАЯ</small></div></div></div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div class="history"><button class="circle-btn" aria-label="Назад">‹</button><button class="circle-btn" aria-label="Вперёд">›</button></div>
+    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Треки, исполнители, альбомы..." autocomplete="off"></label>
+    <div class="top-actions"><button class="quality" id="qualityBtn">音  HI-RES READY</button><a class="login" href="login.html">ВОЙТИ</a></div>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero-copy"><div class="kicker">TEHNOCELL INDOSTRI PRESENTS · 001</div><h1>THE WORLD.<br><span>IN SOUND.</span></h1><p>Открой музыку за пределами привычного. Новые голоса, неожиданные жанры и твоя собственная звуковая вселенная.</p><div class="hero-buttons"><button class="primary" id="exploreBtn">ОТКРЫТЬ MIVO ↗</button><button class="secondary" id="uploadHero">ДОБАВИТЬ СВОЮ МУЗЫКУ +</button></div></div>
+    <div class="hero-stamp">MUSIC WITHOUT BOUNDARIES</div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><h2>Твоя музыка начинается здесь</h2><p>Быстрый доступ к любимым направлениям</p></div><button class="text-btn" data-jump="genres">ВСЕ ЖАНРЫ ↗</button></div>
+    <div class="quick-grid">
+      <button class="quick" data-filter="Electronic"><span class="quick-art art1">01</span><span><strong>Electronic pulse</strong><small>Электроника и ритм</small></span></button>
+      <button class="quick" data-filter="Ambient"><span class="quick-art art2">02</span><span><strong>Deep focus</strong><small>Звуки для концентрации</small></span></button>
+      <button class="quick" data-filter="Indie"><span class="quick-art art3">03</span><span><strong>Indie discovery</strong><small>Новые независимые голоса</small></span></button>
+      <button class="quick" data-filter="Jazz"><span class="quick-art art4">04</span><span><strong>Late night jazz</strong><small>Ночной музыкальный город</small></span></button>
+    </div>
+  </section>
+
+  <section class="section" id="discover">
+    <div class="section-head"><div><h2>Выбрано для открытия</h2><p>Демонстрационная витрина MIVO — каталог будет подключаться отдельно</p></div><button class="text-btn" id="shuffleBtn">ПЕРЕМЕШАТЬ ↗</button></div>
+    <div class="cards" id="trackGrid"></div><div class="empty" id="emptyState">Ничего не найдено. Попробуй другой запрос.</div>
+  </section>
+
+  <section class="section" id="genres">
+    <div class="section-head"><div><h2>Музыка без границ</h2><p>Исследуй звучание разных направлений</p></div></div>
+    <div class="mix-grid">
+      <button class="mix" data-filter="Electronic" style="--mix:#a1c34c"><small>01 / ELECTRONIC</small><strong>Новая энергия</strong><span>От deep house до techno</span></button>
+      <button class="mix" data-filter="Ambient" style="--mix:#577f9d"><small>02 / AMBIENT</small><strong>Тихая глубина</strong><span>Пространство и атмосфера</span></button>
+      <button class="mix" data-filter="Indie" style="--mix:#9873a9"><small>03 / INDIE</small><strong>За пределами мейнстрима</strong><span>Независимая сцена</span></button>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="discovery">
+      <div class="discovery-main"><small>MIVO DISCOVERY ENGINE</small><h3>Не просто слушай.<br>Открывай новое.</h3><p>В будущем MIVO будет собирать персональные подборки на основе твоих вкусов, истории и настроения.</p></div>
+      <div class="discovery-side"><div class="feature"><div><strong>Твоя музыкальная карта</strong><small>Жанры и сцены со всего мира</small></div><b>↗</b></div><div class="feature"><div><strong>Качество без компромиссов</strong><small>Lossless и Hi-Res — в дорожной карте</small></div><b>◉</b></div><div class="feature"><div><strong>Независимые артисты</strong><small>Открытая сцена для новых имён</small></div><b>✳</b></div></div>
+    </div>
+  </section>
+
+  <section class="section" id="library">
+    <div class="section-head"><div><h2>Твоя коллекция</h2><p>Добавляй аудиофайлы с устройства — они останутся локально в этом браузере</p></div></div>
+    <div class="upload-panel"><div><strong>Загрузи собственные треки</strong><p>На этом этапе можно воспроизводить личные аудиофайлы прямо в MIVO.<br>Файлы не отправляются на сервер.</p></div><button class="upload-btn" id="uploadBtn">ВЫБРАТЬ АУДИОФАЙЛЫ +</button><input id="fileInput" type="file" accept="audio/*" multiple></div>
+    <div class="cards" id="localGrid" style="margin-top:20px"></div>
+    <p class="notice">Важно: это первая интерактивная веб-версия. Глобальный лицензированный каталог, аккаунты, синхронизация между устройствами и потоковое Hi-Res-воспроизведение потребуют отдельной серверной и лицензионной инфраструктуры.</p>
+  </section>
+</main>
+<nav class="mobile-nav"><button class="active" data-view="home"><span>⌂</span>Главная</button><button data-view="discover"><span>⌕</span>Обзор</button><button data-view="library"><span>▤</span>Медиатека</button><button data-view="liked"><span>♡</span>Любимое</button></nav>
+</div>
+
+<footer class="player">
+  <div class="now"><div class="now-art" id="nowArt">M</div><div class="now-meta"><strong id="nowTitle">Выбери свой первый трек</strong><small id="nowArtist">MIVO · MUSIC WITHOUT BOUNDARIES</small></div><button class="like" id="likeBtn" aria-label="Нравится">♡</button></div>
+  <div class="controls"><div class="control-row"><button class="control" id="shuffle" title="Перемешать">⤨</button><button class="control" id="prev" title="Предыдущий">◀</button><button class="control main-play" id="play" title="Воспроизвести">▶</button><button class="control" id="next" title="Следующий">▶</button><button class="control" id="repeat" title="Повтор">↻</button></div><div class="progress-row"><span id="currentTime">0:00</span><input class="progress" id="progress" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div></div>
+  <div class="volume"><span>◖</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+</footer>
+<div class="toast" id="toast"></div>
+<audio id="audio" preload="metadata"></audio>
+
+<script>
+const demoTracks=[
+ {title:"Midnight Motion",artist:"MIVO Sessions",genre:"Electronic",style:"c1",symbol:"MM",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+ {title:"Quiet Horizons",artist:"Open Atmosphere",genre:"Ambient",style:"c2",symbol:"QH",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+ {title:"Golden Hour",artist:"The Independent",genre:"Indie",style:"c3",symbol:"GH",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
+ {title:"Blue Afterglow",artist:"Nocturne Trio",genre:"Jazz",style:"c4",symbol:"BA",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+ {title:"Northern Lights",artist:"Arctic Signal",genre:"Electronic",style:"c5",symbol:"NL",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
+ {title:"Soft Focus",artist:"Mira Sol",genre:"Ambient",style:"c6",symbol:"SF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"},
+ {title:"Desert Bloom",artist:"Sahara Tapes",genre:"World",style:"c7",symbol:"DB",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
+ {title:"Coastal Lines",artist:"Low Tide",genre:"Indie",style:"c8",symbol:"CL",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"},
+ {title:"Velvet City",artist:"Afterhours",genre:"Jazz",style:"c9",symbol:"VC",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"},
+ {title:"Green Frequency",artist:"Field Notes",genre:"Electronic",style:"c10",symbol:"GF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"},
+ {title:"Blue Geometry",artist:"Lunar Arcade",genre:"Ambient",style:"c11",symbol:"BG",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"},
+ {title:"Slow Fire",artist:"June Avenue",genre:"Indie",style:"c12",symbol:"SF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3"}
+];
+let localTracks=[],queue=[...demoTracks],current=-1,liked=new Set(),repeat=false,shuffle=false;
+const audio=document.getElementById("audio"),grid=document.getElementById("trackGrid"),localGrid=document.getElementById("localGrid");
+const $=id=>document.getElementById(id);
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
+function allTracks(){return [...demoTracks,...localTracks]}
+function card(t,i,local=false){const d=document.createElement("div");d.className="music-card";d.innerHTML='<div class="cover '+(t.style||"c1")+'"><b>'+escapeHtml(t.symbol||"♪")+'</b><span class="card-play">▶</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+'</small>';d.addEventListener("click",()=>playTrack(local?demoTracks.length+i:i));return d}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(list=demoTracks){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block"}
+function renderLocal(){localGrid.replaceChildren();localTracks.forEach((t,i)=>localGrid.appendChild(card(t,i,true)))}
+function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];audio.src=t.url;audio.load();audio.play().then(()=>{$("play").textContent="Ⅱ"}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶"});$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+t.genre;$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(t.title));}
+function togglePlay(){if(!audio.src){playTrack(0);return}if(audio.paused){audio.play().then(()=>$("play").textContent="Ⅱ").catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶"}}
+function move(step){let n=current+step;if(shuffle&&allTracks().length>1){n=Math.floor(Math.random()*allTracks().length)}else if(n<0)n=allTracks().length-1;else if(n>=allTracks().length)n=0;playTrack(n)}
+function fmt(s){if(!Number.isFinite(s))return"0:00";return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0")}
+$("play").onclick=togglePlay;$("next").onclick=()=>move(1);$("prev").onclick=()=>{if(audio.currentTime>3){audio.currentTime=0}else move(-1)};
+$("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.color=shuffle?"var(--accent)":"#888";toast(shuffle?"Перемешивание включено":"Обычный порядок")};
+$("repeat").onclick=()=>{repeat=!repeat;audio.loop=repeat;$("repeat").style.color=repeat?"var(--accent)":"#888"};
+$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current];liked.has(t.title)?liked.delete(t.title):liked.add(t.title);$("likeBtn").classList.toggle("on",liked.has(t.title));toast(liked.has(t.title)?"Добавлено в избранное":"Удалено из избранного")};
+audio.addEventListener("timeupdate",()=>{if(audio.duration){$("progress").value=audio.currentTime/audio.duration*100;$("currentTime").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration)}});
+$("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
+$("volume").oninput=e=>audio.volume=e.target.value;audio.volume=.8;
+audio.addEventListener("ended",()=>{if(!repeat)move(1)});
+$("searchInput").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();render(allTracks().filter(t=>(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(q)))});
+function filterGenre(g){$("searchInput").value=g;render(allTracks().filter(t=>(t.genre+" "+t.title+" "+t.artist).toLowerCase().includes(g.toLowerCase())));$("discover").scrollIntoView({behavior:"smooth"});}
+document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>filterGenre(b.dataset.filter)));
+$("shuffleBtn").onclick=()=>{const a=[...demoTracks].sort(()=>Math.random()-.5);render(a);toast("Подборка перемешана")};
+$("exploreBtn").onclick=()=>$("discover").scrollIntoView({behavior:"smooth"});
+$("uploadBtn").onclick=$("uploadHero").onclick=()=>$("fileInput").click();
+$("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{const url=URL.createObjectURL(f);localTracks.push({title:f.name.replace(/\.[^.]+$/,""),artist:"Твоя медиатека",genre:"Local",style:"c"+(1+Math.floor(Math.random()*12)),symbol:"♪",url})});renderLocal();toast("Добавлено файлов: "+files.length);e.target.value=""};
+$("qualityBtn").onclick=()=>toast("Hi-Res — в планах. Сейчас качество зависит от исходного аудиофайла.");
+document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const target=b.dataset.view==="home"?"hero":b.dataset.view==="discover"?"discover":b.dataset.view==="library"?"library":b.dataset.view==="liked"?"discover":b.dataset.view==="recent"?"discover":"library";if(b.dataset.view==="liked"){render(allTracks().filter(t=>liked.has(t.title)));}else if(b.dataset.view!=="home"&&b.dataset.view!=="library"){render()}$(target).scrollIntoView({behavior:"smooth"})});
+render();renderLocal();
+</script>
+<script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
+</body>
+</html>
