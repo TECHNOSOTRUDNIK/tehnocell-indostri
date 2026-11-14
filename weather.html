@@ -1471,7 +1471,7 @@ function initWeatherMap(){
    latitude=event.lngLat.lat;longitude=event.lngLat.lng;currentCity="Выбранная точка";
    tcMapSetMarker(latitude,longitude);$("cityName").textContent=currentCity;renderFavorites();
    $("status").textContent="Загружаем погоду для выбранной точки…";
-   await loadWeather();tcMapRenderOverlay();
+   await loadWeather();
   });
   weatherMap.on("error",function(event){if(event&&event.error)console.warn("WEATHER map tile error:",event.error);});
   return weatherMap;
