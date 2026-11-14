@@ -912,7 +912,7 @@ async function loadMivoHits(force=false){
       const data=await response.json(),results=data.results||[];
       const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9а-яё]/gi,"");
       const wanted=norm(title),artistParts=artist.split(" ").filter(x=>x.length>2).map(norm);
-      const match=results.find(x=>norm(x.trackName).includes(wanted)||wanted.includes(norm(x.trackName)))||results[0];
+      const match=results.find(x=>{const song=norm(x.trackName),artistName=norm(x.artistName);return (song===wanted||song.includes(wanted)||wanted.includes(song))&&artistParts.some(part=>artistName.includes(part))});
       if(!match)continue;
       found[index]={id:"apple:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",symbol:"♪",style:"c1",viralYear:year};
      }catch(e){}
