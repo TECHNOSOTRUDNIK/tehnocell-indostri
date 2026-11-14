@@ -356,6 +356,28 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 /* Search: keep focus subtle, without the bright white outline */
 .search:focus-within{border-color:#303030!important;box-shadow:none!important;background:#191919}
 .search input:focus-visible{outline:none!important;box-shadow:none!important}
+
+/* MIVO monochrome identity + honest catalog state */
+:root{--accent:#fff}
+.brand-mark{box-shadow:none}.avatar{background:#fff;color:#111}.hero{background:linear-gradient(110deg,#151515,#080808 65%,#202020)}
+.hero:before{background:radial-gradient(circle at 40% 40%,#fff 0,#aaa 12%,#555 30%,#222 52%,transparent 70%)}
+.kicker,.hero h1 span,.hero-stamp,.np-live,.np-live i,.np-eyebrow,.np-equalizer i{color:#fff;background-color:transparent}
+.np-live i{background:#fff;box-shadow:0 0 12px #fff}
+.primary{background:#fff;color:#111}.primary:hover{box-shadow:0 8px 28px #ffffff22}
+.hero p,.kicker{color:#c7c7c7}.hero-visual-caption,.caption-dot{color:#fff}
+.quick-art,.art1,.art2,.art3,.art4,.c1,.c2,.c3,.c4,.c5,.c6,.c7,.c8,.c9,.c10,.c11,.c12{background:linear-gradient(145deg,#555,#151515)!important;color:#fff}
+.mix:after{background:#aaa!important;opacity:.18}.discovery-main{background:linear-gradient(125deg,#242424,#101010)}.discovery-main:after{color:#ffffff0b}
+.discovery-main small{color:#ddd}.feature b{color:#fff}
+.np-backdrop{background:radial-gradient(ellipse at 70% 35%,#ffffff33,transparent 42%),radial-gradient(ellipse at 20% 80%,#77777733,transparent 40%),#080808}
+.catalog-stage{min-height:330px;position:relative;overflow:hidden;border:1px solid #292929;border-radius:22px;background:linear-gradient(115deg,#171717,#080808 72%);padding:36px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:28px}
+.catalog-mark{position:absolute;right:4%;top:-95px;font:700 340px/.9 "Space Grotesk";letter-spacing:-35px;color:#ffffff08;pointer-events:none}.catalog-mark span{color:#fff4}
+.catalog-copy{position:relative;z-index:1;max-width:650px}.catalog-status{font-size:9px;letter-spacing:2px;font-weight:800;color:#ddd;display:flex;align-items:center;gap:9px}.catalog-status i{width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 12px #fff;display:inline-block}
+.catalog-copy h3{font:700 clamp(30px,4vw,51px)/1.02 "Space Grotesk";letter-spacing:-2px;margin:22px 0 14px}.catalog-copy p{max-width:570px;color:#aaa;font-size:12px;line-height:1.85}
+.catalog-columns{position:relative;z-index:1;display:grid;gap:10px;min-width:210px}.catalog-columns div{border:1px solid #ffffff20;background:#ffffff08;border-radius:12px;padding:13px 15px}.catalog-columns b{font:700 10px "Space Grotesk";color:#888;display:block;margin-bottom:7px}.catalog-columns strong{display:block;font-size:11px}.catalog-columns small{display:block;color:#777;font-size:9px;margin-top:4px}
+.mivo-worlds .quick{cursor:default}.mivo-worlds .quick:hover{transform:none;border-color:#444}
+.empty{border:1px dashed #333;border-radius:14px;padding:30px;margin-top:10px;color:#888}
+@media(max-width:800px){.catalog-stage{grid-template-columns:1fr;padding:25px;gap:20px}.catalog-mark{font-size:230px;top:-50px;right:-5%}.catalog-columns{grid-template-columns:repeat(3,1fr);min-width:0}.catalog-columns div{padding:11px}.catalog-columns strong{font-size:10px}}
+@media(max-width:480px){.catalog-columns{grid-template-columns:1fr}.catalog-stage{padding:21px}.catalog-copy h3{font-size:34px}}
 </style>
 </head>
 <body>
@@ -399,19 +421,27 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
     </div>
   </section>
 
-  <section class="section" id="discover">
-    <div class="section-head"><div><div class="eyebrow-line">ТВОЯ СТАРТОВАЯ КОЛЛЕКЦИЯ <span></span></div><h2>Музыка MIVO</h2><p>Встроенная подборка для первого прослушивания — запускай сразу, без загрузки файлов</p></div><button class="text-btn" id="shuffleBtn">СЛУЧАЙНЫЙ ПОРЯДОК ↗</button></div>
-    <div class="collection-meta"><span><i></i> MIVO SELECTED</span><span id="resultCount">12 композиций</span></div><div class="cards" id="trackGrid"></div><div class="empty" id="emptyState">Ничего не найдено. Попробуй другой запрос.</div>
-  </section>
+  <section class="section welcome-section" id="discover">
+  <div class="section-head"><div><div class="eyebrow-line">MIVO DISCOVER <span></span></div><h2>Открой свой музыкальный мир</h2><p>Исследуй сцены, культуры и звучания — без выдуманных треков и фальшивых подборок.</p></div></div>
+  <div class="quick-grid mivo-worlds">
+   <article class="quick"><span class="quick-art art1">RU</span><span><strong>Русская сцена</strong><small>Поп, рок, хип-хоп и новое звучание</small></span></article>
+   <article class="quick"><span class="quick-art art2">CIS</span><span><strong>Музыка СНГ</strong><small>Артисты и направления региона</small></span></article>
+   <article class="quick"><span class="quick-art art3">GLB</span><span><strong>Мировая музыка</strong><small>Хиты и открытия со всего мира</small></span></article>
+   <article class="quick"><span class="quick-art art4">NEW</span><span><strong>Новые голоса</strong><small>Независимые исполнители</small></span></article>
+  </div>
+ </section>
 
   <section class="section" id="genres">
-    <div class="section-head"><div><h2>Музыка без границ</h2><p>Исследуй звучание разных направлений</p></div></div>
-    <div class="mix-grid">
-      <button class="mix" data-filter="Electronic" style="--mix:#a1c34c"><small>01 / ЭЛЕКТРОНИКА</small><strong>Новая энергия</strong><span>От deep house до techno</span></button>
-      <button class="mix" data-filter="Ambient" style="--mix:#577f9d"><small>02 / ЭМБИЕНТ</small><strong>Тихая глубина</strong><span>Пространство и атмосфера</span></button>
-      <button class="mix" data-filter="Indie" style="--mix:#9873a9"><small>03 / ИНДИ</small><strong>За пределами мейнстрима</strong><span>Независимая сцена</span></button>
-    </div>
-  </section>
+ <div class="section-head"><div><div class="eyebrow-line">MIVO MUSIC MAP <span></span></div><h2>Музыкальные направления</h2><p>Будущая карта жанров и сцен — от локальной музыки до мировых направлений.</p></div></div>
+ <div class="mix-grid">
+  <article class="mix"><small>01 / POP & MAINSTREAM</small><strong>Популярная музыка</strong><span>Главные хиты и чарты</span></article>
+  <article class="mix"><small>02 / HIP-HOP & R&B</small><strong>Ритм и культура</strong><span>Хип-хоп, рэп и R&amp;B</span></article>
+  <article class="mix"><small>03 / ROCK & ALTERNATIVE</small><strong>Громче границ</strong><span>Рок, инди и альтернатива</span></article>
+  <article class="mix"><small>04 / ELECTRONIC</small><strong>Электронная сцена</strong><span>От house до techno</span></article>
+  <article class="mix"><small>05 / CLASSICAL & JAZZ</small><strong>Вне времени</strong><span>Классика, джаз и инструментал</span></article>
+  <article class="mix"><small>06 / WORLD</small><strong>Звучание планеты</strong><span>Музыкальные культуры мира</span></article>
+ </div>
+ </section>
 
   <section class="section">
     <div class="discovery">
@@ -421,11 +451,11 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
   </section>
 
   <section class="section" id="library">
-    <div class="section-head"><div><h2>Твоя медиатека</h2><p>Добавляй аудиофайлы с устройства — они останутся локально в этом браузере</p></div></div>
-    <div class="upload-panel"><div><strong>Добавь свою музыку</strong><p>На этом этапе можно воспроизводить личные аудиофайлы прямо в MIVO.<br>Файлы не отправляются на сервер.</p></div><button class="upload-btn" id="uploadBtn">ВЫБРАТЬ АУДИОФАЙЛЫ +</button><input id="fileInput" type="file" accept="audio/*" multiple></div>
-    <div class="cards" id="localGrid" style="margin-top:20px"></div>
-    <p class="notice">Встроенная подборка MIVO — демонстрационные инструментальные композиции. Поиск показывает ознакомительные фрагменты каталога Apple Music. Полные версии популярных песен подключаются только через лицензированных музыкальных партнёров.</p>
-  </section>
+ <div class="section-head"><div><div class="eyebrow-line">YOUR COLLECTION <span></span></div><h2>Твоя медиатека</h2><p>Твои собственные аудиофайлы, избранное и история прослушивания.</p></div></div>
+ <div class="upload-panel"><div><strong>Твоя музыка — на твоём устройстве</strong><p>Добавляй аудиофайлы и слушай их в MIVO. Сейчас файлы остаются только в памяти текущего браузера и не загружаются на сервер.</p></div><button class="upload-btn" id="uploadBtn">ВЫБРАТЬ АУДИОФАЙЛЫ +</button><input id="fileInput" type="file" accept="audio/*" multiple></div>
+ <div class="cards" id="localGrid" style="margin-top:20px"></div>
+ <p class="notice">Избранное и история сохраняются в этом браузере. Полный онлайн-каталог будет подключён отдельно после подготовки музыкальных источников и прав на воспроизведение.</p>
+ </section>
 </main>
 <nav class="mobile-nav"><button class="active" data-view="home"><span>⌂</span>Главная</button><button data-view="discover"><span>⌕</span>Обзор</button><button data-view="library"><span>▤</span>Медиатека</button><button data-view="liked"><span>♡</span>Любимое</button></nav>
 </div>
@@ -457,21 +487,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 <audio id="audio" preload="metadata"></audio>
 
 <script>
-const demoTracks=[
- {title:"Midnight Motion",artist:"MIVO Sessions",genre:"Electronic",style:"c1",symbol:"MM",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
- {title:"Quiet Horizons",artist:"Open Atmosphere",genre:"Ambient",style:"c2",symbol:"QH",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
- {title:"Golden Hour",artist:"The Independent",genre:"Indie",style:"c3",symbol:"GH",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"},
- {title:"Blue Afterglow",artist:"Nocturne Trio",genre:"Jazz",style:"c4",symbol:"BA",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
- {title:"Northern Lights",artist:"Arctic Signal",genre:"Electronic",style:"c5",symbol:"NL",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
- {title:"Soft Focus",artist:"Mira Sol",genre:"Ambient",style:"c6",symbol:"SF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"},
- {title:"Desert Bloom",artist:"Sahara Tapes",genre:"World",style:"c7",symbol:"DB",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
- {title:"Coastal Lines",artist:"Low Tide",genre:"Indie",style:"c8",symbol:"CL",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"},
- {title:"Velvet City",artist:"Afterhours",genre:"Jazz",style:"c9",symbol:"VC",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"},
- {title:"Green Frequency",artist:"Field Notes",genre:"Electronic",style:"c10",symbol:"GF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"},
- {title:"Blue Geometry",artist:"Lunar Arcade",genre:"Ambient",style:"c11",symbol:"BG",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"},
- {title:"Slow Fire",artist:"June Avenue",genre:"Indie",style:"c12",symbol:"SF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3"}
-];
-let localTracks=[],catalogTracks=[],queue=[...demoTracks],current=-1,searchTimer=null,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),repeat=false,shuffle=false;
+let localTracks=[],catalogTracks=[],queue=[],current=-1,searchTimer=null,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),repeat=false,shuffle=false;
 function readStore(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||"null");return value??fallback}catch(_){return fallback}}
 function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(_){toast("Не удалось сохранить данные в этом браузере")}}
 function trackKey(t){return t.url||t.title+"::"+t.artist}
@@ -507,18 +523,18 @@ mivoDb.auth.onAuthStateChange((_event,session)=>paintMivoAuth(session?.user||nul
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshMivoAuth()});
 
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
-function allTracks(){return [...demoTracks,...localTracks,...catalogTracks]}
+function allTracks(){return [...localTracks,...catalogTracks]}
 function card(t,i,local=false){const d=document.createElement("div");d.className="music-card";const art=t.artworkUrl100?'background-image:url("'+escapeHtml(t.artworkUrl100.replace("100x100","600x600"))+'");background-size:cover;background-position:center':"";d.innerHTML='<div class="cover '+(t.style||"c1")+'" style="'+art+'"><b>'+(t.artworkUrl100?"":escapeHtml(t.symbol||"♪"))+'</b><span class="card-play">▶</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small>';d.addEventListener("click",()=>playTrack(allTracks().indexOf(t)));return d}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function render(list=demoTracks){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block"}
+function render(list=allTracks()){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block";$("resultCount").textContent=list.length+" "+(list.length===1?"композиция":list.length>1&&list.length<5?"композиции":"композиций")}
 function renderLocal(){localGrid.replaceChildren();localTracks.forEach((t,i)=>localGrid.appendChild(card(t,i,true)))}
 function genreRu(g){return ({Electronic:"Электроника",Ambient:"Эмбиент",Indie:"Инди",Jazz:"Джаз",World:"Музыка мира",Local:"Локальный файл"})[g]||g||"Музыка"}
-function syncNowPlaying(){const t=allTracks()[current];if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");$("npBackdrop").style.background="radial-gradient(ellipse at 70% 35%,rgba(215,255,98,.17),transparent 42%),radial-gradient(ellipse at 20% 80%,rgba(90,120,80,.25),transparent 40%),#080908";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>"}
-function openNowPlaying(){if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
+function syncNowPlaying(){const t=allTracks()[current];if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");$("npBackdrop").style.background="radial-gradient(ellipse at 70% 35%,rgba(255,255,255,.16),transparent 42%),radial-gradient(ellipse at 20% 80%,rgba(150,150,150,.16),transparent 40%),#080808";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>"}
+function openNowPlaying(){if(current<0&&!allTracks().length){toast("Сначала добавь аудиофайл или найди музыку через поиск");return}if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
 function closeNowPlaying(){$("nowPlaying").classList.remove("open");$("nowPlaying").setAttribute("aria-hidden","true");document.body.style.overflow=""}
 function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];saveRecent(t);audio.pause();audio.removeAttribute("src");audio.load();$("progress").value=0;$("npProgress").value=0;$("currentTime").textContent="0:00";$("npCurrent").textContent="0:00";$("duration").textContent="0:00";$("npDuration").textContent="0:00";let started=false;const startFromBeginning=()=>{if(started)return;started=true;try{audio.currentTime=0}catch(_){}audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"})};audio.addEventListener("loadedmetadata",startFromBeginning,{once:true});audio.src=t.url;audio.load();if(audio.readyState>=1)startFromBeginning();$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
-function togglePlay(){if(!audio.src){playTrack(0);return}if(audio.paused){audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶";$("npPlay").textContent="▶";$("nowPlaying").classList.remove("playing")}}
-function move(step){let n=current+step;if(shuffle&&allTracks().length>1){n=Math.floor(Math.random()*allTracks().length)}else if(n<0)n=allTracks().length-1;else if(n>=allTracks().length)n=0;playTrack(n)}
+function togglePlay(){if(!audio.src){if(allTracks().length)playTrack(0);else toast("Добавь аудиофайл или найди трек через поиск");return}if(audio.paused){audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶";$("npPlay").textContent="▶";$("nowPlaying").classList.remove("playing")}}
+function move(step){const tracks=allTracks();if(!tracks.length){toast("В медиатеке пока нет музыки");return}let n=current+step;if(shuffle&&tracks.length>1){n=Math.floor(Math.random()*tracks.length)}else if(n<0)n=tracks.length-1;else if(n>=tracks.length)n=0;playTrack(n)}
 function fmt(s){if(!Number.isFinite(s))return"0:00";return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0")}
 $("play").onclick=togglePlay;$("next").onclick=()=>move(1);$("prev").onclick=()=>{if(audio.currentTime>3){audio.currentTime=0}else move(-1)};
 $("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.color=shuffle?"var(--accent)":"#888";toast(shuffle?"Перемешивание включено":"Обычный порядок")};
@@ -529,17 +545,17 @@ $("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.t
 $("volume").oninput=e=>{audio.volume=e.target.value;$("npVolume").value=e.target.value};$("npVolume").oninput=e=>{audio.volume=e.target.value;$("volume").value=e.target.value};audio.volume=.8;
 audio.addEventListener("play",()=>{$("nowPlaying").classList.add("playing");$("npPlay").textContent="Ⅱ"});audio.addEventListener("pause",()=>{$("nowPlaying").classList.remove("playing");$("npPlay").textContent="▶"});audio.addEventListener("ended",()=>{if(!repeat)move(1)});
 async function searchWorldwideSongs(query){const status=$("emptyState");status.style.display="block";status.textContent="Ищем песни в музыкальных каталогах…";try{const term=encodeURIComponent(query);const urls=["https://itunes.apple.com/search?term="+term+"&entity=song&limit=25&country=ru","https://itunes.apple.com/search?term="+term+"&entity=song&limit=25&country=us"];const responses=await Promise.all(urls.map(u=>fetch(u).then(r=>{if(!r.ok)throw new Error("search");return r.json()})));const seen=new Set();catalogTracks=responses.flatMap(x=>x.results||[]).filter(x=>{if(!x.previewUrl||seen.has(x.trackId))return false;seen.add(x.trackId);return true}).map(x=>({title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Music",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:x.previewUrl,symbol:"♪",style:"c1"}));const local=allTracks().filter(t=>!catalogTracks.includes(t)&&(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(query.toLowerCase()));render([...catalogTracks,...local]);status.textContent=catalogTracks.length?"Найдено "+catalogTracks.length+" песен. Доступны ознакомительные фрагменты.":"Ничего не найдено. Попробуй другое написание или запрос на английском.";status.style.display=catalogTracks.length||local.length?"none":"block"}catch(err){catalogTracks=[];const local=allTracks().filter(t=>(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(query.toLowerCase()));render(local);status.style.display=local.length?"none":"block";status.textContent="Не удалось подключиться к музыкальному поиску. Проверь интернет и попробуй ещё раз."}}
-$("searchInput").addEventListener("input",e=>{const q=e.target.value.trim();clearTimeout(searchTimer);if(!q){catalogTracks=[];render(demoTracks);return}searchTimer=setTimeout(()=>searchWorldwideSongs(q),450)});
-function filterGenre(g){$("searchInput").value=g;render(allTracks().filter(t=>(t.genre+" "+t.title+" "+t.artist).toLowerCase().includes(g.toLowerCase())));$("discover").scrollIntoView({behavior:"smooth"});}
+$("searchInput").addEventListener("input",e=>{const q=e.target.value.trim();clearTimeout(searchTimer);if(!q){catalogTracks=[];render(allTracks());return}searchTimer=setTimeout(()=>searchWorldwideSongs(q),450)});
+function filterGenre(g){$("searchInput").value=g;render(allTracks().filter(t=>(t.genre+" "+t.title+" "+t.artist).toLowerCase().includes(g.toLowerCase())));$("mivo-music").scrollIntoView({behavior:"smooth"});}
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>filterGenre(b.dataset.filter)));
-$("shuffleBtn").onclick=()=>{const a=[...demoTracks].sort(()=>Math.random()-.5);render(a);toast("Подборка перемешана")};
-$("exploreBtn").onclick=()=>$("discover").scrollIntoView({behavior:"smooth"});
+
+$("exploreBtn").onclick=()=>$("mivo-music").scrollIntoView({behavior:"smooth"});
 $("uploadBtn").onclick=$("uploadHero").onclick=()=>$("fileInput").click();
 $("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{const url=URL.createObjectURL(f);localTracks.push({title:f.name.replace(/\.[^.]+$/,""),artist:"Твоя медиатека",genre:"Local",style:"c"+(1+Math.floor(Math.random()*12)),symbol:"♪",url})});renderLocal();toast("Добавлено файлов: "+files.length);e.target.value=""};
 $("qualityBtn").onclick=()=>toast("Звук высокого разрешения — в планах. Сейчас качество зависит от исходного файла.");$("npClose").onclick=closeNowPlaying;$("nowTitle").onclick=openNowPlaying;$("nowArt").onclick=openNowPlaying;document.querySelector(".now").style.cursor="pointer";document.querySelector(".now").addEventListener("click",e=>{if(e.target.closest("button"))return;openNowPlaying()});$("npPlay").onclick=togglePlay;$("npNext").onclick=()=>move(1);$("npPrev").onclick=()=>move(-1);$("npShuffle").onclick=()=>$("shuffle").click();$("npRepeat").onclick=()=>$("repeat").click();$("npLike").onclick=()=>$("likeBtn").click();$("npShuffle").style.color="#888";document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNowPlaying()});
 document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
-document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":"discover";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover"||view==="playlists")render();if(view==="playlists")toast("Создание пользовательских плейлистов — следующий этап MIVO");$(target).scrollIntoView({behavior:"smooth"})});
-render();renderLocal();
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":view==="discover"?"mivo-music":"discover";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover"||view==="playlists")render(allTracks());if(view==="playlists")toast("Создание пользовательских плейлистов — следующий этап MIVO");$(target).scrollIntoView({behavior:"smooth"})});
+render(allTracks());renderLocal();
 
 /* MIVO polish interactions */
 (function(){
@@ -612,7 +628,7 @@ render();renderLocal();
  audio.addEventListener("pause",()=>{if("mediaSession"in navigator)navigator.mediaSession.playbackState="paused"});
  const resultCount=$("resultCount");
  const originalRender=render;
- render=function(list=demoTracks){originalRender(list);if(resultCount)resultCount.textContent=list.length+" "+(list.length===1?"композиция":list.length>1&&list.length<5?"композиции":"композиций")};
+ render=function(list=allTracks()){originalRender(list);if(resultCount)resultCount.textContent=list.length+" "+(list.length===1?"композиция":list.length>1&&list.length<5?"композиции":"композиций")};
  const originalSync=syncNowPlaying;
  syncNowPlaying=function(){originalSync();const t=allTracks()[current];if(t){$("nowArt").textContent=t.symbol||"♪";$("nowArt").style.backgroundImage=t.artworkUrl100?'url("'+t.artworkUrl100.replace("100x100","600x600")+'")':"";$("nowArt").style.backgroundSize="cover";$("nowArt").style.backgroundPosition="center"}};
 })();
