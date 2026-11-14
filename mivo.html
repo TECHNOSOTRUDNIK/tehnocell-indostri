@@ -837,6 +837,7 @@ async function loadMivoHits(){
 }
 $("refreshHits").addEventListener("click",loadMivoHits);
 
+function renderPlaylists(){
  const root=$("playlistGrid"),empty=$("playlistEmpty");if(!root)return;root.replaceChildren();
  playlists.forEach(p=>{
   const el=document.createElement("article");el.className="playlist-card";
