@@ -662,7 +662,7 @@ body[data-mivo-theme]{background:radial-gradient(ellipse at 78% 0%,color-mix(in 
   </section>
 
   <section class="section hits-section" id="hits">
-   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Вирусные хиты мира</h2><p>Треки, которые набирали популярность в TikTok и мировых чартах в 2025–2026 годах.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
+   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Хиты СНГ · сейчас в тренде</h2><p>Актуальные треки из чарта VK Музыки и вирусные хиты 2025 года. Подборка обновляется вручную по свежим данным.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
    <div class="cards hits-grid" id="hitGrid"></div><div class="empty hits-status" id="hitsStatus">Загружаем музыкальный чарт…</div>
   </section>
 
@@ -852,52 +852,59 @@ async function choosePlaylistForTrack(track){
 }
 let mivoHitsLoaded=false,mivoHitsLoading=false;
 const viralCatalog2025_26=[
- ["BbY WOW","KAROL G Judeline rusowsky","2026"],
- ["Housewife","Tate McRae","2026"],
- ["Nicole Kidman","ADÉLA","2026"],
- ["Stop The Wedding!","Ashe","2026"],
- ["Movin' To The Sun","HUGEL Imael Angel Ultra Naté","2026"],
- ["Choosin' Texas","Ella Langley","2026"],
- ["So Easy (To Fall In Love)","Olivia Dean","2026"],
- ["hate that i made you love me","Ariana Grande","2026"],
- ["stupid song","Olivia Rodrigo","2026"],
- ["Patient Zero","Taylor Swift","2026"],
- ["Flower In A Hurricane","Justice Tame Impala SZA","2026"],
- ["Janice STFU","Drake","2026"],
- ["Man I Need","Olivia Dean","2026"],
- ["Raindance","Dave Tems","2026"],
- ["Back To Friends","sombr","2025"],
+ ["Земляк","Koss ПЛУТТО","2026"],
+ ["КИС Ю","NEXTIME Даник","2026"],
+ ["ДИНАСТИЯ","VILLIAN madk1d","2026"],
+ ["Украсть тебя","МАЯК X","2026"],
+ ["Ледяное сердце","Татьяна Буланова","2026"],
+ ["ЗНАК","Toxi$ Дора","2026"],
+ ["Танцуешь на поминках","АлСми","2026"],
+ ["Ты не бойся ночи","ENZRO","2026"],
+ ["Омут","Полка YASMI","2026"],
+ ["ПЕРВЫЙ РАЗ","GATASKI","2026"],
+ ["Лампочки","ARTIK ASTI","2026"],
+ ["Была не была","Jakone Kiliana","2026"],
+ ["andy warhol","Kai Angel","2026"],
+ ["Феникс","BEARWOLF","2026"],
+ ["Позывной Келин","eneshka soul","2026"],
+ ["Отпускаю","BRVZ","2026"],
+ ["Пьяный","Катрин Штоль","2026"],
+ ["Санта Лючия","GAYAZOV$ BROTHER$","2026"],
+ ["ты в моих мыслях навсегда","урал гайсин снялцепи","2026"],
+ ["Весь этот мир","NEMIGA Дорогой Дневник","2026"],
+ ["GAZ","Zivert","2026"],
+ ["Шадэ","By Индия Xcho MOT","2026"],
+ ["BAD TIMES","Imael Angel","2026"],
+ ["Магнит","Xassa","2026"],
+ ["Мальборо","SAYAN","2026"],
+ ["Родная сторона","Ramila","2026"],
+ ["Дофамин x Oohc","YungMeechy Kanatbek","2026"],
+ ["Мои слёзы","Света","2026"],
+ ["БАНК","ICEGERGERT Zivert","2026"],
+ ["ЭКСПОНАТ","MIA BOYKA","2026"],
+ ["Любовная","Akmal'","2026"],
+ ["Сгореть","NAVAI","2026"],
+ ["так по***","madk1d","2026"],
+ ["В сигаретном дыму","Баста Гуф","2026"],
+ ["I Got Love","Miyagi Эндшпиль Рем Дигга","2026"],
+ ["Пуrosangue","MACAN Jakone","2026"],
+ ["Я ТЕБЯ МОГНУ","ЦУЕФА Вирсавия Милана Некрасова LIZOGUB Давид Туров","2026"],
+ ["Шадэ","By Индия Xcho MOT","2026"],
+ ["Матушка","Татьяна Куртукова","2025"],
+ ["Базовый минимум","Sabi MIA BOYKA","2025"],
+ ["Если я буду танцевать","Баста Моя Мишель","2025"],
+ ["Malo 2.0","ЕГОР КРИД OG Buda Toxi$ Мэйби Бэйби Дора","2025"],
+ ["Плавит","Анна Немченко DAVA","2025"],
  ["APT.","ROSÉ Bruno Mars","2025"],
- ["Golden","HUNTR/X KPop Demon Hunters","2025"],
- ["Anxiety","Doechii","2025"],
- ["Pretty Little Baby","Connie Francis","2025"],
- ["Hold My Hand","Jess Glynne","2025"],
- ["Rock That Body","Black Eyed Peas","2025"],
- ["Azul","J Balvin","2025"],
- ["Dame Un Grrr","Fantomel Kate Linn","2025"],
- ["Te Queria Ver","Aleman Neton Vega","2025"],
- ["Stecu Stecu","Faris Adam","2025"],
- ["Sailor Song","Gigi Perez","2025"],
- ["Shake It To The Max (FLY) (Remix)","MOLIY Silent Addy Skillibeng Shenseea","2025"],
- ["Ocean Eyes","Billie Eilish","2025"],
- ["No One Noticed","The Marías","2025"],
- ["Sparks","Coldplay","2025"],
- ["That's So True","Gracie Abrams","2025"],
- ["Let Down","Radiohead","2025"],
- ["Gabriela","KATSEYE","2025"],
- ["Gnarly","KATSEYE","2025"],
- ["Messy","Lola Young","2025"],
- ["Ordinary","Alex Warren","2025"],
- ["Die With A Smile","Lady Gaga Bruno Mars","2025"],
- ["luther","Kendrick Lamar SZA","2025"],
- ["DtMF","Bad Bunny","2025"],
- ["Love Me Not","Ravyn Lenae","2025"]
+ ["Golden","HUNTR/X","2025"],
+ ["Back To Friends","sombr","2025"],
+ ["Anxiety","Doechii","2025"]
 ];
 async function loadMivoHits(force=false){
  const grid=$("hitGrid"),status=$("hitsStatus");if(!grid||!status||mivoHitsLoading||(!force&&mivoHitsLoaded))return;
- mivoHitsLoading=true;status.style.display="block";status.textContent="Собираем мировую подборку 2025–2026…";grid.replaceChildren();
+ mivoHitsLoading=true;status.style.display="block";status.textContent="Загружаем актуальные хиты СНГ по чартам VK Музыки…";grid.replaceChildren();
  try{
-  const cacheKey="mivo_viral_catalog_25_26_v1",cached=readStore(cacheKey,null);
+  const cacheKey="mivo_cis_chart_nov2026_v2",cached=readStore(cacheKey,null);
   if(!force&&Array.isArray(cached)&&cached.length&&Date.now()-(cached.savedAt||0)<86400000){
    hitTracks=cached.tracks||[];
   }else{
@@ -907,7 +914,7 @@ async function loadMivoHits(force=false){
      const index=cursor++,[title,artist,year]=viralCatalog2025_26[index];
      try{
       const term=encodeURIComponent(title+" "+artist);
-      const response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=6&country=us");
+      const response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=8&country=ru");
       if(!response.ok)continue;
       const data=await response.json(),results=data.results||[];
       const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9а-яё]/gi,"");
@@ -926,7 +933,7 @@ async function loadMivoHits(force=false){
    const node=card(t,i);node.dataset.chartRank=String(i+1);
    const rank=document.createElement("span");rank.className="hit-rank";rank.textContent=t.viralYear==="2026"?"26": "25";node.querySelector(".cover").appendChild(rank);grid.appendChild(node);
   });
-  status.textContent=hitTracks.length?"Мировые хиты и вирусные треки 2025–2026 · доступно для предпрослушивания: "+hitTracks.length+" · метки 25/26 показывают год тренда":"Не удалось получить предпрослушивания. Попробуй обновить подборку.";
+  status.textContent=hitTracks.length?"Подборка по российскому чарту VK Музыки · ноябрь 2026, плюс вирусные хиты 2025 · доступно для предпрослушивания: "+hitTracks.length:"Не удалось найти доступные фрагменты в российском каталоге. Попробуй обновить подборку.";
   status.style.display="block";mivoHitsLoaded=true;renderMixes();
  }catch(error){
   status.textContent="Не удалось загрузить мировую подборку. Проверь подключение и попробуй ещё раз.";status.style.display="block";
@@ -969,7 +976,7 @@ function renderMixes(){
  const counts={};source.forEach(t=>{const g=t.genre||"Музыка";counts[g]=(counts[g]||0)+1});
  const topGenre=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0];
  const mixes=[
-  {title:"Вирусные хиты мира",sub:hitTracks.length?"Популярные треки 2025–2026 годов":"Загружаем мировой музыкальный каталог",list:hitTracks.slice(0,30)},
+  {title:"Хиты СНГ · сейчас в тренде",sub:hitTracks.length?"По чарту VK Музыки · ноябрь 2026":"Загружаем актуальные хиты СНГ",list:hitTracks.slice(0,30)},
   {title:"Похоже на то, что ты слушаешь",sub:topGenre?"На основе твоих последних прослушиваний · "+genreRu(topGenre):"Персональная подборка после первых прослушиваний",list:source},
   {title:"Твои любимые",sub:likedTracks.length?"На основе избранных композиций":"Добавляй треки в избранное — соберём микс",list:likedTracks},
   {title:"Недавно звучало",sub:recentTracks.length?"Продолжение музыкальной истории":"Здесь появятся недавно прослушанные треки",list:recentTracks},
