@@ -1100,7 +1100,64 @@ async function loadWeather() {
   }
 }
 
+
+function publishWeatherSnapshot(data) {
+  try {
+    const c = data?.current, h = data?.hourly, d = data?.daily;
+    if (!c || !h || !d || !Array.isArray(h.time) || !Array.isArray(d.time)) return;
+    const now = new Date(c.time || Date.now()).getTime();
+    let index = h.time.findIndex(t => new Date(t).getTime() >= now);
+    if (index < 0) index = 0;
+    const hours = [];
+    for (let n = index; n < Math.min(index + 6, h.time.length); n++) {
+      hours.push({
+        time: String(h.time[n]).slice(11, 16),
+        temperature: Math.round(Number(h.temperature_2m?.[n])),
+        precipitationProbability: Number(h.precipitation_probability?.[n] ?? 0)
+      });
+    }
+    const snapshot = {
+      available: true,
+      source: "TEHNOCELL WEATHER · live",
+      city: String(currentCity || "Выбранное место"),
+      latitude: Number(latitude),
+      longitude: Number(longitude),
+      updatedAt: new Date().toISOString(),
+      weatherTime: c.time || null,
+      current: {
+        temperature: Math.round(Number(c.temperature_2m)),
+        apparentTemperature: Math.round(Number(c.apparent_temperature)),
+        condition: weatherName(Number(c.weather_code)),
+        humidity: Number(c.relative_humidity_2m),
+        windSpeed: Math.round(Number(c.wind_speed_10m)),
+        windDirection: Math.round(Number(c.wind_direction_10m)),
+        precipitation: Number(c.precipitation || 0),
+        uv: Number(c.uv_index || 0),
+        pressure: Number(c.pressure_msl || 0),
+        visibility: Number(c.visibility || 0)
+      },
+      today: {
+        high: Math.round(Number(d.temperature_2m_max?.[0])),
+        low: Math.round(Number(d.temperature_2m_min?.[0])),
+        precipitationProbability: Number(d.precipitation_probability_max?.[0] ?? 0),
+        sunrise: d.sunrise?.[0] || null,
+        sunset: d.sunset?.[0] || null
+      },
+      hours
+    };
+    if (!Number.isFinite(snapshot.current.temperature)) return;
+    localStorage.setItem("tehnocell_weather_current_snapshot", JSON.stringify(snapshot));
+    window.TEHNOCELL_WEATHER = {
+      getSnapshot: () => JSON.parse(localStorage.getItem("tehnocell_weather_current_snapshot") || "null")
+    };
+    window.dispatchEvent(new CustomEvent("tehnocell-weather-updated", { detail: snapshot }));
+  } catch (error) {
+    console.warn("TEHNOCELL WEATHER snapshot publish failed:", error);
+  }
+}
+
 function showWeather(data) {
+  publishWeatherSnapshot(data);
   const c = data.current;
   window.lastWeatherCurrent=c;
   const h = data.hourly;
