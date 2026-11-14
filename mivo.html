@@ -512,6 +512,12 @@ input[type=range]{accent-color:var(--accent)!important}
 body.mivo-audio-playing .mini-equalizer{display:flex}
 body.mivo-audio-playing .mini-equalizer i{animation-play-state:running}
 @media(max-width:600px){.mini-equalizer{margin-left:0}.now{gap:8px}.now-art{width:43px;height:43px}}
+/* Mobile: keep ENNIE clear of the fixed player and navigation. */
+@media(max-width:800px){#ennie-everywhere-root .ee-launch{right:14px!important;bottom:calc(var(--player,84px) + 72px)!important}}
+/* The ENNIE launcher must not cover controls in the immersive music player. */
+body:has(#nowPlaying.open) #ennie-everywhere-root .ee-launch{display:none!important}
+/* Always show the complete square album artwork in the immersive player. */
+.np-big-art{background-size:contain!important;background-repeat:no-repeat!important;background-color:#101010}
 </style>
 </head>
 <body>
@@ -999,7 +1005,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  }
  function paintTrack(){
   const t=allTracks()[current];if(!t)return;
-  const art=artwork(t,1000),small=artwork(t,300);
+  const art=artwork(t,600),small=artwork(t,300);
   const mini=$("nowArt"),big=$("npArt"),back=$("npBackdrop"),ambient=$("mivoDynamicBackdrop");
   if(mini){
    mini.textContent=small?"":(t.symbol||"♪");
