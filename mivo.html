@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080808">
 <meta name="description" content="MIVO — музыка без границ. Музыкальная платформа TEHNOCELL INDOSTRI.">
-<title>MIVO — Music without boundaries</title>
+<title>MIVO — Музыка без границ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -107,6 +107,44 @@ input[type=range]{accent-color:var(--accent);cursor:pointer}.progress{width:100%
 @media(max-width:800px){:root{--player:84px}.sidebar{display:none}.main{margin:0;padding:0 17px 25px}.topbar{height:69px}.history{display:none}.quality{display:none}.hero{min-height:390px;padding:32px 25px}.hero:before{right:-38%;top:8%;width:380px;height:380px}.hero h1{letter-spacing:-3px}.hero-stamp{right:16px}.section{margin-top:35px}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.mix-grid{grid-template-columns:1fr 1fr}.discovery{grid-template-columns:1fr}.player{grid-template-columns:1fr auto;padding:0 13px;gap:8px}.controls{grid-column:2;grid-row:1}.volume{display:none}.control-row{gap:13px}.progress-row{width:145px}.now-art{width:45px;height:45px}.like{display:none}.mobile-nav{display:flex;position:fixed;z-index:35;bottom:var(--player);left:0;right:0;background:#0c0c0c;border-top:1px solid var(--line);padding:9px 12px;justify-content:space-around}.mobile-nav button{background:none;color:#888;font-size:9px;display:grid;gap:4px;justify-items:center}.mobile-nav button span{font-size:17px}.mobile-nav button.active{color:var(--accent)}.app{padding-bottom:calc(var(--player) + 65px)}}
 @media(max-width:480px){.topbar{gap:8px}.search{height:39px}.login{padding:9px 12px}.hero{min-height:375px}.hero p{font-size:11px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.quick-grid{grid-template-columns:1fr 1fr;gap:8px}.quick{min-height:65px;gap:8px}.quick-art{width:62px;height:65px}.quick strong{font-size:9px}.quick small{font-size:8px}.section-head h2{font-size:20px}.mix-grid{grid-template-columns:1fr}.upload-panel{align-items:flex-start;flex-direction:column}.upload-btn{width:100%}.now-meta strong{font-size:10px}.now-meta small{font-size:8px}.control-row{gap:9px}.control{font-size:13px}.control.main-play{width:31px;height:31px}.progress-row{width:120px}.player{height:84px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ 
+.now-playing{position:fixed;inset:0;z-index:100;background:#080908;display:none;overflow:auto;color:#fff}
+.now-playing.open{display:block;animation:npIn .35s ease}
+@keyframes npIn{from{opacity:0;transform:scale(1.015)}to{opacity:1;transform:scale(1)}}
+.np-backdrop{position:absolute;inset:-12%;background:radial-gradient(ellipse at 70% 35%,#647d3b88,transparent 42%),radial-gradient(ellipse at 20% 80%,#243b3288,transparent 40%),#080908;filter:blur(35px);transition:background .5s}
+.np-close{position:fixed;right:28px;top:24px;z-index:4;width:43px;height:43px;border-radius:50%;background:#ffffff16;border:1px solid #ffffff25;font-size:28px;color:#fff}
+.np-shell{position:relative;z-index:1;max-width:1250px;min-height:100vh;margin:auto;padding:30px 5vw 22px;display:flex;flex-direction:column}
+.np-topline,.np-bottom{display:flex;justify-content:space-between;align-items:center;color:#aaa;font-size:9px;letter-spacing:2px;font-weight:800}
+.np-live{color:#d7ff62}.np-live i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#d7ff62;box-shadow:0 0 12px #d7ff62;margin-right:7px}
+.np-content{flex:1;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:7vw;padding:45px 0}
+.np-art-wrap{position:relative;aspect-ratio:1;max-width:510px;width:100%;margin:auto;display:grid;place-items:center}
+.np-big-art{width:72%;aspect-ratio:1;border-radius:24px;display:grid;place-items:center;font:800 clamp(65px,11vw,145px) "Space Grotesk";letter-spacing:-8px;color:white;text-shadow:0 10px 45px #0009;box-shadow:0 35px 100px #0009;position:relative;z-index:2;background:radial-gradient(circle at 30% 20%,#f1a17c,#7c3038 44%,#24131c);transition:background .4s,transform .4s}
+.np-orbit{position:absolute;border:1px solid #d7ff6245;border-radius:50%;width:90%;height:90%;animation:npOrbit 18s linear infinite}
+.orbit-b{width:105%;height:105%;border-color:#ffffff18;animation-direction:reverse;animation-duration:27s}
+@keyframes npOrbit{to{transform:rotate(360deg)}}
+.np-equalizer{position:absolute;z-index:3;bottom:5%;display:flex;align-items:center;gap:5px;height:48px;opacity:.8}
+.np-equalizer i{width:3px;height:10px;border-radius:5px;background:#d7ff62;animation:eq .8s ease-in-out infinite alternate;animation-play-state:paused}
+.np-equalizer i:nth-child(2n){animation-delay:.2s}.np-equalizer i:nth-child(3n){animation-delay:.4s}.np-equalizer i:nth-child(4n){animation-delay:.1s}
+@keyframes eq{to{height:42px}}
+.now-playing.playing .np-equalizer i{animation-play-state:running}
+.np-info{max-width:510px}.np-eyebrow{font-size:9px;letter-spacing:3px;color:#d7ff62;font-weight:800;margin-bottom:18px}
+.np-info h2{font:700 clamp(34px,5vw,62px)/1.05 "Space Grotesk";letter-spacing:-2.5px;overflow-wrap:anywhere}
+.np-info>p{font-size:16px;color:#c0c0c0;margin-top:12px}
+.np-tags{display:flex;gap:10px;align-items:center;color:#d7ff62;font-size:9px;letter-spacing:1.7px;font-weight:800;margin-top:22px}
+.np-progress{display:flex;align-items:center;gap:12px;color:#aaa;font-size:10px;margin-top:42px}
+.np-progress input{flex:1;min-width:0;accent-color:var(--accent)}
+.np-controls{display:flex;align-items:center;gap:25px;margin-top:25px}
+.np-controls button{background:none;color:#ddd;font-size:19px}
+.np-controls .np-play{width:58px;height:58px;border-radius:50%;background:#d7ff62;color:#111;font-size:19px}
+.np-extra{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:15px}
+.np-extra button{background:none;color:#ddd;font-size:13px}.np-extra button.active{color:#d7ff62}
+.np-volume{display:flex;align-items:center;gap:12px;color:#888;font-size:8px;letter-spacing:1.5px}.np-volume input{width:105px;accent-color:var(--accent)}
+.np-signature{border-left:2px solid #d7ff62;padding:10px 0 10px 14px;margin-top:35px;display:grid;gap:6px}
+.np-signature b{font-size:9px;letter-spacing:2px;color:#d7ff62}.np-signature span{font-size:10px;line-height:1.6;color:#999}
+.np-bottom{border-top:1px solid #ffffff20;padding-top:18px}
+@media(max-width:760px){.np-shell{padding:23px 22px 18px}.np-close{right:16px;top:15px;width:38px;height:38px}.np-topline{padding-right:48px;font-size:7px;letter-spacing:1px}.np-content{grid-template-columns:1fr;gap:20px;padding:38px 0 25px}.np-art-wrap{max-width:min(68vw,330px)}.np-big-art{border-radius:17px}.np-info{width:100%;max-width:none}.np-eyebrow{margin-bottom:10px}.np-info h2{font-size:35px}.np-info>p{font-size:13px;margin-top:7px}.np-tags{margin-top:13px}.np-progress{margin-top:25px}.np-controls{justify-content:center;margin-top:18px;gap:25px}.np-extra{margin-top:20px}.np-signature{margin-top:22px}.np-bottom{font-size:6px;letter-spacing:1px}}
+@media(prefers-reduced-motion:reduce){.np-orbit,.np-equalizer i{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -131,49 +169,49 @@ input[type=range]{accent-color:var(--accent);cursor:pointer}.progress{width:100%
 <main class="main">
   <header class="topbar">
     <div class="history"><button class="circle-btn" aria-label="Назад">‹</button><button class="circle-btn" aria-label="Вперёд">›</button></div>
-    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Треки, исполнители, альбомы..." autocomplete="off"></label>
+    <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Ищи треки, исполнителей и альбомы..." autocomplete="off"></label>
     <div class="top-actions"><button class="quality" id="qualityBtn">音  HI-RES READY</button><a class="login" href="login.html">ВОЙТИ</a></div>
   </header>
 
   <section class="hero" id="hero">
-    <div class="hero-copy"><div class="kicker">TEHNOCELL INDOSTRI PRESENTS · 001</div><h1>THE WORLD.<br><span>IN SOUND.</span></h1><p>Открой музыку за пределами привычного. Новые голоса, неожиданные жанры и твоя собственная звуковая вселенная.</p><div class="hero-buttons"><button class="primary" id="exploreBtn">ОТКРЫТЬ MIVO ↗</button><button class="secondary" id="uploadHero">ДОБАВИТЬ СВОЮ МУЗЫКУ +</button></div></div>
-    <div class="hero-stamp">MUSIC WITHOUT BOUNDARIES</div>
+    <div class="hero-copy"><div class="kicker">МУЗЫКАЛЬНАЯ ПЛАТФОРМА TEHNOCELL INDOSTRI</div><h1>ТВОЙ МИР.<br><span>В ЗВУКЕ.</span></h1><p>Открывай новые голоса, находи любимые звучания и собирай собственную музыкальную вселенную.</p><div class="hero-buttons"><button class="primary" id="exploreBtn">СЛУШАТЬ МУЗЫКУ ↗</button><button class="secondary" id="uploadHero">ДОБАВИТЬ СВОЮ МУЗЫКУ +</button></div></div>
+    <div class="hero-stamp">МУЗЫКА БЕЗ ГРАНИЦ</div>
   </section>
 
   <section class="section">
-    <div class="section-head"><div><h2>Твоя музыка начинается здесь</h2><p>Быстрый доступ к любимым направлениям</p></div><button class="text-btn" data-jump="genres">ВСЕ ЖАНРЫ ↗</button></div>
+    <div class="section-head"><div><h2>Твоя музыка начинается здесь</h2><p>Быстрый доступ к музыкальным направлениям</p></div><button class="text-btn" data-jump="genres">ВСЕ ЖАНРЫ ↗</button></div>
     <div class="quick-grid">
-      <button class="quick" data-filter="Electronic"><span class="quick-art art1">01</span><span><strong>Electronic pulse</strong><small>Электроника и ритм</small></span></button>
-      <button class="quick" data-filter="Ambient"><span class="quick-art art2">02</span><span><strong>Deep focus</strong><small>Звуки для концентрации</small></span></button>
-      <button class="quick" data-filter="Indie"><span class="quick-art art3">03</span><span><strong>Indie discovery</strong><small>Новые независимые голоса</small></span></button>
-      <button class="quick" data-filter="Jazz"><span class="quick-art art4">04</span><span><strong>Late night jazz</strong><small>Ночной музыкальный город</small></span></button>
+      <button class="quick" data-filter="Electronic"><span class="quick-art art1">01</span><span><strong>Электронный импульс</strong><small>Электроника и ритм</small></span></button>
+      <button class="quick" data-filter="Ambient"><span class="quick-art art2">02</span><span><strong>Глубокая концентрация</strong><small>Звуки для концентрации</small></span></button>
+      <button class="quick" data-filter="Indie"><span class="quick-art art3">03</span><span><strong>Открытие инди</strong><small>Новые независимые голоса</small></span></button>
+      <button class="quick" data-filter="Jazz"><span class="quick-art art4">04</span><span><strong>Ночной джаз</strong><small>Ночной музыкальный город</small></span></button>
     </div>
   </section>
 
   <section class="section" id="discover">
-    <div class="section-head"><div><h2>Выбрано для открытия</h2><p>Демонстрационная витрина MIVO — каталог будет подключаться отдельно</p></div><button class="text-btn" id="shuffleBtn">ПЕРЕМЕШАТЬ ↗</button></div>
+    <div class="section-head"><div><h2>Открой для себя</h2><p>Демонстрационная витрина MIVO — каталог будет подключаться отдельно</p></div><button class="text-btn" id="shuffleBtn">СЛУЧАЙНЫЙ ПОРЯДОК ↗</button></div>
     <div class="cards" id="trackGrid"></div><div class="empty" id="emptyState">Ничего не найдено. Попробуй другой запрос.</div>
   </section>
 
   <section class="section" id="genres">
     <div class="section-head"><div><h2>Музыка без границ</h2><p>Исследуй звучание разных направлений</p></div></div>
     <div class="mix-grid">
-      <button class="mix" data-filter="Electronic" style="--mix:#a1c34c"><small>01 / ELECTRONIC</small><strong>Новая энергия</strong><span>От deep house до techno</span></button>
-      <button class="mix" data-filter="Ambient" style="--mix:#577f9d"><small>02 / AMBIENT</small><strong>Тихая глубина</strong><span>Пространство и атмосфера</span></button>
-      <button class="mix" data-filter="Indie" style="--mix:#9873a9"><small>03 / INDIE</small><strong>За пределами мейнстрима</strong><span>Независимая сцена</span></button>
+      <button class="mix" data-filter="Electronic" style="--mix:#a1c34c"><small>01 / ЭЛЕКТРОНИКА</small><strong>Новая энергия</strong><span>От deep house до techno</span></button>
+      <button class="mix" data-filter="Ambient" style="--mix:#577f9d"><small>02 / ЭМБИЕНТ</small><strong>Тихая глубина</strong><span>Пространство и атмосфера</span></button>
+      <button class="mix" data-filter="Indie" style="--mix:#9873a9"><small>03 / ИНДИ</small><strong>За пределами мейнстрима</strong><span>Независимая сцена</span></button>
     </div>
   </section>
 
   <section class="section">
     <div class="discovery">
-      <div class="discovery-main"><small>MIVO DISCOVERY ENGINE</small><h3>Не просто слушай.<br>Открывай новое.</h3><p>В будущем MIVO будет собирать персональные подборки на основе твоих вкусов, истории и настроения.</p></div>
-      <div class="discovery-side"><div class="feature"><div><strong>Твоя музыкальная карта</strong><small>Жанры и сцены со всего мира</small></div><b>↗</b></div><div class="feature"><div><strong>Качество без компромиссов</strong><small>Lossless и Hi-Res — в дорожной карте</small></div><b>◉</b></div><div class="feature"><div><strong>Независимые артисты</strong><small>Открытая сцена для новых имён</small></div><b>✳</b></div></div>
+      <div class="discovery-main"><small>СИСТЕМА ОТКРЫТИЙ MIVO</small><h3>Не просто слушай.<br>Открывай новое.</h3><p>В будущем MIVO будет собирать персональные подборки на основе твоих вкусов, истории и настроения.</p></div>
+      <div class="discovery-side"><div class="feature"><div><strong>Музыкальная карта</strong><small>Жанры и сцены со всего мира</small></div><b>↗</b></div><div class="feature"><div><strong>Высокое качество звука</strong><small>Lossless и Hi-Res — в дорожной карте</small></div><b>◉</b></div><div class="feature"><div><strong>Независимые исполнители</strong><small>Открытая сцена для новых имён</small></div><b>✳</b></div></div>
     </div>
   </section>
 
   <section class="section" id="library">
-    <div class="section-head"><div><h2>Твоя коллекция</h2><p>Добавляй аудиофайлы с устройства — они останутся локально в этом браузере</p></div></div>
-    <div class="upload-panel"><div><strong>Загрузи собственные треки</strong><p>На этом этапе можно воспроизводить личные аудиофайлы прямо в MIVO.<br>Файлы не отправляются на сервер.</p></div><button class="upload-btn" id="uploadBtn">ВЫБРАТЬ АУДИОФАЙЛЫ +</button><input id="fileInput" type="file" accept="audio/*" multiple></div>
+    <div class="section-head"><div><h2>Твоя медиатека</h2><p>Добавляй аудиофайлы с устройства — они останутся локально в этом браузере</p></div></div>
+    <div class="upload-panel"><div><strong>Добавь свою музыку</strong><p>На этом этапе можно воспроизводить личные аудиофайлы прямо в MIVO.<br>Файлы не отправляются на сервер.</p></div><button class="upload-btn" id="uploadBtn">ВЫБРАТЬ АУДИОФАЙЛЫ +</button><input id="fileInput" type="file" accept="audio/*" multiple></div>
     <div class="cards" id="localGrid" style="margin-top:20px"></div>
     <p class="notice">Важно: это первая интерактивная веб-версия. Глобальный лицензированный каталог, аккаунты, синхронизация между устройствами и потоковое Hi-Res-воспроизведение потребуют отдельной серверной и лицензионной инфраструктуры.</p>
   </section>
@@ -182,10 +220,28 @@ input[type=range]{accent-color:var(--accent);cursor:pointer}.progress{width:100%
 </div>
 
 <footer class="player">
-  <div class="now"><div class="now-art" id="nowArt">M</div><div class="now-meta"><strong id="nowTitle">Выбери свой первый трек</strong><small id="nowArtist">MIVO · MUSIC WITHOUT BOUNDARIES</small></div><button class="like" id="likeBtn" aria-label="Нравится">♡</button></div>
-  <div class="controls"><div class="control-row"><button class="control" id="shuffle" title="Перемешать">⤨</button><button class="control" id="prev" title="Предыдущий">◀</button><button class="control main-play" id="play" title="Воспроизвести">▶</button><button class="control" id="next" title="Следующий">▶</button><button class="control" id="repeat" title="Повтор">↻</button></div><div class="progress-row"><span id="currentTime">0:00</span><input class="progress" id="progress" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div></div>
+  <div class="now"><div class="now-art" id="nowArt">M</div><div class="now-meta"><strong id="nowTitle">Выбери свой первый трек</strong><small id="nowArtist">ТВОЯ МУЗЫКА · MIVO</small></div><button class="like" id="likeBtn" aria-label="Нравится">♡</button></div>
+  <div class="controls"><div class="control-row"><button class="control" id="shuffle" title="Случайный порядок">⤨</button><button class="control" id="prev" title="Предыдущий трек">◀</button><button class="control main-play" id="play" title="Воспроизвести">▶</button><button class="control" id="next" title="Следующий трек">▶</button><button class="control" id="repeat" title="Повторить трек">↻</button></div><div class="progress-row"><span id="currentTime">0:00</span><input class="progress" id="progress" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div></div>
   <div class="volume"><span>◖</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
 </footer>
+ 
+<div class="now-playing" id="nowPlaying" aria-hidden="true">
+  <div class="np-backdrop" id="npBackdrop"></div>
+  <button class="np-close" id="npClose" aria-label="Закрыть">×</button>
+  <div class="np-shell">
+    <div class="np-topline"><span>MIVO / СЕЙЧАС ИГРАЕТ</span><span class="np-live"><i></i> ЗВУКОВАЯ СЦЕНА</span></div>
+    <div class="np-content">
+      <div class="np-art-wrap"><div class="np-orbit orbit-a"></div><div class="np-orbit orbit-b"></div><div class="np-big-art" id="npArt">M</div><div class="np-equalizer" id="npEqualizer"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="np-info"><div class="np-eyebrow">ТВОЙ МУЗЫКАЛЬНЫЙ МОМЕНТ</div><h2 id="npTitle">Выбери трек</h2><p id="npArtist">MIVO</p><div class="np-tags"><span id="npGenre">МУЗЫКА</span><span>·</span><span>ПУЛЬС MIVO</span></div>
+        <div class="np-progress"><span id="npCurrent">0:00</span><input id="npProgress" type="range" min="0" max="100" value="0"><span id="npDuration">0:00</span></div>
+        <div class="np-controls"><button id="npShuffle" aria-label="Случайный порядок">⤨</button><button id="npPrev" aria-label="Предыдущий трек">◀</button><button class="np-play" id="npPlay" aria-label="Воспроизвести">▶</button><button id="npNext" aria-label="Следующий трек">▶</button><button id="npRepeat" aria-label="Повтор">↻</button></div>
+        <div class="np-extra"><button id="npLike">♡ <span>В избранное</span></button><div class="np-volume">ГРОМКОСТЬ <input id="npVolume" type="range" min="0" max="1" step=".01" value=".8"></div></div>
+        <div class="np-signature"><b>ПУЛЬС MIVO</b><span>Обложка превращается в живую звуковую сцену. Это пространство твоего прослушивания.</span></div>
+      </div>
+    </div>
+    <div class="np-bottom"><span>TEHNOCELL INDOSTRI</span><span>MIVO — МУЗЫКА, КОТОРАЯ ОЖИВАЕТ</span></div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 <audio id="audio" preload="metadata"></audio>
 
@@ -217,18 +273,22 @@ function card(t,i,local=false){const d=document.createElement("div");d.className
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(list=demoTracks){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block"}
 function renderLocal(){localGrid.replaceChildren();localTracks.forEach((t,i)=>localGrid.appendChild(card(t,i,true)))}
-function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];saveRecent(t);audio.src=t.url;audio.load();audio.play().then(()=>{$("play").textContent="Ⅱ"}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶"});$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+t.genre;$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));}
-function togglePlay(){if(!audio.src){playTrack(0);return}if(audio.paused){audio.play().then(()=>$("play").textContent="Ⅱ").catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶"}}
+function genreRu(g){return ({Electronic:"Электроника",Ambient:"Эмбиент",Indie:"Инди",Jazz:"Джаз",World:"Музыка мира",Local:"Локальный файл"})[g]||g||"Музыка"}
+function syncNowPlaying(){const t=allTracks()[current];if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");$("npBackdrop").style.background="radial-gradient(ellipse at 70% 35%,rgba(215,255,98,.17),transparent 42%),radial-gradient(ellipse at 20% 80%,rgba(90,120,80,.25),transparent 40%),#080908";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>"}
+function openNowPlaying(){if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
+function closeNowPlaying(){$("nowPlaying").classList.remove("open");$("nowPlaying").setAttribute("aria-hidden","true");document.body.style.overflow=""}
+function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];saveRecent(t);audio.src=t.url;audio.load();audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"});$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
+function togglePlay(){if(!audio.src){playTrack(0);return}if(audio.paused){audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶";$("npPlay").textContent="▶";$("nowPlaying").classList.remove("playing")}}
 function move(step){let n=current+step;if(shuffle&&allTracks().length>1){n=Math.floor(Math.random()*allTracks().length)}else if(n<0)n=allTracks().length-1;else if(n>=allTracks().length)n=0;playTrack(n)}
 function fmt(s){if(!Number.isFinite(s))return"0:00";return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0")}
 $("play").onclick=togglePlay;$("next").onclick=()=>move(1);$("prev").onclick=()=>{if(audio.currentTime>3){audio.currentTime=0}else move(-1)};
 $("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.color=shuffle?"var(--accent)":"#888";toast(shuffle?"Перемешивание включено":"Обычный порядок")};
 $("repeat").onclick=()=>{repeat=!repeat;audio.loop=repeat;$("repeat").style.color=repeat?"var(--accent)":"#888"};
-$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current],key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);$("likeBtn").classList.toggle("on",liked.has(key));toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
-audio.addEventListener("timeupdate",()=>{if(audio.duration){$("progress").value=audio.currentTime/audio.duration*100;$("currentTime").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration)}});
-$("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
-$("volume").oninput=e=>audio.volume=e.target.value;audio.volume=.8;
-audio.addEventListener("ended",()=>{if(!repeat)move(1)});
+$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current],key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);$("likeBtn").classList.toggle("on",liked.has(key));if($("nowPlaying").classList.contains("open"))syncNowPlaying();toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
+audio.addEventListener("timeupdate",()=>{if(audio.duration){const p=audio.currentTime/audio.duration*100;$("progress").value=p;$("npProgress").value=p;$("currentTime").textContent=fmt(audio.currentTime);$("npCurrent").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration);$("npDuration").textContent=fmt(audio.duration)}});
+$("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};$("npProgress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
+$("volume").oninput=e=>{audio.volume=e.target.value;$("npVolume").value=e.target.value};$("npVolume").oninput=e=>{audio.volume=e.target.value;$("volume").value=e.target.value};audio.volume=.8;
+audio.addEventListener("play",()=>{$("nowPlaying").classList.add("playing");$("npPlay").textContent="Ⅱ"});audio.addEventListener("pause",()=>{$("nowPlaying").classList.remove("playing");$("npPlay").textContent="▶"});audio.addEventListener("ended",()=>{if(!repeat)move(1)});
 $("searchInput").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();render(allTracks().filter(t=>(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(q)))});
 function filterGenre(g){$("searchInput").value=g;render(allTracks().filter(t=>(t.genre+" "+t.title+" "+t.artist).toLowerCase().includes(g.toLowerCase())));$("discover").scrollIntoView({behavior:"smooth"});}
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>filterGenre(b.dataset.filter)));
@@ -236,7 +296,7 @@ $("shuffleBtn").onclick=()=>{const a=[...demoTracks].sort(()=>Math.random()-.5);
 $("exploreBtn").onclick=()=>$("discover").scrollIntoView({behavior:"smooth"});
 $("uploadBtn").onclick=$("uploadHero").onclick=()=>$("fileInput").click();
 $("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{const url=URL.createObjectURL(f);localTracks.push({title:f.name.replace(/\.[^.]+$/,""),artist:"Твоя медиатека",genre:"Local",style:"c"+(1+Math.floor(Math.random()*12)),symbol:"♪",url})});renderLocal();toast("Добавлено файлов: "+files.length);e.target.value=""};
-$("qualityBtn").onclick=()=>toast("Hi-Res — в планах. Сейчас качество зависит от исходного аудиофайла.");
+$("qualityBtn").onclick=()=>toast("Звук высокого разрешения — в планах. Сейчас качество зависит от исходного файла.");$("npClose").onclick=closeNowPlaying;$("nowTitle").onclick=openNowPlaying;$("nowArt").onclick=openNowPlaying;document.querySelector(".now").style.cursor="pointer";document.querySelector(".now").addEventListener("click",e=>{if(e.target.closest("button"))return;openNowPlaying()});$("npPlay").onclick=togglePlay;$("npNext").onclick=()=>move(1);$("npPrev").onclick=()=>move(-1);$("npShuffle").onclick=()=>$("shuffle").click();$("npRepeat").onclick=()=>$("repeat").click();$("npLike").onclick=()=>$("likeBtn").click();$("npShuffle").style.color="#888";document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNowPlaying()});
 document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
 document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":"discover";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover"||view==="playlists")render();if(view==="playlists")toast("Создание пользовательских плейлистов — следующий этап MIVO");$(target).scrollIntoView({behavior:"smooth"})});
 render();renderLocal();
