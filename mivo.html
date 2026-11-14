@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080808;--panel:#111;--panel2:#171717;--line:rgba(255,255,255,.09);--muted:#858585;--white:#f7f7f7;--accent:#d7ff62;--sidebar:238px;--player:94px}
+:root{--bg:#050505;--panel:#101010;--panel2:#181818;--line:rgba(255,255,255,.12);--muted:#929292;--white:#fff;--accent:#fff;--sidebar:238px;--player:94px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--white);font-family:"DM Sans",Arial,sans-serif;min-height:100vh;overflow-x:hidden}
@@ -145,6 +145,23 @@ input[type=range]{accent-color:var(--accent);cursor:pointer}.progress{width:100%
 @media(max-width:760px){.np-shell{padding:23px 22px 18px}.np-close{right:16px;top:15px;width:38px;height:38px}.np-topline{padding-right:48px;font-size:7px;letter-spacing:1px}.np-content{grid-template-columns:1fr;gap:20px;padding:38px 0 25px}.np-art-wrap{max-width:min(68vw,330px)}.np-big-art{border-radius:17px}.np-info{width:100%;max-width:none}.np-eyebrow{margin-bottom:10px}.np-info h2{font-size:35px}.np-info>p{font-size:13px;margin-top:7px}.np-tags{margin-top:13px}.np-progress{margin-top:25px}.np-controls{justify-content:center;margin-top:18px;gap:25px}.np-extra{margin-top:20px}.np-signature{margin-top:22px}.np-bottom{font-size:6px;letter-spacing:1px}}
 @media(prefers-reduced-motion:reduce){.np-orbit,.np-equalizer i{animation:none!important}}
 
+
+/* MIVO monochrome identity */
+:root{--accent:#fff}
+body{background:#050505}
+.brand-mark,.primary,.login,.card-play{background:#fff!important;color:#050505!important;box-shadow:none}
+.brand-name span,.hero h1 span,.np-live,.np-eyebrow,.np-tags,.np-signature b,.text-btn:hover{color:#fff!important}
+.hero{background:linear-gradient(115deg,#191919,#080808 72%)!important}
+.hero:before{background:radial-gradient(circle at 45% 45%,#ffffff35,#ffffff13 30%,transparent 68%)!important}
+.kicker{color:#ccc!important}.hero p{color:#c5c5c5}
+.art1,.art2,.art3,.art4,.c1,.c2,.c3,.c4,.c5,.c6,.c7,.c8,.c9,.c10,.c11,.c12{background:linear-gradient(145deg,#666,#171717 70%,#050505)!important}
+.mix:after{background:#aaa!important}.discovery-main{background:linear-gradient(125deg,#292929,#101010)!important}
+.discovery-main small,.feature b{color:#fff!important}
+.np-backdrop{background:radial-gradient(ellipse at 70% 35%,#ffffff30,transparent 42%),radial-gradient(ellipse at 20% 80%,#77777735,transparent 40%),#080808!important}
+.np-live i,.np-equalizer i{background:#fff!important;box-shadow:0 0 12px #ffffff70}
+.np-big-art{background:linear-gradient(145deg,#777,#171717 70%,#050505)!important}
+.np-orbit{border-color:#ffffff35!important}.np-play{background:#fff!important}
+
 </style>
 </head>
 <body>
@@ -260,7 +277,7 @@ const demoTracks=[
  {title:"Blue Geometry",artist:"Lunar Arcade",genre:"Ambient",style:"c11",symbol:"BG",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"},
  {title:"Slow Fire",artist:"June Avenue",genre:"Indie",style:"c12",symbol:"SF",url:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3"}
 ];
-let localTracks=[],queue=[...demoTracks],current=-1,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),repeat=false,shuffle=false;
+let localTracks=[],catalogTracks=[],queue=[...demoTracks],current=-1,searchTimer=null,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),repeat=false,shuffle=false;
 function readStore(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||"null");return value??fallback}catch(_){return fallback}}
 function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(_){toast("Не удалось сохранить данные в этом браузере")}}
 function trackKey(t){return t.url||t.title+"::"+t.artist}
@@ -268,8 +285,8 @@ function saveRecent(t){const key=trackKey(t);recent=[key,...recent.filter(x=>x!=
 const audio=document.getElementById("audio"),grid=document.getElementById("trackGrid"),localGrid=document.getElementById("localGrid");
 const $=id=>document.getElementById(id);
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
-function allTracks(){return [...demoTracks,...localTracks]}
-function card(t,i,local=false){const d=document.createElement("div");d.className="music-card";d.innerHTML='<div class="cover '+(t.style||"c1")+'"><b>'+escapeHtml(t.symbol||"♪")+'</b><span class="card-play">▶</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+'</small>';d.addEventListener("click",()=>playTrack(local?demoTracks.length+i:i));return d}
+function allTracks(){return [...demoTracks,...localTracks,...catalogTracks]}
+function card(t,i,local=false){const d=document.createElement("div");d.className="music-card";const art=t.artworkUrl100?'background-image:url("'+escapeHtml(t.artworkUrl100.replace("100x100","600x600"))+'");background-size:cover;background-position:center':"";d.innerHTML='<div class="cover '+(t.style||"c1")+'" style="'+art+'"><b>'+(t.artworkUrl100?"":escapeHtml(t.symbol||"♪"))+'</b><span class="card-play">▶</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small>';d.addEventListener("click",()=>playTrack(allTracks().indexOf(t)));return d}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function render(list=demoTracks){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block"}
 function renderLocal(){localGrid.replaceChildren();localTracks.forEach((t,i)=>localGrid.appendChild(card(t,i,true)))}
@@ -289,7 +306,8 @@ audio.addEventListener("timeupdate",()=>{if(audio.duration){const p=audio.curren
 $("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};$("npProgress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
 $("volume").oninput=e=>{audio.volume=e.target.value;$("npVolume").value=e.target.value};$("npVolume").oninput=e=>{audio.volume=e.target.value;$("volume").value=e.target.value};audio.volume=.8;
 audio.addEventListener("play",()=>{$("nowPlaying").classList.add("playing");$("npPlay").textContent="Ⅱ"});audio.addEventListener("pause",()=>{$("nowPlaying").classList.remove("playing");$("npPlay").textContent="▶"});audio.addEventListener("ended",()=>{if(!repeat)move(1)});
-$("searchInput").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();render(allTracks().filter(t=>(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(q)))});
+async function searchWorldwideSongs(query){const status=$("emptyState");status.style.display="block";status.textContent="Ищем песни в музыкальных каталогах…";try{const term=encodeURIComponent(query);const urls=["https://itunes.apple.com/search?term="+term+"&entity=song&limit=25&country=ru","https://itunes.apple.com/search?term="+term+"&entity=song&limit=25&country=us"];const responses=await Promise.all(urls.map(u=>fetch(u).then(r=>{if(!r.ok)throw new Error("search");return r.json()})));const seen=new Set();catalogTracks=responses.flatMap(x=>x.results||[]).filter(x=>{if(!x.previewUrl||seen.has(x.trackId))return false;seen.add(x.trackId);return true}).map(x=>({title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Music",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:x.previewUrl,symbol:"♪",style:"c1"}));const local=allTracks().filter(t=>!catalogTracks.includes(t)&&(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(query.toLowerCase()));render([...catalogTracks,...local]);status.textContent=catalogTracks.length?"Найдено "+catalogTracks.length+" песен. Доступны ознакомительные фрагменты.":"Ничего не найдено. Попробуй другое написание или запрос на английском.";status.style.display=catalogTracks.length||local.length?"none":"block"}catch(err){catalogTracks=[];const local=allTracks().filter(t=>(t.title+" "+t.artist+" "+t.genre).toLowerCase().includes(query.toLowerCase()));render(local);status.style.display=local.length?"none":"block";status.textContent="Не удалось подключиться к музыкальному поиску. Проверь интернет и попробуй ещё раз."}}
+$("searchInput").addEventListener("input",e=>{const q=e.target.value.trim();clearTimeout(searchTimer);if(!q){catalogTracks=[];render(demoTracks);return}searchTimer=setTimeout(()=>searchWorldwideSongs(q),450)});
 function filterGenre(g){$("searchInput").value=g;render(allTracks().filter(t=>(t.genre+" "+t.title+" "+t.artist).toLowerCase().includes(g.toLowerCase())));$("discover").scrollIntoView({behavior:"smooth"});}
 document.querySelectorAll("[data-filter]").forEach(b=>b.addEventListener("click",()=>filterGenre(b.dataset.filter)));
 $("shuffleBtn").onclick=()=>{const a=[...demoTracks].sort(()=>Math.random()-.5);render(a);toast("Подборка перемешана")};
