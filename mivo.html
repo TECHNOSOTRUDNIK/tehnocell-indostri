@@ -499,6 +499,19 @@ body[data-mivo-theme="mono"]{--accent:#fff;background:#080808!important}
 input[type=range]{accent-color:var(--accent)!important}
 @media(max-width:760px){.mivo-dynamic-backdrop{opacity:.14;filter:blur(35px)}}
 
+/* MIVO artwork consistency and gentle album-colour motion */
+.mivo-dynamic-backdrop{background-repeat:no-repeat;animation:mivoArtworkDrift 34s ease-in-out infinite alternate;filter:blur(54px) saturate(1.18);opacity:.3}
+.mivo-dynamic-backdrop.has-art{opacity:.28}
+@keyframes mivoArtworkDrift{from{transform:scale(1.12) translate3d(-1%,0,0)}to{transform:scale(1.2) translate3d(1%,1%,0)}}
+.np-backdrop{transition:background-image .8s ease,filter 1s ease}
+.now-art.has-cover:after{display:none}
+.mini-equalizer{display:none;align-items:center;gap:2px;height:18px;margin-left:3px;flex-shrink:0}
+.mini-equalizer i{display:block;width:2px;height:4px;border-radius:3px;background:var(--accent);opacity:.9;animation:mivoMiniBars .62s ease-in-out infinite alternate;animation-play-state:paused}
+.mini-equalizer i:nth-child(2){animation-delay:.13s}.mini-equalizer i:nth-child(3){animation-delay:.27s}.mini-equalizer i:nth-child(4){animation-delay:.08s}.mini-equalizer i:nth-child(5){animation-delay:.2s}
+@keyframes mivoMiniBars{to{height:17px}}
+body.mivo-audio-playing .mini-equalizer{display:flex}
+body.mivo-audio-playing .mini-equalizer i{animation-play-state:running}
+@media(max-width:600px){.mini-equalizer{margin-left:0}.now{gap:8px}.now-art{width:43px;height:43px}}
 </style>
 </head>
 <body>
@@ -943,10 +956,18 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   $("lyricsTrackTitle").textContent=t.title;$("lyricsTrackArtist").textContent=t.artist;message("Ищем текст песни…");
   try{
    const url="https://lrclib.net/api/search?track_name="+encodeURIComponent(t.title)+"&artist_name="+encodeURIComponent(t.artist);
-   const response=await fetch(url,{headers:{"Accept":"application/json"}});if(!response.ok)throw new Error("lyrics");
-   const results=await response.json();if(token!==lyricToken)return;
-   if(!Array.isArray(results)||!results.length){message("Текст этой композиции пока не найден.");return}
-   const item=results.find(x=>String(x.trackName||"").toLowerCase()===String(t.title).toLowerCase())||results[0];
+   let response=await fetch(url,{headers:{"Accept":"application/json"}});
+   if(!response.ok)throw new Error("lyrics");
+   let results=await response.json();if(token!==lyricToken)return;
+   if(!Array.isArray(results)||!results.length){
+    const fallbackUrl="https://lrclib.net/api/search?track_name="+encodeURIComponent(t.title);
+    response=await fetch(fallbackUrl,{headers:{"Accept":"application/json"}});
+    if(response.ok)results=await response.json();
+   }
+   if(token!==lyricToken)return;
+   if(!Array.isArray(results)||!results.length){message("Текст этой композиции пока не найден в открытой базе.");return}
+   const normalized=s=>String(s||"").trim().toLowerCase();
+   const item=results.find(x=>normalized(x.trackName)===normalized(t.title)&&normalized(x.artistName)===normalized(t.artist))||results.find(x=>normalized(x.trackName)===normalized(t.title))||results[0];
    lyricLines=parseLyrics(item.syncedLyrics||"");const box=$("lyricsContent");box.replaceChildren();
    if(lyricLines.length){lyricLines.forEach((line,i)=>{const el=document.createElement("button");el.type="button";el.className="lyrics-line";el.textContent=line.text;el.addEventListener("click",()=>{if(Number.isFinite(audio.duration))audio.currentTime=line.time});box.appendChild(el)});highlightLyrics()}
    else if(item.plainLyrics){item.plainLyrics.split(/\r?\n/).filter(Boolean).forEach(line=>{const el=document.createElement("div");el.className="lyrics-line";el.textContent=line;box.appendChild(el)})}
@@ -967,20 +988,43 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
 })();
 
 
-/* MIVO PLAYER ART + LYRICS ENTRYPOINT */
+/* MIVO PLAYER ARTWORK + AMBIENT + MINI EQUALIZER */
 (function(){
- const oldSync=syncNowPlaying;
- syncNowPlaying=function(){
-  oldSync();
+ const originalSync=syncNowPlaying;
+ function artwork(t,size){
+  const raw=t&&(t.artworkUrl100||t.artworkUrl||t.cover||"");
+  if(!raw)return "";
+  return raw.replace(/100x100/g,size+"x"+size).replace(/\d+x\d+bb/,size+"x"+size+"bb");
+ }
+ function paintTrack(){
   const t=allTracks()[current];if(!t)return;
-  const art=t.artworkUrl100?t.artworkUrl100.replace("100x100","600x600"):"";
-  const ambient=$("mivoDynamicBackdrop");
-  if(ambient){ambient.style.backgroundImage=art?'linear-gradient(100deg,#080910d9,#080910b8),url("'+art+'")':'radial-gradient(ellipse at 75% 15%,#55407888,transparent 42%),radial-gradient(ellipse at 20% 80%,#174e6988,transparent 45%)';ambient.classList.toggle("has-art",!!art)}
-  $("nowArt").textContent=art?"":(t.symbol||"♪");
-  $("nowArt").style.backgroundImage=art?'url("'+art.replace("600x600","300x300")+'")':"";
-  $("nowArt").style.backgroundSize="cover";$("nowArt").style.backgroundPosition="center";
- };
+  const art=artwork(t,1000),small=artwork(t,300);
+  const mini=$("nowArt"),big=$("npArt"),back=$("npBackdrop"),ambient=$("mivoDynamicBackdrop");
+  if(mini){
+   mini.textContent=small?"":(t.symbol||"♪");
+   mini.style.setProperty("background-image",small?'url("'+small+'")':"linear-gradient(145deg,#555,#111)","important");
+   mini.style.backgroundSize="cover";mini.style.backgroundPosition="center";
+   mini.classList.toggle("has-cover",!!small);
+  }
+  if(big){
+   big.textContent=art?"":(t.symbol||"♪");
+   big.style.setProperty("background-image",art?'url("'+art+'")':"radial-gradient(circle at 35% 25%,#777,#171717 60%,#070707)","important");
+   big.style.backgroundSize="cover";big.style.backgroundPosition="center";big.style.color=art?"transparent":"#fff";
+  }
+  if(back)back.style.background=art?'linear-gradient(120deg,#05050535,#05050570),url("'+art+'") center/cover no-repeat':'#080808';
+  if(ambient){ambient.style.backgroundImage=art?'url("'+art+'")':'radial-gradient(ellipse at center,#303030,transparent 70%)';ambient.style.backgroundPosition="center";ambient.classList.toggle("has-art",!!art)}
+ }
+ syncNowPlaying=function(){originalSync();paintTrack()};
+ const miniNow=document.querySelector(".now");
+ if(miniNow&&!$("miniEqualizer")){
+  const bars=document.createElement("span");bars.id="miniEqualizer";bars.className="mini-equalizer";bars.setAttribute("aria-label","Воспроизведение");
+  bars.innerHTML="<i></i><i></i><i></i><i></i><i></i>";miniNow.appendChild(bars);
+ }
+ const audioEl=$("audio");
+ function updateBars(){document.body.classList.toggle("mivo-audio-playing",!!audioEl&&!audioEl.paused)}
+ audioEl.addEventListener("play",updateBars);audioEl.addEventListener("pause",updateBars);audioEl.addEventListener("ended",updateBars);
  $("miniLyrics").addEventListener("click",()=>$("openLyrics").click());
+ paintTrack();updateBars();
 })();
 
 </script>
