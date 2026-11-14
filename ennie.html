@@ -1322,6 +1322,7 @@ input, textarea, [contenteditable="true"], [role="textbox"] {
 
       <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite" aria-label="ENNIE готовит ответ">
         <div class="typing-keys" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <span class="typing-label">ENNIE думает…</span>
         
       </div>
 
@@ -5463,3 +5464,4 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
 </style>
 </body>
 </html>
+\n/* ENNIE typing status label — restored */\n.typing-label{display:inline-flex;align-items:center;color:var(--muted,#929292);font-size:12px;font-weight:500;letter-spacing:.15px;line-height:1.3;white-space:nowrap;animation:ennieTypingLabel 1.8s ease-in-out infinite;}\n@keyframes ennieTypingLabel{0%,100%{opacity:.58}50%{opacity:1}}\n@media(prefers-reduced-motion:reduce){.typing-label{animation:none;opacity:1}}\n
