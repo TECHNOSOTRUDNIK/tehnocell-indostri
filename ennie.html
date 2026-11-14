@@ -1077,7 +1077,7 @@ input, textarea, [contenteditable="true"], [role="textbox"] {
   animation:ennieTouchGlow 1.8s ease-out;
 }
 #coreWrap.touching::after { animation:ennieTouchRipple .85s ease-out; }
-#coreWrap.touching { animation:ennieTouchPress .42s ease-out; }
+#coreWrap.touching { animation:ennieTouchPress .62s cubic-bezier(.2,.8,.2,1); }
 #coreWrap.cooldown::before { opacity:.48; }
 @keyframes ennieTouchGlow {
   0% { opacity:.35; filter:blur(12px) brightness(1); }
@@ -1090,8 +1090,8 @@ input, textarea, [contenteditable="true"], [role="textbox"] {
 }
 @keyframes ennieTouchPress {
   0%,100% { transform:scale(1); }
-  35% { transform:scale(.992); }
-  70% { transform:scale(1.002); }
+  28% { transform:scale(.965); }
+  58% { transform:scale(1.035); }
 }
 #coreWrap:focus-visible { outline:1px solid rgba(255,255,255,.65); outline-offset:8px; border-radius:50%; }
 @media (prefers-reduced-motion: reduce) {
