@@ -35,7 +35,7 @@ button,input{font:inherit}button{color:inherit;border:0;cursor:pointer}a{color:i
 .main{margin-left:var(--sidebar);padding:0 36px 30px;max-width:1800px}
 .topbar{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:sticky;top:0;z-index:15;background:linear-gradient(#080808 75%,transparent);backdrop-filter:blur(14px)}
 .history{display:flex;gap:8px}.circle-btn{width:34px;height:34px;border-radius:50%;background:#171717;color:#aaa;font-size:17px}
-.search{height:43px;max-width:460px;flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;background:#151515;border:1px solid transparent;border-radius:30px;transition:.25s}
+.search{position:relative;height:43px;max-width:460px;flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;background:#151515;border:1px solid transparent;border-radius:30px;transition:.25s}
 .search:focus-within{border-color:#555;background:#191919}.search span{color:#777;font-size:17px}.search input{width:100%;background:transparent;border:0;outline:0;color:white;font-size:12px}.search input::placeholder{color:#777}
 .top-actions{display:flex;align-items:center;gap:10px}.quality{border:1px solid #333;background:transparent;padding:9px 12px;border-radius:20px;color:#aaa;font-size:9px;letter-spacing:1px;font-weight:800}
 .login{background:var(--accent);color:#111;border-radius:22px;padding:8px 14px 8px 9px;font-size:10px;font-weight:900;display:inline-flex;align-items:center;gap:8px;max-width:155px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.auth-dot{width:25px;height:25px;flex:0 0 25px;border-radius:50%;background:#111;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:900;border:1px solid #777}.login.signed-in{background:#202020;color:#fff;border:1px solid #555}.login.signed-in .auth-dot{background:#fff;color:#111;border-color:#fff}
@@ -206,6 +206,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 .search-clear{display:none;background:#ffffff12;color:#fff;width:23px;height:23px;border-radius:50%;font-size:17px;line-height:1}
 .search.has-value .search-clear{display:grid;place-items:center}
 .search.has-value .search-shortcut{display:none}
+.search-suggestions{display:none;position:absolute;top:calc(100% + 10px);left:0;right:0;z-index:70;padding:8px;background:#111;border:1px solid #383838;border-radius:15px;box-shadow:0 18px 55px #000b;max-height:min(430px,65vh);overflow:auto}
+.search-suggestions.open{display:block}.suggestion-label{padding:8px 10px 10px;color:#888;font-size:9px;letter-spacing:1.6px;font-weight:800;text-transform:uppercase}
+.suggestion-row{width:100%;display:flex;align-items:center;gap:11px;padding:8px;border-radius:9px;background:transparent;text-align:left;min-width:0}
+.suggestion-row:hover,.suggestion-row:focus{background:#242424;outline:0}.suggestion-art{width:42px;height:42px;flex:0 0 42px;border-radius:7px;object-fit:cover;background:#252525}
+.suggestion-meta{min-width:0;flex:1}.suggestion-meta strong,.suggestion-meta small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.suggestion-meta strong{font-size:11px;color:#fff}.suggestion-meta small{font-size:9px;color:#888;margin-top:4px}
+.suggestion-play{font-size:12px;color:#aaa;padding:7px}.suggestion-empty{padding:14px 10px;color:#888;font-size:10px;line-height:1.6}
 .top-actions{gap:12px}
 .quality{height:37px;border-color:#ffffff1a;color:#aaa;letter-spacing:1.3px;transition:.2s}
 .quality:hover{border-color:#fff;color:#fff;background:#ffffff08}
@@ -397,6 +404,16 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
  .personal-mix-grid,.playlist-grid{grid-template-columns:1fr}.personal-mix{min-height:135px}.playlist-art{width:78px;height:78px;flex-basis:78px}
 }
 @media(max-width:480px){.personal-mix strong{font-size:18px}.playlist-card{gap:10px;padding:10px}.playlist-actions button{padding:7px 8px}}
+.mivo-modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:20px;background:#000b;backdrop-filter:blur(12px)}
+.mivo-modal.open{display:flex;animation:modalFade .18s ease-out}@keyframes modalFade{from{opacity:0}to{opacity:1}}
+.modal-card{width:min(100%,430px);padding:27px;border:1px solid #444;border-radius:20px;background:linear-gradient(145deg,#191919,#0b0b0b);box-shadow:0 28px 90px #000c;animation:modalRise .22s ease-out}
+@keyframes modalRise{from{transform:translateY(12px) scale(.98)}to{transform:translateY(0) scale(1)}}
+.modal-kicker{font-size:9px;letter-spacing:2px;color:#888;font-weight:800}.modal-card h3{font:700 25px "Space Grotesk";margin:12px 0 8px}
+.modal-card p{font-size:11px;line-height:1.65;color:#888;margin-bottom:20px}.modal-input{width:100%;height:49px;border:1px solid #444;border-radius:10px;background:#080808;color:#fff;padding:0 14px;outline:0;font-size:13px}
+.modal-input:focus{border-color:#aaa;box-shadow:0 0 0 3px #ffffff0c}.modal-counter{display:flex;justify-content:space-between;color:#666;font-size:9px;margin-top:8px}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:23px}.modal-actions button{padding:11px 17px;border-radius:22px;font-size:10px;font-weight:800}
+.modal-cancel{background:#242424;color:#ccc;border:1px solid #444}.modal-create{background:#fff;color:#111}
+@media(max-width:520px){.search-suggestions{left:-4px;right:-4px}.modal-card{padding:23px 19px}}
 </style>
 </head>
 <body>
@@ -422,7 +439,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 <main class="main">
   <header class="topbar">
     <div class="history"><button class="circle-btn" aria-label="Назад">‹</button><button class="circle-btn" aria-label="Вперёд">›</button></div>
-    <label class="search"><span class="search-symbol">⌕</span><input id="searchInput" type="search" placeholder="Ищи треки, исполнителей и альбомы..." autocomplete="off"><kbd class="search-shortcut">Ctrl K</kbd><button class="search-clear" id="searchClear" type="button" aria-label="Очистить поиск">×</button></label>
+    <label class="search"><span class="search-symbol">⌕</span><input id="searchInput" type="text" placeholder="Ищи треки, исполнителей и альбомы..." autocomplete="off"><kbd class="search-shortcut">Ctrl K</kbd><button class="search-clear" id="searchClear" type="button" aria-label="Очистить поиск">×</button><div class="search-suggestions" id="searchSuggestions" role="listbox" aria-label="Результаты поиска"></div></label>
     <div class="top-actions"><button class="quality" id="qualityBtn">音  HI-RES READY</button><a class="login" id="authButton" href="login.html" aria-label="Войти в TEHNOCELL ID"><span class="auth-dot" id="authDot">M</span><span id="authLabel">ВОЙТИ</span></a></div>
   </header>
 
@@ -514,7 +531,13 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
     <div class="np-bottom"><span>TEHNOCELL INDOSTRI</span><span>MIVO — МУЗЫКА, КОТОРАЯ ОЖИВАЕТ</span></div>
   </div>
 </div>
-<div class="toast" id="toast"></div>
+<div class="mivo-modal" id="playlistModal" aria-hidden="true"><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="playlistModalTitle">
+<div class="modal-kicker">MIVO / YOUR COLLECTION</div><h3 id="playlistModalTitle">Новый плейлист</h3>
+<p>Дай своей подборке имя. Потом сможешь добавлять в неё любые доступные композиции.</p>
+<input class="modal-input" id="playlistNameInput" type="text" maxlength="48" placeholder="Например, Ночной город" autocomplete="off">
+<div class="modal-counter"><span>Название плейлиста</span><span id="playlistNameCount">0 / 48</span></div>
+<div class="modal-actions"><button class="modal-cancel" id="playlistCancel" type="button">ОТМЕНА</button><button class="modal-create" id="playlistCreate" type="button">СОЗДАТЬ</button></div>
+</div></div><div class="toast" id="toast"></div>
 <audio id="audio" preload="none"></audio>
 
 <script>
@@ -567,6 +590,16 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":
 function render(list=allTracks()){grid.replaceChildren();list.forEach((t)=>grid.appendChild(card(t,allTracks().indexOf(t))));$("emptyState").style.display=list.length?"none":"block";$("resultCount").textContent=list.length+" "+(list.length===1?"композиция":list.length>1&&list.length<5?"композиции":"композиций")}
 function renderLocal(){localGrid.replaceChildren();localTracks.forEach((t,i)=>localGrid.appendChild(card(t,i,true)))}
 function savePlaylists(){writeStore("mivo_playlists_v1",playlists)}
+function openPlaylistModal(onCreate){
+ const modal=$("playlistModal"),input=$("playlistNameInput");input.value="";$("playlistNameCount").textContent="0 / 48";
+ modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";window.playlistModalCallback=onCreate||null;setTimeout(()=>input.focus(),80);
+}
+function closePlaylistModal(){const modal=$("playlistModal");modal.classList.remove("open");modal.setAttribute("aria-hidden","true");document.body.style.overflow="";window.playlistModalCallback=null}
+function submitPlaylistModal(){const input=$("playlistNameInput"),name=input.value.trim();if(!name){input.focus();input.style.borderColor="#fff";return}const p=createPlaylist(name);if(p&&window.playlistModalCallback)window.playlistModalCallback(p);closePlaylistModal()}
+$("playlistNameInput").addEventListener("input",e=>{$("playlistNameCount").textContent=e.target.value.length+" / 48";e.target.style.borderColor="#444"});
+$("playlistCreate").addEventListener("click",submitPlaylistModal);$("playlistCancel").addEventListener("click",closePlaylistModal);
+$("playlistModal").addEventListener("click",e=>{if(e.target.id==="playlistModal")closePlaylistModal()});
+$("playlistNameInput").addEventListener("keydown",e=>{if(e.key==="Enter")submitPlaylistModal();if(e.key==="Escape")closePlaylistModal()});
 function createPlaylist(name){
  name=(name||"").trim().slice(0,48);if(!name){toast("Введи название плейлиста");return null}
  const p={id:"pl_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7),name,tracks:[],createdAt:Date.now()};
@@ -578,7 +611,7 @@ function addTrackToPlaylist(track,playlistId){
  p.tracks.push(key);savePlaylists();renderPlaylists();toast("Добавлено в «"+p.name+"»");
 }
 function choosePlaylistForTrack(track){
- if(!playlists.length){const name=prompt("Сначала создай плейлист. Как его назвать?");if(name){const p=createPlaylist(name);if(p)addTrackToPlaylist(track,p.id)}return}
+ if(!playlists.length){openPlaylistModal(p=>addTrackToPlaylist(track,p.id));return}
  const choices=playlists.map((p,i)=>(i+1)+". "+p.name).join("\n");
  const answer=prompt("В какой плейлист добавить композицию? Введи номер:\n"+choices+"\n\nВведи 0, чтобы создать новый.");
  if(answer===null)return;
@@ -627,7 +660,7 @@ function renderMixes(){
  });
  empty.style.display=tracks.length?"none":"block";
 }
-$("createPlaylistBtn").addEventListener("click",()=>{const name=prompt("Как назовём новый плейлист?");if(name)createPlaylist(name)});
+$("createPlaylistBtn").addEventListener("click",()=>openPlaylistModal());
 function genreRu(g){return ({Electronic:"Электроника",Ambient:"Эмбиент",Indie:"Инди",Jazz:"Джаз",World:"Музыка мира",Local:"Локальный файл"})[g]||g||"Музыка"}
 function syncNowPlaying(){const t=allTracks()[current];if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");$("npBackdrop").style.background="radial-gradient(ellipse at 70% 35%,rgba(255,255,255,.16),transparent 42%),radial-gradient(ellipse at 20% 80%,rgba(150,150,150,.16),transparent 40%),#080808";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>"}
 function openNowPlaying(){if(current<0&&!allTracks().length){toast("Сначала добавь аудиофайл или найди музыку через поиск");return}if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
@@ -652,6 +685,18 @@ audio.addEventListener("timeupdate",()=>{if(audio.duration){const p=audio.curren
 $("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};$("npProgress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
 $("volume").oninput=e=>{audio.volume=e.target.value;$("npVolume").value=e.target.value};$("npVolume").oninput=e=>{audio.volume=e.target.value;$("volume").value=e.target.value};audio.volume=.8;
 audio.addEventListener("play",()=>{$("nowPlaying").classList.add("playing");$("npPlay").textContent="Ⅱ"});audio.addEventListener("pause",()=>{$("nowPlaying").classList.remove("playing");$("npPlay").textContent="▶"});audio.addEventListener("ended",()=>{if(!repeat)move(1)});
+function renderSearchSuggestions(list,query,message){
+ const box=$("searchSuggestions");if(!box)return;box.replaceChildren();if(!query||!query.trim()){box.classList.remove("open");return}
+ const title=document.createElement("div");title.className="suggestion-label";title.textContent="Результаты поиска";box.appendChild(title);
+ if(!list.length){const empty=document.createElement("div");empty.className="suggestion-empty";empty.textContent=message||"Пока ничего не найдено. Попробуй изменить запрос.";box.appendChild(empty);box.classList.add("open");return}
+ list.slice(0,7).forEach(track=>{const row=document.createElement("button");row.type="button";row.className="suggestion-row";
+ const art=document.createElement("img");art.className="suggestion-art";art.alt="";art.loading="lazy";art.src=track.artworkUrl100||"";
+ const meta=document.createElement("span");meta.className="suggestion-meta";const name=document.createElement("strong");name.textContent=track.title;
+ const details=document.createElement("small");details.textContent=track.artist+" · "+(track.collectionName||track.genre||"Композиция");
+ const play=document.createElement("span");play.className="suggestion-play";play.textContent="▶";meta.append(name,details);row.append(art,meta,play);
+ row.addEventListener("click",()=>{const idx=allTracks().findIndex(t=>trackKey(t)===trackKey(track));if(idx>=0)playTrack(idx);box.classList.remove("open");$("searchInput").value=track.title;$("searchInput").dispatchEvent(new Event("input"))});box.appendChild(row)});
+ box.classList.add("open");
+}
 async function searchWorldwideSongs(query){
  const status=$("emptyState"),sequence=++searchSequence;
  if(searchController)searchController.abort();searchController=new AbortController();
@@ -665,18 +710,18 @@ async function searchWorldwideSongs(query){
   if(sequence!==searchSequence)return;
   const seen=new Set();
   catalogTracks=results.filter(x=>x.previewUrl&&!seen.has(x.trackId)&&(seen.add(x.trackId),true)).map(x=>({id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Music",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:x.previewUrl,symbol:"♪",style:"c1"}));
-  render([...catalogTracks,...localTracks]);renderMixes();
+  renderSearchSuggestions(catalogTracks,query);render([...catalogTracks,...localTracks]);renderMixes();
   status.textContent=catalogTracks.length?"Найдено "+catalogTracks.length+" песен. Доступны ознакомительные фрагменты.":"Ничего не найдено. Попробуй другой запрос.";
   status.style.display=catalogTracks.length||localTracks.length?"none":"block";
  }catch(err){
   if(err.name==="AbortError"||sequence!==searchSequence)return;
-  catalogTracks=[];render(localTracks);status.style.display=localTracks.length?"none":"block";status.textContent="Не удалось подключиться к музыкальному поиску. Проверь интернет и попробуй ещё раз.";
+  catalogTracks=[];renderSearchSuggestions([],query,"Не удалось подключиться к музыкальному поиску.");render(localTracks);status.style.display=localTracks.length?"none":"block";status.textContent="Не удалось подключиться к музыкальному поиску. Проверь интернет и попробуй ещё раз.";
  }
 }
 $("searchInput").addEventListener("input",e=>{
  const q=e.target.value.trim();clearTimeout(searchTimer);
- if(!q){searchSequence++;if(searchController)searchController.abort();catalogTracks=[];render(allTracks());renderMixes();return}
- searchTimer=setTimeout(()=>searchWorldwideSongs(q),600);
+ if(!q){searchSequence++;if(searchController)searchController.abort();catalogTracks=[];$("searchSuggestions").classList.remove("open");render(allTracks());renderMixes();return}
+ searchTimer=setTimeout(()=>searchWorldwideSongs(q),450);
 });
 function filterGenre(g){$("searchInput").value=g;render(allTracks().filter(t=>(t.genre+" "+t.title+" "+t.artist).toLowerCase().includes(g.toLowerCase())));$("mivo-music").scrollIntoView({behavior:"smooth"});}
 
@@ -706,7 +751,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  });
  const search=$("searchInput"),searchWrap=document.querySelector(".search");
  function syncSearch(){searchWrap.classList.toggle("has-value",!!search.value.trim())}
- search.addEventListener("input",syncSearch);syncSearch();
+ search.addEventListener("input",syncSearch);syncSearch();search.addEventListener("keydown",e=>{if(e.key==="Escape")$("searchSuggestions").classList.remove("open")});document.addEventListener("click",e=>{if(!searchWrap.contains(e.target))$("searchSuggestions").classList.remove("open")});
  $("searchClear").addEventListener("click",()=>{search.value="";search.dispatchEvent(new Event("input"));search.focus();syncSearch()});
  document.addEventListener("keydown",e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();search.focus();search.select()}
