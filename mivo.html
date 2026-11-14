@@ -352,6 +352,10 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #fff;
 }
 @media(prefers-reduced-motion:reduce){.hero-disc:before,.hero-disc:after,.hero-wave i,.brand-mark:after{animation:none!important}}
 
+
+/* Search: keep focus subtle, without the bright white outline */
+.search:focus-within{border-color:#303030!important;box-shadow:none!important;background:#191919}
+.search input:focus-visible{outline:none!important;box-shadow:none!important}
 </style>
 </head>
 <body>
