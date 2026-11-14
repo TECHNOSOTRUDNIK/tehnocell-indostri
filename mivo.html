@@ -589,6 +589,38 @@ body[data-mivo-theme]{background:radial-gradient(ellipse at 78% 0%,color-mix(in 
 @media(max-width:800px){.hits-section .section-head{align-items:flex-start}.np-big-art{animation:albumBreath 13s ease-in-out infinite}}
 @media(prefers-reduced-motion:reduce){.np-big-art,.np-big-art:after,.np-equalizer i,.mini-equalizer i,.hits-grid .music-card{animation:none!important}}
 
+
+/* MIVO performance profile: reduce full-screen repaints and background filters */
+.np-backdrop{filter:none!important;transition:opacity .35s ease!important;animation:none!important;background-size:cover!important}
+.mivo-dynamic-backdrop{display:none!important;filter:none!important;animation:none!important;transition:none!important}
+.np-backdrop:after{animation:none!important;opacity:.08!important}
+.np-art-wrap:before{filter:none!important;animation:none!important;opacity:.25!important}
+.hero:before{filter:none!important;animation:none!important;will-change:auto!important}
+.np-big-art{animation:none!important;transform:translateZ(0);box-shadow:0 14px 42px #0008!important}
+.np-big-art:after{display:none!important;animation:none!important}
+.np-equalizer i,.mini-equalizer i{box-shadow:none!important;will-change:transform;animation-duration:1.15s!important}
+.hit-rank{backdrop-filter:none!important}
+.hits-grid .music-card{animation:none!important}
+@media(max-width:800px){
+ html{scroll-behavior:auto}
+ .topbar,.player,.mobile-nav,.mivo-modal,.lyrics-modal{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ .np-backdrop{filter:none!important;inset:0!important;transform:none!important;opacity:.95!important;background:
+  radial-gradient(ellipse at 18% 24%,color-mix(in srgb,var(--mivo-color-1) 34%,transparent),transparent 58%),
+  radial-gradient(ellipse at 82% 78%,color-mix(in srgb,var(--mivo-color-2) 30%,transparent),transparent 58%),
+  #090a10!important}
+ .mivo-dynamic-backdrop{display:none!important}
+ .np-art-wrap:before{display:none!important}
+ .np-big-art{animation:none!important;box-shadow:0 10px 28px #0008!important}
+ .np-big-art:after{display:none!important}
+ .hero:before{display:none!important}
+ .player{box-shadow:0 -5px 18px #0007!important}
+ .section{content-visibility:auto;contain-intrinsic-size:650px}
+ .music-card,.mix,.playlist-card{contain:content}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
 </style>
 </head>
 <body>
@@ -812,8 +844,10 @@ async function choosePlaylistForTrack(track){
  if(answer.trim()==="0"){const name=await mivoPrompt("Новый плейлист","Придумай название подборки.","Название плейлиста");if(name){const p=createPlaylist(name);if(p)addTrackToPlaylist(track,p.id)}return}
  const p=playlists[Number(answer)-1];if(p)addTrackToPlaylist(track,p.id);else toast("Такого номера нет");
 }
-async function loadMivoHits(){
- const grid=$("hitGrid"),status=$("hitsStatus");if(!grid||!status)return;
+let mivoHitsLoaded=false,mivoHitsLoading=false;
+async function loadMivoHits(force=false){
+ const grid=$("hitGrid"),status=$("hitsStatus");if(!grid||!status||mivoHitsLoading||(!force&&mivoHitsLoaded))return;
+ mivoHitsLoading=true;
  status.style.display="block";status.textContent="Загружаем актуальный чарт…";grid.replaceChildren();
  try{
   const response=await fetch("https://rss.applemarketingtools.com/api/v2/ru/music/most-played/25/songs.json",{cache:"no-store"});
@@ -830,12 +864,17 @@ async function loadMivoHits(){
   }).filter(Boolean);
   hitTracks.forEach((t,i)=>{const node=card(t,i);node.dataset.chartRank=String(i+1);const rank=document.createElement("span");rank.className="hit-rank";rank.textContent=String(i+1).padStart(2,"0");node.querySelector(".cover").appendChild(rank);grid.appendChild(node)});
   status.textContent=hitTracks.length?"Чарт Apple Music · обновляется регулярно · доступно композиций: "+hitTracks.length:"В чарте пока нет композиций с доступным предпрослушиванием.";
-  status.style.display=hitTracks.length?"block":"none";
+  status.style.display=hitTracks.length?"block":"none";mivoHitsLoaded=true;
  }catch(error){
   hitTracks=[];status.textContent="Не удалось загрузить чарт. Попробуй обновить страницу позже.";status.style.display="block";
- }
+ }finally{mivoHitsLoading=false}
 }
-$("refreshHits").addEventListener("click",loadMivoHits);
+$("refreshHits").addEventListener("click",()=>loadMivoHits(true));
+const hitsSection=$("hits");
+if("IntersectionObserver"in window&&hitsSection){
+ const hitsObserver=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){loadMivoHits();hitsObserver.disconnect()}},{rootMargin:"220px"});
+ hitsObserver.observe(hitsSection);
+}else{window.addEventListener("load",()=>setTimeout(()=>loadMivoHits(),1800),{once:true})}
 
 function renderPlaylists(){
  const root=$("playlistGrid"),empty=$("playlistEmpty");if(!root)return;root.replaceChildren();
@@ -984,7 +1023,7 @@ $("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{co
 $("qualityBtn").onclick=()=>toast("Звук высокого разрешения — в планах. Сейчас качество зависит от исходного файла.");$("npClose").onclick=closeNowPlaying;$("nowTitle").onclick=openNowPlaying;$("nowArt").onclick=openNowPlaying;document.querySelector(".now").style.cursor="pointer";document.querySelector(".now").addEventListener("click",e=>{if(e.target.closest("button"))return;openNowPlaying()});$("npPlay").onclick=togglePlay;$("npNext").onclick=()=>move(1);$("npPrev").onclick=()=>move(-1);$("npShuffle").onclick=()=>$("shuffle").click();$("npRepeat").onclick=()=>$("repeat").click();$("npLike").onclick=()=>$("likeBtn").click();$("npShuffle").style.color="#888";document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNowPlaying()});
 document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
 document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":view==="playlists"?"playlists":view==="mixes"?"mixes":"mivo-music";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover")render(allTracks());else if(view==="mixes")renderMixes();else if(view==="playlists")renderPlaylists();$(target).scrollIntoView({behavior:"smooth"})});
-render(allTracks());renderLocal();renderMixes();renderPlaylists();loadMivoHits();
+render(allTracks());renderLocal();renderMixes();renderPlaylists();
 
 /* MIVO polish interactions */
 (function(){
