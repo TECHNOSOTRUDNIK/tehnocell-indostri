@@ -1478,5 +1478,77 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  window.addEventListener("resize",collectBars,{passive:true});
 })();
 </script>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const defaults={accent:"#b99cff",theme:"dark",font:"normal",density:"comfortable",corners:"soft",columns:"auto",motion:true,ambient:true,autoplay:true,rememberVolume:true,autoPlayer:false,autoLyrics:false,dataSaver:false,reduceMotion:false,language:"ru",start:"home"};
+ let p={...defaults};
+ try{p={...p,...JSON.parse(localStorage.getItem("mivo_ui_settings_v1")||"{}")}}catch(_){}
+ const ids={accent:"uiAccent",theme:"uiTheme",font:"uiFont",density:"uiDensity",corners:"uiCorners",columns:"uiColumns",motion:"uiMotion",ambient:"uiAmbient",autoplay:"uiAutoplay",rememberVolume:"uiRememberVolume",autoPlayer:"uiAutoPlayer",autoLyrics:"uiAutoLyrics",dataSaver:"uiDataSaver",reduceMotion:"uiReduceMotion",language:"uiLanguage",start:"uiStart"};
+ function apply(){
+  document.documentElement.style.setProperty("--accent",p.accent);
+  document.body.dataset.uiTheme=p.theme;
+  document.body.dataset.uiFont=p.font;
+  document.body.dataset.uiCorners=p.corners;
+  document.body.dataset.uiColumns=p.columns;
+  document.body.classList.toggle("mivo-compact",p.density==="compact");
+  document.body.classList.toggle("mivo-no-motion",!p.motion||p.reduceMotion||p.dataSaver);
+  document.body.classList.toggle("mivo-no-ambient",!p.ambient||p.dataSaver);
+  Object.entries(ids).forEach(([key,id])=>{
+   const el=$(id);if(!el)return;
+   if(el.type==="checkbox")el.checked=!!p[key];else el.value=p[key]||defaults[key];
+  });
+ }
+ Object.entries(ids).forEach(([key,id])=>{
+  const el=$(id);if(!el)return;
+  el.addEventListener("change",()=>{
+   if(el.type==="checkbox")p[key]=el.checked;else p[key]=el.value;
+   localStorage.setItem("mivo_ui_settings_v1",JSON.stringify(p));apply();toast("Настройки сохранены");
+  });
+ });
+ $("uiReset").addEventListener("click",()=>{
+  p={...defaults};localStorage.setItem("mivo_ui_settings_v1",JSON.stringify(p));apply();toast("Настройки MIVO сброшены");
+ });
+ apply();window.MIVO_UI_PREFS=()=>({...p});
+ const tabs=document.querySelector(".catalog-tabs");
+ function renderReleases(){
+  const root=$("releaseGrid");if(!root)return;
+  const tracks=window.allTracks?window.allTracks():[];
+  const groups=new Map();
+  tracks.forEach(t=>{
+   const name=t.collectionName||"Синглы";
+   const key=name+"::"+t.artist;
+   if(!groups.has(key))groups.set(key,{name,artist:t.artist,tracks:[],art:t.artworkUrl100});
+   groups.get(key).tracks.push(t);
+  });
+  root.replaceChildren();
+  [...groups.values()].sort((a,b)=>b.tracks.length-a.tracks.length).forEach(group=>{
+   const button=document.createElement("button");button.className="release-tile";button.type="button";
+   const img=document.createElement("img");img.loading="lazy";img.src=(group.art||"").replace("100x100","300x300");img.alt="";
+   const title=document.createElement("strong");title.textContent=group.name;
+   const meta=document.createElement("small");meta.textContent=group.artist+" · "+group.tracks.length+" композ.";
+   button.append(img,title,meta);
+   button.addEventListener("click",()=>{
+    root.hidden=true;$("trackGrid").hidden=false;$("catalogHint").hidden=true;
+    window.render(group.tracks);$("resultCount").textContent=group.tracks.length+" композиций";
+   });
+   root.appendChild(button);
+  });
+  if(!groups.size){const note=document.createElement("p");note.className="catalog-hint";note.textContent="Релизы появятся, когда в каталоге будут доступны альбомные данные.";root.appendChild(note)}
+ }
+ tabs?.querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{
+  const name=button.dataset.catalogTab;
+  tabs.querySelectorAll("button").forEach(item=>item.classList.toggle("active",item===button));
+  $("trackGrid").hidden=name!=="tracks";
+  $("releaseGrid").hidden=name!=="releases";
+  $("catalogHint").hidden=name!=="releases";
+  if(name==="releases")renderReleases();
+  if(name==="mixes"||name==="wave"){
+   const view=name==="wave"?"wave":"mixes";
+   document.querySelector('[data-view="'+view+'"]')?.click();
+  }
+ }));
+})();
+</script>
 </body>
 </html>
