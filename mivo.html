@@ -627,6 +627,7 @@ body[data-mivo-theme]{background:radial-gradient(ellipse at 78% 0%,color-mix(in 
 #npEqualizer i{height:28px!important}
 .mini-equalizer i{height:8px!important}
 
+.lyrics-loading{white-space:pre-wrap}
 </style>
 <style>
 /* MIVO mobile-first layout and expanded settings */
@@ -1248,6 +1249,7 @@ $("likeBtn").onclick=()=>{const t=getCurrentTrack();if(!t)return;const key=track
  const savedLikes=readStore("mivo_liked_tracks_v1",{});if(liked.has(key))savedLikes[key]=trackSnapshot(t);else delete savedLikes[key];writeStore("mivo_liked_tracks_v1",savedLikes);
  renderMixes();$("likeBtn").classList.toggle("on",liked.has(key));if($("nowPlaying").classList.contains("open"))syncNowPlaying();toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
 audio.addEventListener("timeupdate",()=>{if(audio.duration){const p=audio.currentTime/audio.duration*100;$("progress").value=p;$("npProgress").value=p;$("currentTime").textContent=fmt(audio.currentTime);$("npCurrent").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration);$("npDuration").textContent=fmt(audio.duration)}});
+audio.addEventListener("timeupdate",()=>{if(typeof highlightLyrics==="function")highlightLyrics()});
 $("progress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};$("npProgress").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};
 $("volume").oninput=e=>{audio.volume=e.target.value;$("npVolume").value=e.target.value};$("npVolume").oninput=e=>{audio.volume=e.target.value;$("volume").value=e.target.value};audio.volume=.8;
 audio.addEventListener("play",()=>{$("nowPlaying").classList.add("playing");$("npPlay").textContent="Ⅱ"});audio.addEventListener("pause",()=>{$("nowPlaying").classList.remove("playing");$("npPlay").textContent="▶"});audio.addEventListener("ended",()=>{let s={};try{s=JSON.parse(localStorage.getItem("mivo_ui_settings_v1")||"{}")}catch(_){}if(!repeat&&s.autoplay!==false)move(1)});
@@ -1431,10 +1433,16 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    if(token!==lyricToken)return;
    if(!Array.isArray(results)||!results.length){message("Текст этой композиции пока не найден в открытой базе.");return}
    const normalized=s=>String(s||"").trim().toLowerCase();
-   const item=results.find(x=>normalized(x.trackName)===normalized(t.title)&&normalized(x.artistName)===normalized(t.artist))||results.find(x=>normalized(x.trackName)===normalized(t.title))||results[0];
-   lyricLines=parseLyrics(item.syncedLyrics||"");const box=$("lyricsContent");box.replaceChildren();
-   if(lyricLines.length){lyricLines.forEach((line,i)=>{const el=document.createElement("button");el.type="button";el.className="lyrics-line";el.textContent=line.text;el.addEventListener("click",()=>{if(Number.isFinite(audio.duration))audio.currentTime=line.time});box.appendChild(el)});highlightLyrics()}
-   else if(item.plainLyrics){item.plainLyrics.split(/\r?\n/).filter(Boolean).forEach(line=>{const el=document.createElement("div");el.className="lyrics-line";el.textContent=line;box.appendChild(el)})}
+   const exactTitle=results.filter(x=>normalized(x.trackName)===normalized(t.title));
+   const artistKey=normalized(t.artist);
+   const item=exactTitle.find(x=>normalized(x.artistName)===artistKey)||exactTitle.find(x=>artistKey.length>3&&(normalized(x.artistName).includes(artistKey)||artistKey.includes(normalized(x.artistName))));
+   if(!item){message("Не нашли точное совпадение текста для этой композиции. Не будем показывать слова от другой песни.");return}
+   const box=$("lyricsContent");box.replaceChildren();
+   const synced=parseLyrics(item.syncedLyrics||"");
+   const durationMismatch=Number.isFinite(audio.duration)&&item.duration&&Math.abs(Number(item.duration)-audio.duration)>12;
+   if(synced.length&&!durationMismatch){lyricLines=synced;lyricLines.forEach(line=>{const el=document.createElement("button");el.type="button";el.className="lyrics-line";el.textContent=line.text;el.addEventListener("click",()=>{if(Number.isFinite(audio.duration))audio.currentTime=line.time});box.appendChild(el)});highlightLyrics()}
+   else if(item.plainLyrics){lyricLines=[];item.plainLyrics.split(/\r?\n/).filter(Boolean).forEach(line=>{const el=document.createElement("div");el.className="lyrics-line";el.textContent=line;box.appendChild(el)});if(durationMismatch){const note=document.createElement("div");note.className="lyrics-loading";note.textContent="Сейчас играет короткий ознакомительный фрагмент. Текст показан без синхронизации, чтобы строки не расходились с музыкой.";box.prepend(note)}}
+   else if(durationMismatch)message("Для этой песни доступен только короткий фрагмент, поэтому синхронизация полного текста невозможна.");
    else message("Для этой версии песни текст не найден.");
   }catch(e){if(token===lyricToken)message("Не удалось загрузить текст. Проверь интернет и попробуй ещё раз.")}
  }
