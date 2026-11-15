@@ -1649,7 +1649,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  types.querySelectorAll("button").forEach(b=>b.onclick=()=>{searchType=b.dataset.searchType;types.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));doFilter(lastQuery)});
  const searchInput=$("catalogSearchInput"),topInput=$("searchInput");
  if(searchInput){searchInput.addEventListener("input",e=>{lastQuery=e.target.value.trim();if(topInput)topInput.value=lastQuery;if(lastQuery){activate("catalog");doFilter(lastQuery);if(topInput)topInput.dispatchEvent(new Event("input"))}else{resultGrid.replaceChildren();suggestions.replaceChildren()}});$("catalogSearchClear").onclick=()=>{searchInput.value="";lastQuery="";if(topInput){topInput.value="";topInput.dispatchEvent(new Event("input"))}doFilter("")}}
- if(topInput)topInput.addEventListener("focus",()=>{activate("catalog");if(searchInput)searchInput.value=topInput.value});
+ if(topInput){topInput.addEventListener("focus",()=>{activate("catalog");if(searchInput)searchInput.value=topInput.value});topInput.addEventListener("input",()=>{if(searchInput)searchInput.value=topInput.value;lastQuery=topInput.value.trim();setTimeout(()=>{if(lastQuery)doFilter(lastQuery)},520)})}
  function artistLink(el){if(!el||el.dataset.artistLink)return;el.dataset.artistLink="1";el.classList.add("now-artist-link");el.title="Открыть страницу исполнителя";el.addEventListener("click",e=>{e.stopPropagation();const t=trackData()[current];if(t?.artist)showArtist(t.artist)})}
  artistLink($("nowArtist"));artistLink($("npArtist"));document.addEventListener("click",e=>{if(e.target.closest("#npArtist,#nowArtist")){const t=trackData()[current];if(t?.artist)showArtist(t.artist)}});
  activate("home");
