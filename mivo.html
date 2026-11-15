@@ -1116,7 +1116,18 @@ $("uploadBtn").onclick=$("uploadHero").onclick=()=>$("fileInput").click();
 $("fileInput").onchange=e=>{const files=[...e.target.files];files.forEach(f=>{const url=URL.createObjectURL(f);localTracks.push({title:f.name.replace(/\.[^.]+$/,""),artist:"Твоя медиатека",genre:"Local",style:"c"+(1+Math.floor(Math.random()*12)),symbol:"♪",url})});renderLocal();renderMixes();toast("Добавлено файлов: "+files.length);e.target.value=""};
 $("qualityBtn").onclick=()=>toast("Звук высокого разрешения — в планах. Сейчас качество зависит от исходного файла.");$("npClose").onclick=closeNowPlaying;$("nowTitle").onclick=openNowPlaying;$("nowArt").onclick=openNowPlaying;document.querySelector(".now").style.cursor="pointer";document.querySelector(".now").addEventListener("click",e=>{if(e.target.closest("button"))return;openNowPlaying()});$("npPlay").onclick=togglePlay;$("npNext").onclick=()=>move(1);$("npPrev").onclick=()=>move(-1);$("npShuffle").onclick=()=>$("shuffle").click();$("npRepeat").onclick=()=>$("repeat").click();$("npLike").onclick=()=>$("likeBtn").click();$("npShuffle").style.color="#888";document.addEventListener("keydown",e=>{if(e.key==="Escape")closeNowPlaying()});
 document.querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>$("genres").scrollIntoView({behavior:"smooth"}));
-document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));const view=b.dataset.view,target=view==="home"?"hero":view==="library"?"library":view==="playlists"?"playlists":view==="mixes"?"mixes":"mivo-music";if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));else if(view==="discover")render(allTracks());else if(view==="mixes")renderMixes();else if(view==="playlists")renderPlaylists();$(target).scrollIntoView({behavior:"smooth"})});
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll('[data-view="'+b.dataset.view+'"]').forEach(x=>x.classList.add("active"));
+ const view=b.dataset.view;
+ const target=view==="home"?"hero":view==="library"?"library":view==="playlists"?"playlists":view==="settings"?"settings":(view==="mixes"||view==="wave")?"mixes":"mivo-music";
+ if(view==="liked")render(allTracks().filter(t=>liked.has(trackKey(t))));
+ else if(view==="recent")render(recent.map(k=>allTracks().find(t=>trackKey(t)===k)).filter(Boolean));
+ else if(view==="discover")render(allTracks());
+ else if(view==="mixes"||view==="wave")renderMixes();
+ else if(view==="playlists")renderPlaylists();
+ $(target).scrollIntoView({behavior:"smooth",block:"start"});
+});
 render(allTracks());renderLocal();renderMixes();renderPlaylists();
 
 /* MIVO polish interactions */
@@ -1210,7 +1221,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   $("themeSelect").value=prefs.theme||"aurora";$("accentPicker").value=prefs.accent||defaults.accent;$("densitySelect").value=prefs.density||"comfortable";
  }
  function closeCustomize(){$("customizeModal").classList.remove("open");$("customizeModal").setAttribute("aria-hidden","true");if(!$("lyricsModal").classList.contains("open")&&!$("nowPlaying").classList.contains("open"))document.body.style.overflow=""}
- $("openCustomize").addEventListener("click",()=>{$("customizeModal").classList.add("open");$("customizeModal").setAttribute("aria-hidden","false");document.body.style.overflow="hidden"});
+ $("openCustomize").addEventListener("click",()=>{document.querySelector('[data-view="settings"]')?.click()});
  const presetAccents={aurora:"#8ddcff",violet:"#b99cff",sunset:"#ffad91",ocean:"#65d8e8",mono:"#ffffff"};$("themeSelect").addEventListener("change",()=>{$("accentPicker").value=presetAccents[$("themeSelect").value]||"#b99cff"});
  $("saveCustomize").addEventListener("click",()=>{prefs={theme:$("themeSelect").value,accent:$("accentPicker").value,density:$("densitySelect").value};writeStore("mivo_appearance_v1",prefs);applyPrefs();closeCustomize();toast("Оформление MIVO сохранено")});
  $("resetCustomize").addEventListener("click",()=>{prefs=Object.assign({},defaults);writeStore("mivo_appearance_v1",prefs);applyPrefs();toast("Стандартное оформление восстановлено")});
