@@ -1661,7 +1661,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    button.append(img,title,meta);
    button.addEventListener("click",()=>{
     root.hidden=true;$("trackGrid").hidden=false;$("catalogHint").hidden=true;
-    window.render(group.tracks);$("resultCount").textContent=group.tracks.length+" композиций";
+    renderAlbum(group.name,group.artist);
    });
    root.appendChild(button);
   });
@@ -1795,7 +1795,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  if(singleInput){
   singleInput.placeholder="Трек, исполнитель или альбом…";
   singleInput.addEventListener("focus",()=>activate("catalog"));
-  singleInput.addEventListener("input",()=>{query=singleInput.value.trim();if(query)activate("catalog");filterSearch()});
+  singleInput.addEventListener("input",()=>{query=singleInput.value.trim();if(query)activate("catalog");if(kind==="artists"&&query){const seq=++artistSearchSequence;fetchArtistDiscography(query).then(items=>{if(seq!==artistSearchSequence||query!==singleInput.value.trim())return;artistSearchTracks=items;items.forEach(t=>{if(!catalogTracks.some(x=>trackKey(x)===trackKey(t)))catalogTracks.push(t)});persistCatalog();filterSearch()}).catch(()=>{artistSearchTracks=[];filterSearch()})}else filterSearch()});
  }
  $("searchClear")?.addEventListener("click",()=>{query="";filterSearch()});
  const searchOpen=document.createElement("button");searchOpen.type="button";searchOpen.className="circle-btn";searchOpen.textContent="⌕";searchOpen.setAttribute("aria-label","Открыть поиск");searchOpen.onclick=()=>{activate("catalog");setTimeout(()=>singleInput?.focus(),80)};
@@ -1848,7 +1848,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  function linkArtist(id){const el=$(id);if(!el||el.dataset.profileLink)return;el.dataset.profileLink="1";el.style.cursor="pointer";el.title="Открыть страницу исполнителя";el.addEventListener("click",e=>{e.stopPropagation();const t=getCurrentTrack();if(t?.artist)renderArtist(t.artist)})}
  linkArtist("nowArtist");linkArtist("npArtist");
  // Make release cards open album pages, not artist pages.
- document.querySelectorAll("[data-catalog-tab]").forEach(btn=>btn.addEventListener("click",()=>{if(btn.dataset.catalogTab==="releases")setTimeout(()=>document.querySelectorAll(".release-tile").forEach(tile=>{if(tile.dataset.albumLinked)return;tile.dataset.albumLinked="1";tile.addEventListener("click",()=>{const title=tile.querySelector("strong")?.textContent||"Синглы";const artist=tile.querySelector("small")?.textContent?.split(" · ")[0]||"";renderAlbum(title,artist)},{once:true})}),100)}));
+ // Release tiles navigate directly to their album page.
  // Keep search results in sync after the network catalog finishes loading.
  const originalSearchRunner=searchWorldwideSongs;
  searchWorldwideSongs=async function(q){await originalSearchRunner(q);query=singleInput?.value.trim()||q;filterSearch()};
