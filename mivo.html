@@ -679,6 +679,39 @@ body[data-ui-columns="3"] .cards{grid-template-columns:repeat(3,minmax(0,1fr))!i
 body.mivo-no-motion *,body.mivo-no-motion *:before,body.mivo-no-motion *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 body.mivo-no-ambient .np-backdrop:after{display:none!important}
 </style>
+<style>
+.mivo-page{display:none;animation:mivoPageIn .24s ease both}.mivo-page.active{display:block}
+@keyframes mivoPageIn{from{opacity:.2;transform:translateY(7px)}to{opacity:1;transform:none}}
+.mivo-page-head{padding:18px 0 22px}.mivo-page-head .eyebrow-line{margin-bottom:10px}.mivo-page-head h1{font-size:clamp(27px,5vw,44px);letter-spacing:-1.8px;margin:0 0 8px}.mivo-page-head p{color:#929292;font-size:13px;line-height:1.6;margin:0}
+.mobile-nav button{cursor:pointer}.mobile-nav button.active{color:var(--accent)!important}
+.mivo-home-intro{display:flex;gap:12px;overflow:auto;padding:5px 0 18px;scrollbar-width:none}
+.mivo-home-intro button{flex:0 0 auto;border:1px solid #ffffff15;border-radius:14px;background:#151515;color:#fff;padding:12px 17px;font-size:12px}
+.mivo-home-intro button.active{background:var(--accent);color:#080808;border-color:var(--accent)}
+.mivo-feature-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:15px 0 26px}
+.mivo-feature-card{min-height:115px;padding:16px;border-radius:17px;background:linear-gradient(140deg,#25212d,#111);border:1px solid #ffffff12;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:#fff}
+.mivo-feature-card b{font-size:15px}.mivo-feature-card small{font-size:10px;color:#aaa}.mivo-feature-card i{font-style:normal;font-size:22px;color:var(--accent)}
+.mivo-search-page{padding-top:8px}
+.mivo-search-hero{border-radius:22px;background:linear-gradient(130deg,#211b2b,#101010 65%);border:1px solid #ffffff12;padding:23px;margin-bottom:20px}
+.mivo-search-hero h1{font-size:clamp(26px,5vw,42px);margin:0 0 8px;letter-spacing:-1.5px}
+.mivo-search-hero p{font-size:12px;color:#aaa;margin:0 0 17px}
+.mivo-search-hero .search{display:flex;width:100%;height:58px;background:#080808;border:1px solid #ffffff25;border-radius:15px;padding:0 17px}
+.mivo-search-hero .search input{font-size:15px}
+.search-types{display:flex;gap:8px;overflow:auto;padding:0 0 15px;scrollbar-width:none}
+.search-types button{border:1px solid #ffffff18;border-radius:99px;padding:10px 17px;background:#151515;color:#aaa;white-space:nowrap;font-size:11px}
+.search-types button.active{background:#fff;color:#090909;border-color:#fff}
+.artist-hero{position:relative;overflow:hidden;min-height:255px;border-radius:22px;padding:26px;display:flex;flex-direction:column;justify-content:flex-end;background:radial-gradient(ellipse at 80% 15%,color-mix(in srgb,var(--artist-color,var(--accent)) 45%,transparent),transparent 55%),linear-gradient(140deg,#29232e,#0b0b0d);border:1px solid #ffffff18}
+.artist-hero:after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-55px;top:-75px;border:1px solid #ffffff20;box-shadow:0 0 0 22px #ffffff08,0 0 0 50px #ffffff05}
+.artist-hero>*{position:relative;z-index:1}.artist-hero .artist-kicker{font-size:10px;letter-spacing:3px;color:var(--accent);font-weight:800}
+.artist-hero h1{font-size:clamp(34px,7vw,60px);letter-spacing:-2px;margin:12px 0 7px}.artist-hero p{font-size:12px;color:#bbb;margin:0;max-width:70%}
+.artist-actions{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}.artist-actions button{padding:11px 16px;border-radius:99px;border:1px solid #ffffff25;background:#ffffff10;color:#fff;font-size:11px}
+.artist-actions button.primary{background:var(--accent);color:#080808;border-color:var(--accent)}
+.artist-track-row{display:grid;grid-template-columns:38px 48px minmax(0,1fr) auto;align-items:center;gap:12px;padding:9px 5px;border-bottom:1px solid #ffffff0c;cursor:pointer}
+.artist-track-row img{width:48px;height:48px;object-fit:cover;border-radius:8px}.artist-track-row .num{color:#777;font-size:11px;text-align:center}.artist-track-row strong{font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.artist-track-row small{color:#888;font-size:10px}.artist-track-row .duration{color:#888;font-size:10px}
+.artist-related{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.artist-related button{background:#141414;border:1px solid #ffffff12;border-radius:13px;padding:13px;color:#fff;text-align:left;min-width:0}.artist-related strong,.artist-related small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.artist-related small{font-size:10px;color:#888;margin-top:5px}
+.now-artist-link,.np-artist-link{cursor:pointer;text-decoration:none}
+@media(max-width:800px){.mivo-feature-row{grid-template-columns:1fr 1fr;gap:9px}.mivo-feature-card{min-height:105px;padding:13px}.mivo-feature-card:last-child{grid-column:span 2}.mivo-search-hero{padding:17px;border-radius:17px}.mivo-search-hero .search{height:54px}.artist-hero{min-height:230px;padding:20px}.artist-track-row{grid-template-columns:25px 44px minmax(0,1fr) auto;gap:9px}.artist-track-row img{width:44px;height:44px}.artist-related{grid-template-columns:repeat(2,minmax(0,1fr))}.mivo-page-head{padding-top:9px}}
+</style>
 </head>
 <body>
 <div class="mivo-dynamic-backdrop" id="mivoDynamicBackdrop"></div><div class="noise"></div>
@@ -1572,6 +1605,54 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  if(prefs.start&&prefs.start!=="home"){
   setTimeout(()=>document.querySelector('[data-view="'+prefs.start+'"]')?.click(),250);
  }
+})();
+</script>
+<script>
+(function(){
+ const $=id=>document.getElementById(id),main=document.querySelector(".main"),nav=document.querySelector(".mobile-nav");
+ if(!main||!nav)return;
+ const page=(id,title,subtitle)=>{let el=$(id);if(!el){el=document.createElement("section");el.id=id;el.className="mivo-page";main.appendChild(el)}el.innerHTML='<div class="mivo-page-head"><div class="eyebrow-line">MIVO / ПРОСТРАНСТВО</div><h1>'+title+'</h1><p>'+subtitle+'</p></div>';return el};
+ const pages={home:page("mivoPageHome","Твоя музыка. Твой ритм.","Подборки, открытия и музыка, которая подходит именно тебе."),wave:page("mivoPageWave","Моя волна","Персональная подборка из твоих прослушиваний, любимых треков и музыкальных предпочтений."),catalog:page("mivoPageCatalog","Найди своё звучание","Ищи композиции, исполнителей и альбомы в одном месте."),collection:page("mivoPageCollection","Твоя коллекция","Всё, что ты сохранил, слушал и собрал."),settings:page("mivoPageSettings","Настройки MIVO","Настрой приложение под себя."),artist:page("mivoPageArtist","Исполнитель","Музыкальная страница артиста.")};
+ const groups={home:["hero","hits","mixes","discover","genres"],catalog:["mivo-music"],collection:["playlists","library"],settings:["settings"]};
+ Object.entries(groups).forEach(([key,ids])=>ids.forEach(id=>{const node=$(id);if(node)pages[key].appendChild(node)}));
+ const searchHero=document.createElement("div");searchHero.className="mivo-search-hero";searchHero.innerHTML='<div class="eyebrow-line">ПОИСК ПО ВСЕЙ МУЗЫКЕ</div><h1>Что хочешь послушать?</h1><p>Ищи по названию песни, имени исполнителя или альбому.</p>';
+ const topSearch=document.querySelector(".topbar .search");
+ if(topSearch){const clone=topSearch.cloneNode(true);clone.id="catalogSearchWrap";clone.querySelector("input").id="catalogSearchInput";clone.querySelector(".search-suggestions").id="catalogSearchSuggestions";clone.querySelector(".search-clear").id="catalogSearchClear";searchHero.appendChild(clone)}
+ pages.catalog.insertBefore(searchHero,pages.catalog.querySelector(".mivo-page-head").nextSibling);
+ const types=document.createElement("div");types.className="search-types";types.innerHTML='<button class="active" data-search-type="all">Всё</button><button data-search-type="tracks">Треки</button><button data-search-type="artists">Исполнители</button><button data-search-type="albums">Альбомы</button>';searchHero.appendChild(types);
+ const resultHeading=document.createElement("div");resultHeading.className="section-head";resultHeading.innerHTML='<div><div class="eyebrow-line">РЕЗУЛЬТАТЫ</div><h2 id="mivoSearchTitle">Популярное и новое</h2></div>';pages.catalog.appendChild(resultHeading);
+ const resultGrid=document.createElement("div");resultGrid.id="mivoSearchResults";resultGrid.className="cards";pages.catalog.appendChild(resultGrid);
+ const suggestions=document.createElement("div");suggestions.id="mivoSearchArtists";suggestions.className="artist-related";pages.catalog.appendChild(suggestions);
+ let searchType="all",lastQuery="";
+ function trackData(){return typeof allTracks==="function"?allTracks():[]}
+ function activate(name){Object.values(pages).forEach(p=>p.classList.remove("active"));(pages[name]||pages.home).classList.add("active");nav.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));document.querySelectorAll(".sidebar [data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===({home:"home",wave:"mixes",catalog:"discover",collection:"library",settings:"settings"}[name])));window.scrollTo({top:0,behavior:"instant"});if(name==="wave"){renderMixes();const t=$("mixes")?.querySelector("h2");if(t)t.textContent="Моя волна"}}
+ function showArtist(name){
+  const tracks=trackData().filter(t=>(t.artist||"").toLowerCase()===name.toLowerCase()),p=pages.artist;p.replaceChildren();
+  const hero=document.createElement("div");hero.className="artist-hero";const kicker=document.createElement("div");kicker.className="artist-kicker";kicker.textContent="ИСПОЛНИТЕЛЬ · MIVO";const title=document.createElement("h1");title.textContent=name;const desc=document.createElement("p");desc.textContent=tracks.length?tracks.length+" композиций в доступном каталоге · музыка исполнителя":"Страница исполнителя · каталог пополняется";
+  const actions=document.createElement("div");actions.className="artist-actions";const play=document.createElement("button");play.className="primary";play.textContent="▶ Слушать всё";play.disabled=!tracks.length;play.onclick=()=>{if(tracks.length){queue=tracks.map(trackKey);playTrack(trackData().indexOf(tracks[0]))}};const back=document.createElement("button");back.textContent="← Назад";back.onclick=()=>activate("home");actions.append(play,back);hero.append(kicker,title,desc,actions);p.append(hero);
+  const head=document.createElement("div");head.className="section-head";head.innerHTML="<div><div class='eyebrow-line'>ДИСКОГРАФИЯ</div><h2>Популярные композиции</h2></div>";p.append(head);
+  tracks.forEach((t,i)=>{const row=document.createElement("div");row.className="artist-track-row";const n=document.createElement("span");n.className="num";n.textContent=String(i+1).padStart(2,"0");const img=document.createElement("img");img.loading="lazy";img.src=t.artworkUrl100||"";img.alt="";const meta=document.createElement("span");const b=document.createElement("strong");b.textContent=t.title;const sm=document.createElement("small");sm.textContent=t.collectionName||"Композиция";meta.append(b,sm);const dur=document.createElement("span");dur.className="duration";dur.textContent="▶";row.append(n,img,meta,dur);row.onclick=()=>playTrack(trackData().indexOf(t));p.append(row)});
+  if(!tracks.length){const empty=document.createElement("p");empty.className="catalog-hint";empty.textContent="Пока нет композиций этого исполнителя в загруженном каталоге.";p.append(empty)}
+  activate("artist");
+ }
+ nav.innerHTML='<button data-page="home" class="active"><span>⌂</span>Главная</button><button data-page="wave"><span>〰</span>Моя волна</button><button data-page="catalog"><span>⌕</span>Поиск</button><button data-page="collection"><span>▤</span>Коллекция</button><button data-page="settings"><span>⚙</span>Настройки</button>';
+ nav.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>activate(b.dataset.page)));
+ document.querySelectorAll(".sidebar [data-view]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();const v=b.dataset.view;activate(v==="home"?"home":v==="mixes"?"wave":v==="discover"?"catalog":v==="settings"?"settings":"collection")}));
+ const chips=document.createElement("div");chips.className="mivo-home-intro";["Для тебя","Популярное","Новинки","По настроению","Твои открытия"].forEach((label,i)=>{const b=document.createElement("button");b.textContent=label;if(!i)b.classList.add("active");b.onclick=()=>{chips.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));toast("Подборка: "+label)};chips.append(b)});pages.home.insertBefore(chips,pages.home.querySelector("#hero"));
+ const feature=document.createElement("div");feature.className="mivo-feature-row";[["◷","Продолжить слушать","Вернись к последним трекам","recent"],["♫","Похоже на твоё","Музыка на основе истории","similar"],["✦","Возможно, слышал","Знакомые артисты и хиты","hits"]].forEach(([icon,title,sub,action])=>{const b=document.createElement("button");b.className="mivo-feature-card";b.innerHTML="<i>"+icon+"</i><b>"+title+"</b><small>"+sub+"</small>";b.onclick=()=>{if(action==="recent"){activate("collection");document.querySelector('[data-view="recent"]')?.click()}else if(action==="hits"){activate("home");$("hits")?.scrollIntoView({behavior:"smooth"})}else activate("wave")};feature.append(b)});pages.home.insertBefore(feature,pages.home.querySelector("#hits"));
+ function doFilter(q){const tracks=trackData(),list=tracks.filter(t=>{const hay=searchType==="artists"?t.artist:searchType==="albums"?t.collectionName:searchType==="tracks"?t.title:t.title+" "+t.artist+" "+(t.collectionName||"");return(hay||"").toLowerCase().includes(q.toLowerCase())});$("mivoSearchTitle").textContent=q?"Результаты: "+q:"Популярное и новое";
+  if(searchType==="artists"){const names=[...new Set(list.map(t=>t.artist))];suggestions.replaceChildren();names.forEach(n=>{const b=document.createElement("button");const strong=document.createElement("strong");strong.textContent=n;const small=document.createElement("small");small.textContent="Исполнитель";b.append(strong,small);b.onclick=()=>showArtist(n);suggestions.append(b)});resultGrid.replaceChildren()}
+  else if(searchType==="albums"){const albums=new Map();list.forEach(t=>{const k=(t.collectionName||"Синглы")+"::"+t.artist;if(!albums.has(k))albums.set(k,t)});resultGrid.replaceChildren();suggestions.replaceChildren();[...albums.values()].forEach(t=>{const c=card(t,0);c.addEventListener("click",e=>{e.stopPropagation();showArtist(t.artist)});resultGrid.append(c)})}
+  else{suggestions.replaceChildren();resultGrid.replaceChildren();list.slice(0,60).forEach(t=>resultGrid.append(card(t,trackData().indexOf(t))))}
+  if(!list.length){const p=document.createElement("p");p.className="catalog-hint";p.textContent=q?"Ничего не найдено. Попробуй другое название.":"Начни вводить запрос.";resultGrid.append(p)}
+ }
+ types.querySelectorAll("button").forEach(b=>b.onclick=()=>{searchType=b.dataset.searchType;types.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));doFilter(lastQuery)});
+ const searchInput=$("catalogSearchInput"),topInput=$("searchInput");
+ if(searchInput){searchInput.addEventListener("input",e=>{lastQuery=e.target.value.trim();if(topInput)topInput.value=lastQuery;if(lastQuery){activate("catalog");doFilter(lastQuery);if(topInput)topInput.dispatchEvent(new Event("input"))}else{resultGrid.replaceChildren();suggestions.replaceChildren()}});$("catalogSearchClear").onclick=()=>{searchInput.value="";lastQuery="";if(topInput){topInput.value="";topInput.dispatchEvent(new Event("input"))}doFilter("")}}
+ if(topInput)topInput.addEventListener("focus",()=>{activate("catalog");if(searchInput)searchInput.value=topInput.value});
+ function artistLink(el){if(!el||el.dataset.artistLink)return;el.dataset.artistLink="1";el.classList.add("now-artist-link");el.title="Открыть страницу исполнителя";el.addEventListener("click",e=>{e.stopPropagation();const t=trackData()[current];if(t?.artist)showArtist(t.artist)})}
+ artistLink($("nowArtist"));artistLink($("npArtist"));document.addEventListener("click",e=>{if(e.target.closest("#npArtist,#nowArtist")){const t=trackData()[current];if(t?.artist)showArtist(t.artist)}});
+ activate("home");
 })();
 </script>
 </body>
