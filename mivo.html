@@ -1775,6 +1775,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  pages.home.insertBefore(features,pages.home.querySelector("#hits"));
  nav.innerHTML='<button data-page="home" class="active"><span>⌂</span>Главная</button><button data-page="wave"><span>〰</span>Моя волна</button><button data-page="catalog"><span>⌕</span>Поиск</button><button data-page="collection"><span>▤</span>Коллекция</button><button data-page="settings"><span>⚙</span>Настройки</button>';
  nav.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>activate(b.dataset.page)));
+ document.querySelectorAll(".sidebar [data-view]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();const v=b.dataset.view;activate(v==="home"?"home":v==="mixes"?"wave":v==="discover"?"catalog":v==="settings"?"settings":"collection")}));
  // Convert home shelves into compact horizontal carousels; no endless wall of cards.
  ["hitGrid","mixGrid","trackGrid","releaseGrid"].forEach(id=>$(id)?.classList.add("mivo-horizontal"));
  const originalRenderMixes=renderMixes;
@@ -1850,7 +1851,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    const res=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(title+" "+artist)+"&entity=song&limit=12&country=ru");
    if(!res.ok)continue;const data=await res.json(),wanted=norm(title),artistWords=artist.split(/[ ,&]+/).map(norm).filter(x=>x.length>2);
    const match=(data.results||[]).find(x=>norm(x.trackName)===wanted&&artistWords.some(w=>norm(x.artistName).includes(w)));
-   if(match)out.push({id:"vkchart:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",symbol:"♪",style:"c1",chartSource:"VK Музыка · 13.11.2026"});
+   if(match)out.push({id:"vkchart:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",releaseDate:match.releaseDate||"",symbol:"♪",style:"c1",chartSource:"VK Музыка · 13.11.2026"});
   }catch(_){}}}
   await Promise.all(Array.from({length:6},worker));return out;
  }
