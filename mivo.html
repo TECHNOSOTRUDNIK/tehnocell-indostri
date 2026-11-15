@@ -765,6 +765,21 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 }
 @media(max-width:380px){.mivo-page #hits .music-card,.mivo-page #mivo-music .music-card{flex-basis:48vw}.artist-related-grid{grid-template-columns:1fr}}
 </style>
+<style>
+/* Richer sound-stage and album artwork */
+.now-playing{background:#09070d!important}
+.np-backdrop{filter:saturate(1.55) contrast(1.05);transform:scale(1.06)}
+.np-backdrop:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 75% 20%,color-mix(in srgb,var(--accent) 34%,transparent),transparent 48%),linear-gradient(115deg,#07060a77,#07060a18 50%,#07060a99)}
+.np-shell{position:relative}
+.np-big-art{border-color:color-mix(in srgb,var(--accent) 65%,white 10%)!important;box-shadow:0 25px 90px #000a,0 0 55px color-mix(in srgb,var(--accent) 28%,transparent)!important;animation:mivoCoverPulse 9s ease-in-out infinite}
+@keyframes mivoCoverPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+.np-orbit{border-color:color-mix(in srgb,var(--accent) 50%,white 12%)!important}
+.np-play{background:var(--accent)!important;color:#090909!important;box-shadow:0 8px 34px color-mix(in srgb,var(--accent) 40%,transparent)!important}
+.np-equalizer i,.np-live i{background:var(--accent)!important}
+.np-tags span:first-child,.np-eyebrow,.np-signature b{color:var(--accent)!important}
+.artist-hero-v2 .artist-actions .primary{background:var(--accent)!important}
+@media(prefers-reduced-motion:reduce){.np-big-art{animation:none!important}}
+</style>
 </head>
 <body>
 <div class="mivo-dynamic-backdrop" id="mivoDynamicBackdrop"></div><div class="noise"></div>
@@ -963,7 +978,7 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshMiv
 
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
 function allTracks(){return [...localTracks,...catalogTracks,...hitTracks]}
-function trackSnapshot(t){return {id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.url,symbol:t.symbol,style:t.style}}
+function trackSnapshot(t){return {id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.url,releaseDate:t.releaseDate,chartRank:t.chartRank,symbol:t.symbol,style:t.style}}
 function persistCatalog(){const old=readStore("mivo_catalog_cache_v1",[]),map=new Map();[...old,...catalogTracks].forEach(t=>{if(t&&t.id)map.set(t.id,trackSnapshot(t))});writeStore("mivo_catalog_cache_v1",[...map.values()].slice(-100))}
 function restoreHistoryTracks(){
  const history=readStore("mivo_recent_tracks_v1",{}),savedLikes=readStore("mivo_liked_tracks_v1",{}),known=new Set(catalogTracks.map(trackKey));
@@ -1804,6 +1819,14 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  linkArtist("nowArtist");linkArtist("npArtist");
  // Make release cards open album pages, not artist pages.
  document.querySelectorAll("[data-catalog-tab]").forEach(btn=>btn.addEventListener("click",()=>{if(btn.dataset.catalogTab==="releases")setTimeout(()=>document.querySelectorAll(".release-tile").forEach(tile=>{if(tile.dataset.albumLinked)return;tile.dataset.albumLinked="1";tile.addEventListener("click",()=>{const title=tile.querySelector("strong")?.textContent||"Синглы";const artist=tile.querySelector("small")?.textContent?.split(" · ")[0]||"";renderAlbum(title,artist)},{once:true})}),100)}));
+ // Keep search results in sync after the network catalog finishes loading.
+ const originalSearchRunner=searchWorldwideSongs;
+ searchWorldwideSongs=async function(q){await originalSearchRunner(q);query=singleInput?.value.trim()||q;filterSearch()};
+ // Catalog tabs are page controls, not dead links or scroll shortcuts.
+ document.querySelectorAll(".catalog-tabs [data-catalog-tab]").forEach(btn=>btn.addEventListener("click",()=>{
+  const tab=btn.dataset.catalogTab;
+  if(tab==="mixes"||tab==="wave"){activate("wave");renderWaveShelves();fillWave()}
+ }));
  activate("home");
  const startPref=window.MIVO_UI_PREFS?.().start;const startMap={home:"home",wave:"wave",discover:"catalog",library:"collection",settings:"settings"};if(startPref&&startMap[startPref])activate(startMap[startPref]);
 })();
