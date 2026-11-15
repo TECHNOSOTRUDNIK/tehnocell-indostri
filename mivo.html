@@ -804,6 +804,15 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 .mobile-nav button{flex:1 0 62px;min-width:62px;min-height:48px}
 @media(max-width:760px){.artist-hero-v2{min-height:290px!important;padding:20px!important;border-radius:23px!important}.artist-hero-v2 h1{font-size:clamp(36px,10vw,58px)!important}.artist-related-grid{grid-template-columns:1fr 1fr}.mivo-page .catalog-tabs{margin-inline:-17px;padding-inline:17px!important}}
 </style>
+<style>
+#openCustomize,.customize-trigger{display:none!important}
+.mivo-page.active{display:block!important}
+.mivo-page:not(.active){display:none!important}
+.artist-hero-v2{overflow:hidden;isolation:isolate}
+.artist-hero-v2 .back-link{position:relative;z-index:2;align-self:flex-start;margin-bottom:24px}
+.artist-track-row,.artist-album,.artist-related-card{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mobile-nav button{white-space:nowrap;overflow:visible}
+</style>
 </head>
 <body>
 <div class="mivo-dynamic-backdrop" id="mivoDynamicBackdrop"></div><div class="noise"></div>
@@ -838,7 +847,7 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
   </section>
 
   <section class="section hits-section" id="hits">
-   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Хиты СНГ · сейчас в тренде</h2><p>Актуальные треки из чарта VK Музыки и вирусные хиты 2025 года. Подборка обновляется вручную по свежим данным.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
+   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Хиты СНГ · сейчас в тренде</h2><p>Популярная музыка России и стран СНГ. Подборка обновляется по доступным музыкальным данным.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
    <div class="cards hits-grid" id="hitGrid"></div><div class="empty hits-status" id="hitsStatus">Загружаем музыкальный чарт…</div>
   </section>
 
@@ -1799,8 +1808,8 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  [["◷","Продолжить","Вернись к последнему треку","recent"],["♫","Похоже на твоё","Новые треки по твоим вкусам","similar"],["✦","Открой новое","Найди исполнителей и жанры","discover"]].forEach(([icon,title,sub,action])=>{const b=document.createElement("button");b.className="mivo-feature-card";b.innerHTML="<i>"+icon+"</i><b>"+title+"</b><small>"+sub+"</small>";b.onclick=()=>{if(action==="recent"){const t=getCurrentTrack()||all().find(x=>recent.includes(trackKey(x)));if(t){const ix=all().findIndex(x=>trackKey(x)===trackKey(t));if(ix>=0)playTrack(ix);if(t.url)audio.play().catch(()=>{})}activate("collection")}else if(action==="similar")activate("wave");else activate("catalog")};features.append(b)});
  pages.home.insertBefore(features,pages.home.querySelector("#hits"));
  nav.innerHTML='<button data-page="home" class="active"><span>⌂</span>Главная</button><button data-page="wave"><span>〰</span>Моя волна</button><button data-page="catalog"><span>⌕</span>Поиск</button><button data-page="collection"><span>▤</span>Коллекция</button><button data-page="settings"><span>⚙</span>Настройки</button>';
- nav.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>activate(b.dataset.page)));
- document.querySelectorAll(".sidebar [data-view]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();const v=b.dataset.view;activate(v==="home"?"home":v==="mixes"?"wave":v==="discover"?"catalog":v==="settings"?"settings":"collection")}));
+ nav.addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(!b)return;e.preventDefault();e.stopImmediatePropagation();activate(b.dataset.page)},true);
+ document.querySelectorAll(".sidebar [data-view]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();e.stopPropagation();const v=b.dataset.view;activate(v==="home"?"home":v==="mixes"?"wave":v==="discover"?"catalog":v==="settings"?"settings":"collection")}));
  // Convert home shelves into compact horizontal carousels; no endless wall of cards.
  ["hitGrid","mixGrid","trackGrid","releaseGrid"].forEach(id=>$(id)?.classList.add("mivo-horizontal"));
  const originalRenderMixes=renderMixes;
@@ -1866,7 +1875,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   return items.slice(0,100).map((x,i)=>{
    const id=String(x.id||"").split("/").pop(),full=byId.get(id)||{},art=x.artworkUrl100||x.artwork?.url||full.artworkUrl100||"";
    return {id:"applechart:"+id,title:x.name||full.trackName,artist:x.artistName||full.artistName,genre:full.primaryGenreName||x.genres?.[0]?.name||"Поп",collectionName:full.collectionName||"",artworkUrl100:art.replace("{w}","300").replace("{h}","300"),trackViewUrl:x.url||full.trackViewUrl||"",url:full.previewUrl||"",previewUrl:full.previewUrl||"",releaseDate:full.releaseDate||x.releaseDate||"",symbol:"♪",style:"c1",chartRank:i+1,chartSource:"Apple Music Россия"};
-  }).filter(t=>t.title&&t.artist);
+  }).filter(t=>t.title&&t.artist&&/[а-яё]/i.test(t.title+" "+t.artist));
  }
  async function fetchVkSnapshot(){const out=new Array(fallback.length);let cursor=0;async function worker(){while(cursor<fallback.length){const index=cursor++,[title,artist]=fallback[index];try{const res=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(title+" "+artist)+"&entity=song&limit=12&country=ru");if(!res.ok)continue;const data=await res.json(),wanted=norm(title),words=artist.split(/[ ,&]+/).map(norm).filter(x=>x.length>2);const match=(data.results||[]).find(x=>norm(x.trackName)===wanted&&words.some(w=>norm(x.artistName).includes(w)));if(match)out[index]={id:"vkchart:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",releaseDate:match.releaseDate||"",symbol:"♪",style:"c1"}}catch(_){}}}await Promise.all(Array.from({length:6},worker));return out.filter(Boolean)}
  async function fetchFreshReleases(){const queries=["русская музыка 2026","русский рэп 2026","поп музыка Россия 2026","музыка СНГ 2026"],out=new Map();let cursor=0;async function worker(){while(cursor<queries.length){const q=queries[cursor++];try{const r=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(q)+"&entity=song&limit=200&country=ru");if(!r.ok)continue;const d=await r.json();(d.results||[]).forEach(x=>{if(!x.trackId||!x.releaseDate)return;const dt=new Date(x.releaseDate);if(!Number.isFinite(dt.getTime())||dt.getTime()>Date.now()+86400000||dt.getTime()<Date.now()-180*86400000)return;if(!/[а-яё]/i.test(String(x.artistName||"")+" "+String(x.trackName||"")))return;out.set(String(x.trackId),{id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Поп",collectionName:x.collectionName||"",artworkUrl100:x.artworkUrl100||"",trackViewUrl:x.trackViewUrl||"",url:x.previewUrl||"",previewUrl:x.previewUrl||"",releaseDate:x.releaseDate,symbol:"♪",style:"c1"})})}catch(_){}}}await Promise.all([worker(),worker()]);return [...out.values()].sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate)).slice(0,60)}
@@ -1883,7 +1892,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   if(mivoHitsLoading||(!force&&mivoHitsLoaded))return;mivoHitsLoading=true;
   const status=$("hitsStatus"),grid=$("hitGrid");if(status){status.style.display="block";status.textContent="Обновляем музыкальные чарты…"}if(grid)grid.replaceChildren();
   try{
-   const key="mivo_live_chart_ru_v4",cached=readStore(key,null);let tracks=null,source="";
+   const key="mivo_live_chart_ru_v5",cached=readStore(key,null);let tracks=null,source="";
    if(!force&&cached?.tracks?.length&&Date.now()-cached.savedAt<6*60*60*1000){tracks=cached.tracks;source=cached.source}
    else{
     try{tracks=await fetchAppleRuChart();source="Ежедневный чарт Apple Music Россия"}
