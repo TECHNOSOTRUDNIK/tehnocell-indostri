@@ -780,6 +780,30 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 .artist-hero-v2 .artist-actions .primary{background:var(--accent)!important}
 @media(prefers-reduced-motion:reduce){.np-big-art{animation:none!important}}
 </style>
+<style>
+#mivoPageArtist,#mivoPageAlbum{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important}
+#mivoPageArtist:before,#mivoPageArtist:after,#mivoPageAlbum:before,#mivoPageAlbum:after{display:none!important}
+.artist-hero-v2{min-height:350px!important;padding:clamp(22px,5vw,48px)!important;border:1px solid #ffffff20!important;border-radius:30px!important;background:#101014!important;box-shadow:0 24px 70px #0007!important}
+.artist-hero-v2:before{opacity:.78!important;filter:blur(28px) saturate(1.65)!important}
+.artist-hero-v2:after{background:linear-gradient(0deg,#07070bf7 0%,#08080b9c 48%,#08080b15 100%)!important}
+.artist-hero-v2 .artist-kicker{display:inline-flex;width:max-content;padding:7px 11px;border:1px solid #ffffff24;border-radius:30px;background:#09090b66}
+.artist-hero-v2 h1{font-size:clamp(42px,10vw,82px)!important;letter-spacing:-3px!important;max-width:100%!important}
+.artist-hero-v2 p{font-size:14px!important;max-width:100%!important}
+.artist-actions button{min-height:46px!important;font-size:12px!important}
+.artist-track-row{min-height:68px;border-bottom:1px solid #ffffff12!important;border-radius:12px;padding:9px!important}
+.artist-track-row img{width:50px!important;height:50px!important}
+.artist-album{flex-basis:154px!important;background:#17171d!important;border:1px solid #ffffff18!important}
+.artist-related-card{min-height:66px!important}
+.mivo-page .catalog-tabs{position:sticky;top:0;z-index:12;background:#09090bed;backdrop-filter:blur(16px);padding:10px 0!important;overscroll-behavior-x:contain;touch-action:pan-x}
+.mivo-page .catalog-tabs button{min-height:40px;flex-shrink:0}
+.mivo-page .catalog-tabs,.mivo-horizontal,.mobile-nav,.mivo-page .search-types{scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.mivo-page .catalog-tabs::-webkit-scrollbar,.mivo-horizontal::-webkit-scrollbar,.mobile-nav::-webkit-scrollbar{display:none}
+.mivo-page .search-types{display:flex;gap:8px;overflow-x:auto;white-space:nowrap;touch-action:pan-x;padding-bottom:8px}
+.mivo-page .search-types button{flex:0 0 auto;min-height:40px}
+.mobile-nav{overflow-x:auto;overscroll-behavior-x:contain;touch-action:pan-x}
+.mobile-nav button{flex:1 0 62px;min-width:62px;min-height:48px}
+@media(max-width:760px){.artist-hero-v2{min-height:290px!important;padding:20px!important;border-radius:23px!important}.artist-hero-v2 h1{font-size:clamp(36px,10vw,58px)!important}.artist-related-grid{grid-template-columns:1fr 1fr}.mivo-page .catalog-tabs{margin-inline:-17px;padding-inline:17px!important}}
+</style>
 </head>
 <body>
 <div class="mivo-dynamic-backdrop" id="mivoDynamicBackdrop"></div><div class="noise"></div>
@@ -1073,7 +1097,7 @@ const viralCatalog2025_26=[
 ];
 async function loadMivoHits(force=false){
  const grid=$("hitGrid"),status=$("hitsStatus");if(!grid||!status||mivoHitsLoading||(!force&&mivoHitsLoaded))return;
- mivoHitsLoading=true;status.style.display="block";status.textContent="Загружаем актуальные хиты СНГ по чартам VK Музыки…";grid.replaceChildren();
+ mivoHitsLoading=true;status.style.display="block";status.textContent="Загружаем актуальные хиты…";grid.replaceChildren();
  try{
   const cacheKey="mivo_cis_chart_nov2026_v2",cached=readStore(cacheKey,null);
   if(!force&&Array.isArray(cached)&&cached.length&&Date.now()-(cached.savedAt||0)<86400000){
@@ -1104,7 +1128,7 @@ async function loadMivoHits(force=false){
    const node=card(t,i);node.dataset.chartRank=String(i+1);
    const rank=document.createElement("span");rank.className="hit-rank";rank.textContent=t.viralYear==="2026"?"26": "25";node.querySelector(".cover").appendChild(rank);grid.appendChild(node);
   });
-  status.textContent=hitTracks.length?"Подборка по российскому чарту VK Музыки · ноябрь 2026, плюс вирусные хиты 2025 · доступно для предпрослушивания: "+hitTracks.length:"Не удалось найти доступные фрагменты в российском каталоге. Попробуй обновить подборку.";
+  status.textContent=hitTracks.length?"Подобрано композиций: "+hitTracks.length:"Не удалось найти доступные фрагменты в российском каталоге. Попробуй обновить подборку.";
   status.style.display="block";mivoHitsLoaded=true;renderMixes();
  }catch(error){
   status.textContent="Не удалось загрузить мировую подборку. Проверь подключение и попробуй ещё раз.";status.style.display="block";
@@ -1230,19 +1254,21 @@ function renderSearchSuggestions(list,query,message){
  row.addEventListener("click",()=>{const idx=allTracks().findIndex(t=>trackKey(t)===trackKey(track));if(idx>=0)playTrack(idx);box.classList.remove("open");$("searchInput").value=track.title;$("searchInput").dispatchEvent(new Event("input"))});box.appendChild(row)});
  box.classList.add("open");
 }
+let artistSearchTracks=[],artistSearchSequence=0;
+async function fetchArtistDiscography(name){const norm=s=>String(s||"").toLowerCase().replace(/ё/g,"е").replace(/[^a-z0-9а-я]/gi,"");const r=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(name)+"&entity=musicArtist&limit=20&country=ru");if(!r.ok)throw Error("artist search");const d=await r.json(),a=d.results||[],w=norm(name),artist=a.find(x=>norm(x.artistName)===w)||a.find(x=>norm(x.artistName).includes(w)||w.includes(norm(x.artistName)));if(!artist?.artistId)return [];const lr=await fetch("https://itunes.apple.com/lookup?id="+artist.artistId+"&entity=song&limit=200&country=ru");if(!lr.ok)throw Error("artist lookup");const ld=await lr.json();return (ld.results||[]).filter(x=>x.wrapperType==="track"&&x.trackId).map(x=>({id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName||artist.artistName,genre:x.primaryGenreName||"Музыка",collectionName:x.collectionName||"",artworkUrl100:x.artworkUrl100||"",trackViewUrl:x.trackViewUrl||"",url:x.previewUrl||"",previewUrl:x.previewUrl||"",releaseDate:x.releaseDate||"",symbol:"♪",style:"c1"}))}
 async function searchWorldwideSongs(query){
  const status=$("emptyState"),sequence=++searchSequence;
  if(searchController)searchController.abort();searchController=new AbortController();
  status.style.display="block";status.textContent="Ищем музыку…";
  try{
   const term=encodeURIComponent(query),signal=searchController.signal;
-  let response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=18&country=ru",{signal});
+  let response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=200&country=ru",{signal});
   if(!response.ok)throw new Error("search");
   let data=await response.json(),results=data.results||[];
-  if(!results.length){response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=18&country=us",{signal});if(!response.ok)throw new Error("search");data=await response.json();results=data.results||[]}
+  if(!results.length){response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=200&country=us",{signal});if(!response.ok)throw new Error("search");data=await response.json();results=data.results||[]}
   if(sequence!==searchSequence)return;
   const seen=new Set();
-  catalogTracks=results.filter(x=>x.previewUrl&&!seen.has(x.trackId)&&(seen.add(x.trackId),true)).map(x=>({id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Music",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:x.previewUrl,symbol:"♪",style:"c1"}));
+  catalogTracks=results.filter(x=>x.trackId&&!seen.has(x.trackId)&&(seen.add(x.trackId),true)).map(x=>({id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Music",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:x.previewUrl,symbol:"♪",style:"c1"}));
   persistCatalog();renderSearchSuggestions(catalogTracks,query);render([...catalogTracks,...localTracks]);renderMixes();
   status.textContent=catalogTracks.length?"Найдено "+catalogTracks.length+" песен. Доступны ознакомительные фрагменты.":"Ничего не найдено. Попробуй другой запрос.";
   status.style.display=catalogTracks.length||localTracks.length?"none":"block";
@@ -1708,8 +1734,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   window.scrollTo({top:0,behavior:"instant"});
   if(name==="wave"){renderMixes();renderWaveShelves()}
  }
- function renderArtist(name){
-  const tracks=all().filter(t=>(t.artist||"").toLowerCase()===name.toLowerCase());
+ async function renderArtist(name){let tracks=all().filter(t=>(t.artist||"").toLowerCase()===name.toLowerCase());if(tracks.length<40){try{const extra=await fetchArtistDiscography(name);extra.forEach(t=>{if(!catalogTracks.some(x=>trackKey(x)===trackKey(t)))catalogTracks.push(t)});persistCatalog();tracks=all().filter(t=>(t.artist||"").toLowerCase()===name.toLowerCase())}catch(_){}}tracks=[...new Map(tracks.map(t=>[trackKey(t),t])).values()];
   const p=pages.artist;p.replaceChildren();
   const art=tracks[0]?.artworkUrl100?.replace("100x100","600x600")||"";
   const hero=document.createElement("section");hero.className="artist-hero-v2";if(art)hero.style.setProperty("--artist-art",'url("'+art+'")');
@@ -1741,7 +1766,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   activate("album");
  }
  function filterSearch(){
-  const q=query.toLowerCase(),tracks=all().filter(t=>!q||[t.title,t.artist,t.collectionName].join(" ").toLowerCase().includes(q));
+  const q=query.toLowerCase(),source=kind==="artists"?[...all(),...artistSearchTracks]:all(),tracks=source.filter(t=>!q||[t.title,t.artist,t.collectionName].join(" ").toLowerCase().includes(q));
   searchResults.replaceChildren();artistResults.replaceChildren();
   $("mivoSearchTitle").textContent=q?"Результаты поиска":"Популярное и новое";
   if(kind==="artists"){
@@ -1756,7 +1781,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   }
   if(!tracks.length){const note=document.createElement("p");note.className="catalog-hint";note.textContent=q?"Ничего не найдено. Попробуй другое название.":"Здесь появятся результаты поиска.";searchResults.append(note)}
  }
- types.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{kind=b.dataset.kind;types.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));filterSearch()}));
+ types.querySelectorAll("button").forEach(b=>b.addEventListener("click",async()=>{kind=b.dataset.kind;types.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));if(kind==="artists"&&query){const seq=++artistSearchSequence;artistResults.replaceChildren();const wait=document.createElement("p");wait.className="catalog-hint";wait.textContent="Ищем исполнителя и его дискографию…";artistResults.append(wait);try{artistSearchTracks=await fetchArtistDiscography(query);if(seq!==artistSearchSequence)return;artistSearchTracks.forEach(t=>{if(!catalogTracks.some(x=>trackKey(x)===trackKey(t)))catalogTracks.push(t)});persistCatalog()}catch(_){artistSearchTracks=[]}}filterSearch()}));
  const singleInput=$("searchInput");
  if(singleInput){
   singleInput.placeholder="Трек, исполнитель или альбом…";
@@ -1788,7 +1813,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   const played=new Set([...recent,...liked]);
   const candidates=tracks.filter(t=>!played.has(trackKey(t))&&!artistSeen.has((t.artist||"").toLowerCase()));
   const recommended=candidates.map(t=>({t,score:(genreScore[t.genre]||0)+(t.genre==="Hip-Hop"||t.genre==="Pop"?1:0)+Math.random()*.25})).sort((a,b)=>b.score-a.score).map(x=>x.t).slice(0,24);
-  const fresh=tracks.filter(t=>!played.has(trackKey(t))).slice(0,24);
+  const fresh=tracks.filter(t=>!played.has(trackKey(t))&&!hitTracks.some(h=>trackKey(h)===trackKey(t))).sort((a,b)=>String(b.releaseDate||"").localeCompare(String(a.releaseDate||""))).slice(0,24);
   const mixes=[
    {title:"Похоже на твоё",sub:seeds.length?"Похожие жанры и новые исполнители · без повторов":"Послушай несколько треков — настроим рекомендации",list:recommended},
    {title:"Хиты России и СНГ",sub:hitTracks.length?"По актуальному чарту и музыкальным открытиям":"Загружаем чарт",list:hitTracks.slice(0,30)},
@@ -1802,10 +1827,11 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  function renderWaveShelves(){
   const root=pages.wave;if(root.dataset.ready)return;root.dataset.ready="1";
   const intro=document.createElement("div");intro.className="mivo-feature-row";
-  [["♫","Подобрано под тебя","Новые треки похожих жанров"],["✦","Новые открытия","Исполнители за пределами твоей истории"],["◉","В тренде","Музыка, которую сейчас слушают"]].forEach(([ic,t,s],i)=>{const b=document.createElement("button");b.className="mivo-feature-card";b.innerHTML="<i>"+ic+"</i><b>"+t+"</b><small>"+s+"</small>";b.onclick=()=>{if(i===0)document.querySelector("#mixGrid .personal-mix")?.click();else if(i===1)activate("catalog");else activate("home")};intro.append(b)});root.append(intro);
+  [["♫","Подобрано под тебя","Новые треки похожих жанров"],["✦","Новые открытия","Исполнители за пределами твоей истории"],["◉","В тренде","Музыка, которую сейчас слушают"]].forEach(([ic,t,s],i)=>{const b=document.createElement("button");b.className="mivo-feature-card";b.innerHTML="<i>"+ic+"</i><b>"+t+"</b><small>"+s+"</small>";b.onclick=()=>{if(i===0){activate("wave");fillWave()}else if(i===1){activate("catalog");singleInput?.focus()}else{activate("wave");showWaveTrend()}};intro.append(b)});root.append(intro);
   const note=document.createElement("p");note.className="catalog-hint";note.textContent="Рекомендации исключают уже прослушанные композиции и учитывают жанры твоей истории и избранного.";root.append(note);
   const list=document.createElement("div");list.id="waveTrackList";list.className="mivo-search-results";root.append(list);
  }
+ function showWaveTrend(){const list=$("waveTrackList");if(!list)return;list.replaceChildren();const source=hitTracks.length?hitTracks:all().filter(t=>/рус|rap|hip.?hop|pop/i.test(t.genre||""));source.slice(0,60).forEach(t=>list.append(card(t,all().findIndex(x=>trackKey(x)===trackKey(t)))));if(!source.length){const p=document.createElement("p");p.textContent="Трендовая подборка пока загружается.";list.append(p)}}
  function fillWave(){const list=$("waveTrackList");if(!list)return;list.replaceChildren();const seeds=[...recent,...[...liked]];const genres={};all().forEach(t=>{if(seeds.includes(trackKey(t)))genres[t.genre]=(genres[t.genre]||0)+1});const excluded=new Set(seeds);const choices=all().filter(t=>!excluded.has(trackKey(t))).sort((a,b)=>(genres[b.genre]||0)-(genres[a.genre]||0)).slice(0,30);choices.forEach(t=>list.append(card(t,all().findIndex(x=>trackKey(x)===trackKey(t)))));if(!choices.length){const p=document.createElement("p");p.textContent="Пока мало данных для рекомендаций. Послушай несколько разных композиций.";list.append(p)}}
  const oldActivate=activate;
  activate=function(name){oldActivate(name);if(name==="wave"){renderMixes();fillWave()}};
@@ -1818,10 +1844,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  const originalSearchRunner=searchWorldwideSongs;
  searchWorldwideSongs=async function(q){await originalSearchRunner(q);query=singleInput?.value.trim()||q;filterSearch()};
  // Catalog tabs are page controls, not dead links or scroll shortcuts.
- document.querySelectorAll(".catalog-tabs [data-catalog-tab]").forEach(btn=>btn.addEventListener("click",()=>{
-  const tab=btn.dataset.catalogTab;
-  if(tab==="mixes"||tab==="wave"){activate("wave");renderWaveShelves();fillWave()}
- }));
+ document.querySelectorAll(".catalog-tabs [data-catalog-tab]").forEach(btn=>btn.addEventListener("click",()=>{const tab=btn.dataset.catalogTab;document.querySelectorAll(".catalog-tabs [data-catalog-tab]").forEach(x=>x.classList.toggle("active",x===btn));if(tab==="mixes"||tab==="wave"){activate("wave");renderWaveShelves();fillWave()}else{activate("catalog");$("trackGrid").hidden=tab!=="tracks";$("releaseGrid").hidden=tab!=="releases";$("catalogHint").hidden=tab!=="releases";if(tab==="releases")renderReleases();else if(tab==="tracks")render(allTracks())}}));
  activate("home");
  const startPref=window.MIVO_UI_PREFS?.().start;const startMap={home:"home",wave:"wave",discover:"catalog",library:"collection",settings:"settings"};if(startPref&&startMap[startPref])activate(startMap[startPref]);
 })();
@@ -1845,25 +1868,15 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    return {id:"applechart:"+id,title:x.name||full.trackName,artist:x.artistName||full.artistName,genre:full.primaryGenreName||x.genres?.[0]?.name||"Поп",collectionName:full.collectionName||"",artworkUrl100:art.replace("{w}","300").replace("{h}","300"),trackViewUrl:x.url||full.trackViewUrl||"",url:full.previewUrl||"",previewUrl:full.previewUrl||"",releaseDate:full.releaseDate||x.releaseDate||"",symbol:"♪",style:"c1",chartRank:i+1,chartSource:"Apple Music Россия"};
   }).filter(t=>t.title&&t.artist);
  }
- async function fetchVkSnapshot(){
-  const out=[],list=fallback;let cursor=0;
-  async function worker(){while(cursor<list.length){const [title,artist]=list[cursor++];try{
-   const res=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(title+" "+artist)+"&entity=song&limit=12&country=ru");
-   if(!res.ok)continue;const data=await res.json(),wanted=norm(title),artistWords=artist.split(/[ ,&]+/).map(norm).filter(x=>x.length>2);
-   const match=(data.results||[]).find(x=>norm(x.trackName)===wanted&&artistWords.some(w=>norm(x.artistName).includes(w)));
-   if(match)out.push({id:"vkchart:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",releaseDate:match.releaseDate||"",symbol:"♪",style:"c1",chartSource:"VK Музыка · 13.11.2026"});
-  }catch(_){}}}
-  await Promise.all(Array.from({length:6},worker));return out;
- }
- function buildFreshReleaseShelf(){
+ async function fetchVkSnapshot(){const out=new Array(fallback.length);let cursor=0;async function worker(){while(cursor<fallback.length){const index=cursor++,[title,artist]=fallback[index];try{const res=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(title+" "+artist)+"&entity=song&limit=12&country=ru");if(!res.ok)continue;const data=await res.json(),wanted=norm(title),words=artist.split(/[ ,&]+/).map(norm).filter(x=>x.length>2);const match=(data.results||[]).find(x=>norm(x.trackName)===wanted&&words.some(w=>norm(x.artistName).includes(w)));if(match)out[index]={id:"vkchart:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",releaseDate:match.releaseDate||"",symbol:"♪",style:"c1"}}catch(_){}}}await Promise.all(Array.from({length:6},worker));return out.filter(Boolean)}
+ async function fetchFreshReleases(){const queries=["русская музыка 2026","русский рэп 2026","поп музыка Россия 2026","музыка СНГ 2026"],out=new Map();let cursor=0;async function worker(){while(cursor<queries.length){const q=queries[cursor++];try{const r=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(q)+"&entity=song&limit=200&country=ru");if(!r.ok)continue;const d=await r.json();(d.results||[]).forEach(x=>{if(!x.trackId||!x.releaseDate)return;const dt=new Date(x.releaseDate);if(!Number.isFinite(dt.getTime())||dt.getTime()>Date.now()+86400000||dt.getTime()<Date.now()-180*86400000)return;if(!/[а-яё]/i.test(String(x.artistName||"")+" "+String(x.trackName||"")))return;out.set(String(x.trackId),{id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Поп",collectionName:x.collectionName||"",artworkUrl100:x.artworkUrl100||"",trackViewUrl:x.trackViewUrl||"",url:x.previewUrl||"",previewUrl:x.previewUrl||"",releaseDate:x.releaseDate,symbol:"♪",style:"c1"})})}catch(_){}}}await Promise.all([worker(),worker()]);return [...out.values()].sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate)).slice(0,60)}
+ async function buildFreshReleaseShelf(){
   const home=document.getElementById("mivoPageHome");if(!home)return;
   let section=document.getElementById("mivoFreshReleases");
   if(!section){section=document.createElement("section");section.id="mivoFreshReleases";section.className="section";section.innerHTML='<div class="section-head"><div><div class="eyebrow-line">СВЕЖИЕ РЕЛИЗЫ</div><h2>Недавно вышло</h2><p>Новые композиции из актуального музыкального каталога.</p></div><button class="text-btn" type="button" id="allFreshReleases">ВСЕ ↗</button></div><div class="mivo-horizontal" id="mivoFreshGrid"></div>';const mixes=document.getElementById("mixes");home.insertBefore(section,mixes||null);section.querySelector("#allFreshReleases").onclick=()=>{document.querySelector("[data-page=catalog]")?.click();document.querySelector("[data-catalog-tab=releases]")?.click()}}
   const grid=section.querySelector("#mivoFreshGrid");if(!grid)return;grid.replaceChildren();
-  const cutoff=Date.now()-120*86400000;
-  let fresh=hitTracks.filter(t=>t.releaseDate&&new Date(t.releaseDate).getTime()>=cutoff).sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate));
-  if(!fresh.length)fresh=hitTracks.filter(t=>t.releaseDate).sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate)).slice(0,18);
-  fresh.slice(0,20).forEach(t=>grid.append(card(t,allTracks().findIndex(x=>trackKey(x)===trackKey(t)))));
+  let fresh=await fetchFreshReleases();
+  fresh.slice(0,20).forEach(t=>{if(!allTracks().some(x=>trackKey(x)===trackKey(t)))catalogTracks.push(t);grid.append(card(t,allTracks().findIndex(x=>trackKey(x)===trackKey(t))))});
   if(!fresh.length){const note=document.createElement("p");note.className="catalog-hint";note.textContent="Даты релизов появятся вместе с обновлением музыкального каталога.";grid.append(note)}
  }
  async function loadLiveChart(force=false){
@@ -1891,7 +1904,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  $("refreshHits")?.addEventListener("click",()=>loadLiveChart(true));
  const status=$("hitsStatus");if(status&&"IntersectionObserver"in window){const observer=new IntersectionObserver(entries=>{if(entries.some(x=>x.isIntersecting)){loadLiveChart();observer.disconnect()}},{rootMargin:"300px"});observer.observe(status)}else loadLiveChart();
  // Freshly released tracks are separated from the chart, using actual release dates when present.
- const originalTabs=document.querySelector(".catalog-tabs");
+ const staleTabs=document.querySelector(".catalog-tabs");const originalTabs=staleTabs?staleTabs.cloneNode(true):null;if(staleTabs&&originalTabs)staleTabs.replaceWith(originalTabs);
  originalTabs?.querySelectorAll("[data-catalog-tab='releases']").forEach(btn=>btn.addEventListener("click",()=>setTimeout(()=>{
   const root=$("releaseGrid");if(!root||root.dataset.freshBuilt)return;root.dataset.freshBuilt="1";
   const recentTracks=hitTracks.filter(t=>t.releaseDate&&Date.now()-new Date(t.releaseDate).getTime()<1000*60*60*24*120);
