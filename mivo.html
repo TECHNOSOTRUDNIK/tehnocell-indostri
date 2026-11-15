@@ -1860,6 +1860,17 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   }catch(_){}}}
   await Promise.all(Array.from({length:6},worker));return out;
  }
+ function buildFreshReleaseShelf(){
+  const home=document.getElementById("mivoPageHome");if(!home)return;
+  let section=document.getElementById("mivoFreshReleases");
+  if(!section){section=document.createElement("section");section.id="mivoFreshReleases";section.className="section";section.innerHTML='<div class="section-head"><div><div class="eyebrow-line">СВЕЖИЕ РЕЛИЗЫ</div><h2>Недавно вышло</h2><p>Новые композиции из актуального музыкального каталога.</p></div><button class="text-btn" type="button" id="allFreshReleases">ВСЕ ↗</button></div><div class="mivo-horizontal" id="mivoFreshGrid"></div>';const mixes=document.getElementById("mixes");home.insertBefore(section,mixes||null);section.querySelector("#allFreshReleases").onclick=()=>{document.querySelector("[data-page=catalog]")?.click();document.querySelector("[data-catalog-tab=releases]")?.click()}}
+  const grid=section.querySelector("#mivoFreshGrid");if(!grid)return;grid.replaceChildren();
+  const cutoff=Date.now()-120*86400000;
+  let fresh=hitTracks.filter(t=>t.releaseDate&&new Date(t.releaseDate).getTime()>=cutoff).sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate));
+  if(!fresh.length)fresh=hitTracks.filter(t=>t.releaseDate).sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate)).slice(0,18);
+  fresh.slice(0,20).forEach(t=>grid.append(card(t,allTracks().findIndex(x=>trackKey(x)===trackKey(t)))));
+  if(!fresh.length){const note=document.createElement("p");note.className="catalog-hint";note.textContent="Даты релизов появятся вместе с обновлением музыкального каталога.";grid.append(note)}
+ }
  async function loadLiveChart(force=false){
   if(mivoHitsLoading||(!force&&mivoHitsLoaded))return;mivoHitsLoading=true;
   const status=$("hitsStatus"),grid=$("hitGrid");if(status){status.style.display="block";status.textContent="Обновляем музыкальные чарты…"}if(grid)grid.replaceChildren();
@@ -1873,6 +1884,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
     if(tracks.length)writeStore(key,{savedAt:Date.now(),tracks,source});
    }
    hitTracks=tracks||[];
+   buildFreshReleaseShelf();
    grid?.replaceChildren();
    hitTracks.slice(0,50).forEach((t,i)=>{const node=card(t,i);node.dataset.chartRank=String(t.chartRank||i+1);const rank=document.createElement("span");rank.className="hit-rank";rank.textContent="#"+(t.chartRank||i+1);node.querySelector(".cover")?.append(rank);grid?.append(node)});
    if(status){status.textContent=hitTracks.length?source+" · "+hitTracks.length+" композиций · список обновляется автоматически":"Не удалось загрузить чарт. Попробуй позже.";status.style.display="block"}
