@@ -1550,5 +1550,29 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  }));
 })();
 </script>
+<script>
+(function(){
+ const prefs=window.MIVO_UI_PREFS?window.MIVO_UI_PREFS():{};
+ const audio=document.getElementById("audio");
+ const volume=document.getElementById("volume"),npVolume=document.getElementById("npVolume");
+ let saved=null;try{saved=localStorage.getItem("mivo_saved_volume")}catch(_){}
+ if(prefs.rememberVolume&&saved!==null&&!Number.isNaN(Number(saved))){
+  audio.volume=Number(saved);if(volume)volume.value=saved;if(npVolume)npVolume.value=saved;
+ }
+ function remember(value){if(!prefs.rememberVolume)return;try{localStorage.setItem("mivo_saved_volume",String(value))}catch(_){}}
+ volume?.addEventListener("input",e=>remember(e.target.value));
+ npVolume?.addEventListener("input",e=>remember(e.target.value));
+ let lastTrack="";
+ audio.addEventListener("play",()=>{
+  const title=document.getElementById("nowTitle")?.textContent||"";
+  if(title===lastTrack)return;lastTrack=title;
+  if(prefs.autoPlayer&&typeof window.openNowPlaying==="function")window.openNowPlaying();
+  if(prefs.autoLyrics)document.getElementById("openLyrics")?.click();
+ });
+ if(prefs.start&&prefs.start!=="home"){
+  setTimeout(()=>document.querySelector('[data-view="'+prefs.start+'"]')?.click(),250);
+ }
+})();
+</script>
 </body>
 </html>
