@@ -867,11 +867,12 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 <audio id="audio" preload="none"></audio>
 
 <script>
-let localTracks=[],catalogTracks=readStore("mivo_catalog_cache_v1",[]),hitTracks=[],queue=[],current=-1,searchTimer=null,searchController=null,searchSequence=0,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),playlists=readStore("mivo_playlists_v1",[]),repeat=false,shuffle=false;
+let localTracks=[],catalogTracks=readStore("mivo_catalog_cache_v1",[]),hitTracks=[],queue=[],current=-1,currentTrackKey=null,searchTimer=null,searchController=null,searchSequence=0,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),playlists=readStore("mivo_playlists_v1",[]),repeat=false,shuffle=false;
 if(!Array.isArray(catalogTracks))catalogTracks=[];if(!Array.isArray(recent))recent=[];if(!Array.isArray(playlists))playlists=[];
 function readStore(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||"null");return value??fallback}catch(_){return fallback}}
 function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(_){toast("Не удалось сохранить данные в этом браузере")}}
 function trackKey(t){return t.id||((t.genre==="Local"?"local:":"track:")+t.title+"::"+t.artist)}
+function getCurrentTrack(){const tracks=allTracks();if(currentTrackKey){const found=tracks.find(t=>trackKey(t)===currentTrackKey);if(found){current=tracks.indexOf(found);return found}}return current>=0?tracks[current]||null:null}
 function saveRecent(t){
  const key=trackKey(t);recent=[key,...recent.filter(x=>x!==key)].slice(0,40);writeStore("mivo_recent_v1",recent);
  const history=readStore("mivo_recent_tracks_v1",{});history[key]=trackSnapshot(t);
@@ -922,7 +923,7 @@ function card(t,i,local=false){
  const fallback=t.style||("c"+((Math.abs(String(t.title||"M").split("").reduce((a,c)=>a+c.charCodeAt(0),0))%8)+1));
  d.innerHTML='<div class="cover '+fallback+'">'+(art?'<img class="cover-photo" loading="lazy" decoding="async" src="'+art+'" alt="Обложка '+escapeHtml(t.title)+'">':'<span class="cover-symbol">'+escapeHtml(t.symbol||"♪")+'</span>')+'<span class="cover-play">▶</span><span class="cover-kind">MIVO</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small><button class="card-add" type="button" aria-label="Добавить в плейлист" title="Добавить в плейлист">＋</button>';
  const img=d.querySelector(".cover-photo");if(img)img.addEventListener("error",()=>{img.remove();const icon=document.createElement("span");icon.className="cover-symbol";icon.textContent=t.symbol||"♪";d.querySelector(".cover").prepend(icon)});
- d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;if(!t.url&&t.trackViewUrl){window.open(t.trackViewUrl,"_blank","noopener");toast("Открываем страницу композиции");return}playTrack(allTracks().indexOf(t))});
+ d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;const liveIndex=allTracks().findIndex(x=>trackKey(x)===trackKey(t));if(liveIndex<0)return;if(!t.url&&t.trackViewUrl){window.open(t.trackViewUrl,"_blank","noopener");toast("Полная версия откроется на музыкальной площадке");return}playTrack(liveIndex)});
  d.querySelector(".card-add").addEventListener("click",e=>{e.stopPropagation();choosePlaylistForTrack(t)});
  return d;
 }
@@ -1027,7 +1028,7 @@ async function loadMivoHits(force=false){
       const data=await response.json(),results=data.results||[];
       const norm=s=>String(s||"").toLowerCase().replace(/[^a-z0-9а-яё]/gi,"");
       const wanted=norm(title),artistParts=artist.split(" ").filter(x=>x.length>2).map(norm);
-      const match=results.find(x=>{const song=norm(x.trackName),artistName=norm(x.artistName);return (song===wanted||song.includes(wanted)||wanted.includes(song))&&artistParts.some(part=>artistName.includes(part))});
+      const match=results.find(x=>{const song=norm(x.trackName),artistName=norm(x.artistName);const exactTitle=song===wanted;const matched=artistParts.filter(part=>artistName.includes(part));const artistOk=artistParts.length>1?matched.length>=Math.min(2,artistParts.length):matched.length===1;return exactTitle&&artistOk});
       if(!match)continue;
       found[index]={id:"apple:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:match.previewUrl||"",previewUrl:match.previewUrl||"",symbol:"♪",style:"c1",viralYear:year};
      }catch(e){}
@@ -1063,7 +1064,7 @@ function renderPlaylists(){
   el.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",async()=>{
    const action=btn.dataset.action;
    if(action==="play")playPlaylist(p.id);
-   if(action==="add"){if(current<0)toast("Сначала выбери композицию");else addTrackToPlaylist(allTracks()[current],p.id)}
+   if(action==="add"){const active=getCurrentTrack();if(!active)toast("Сначала выбери композицию");else addTrackToPlaylist(active,p.id)}
    if(action==="rename"){const name=await mivoPrompt("Переименовать плейлист","Укажи новое название подборки.", "Название плейлиста",p.name);if(name&&name.trim()){p.name=name.trim().slice(0,48);savePlaylists();renderPlaylists()}}
    if(action==="delete"&&await mivoConfirm("Удалить плейлист?","Плейлист «"+p.name+"» будет удалён. Это действие нельзя отменить.")){playlists=playlists.filter(x=>x.id!==p.id);savePlaylists();renderPlaylists();toast("Плейлист удалён")}
   }));
@@ -1127,19 +1128,19 @@ function mivoConfirm(title,message){
  });
 }
 function genreRu(g){return ({Electronic:"Электроника",Ambient:"Эмбиент",Indie:"Инди",Jazz:"Джаз",World:"Музыка мира",Local:"Локальный файл",Pop:"Поп",Rock:"Рок","Hip-Hop":"Хип-хоп",Dance:"Танцевальная музыка"})[g]||g||"Музыка"}
-function syncNowPlaying(){const t=allTracks()[current];if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");
+function syncNowPlaying(){const t=getCurrentTrack();if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");
  const art=t.artworkUrl100?t.artworkUrl100.replace("100x100","600x600"):"";
  $("npBackdrop").style.background=art?'linear-gradient(120deg,#05050566,#050505aa),url("'+art+'") center/cover no-repeat':'radial-gradient(ellipse at 70% 35%,#ffffff2b,transparent 42%),radial-gradient(ellipse at 20% 80%,#7773,transparent 40%),#080808';
  $("npArt").style.backgroundImage=art?'url("'+art+'")':"";$("npArt").style.backgroundSize="cover";$("npArt").style.backgroundPosition="center";$("npArt").style.color=art?"transparent":"#fff";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>"}
 function openNowPlaying(){if(current<0&&!allTracks().length){toast("Сначала добавь аудиофайл или найди музыку через поиск");return}if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
 function closeNowPlaying(){$("nowPlaying").classList.remove("open");$("nowPlaying").setAttribute("aria-hidden","true");document.body.style.overflow=""}
-function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];if(!queue.length||!queue.includes(trackKey(t)))queue=tracks.map(trackKey);saveRecent(t);renderMixes();audio.pause();audio.removeAttribute("src");audio.load();$("progress").value=0;$("npProgress").value=0;$("currentTime").textContent="0:00";$("npCurrent").textContent="0:00";$("duration").textContent="0:00";$("npDuration").textContent="0:00";let started=false;const startFromBeginning=()=>{if(started)return;started=true;try{audio.currentTime=0}catch(_){}audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"})};audio.addEventListener("loadedmetadata",startFromBeginning,{once:true});audio.crossOrigin="anonymous";audio.src=t.url;audio.load();if(audio.readyState>=1)startFromBeginning();$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
+function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];currentTrackKey=trackKey(t);if(!queue.length||!queue.includes(trackKey(t)))queue=tracks.map(trackKey);saveRecent(t);renderMixes();audio.pause();audio.removeAttribute("src");audio.load();$("progress").value=0;$("npProgress").value=0;$("currentTime").textContent="0:00";$("npCurrent").textContent="0:00";$("duration").textContent="0:00";$("npDuration").textContent="0:00";let started=false;const startFromBeginning=()=>{if(started)return;started=true;try{audio.currentTime=0}catch(_){}audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"})};audio.addEventListener("loadedmetadata",startFromBeginning,{once:true});audio.crossOrigin="anonymous";audio.src=t.url;audio.load();if(audio.readyState>=1)startFromBeginning();$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
 function togglePlay(){if(!audio.src){if(allTracks().length)playTrack(0);else toast("Добавь аудиофайл или найди трек через поиск");return}if(audio.paused){audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>toast("Не удалось продолжить воспроизведение"))}else{audio.pause();$("play").textContent="▶";$("npPlay").textContent="▶";$("nowPlaying").classList.remove("playing")}}
 function move(step){
  const tracks=allTracks();if(!tracks.length){toast("В медиатеке пока нет музыки");return}
  let keys=queue.length?queue.filter(k=>tracks.some(t=>trackKey(t)===k)):tracks.map(trackKey);
  if(!keys.length)keys=tracks.map(trackKey);
- const active=trackKey(tracks[current]||{});let pos=keys.indexOf(active);
+ const active=trackKey(getCurrentTrack()||{});let pos=keys.indexOf(active);
  if(shuffle&&keys.length>1){let next=pos;while(next===pos)next=Math.floor(Math.random()*keys.length);pos=next}
  else pos=(pos<0?0:(pos+step+keys.length)%keys.length);
  const nextTrack=tracks.find(t=>trackKey(t)===keys[pos]);if(nextTrack)playTrack(tracks.indexOf(nextTrack));
@@ -1148,7 +1149,7 @@ function fmt(s){if(!Number.isFinite(s))return"0:00";return Math.floor(s/60)+":"+
 $("play").onclick=togglePlay;$("next").onclick=()=>move(1);$("prev").onclick=()=>{if(audio.currentTime>3){audio.currentTime=0}else move(-1)};
 $("shuffle").onclick=()=>{shuffle=!shuffle;$("shuffle").style.color=shuffle?"var(--accent)":"#888";toast(shuffle?"Перемешивание включено":"Обычный порядок")};
 $("repeat").onclick=()=>{repeat=!repeat;audio.loop=repeat;$("repeat").style.color=repeat?"var(--accent)":"#888"};
-$("likeBtn").onclick=()=>{if(current<0)return;const t=allTracks()[current],key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);
+$("likeBtn").onclick=()=>{const t=getCurrentTrack();if(!t)return;const key=trackKey(t);liked.has(key)?liked.delete(key):liked.add(key);writeStore("mivo_liked_v1",[...liked]);
  const savedLikes=readStore("mivo_liked_tracks_v1",{});if(liked.has(key))savedLikes[key]=trackSnapshot(t);else delete savedLikes[key];writeStore("mivo_liked_tracks_v1",savedLikes);
  renderMixes();$("likeBtn").classList.toggle("on",liked.has(key));if($("nowPlaying").classList.contains("open"))syncNowPlaying();toast(liked.has(key)?"Добавлено в избранное":"Удалено из избранного")};
 audio.addEventListener("timeupdate",()=>{if(audio.duration){const p=audio.currentTime/audio.duration*100;$("progress").value=p;$("npProgress").value=p;$("currentTime").textContent=fmt(audio.currentTime);$("npCurrent").textContent=fmt(audio.currentTime);$("duration").textContent=fmt(audio.duration);$("npDuration").textContent=fmt(audio.duration)}});
@@ -1260,11 +1261,11 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   const node=originalCard(t,i,local);
   const play=node.querySelector(".card-play");
   if(play)play.setAttribute("aria-label","Воспроизвести "+t.title);
-  if(current>=0&&allTracks()[current]===t)node.classList.add("is-playing");
+  if(getCurrentTrack()&&trackKey(getCurrentTrack())===trackKey(t))node.classList.add("is-playing");
   return node;
  };
  const updateMedia=()=>{
-  const t=allTracks()[current];if(!t)return;
+  const t=getCurrentTrack();if(!t)return;
   if("mediaSession"in navigator){
    try{
     navigator.mediaSession.metadata=new MediaMetadata({title:t.title,artist:t.artist,album:t.collectionName||"MIVO",artwork:t.artworkUrl100?[{src:t.artworkUrl100.replace("100x100","300x300"),sizes:"600x600",type:"image/jpeg"}]:[]});
@@ -1289,7 +1290,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  const originalRender=render;
  render=function(list=allTracks()){originalRender(list);if(resultCount)resultCount.textContent=list.length+" "+(list.length===1?"композиция":list.length>1&&list.length<5?"композиции":"композиций")};
  const originalSync=syncNowPlaying;
- syncNowPlaying=function(){originalSync();const t=allTracks()[current];if(t){$("nowArt").textContent=t.symbol||"♪";$("nowArt").style.backgroundImage=t.artworkUrl100?'url("'+t.artworkUrl100.replace("100x100","600x600")+'")':"";$("nowArt").style.backgroundSize="cover";$("nowArt").style.backgroundPosition="center"}};
+ syncNowPlaying=function(){originalSync();const t=getCurrentTrack();if(t){$("nowArt").textContent=t.symbol||"♪";$("nowArt").style.backgroundImage=t.artworkUrl100?'url("'+t.artworkUrl100.replace("100x100","600x600")+'")':"";$("nowArt").style.backgroundSize="cover";$("nowArt").style.backgroundPosition="center"}};
 })();
 
 </script>
@@ -1317,7 +1318,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  function message(text){const box=$("lyricsContent");box.replaceChildren();const p=document.createElement("div");p.className="lyrics-loading";p.textContent=text;box.appendChild(p)}
  function parseLyrics(text){return text.split(/\r?\n/).map(line=>{const m=line.match(/^\[(\d{2}):(\d{2})(?:\.(\d{1,3}))?\]\s*(.*)$/);return m?{time:Number(m[1])*60+Number(m[2])+Number("0."+(m[3]||"0")),text:m[4]}:null}).filter(x=>x&&x.text).sort((a,b)=>a.time-b.time)}
  async function loadLyrics(){
-  const token=++lyricToken,t=allTracks()[current];$("lyricsModal").classList.add("open");$("lyricsModal").setAttribute("aria-hidden","false");
+  const token=++lyricToken,t=getCurrentTrack();$("lyricsModal").classList.add("open");$("lyricsModal").setAttribute("aria-hidden","false");
   if(!t){message("Сначала выбери композицию.");return}
   $("lyricsTrackTitle").textContent=t.title;$("lyricsTrackArtist").textContent=t.artist;message("Ищем текст песни…");
   try{
@@ -1399,7 +1400,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   img.onerror=()=>applyPalette(fallback);img.src=url;
  }
  function paintTrack(){
-  const t=allTracks()[current];if(!t)return;
+  const t=getCurrentTrack();if(!t)return;
   const art=artwork(t,600),small=artwork(t,300);
   const mini=$("nowArt"),big=$("npArt"),back=$("npBackdrop"),ambient=$("mivoDynamicBackdrop");
   if(mini){
@@ -1650,8 +1651,8 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  const searchInput=$("catalogSearchInput"),topInput=$("searchInput");
  if(searchInput){searchInput.addEventListener("input",e=>{lastQuery=e.target.value.trim();if(topInput)topInput.value=lastQuery;if(lastQuery){activate("catalog");doFilter(lastQuery);if(topInput)topInput.dispatchEvent(new Event("input"))}else{resultGrid.replaceChildren();suggestions.replaceChildren()}});$("catalogSearchClear").onclick=()=>{searchInput.value="";lastQuery="";if(topInput){topInput.value="";topInput.dispatchEvent(new Event("input"))}doFilter("")}}
  if(topInput){topInput.addEventListener("focus",()=>{activate("catalog");if(searchInput)searchInput.value=topInput.value});topInput.addEventListener("input",()=>{if(searchInput)searchInput.value=topInput.value;lastQuery=topInput.value.trim();setTimeout(()=>{if(lastQuery)doFilter(lastQuery)},520)})}
- function artistLink(el){if(!el||el.dataset.artistLink)return;el.dataset.artistLink="1";el.classList.add("now-artist-link");el.title="Открыть страницу исполнителя";el.addEventListener("click",e=>{e.stopPropagation();const t=trackData()[current];if(t?.artist)showArtist(t.artist)})}
- artistLink($("nowArtist"));artistLink($("npArtist"));document.addEventListener("click",e=>{if(e.target.closest("#npArtist,#nowArtist")){const t=trackData()[current];if(t?.artist)showArtist(t.artist)}});
+ function artistLink(el){if(!el||el.dataset.artistLink)return;el.dataset.artistLink="1";el.classList.add("now-artist-link");el.title="Открыть страницу исполнителя";el.addEventListener("click",e=>{e.stopPropagation();const t=getCurrentTrack();if(t?.artist)showArtist(t.artist)})}
+ artistLink($("nowArtist"));artistLink($("npArtist"));document.addEventListener("click",e=>{if(e.target.closest("#npArtist,#nowArtist")){const t=getCurrentTrack();if(t?.artist)showArtist(t.artist)}});
  activate("home");
 })();
 </script>
