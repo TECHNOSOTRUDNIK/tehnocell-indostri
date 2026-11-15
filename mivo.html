@@ -815,6 +815,42 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 .artist-track-row,.artist-album,.artist-related-card{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mobile-nav button{white-space:nowrap;overflow:visible}
 </style>
+<style>
+/* MIVO Android song screen: fit modern mobile browser viewports and safe areas */
+@supports (height: 100dvh) {
+  .now-playing { min-height: 100dvh; }
+  .np-shell { min-height: 100dvh; }
+}
+.now-playing { overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.np-shell { padding-top: max(23px, env(safe-area-inset-top)); padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+.np-extra { flex-wrap: wrap; }
+.np-extra > button { min-height: 42px; padding: 8px 10px; border: 1px solid #ffffff20; border-radius: 22px; }
+@media (max-width: 760px) {
+  .np-shell { min-height: 100%; padding-left: 18px; padding-right: 18px; }
+  .np-content { min-height: 0; align-content: start; gap: clamp(12px, 3vh, 24px); padding: 24px 0 20px; }
+  .np-art-wrap { width: min(62vw, 290px); max-width: 290px; }
+  .np-info { min-width: 0; }
+  .np-info h2 { font-size: clamp(25px, 7vw, 35px); line-height: 1.08; overflow-wrap: anywhere; }
+  .np-info > p { overflow-wrap: anywhere; }
+  .np-progress { display: grid; grid-template-columns: 36px minmax(0,1fr) 36px; gap: 8px; align-items: center; }
+  .np-progress input { min-width: 0; width: 100%; }
+  .np-controls { gap: clamp(16px, 5vw, 25px); }
+  .np-extra { justify-content: flex-start; gap: 8px; }
+  .np-volume { margin-left: auto; max-width: 100%; }
+  .np-volume input { width: clamp(75px, 25vw, 105px); }
+  .np-bottom { gap: 10px; padding-bottom: 3px; }
+}
+@media (max-width: 390px) {
+  .np-shell { padding-left: 14px; padding-right: 14px; }
+  .np-topline { font-size: 6px; }
+  .np-art-wrap { width: min(57vw, 235px); }
+  .np-info h2 { font-size: 26px; }
+  .np-extra { gap: 6px; }
+  .np-extra > button { font-size: 11px; padding: 7px 9px; }
+  .np-volume { width: 100%; justify-content: flex-start; margin-left: 0; }
+  .np-bottom span:last-child { text-align: right; }
+}
+</style>
 </head>
 <body>
 <div class="mivo-dynamic-backdrop" id="mivoDynamicBackdrop"></div><div class="noise"></div>
@@ -947,7 +983,7 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
       <div class="np-info"><div class="np-eyebrow">ТВОЙ МУЗЫКАЛЬНЫЙ МОМЕНТ</div><h2 id="npTitle">Выбери трек</h2><p id="npArtist">MIVO</p><div class="np-tags"><span id="npGenre">МУЗЫКА</span><span>·</span><span>ПУЛЬС MIVO</span></div>
         <div class="np-progress"><span id="npCurrent">0:00</span><input id="npProgress" type="range" min="0" max="100" value="0"><span id="npDuration">0:00</span></div>
         <div class="np-controls"><button id="npShuffle" aria-label="Случайный порядок">⤨</button><button id="npPrev" aria-label="Предыдущий трек">◀</button><button class="np-play" id="npPlay" aria-label="Воспроизвести">▶</button><button id="npNext" aria-label="Следующий трек">▶</button><button id="npRepeat" aria-label="Повтор">↻</button></div>
-        <div class="np-extra"><button id="npLike">♡ <span>В избранное</span></button><button id="openLyrics" class="np-lyrics-btn" type="button">≋ <span>ТЕКСТ ПЕСНИ</span></button><a id="npFullTrack" class="np-lyrics-btn" href="#" target="_blank" rel="noopener noreferrer" hidden>↗ <span>ПОЛНАЯ ВЕРСИЯ</span></a><div class="np-volume">ГРОМКОСТЬ <input id="npVolume" type="range" min="0" max="1" step=".01" value=".8"></div></div>
+        <div class="np-extra"><button id="npLike">♡ <span>В избранное</span></button><button id="openLyrics" class="np-lyrics-btn" type="button">≋ <span>ТЕКСТ ПЕСНИ</span></button><div class="np-volume">ГРОМКОСТЬ <input id="npVolume" type="range" min="0" max="1" step=".01" value=".8"></div></div>
         <div class="np-signature"><b>ПУЛЬС MIVO</b><span>Обложка превращается в живую звуковую сцену. Это пространство твоего прослушивания.</span></div>
       </div>
     </div>
@@ -1020,7 +1056,7 @@ function card(t,i,local=false){
  const fallback=t.style||("c"+((Math.abs(String(t.title||"M").split("").reduce((a,c)=>a+c.charCodeAt(0),0))%8)+1));
  d.innerHTML='<div class="cover '+fallback+'">'+(art?'<img class="cover-photo" loading="lazy" decoding="async" src="'+art+'" alt="Обложка '+escapeHtml(t.title)+'">':'<span class="cover-symbol">'+escapeHtml(t.symbol||"♪")+'</span>')+'<span class="cover-play">▶</span><span class="cover-kind">MIVO</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small><button class="card-add" type="button" aria-label="Добавить в плейлист" title="Добавить в плейлист">＋</button>';
  const img=d.querySelector(".cover-photo");if(img)img.addEventListener("error",()=>{img.remove();const icon=document.createElement("span");icon.className="cover-symbol";icon.textContent=t.symbol||"♪";d.querySelector(".cover").prepend(icon)});
- d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;const liveIndex=allTracks().findIndex(x=>trackKey(x)===trackKey(t));if(liveIndex<0)return;if(!t.url&&t.trackViewUrl){window.open(t.trackViewUrl,"_blank","noopener");toast("Полная версия откроется на музыкальной площадке");return}playTrack(liveIndex)});
+ d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;const liveIndex=allTracks().findIndex(x=>trackKey(x)===trackKey(t));if(liveIndex<0)return;if(!t.url){toast("Полное воспроизведение этой композиции пока недоступно в MIVO");return}playTrack(liveIndex)});
  d.querySelector(".card-add").addEventListener("click",e=>{e.stopPropagation();choosePlaylistForTrack(t)});
  return d;
 }
@@ -1228,7 +1264,7 @@ function genreRu(g){return ({Electronic:"Электроника",Ambient:"Эмб
 function syncNowPlaying(){const t=getCurrentTrack();if(!t)return;$("npTitle").textContent=t.title;$("npArtist").textContent=t.artist;$("npGenre").textContent=genreRu(t.genre).toUpperCase();$("npArt").textContent=t.symbol||"♪";$("npArt").className="np-big-art "+(t.style||"c1");
  const art=t.artworkUrl100?t.artworkUrl100.replace("100x100","600x600"):"";
  $("npBackdrop").style.background=art?'linear-gradient(120deg,#05050566,#050505aa),url("'+art+'") center/cover no-repeat':'radial-gradient(ellipse at 70% 35%,#ffffff2b,transparent 42%),radial-gradient(ellipse at 20% 80%,#7773,transparent 40%),#080808';
- $("npArt").style.backgroundImage=art?'url("'+art+'")':"";$("npArt").style.backgroundSize="cover";$("npArt").style.backgroundPosition="center";$("npArt").style.color=art?"transparent":"#fff";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>";const fullLink=$("npFullTrack");if(fullLink){if(t.trackViewUrl){fullLink.href=t.trackViewUrl;fullLink.hidden=false}else{fullLink.removeAttribute("href");fullLink.hidden=true}}}
+ $("npArt").style.backgroundImage=art?'url("'+art+'")':"";$("npArt").style.backgroundSize="cover";$("npArt").style.backgroundPosition="center";$("npArt").style.color=art?"transparent":"#fff";$("npLike").classList.toggle("active",liked.has(trackKey(t)));$("npLike").innerHTML=liked.has(trackKey(t))?"♥ <span>В избранном</span>":"♡ <span>В избранное</span>";}
 function openNowPlaying(){if(current<0&&!allTracks().length){toast("Сначала добавь аудиофайл или найди музыку через поиск");return}if(current<0){playTrack(0)}syncNowPlaying();$("nowPlaying").classList.add("open");$("nowPlaying").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("npPlay").textContent=audio.paused?"▶":"Ⅱ";$("nowPlaying").classList.toggle("playing",!audio.paused)}
 function closeNowPlaying(){$("nowPlaying").classList.remove("open");$("nowPlaying").setAttribute("aria-hidden","true");document.body.style.overflow=""}
 function playTrack(index){const tracks=allTracks();if(index<0||index>=tracks.length)return;current=index;const t=tracks[index];currentTrackKey=trackKey(t);if(!queue.length||!queue.includes(trackKey(t)))queue=tracks.map(trackKey);saveRecent(t);renderMixes();audio.pause();audio.removeAttribute("src");audio.load();$("progress").value=0;$("npProgress").value=0;$("currentTime").textContent="0:00";$("npCurrent").textContent="0:00";$("duration").textContent="0:00";$("npDuration").textContent="0:00";let started=false;const startFromBeginning=()=>{if(started)return;started=true;try{audio.currentTime=0}catch(_){}audio.play().then(()=>{$("play").textContent="Ⅱ";$("npPlay").textContent="Ⅱ";$("nowPlaying").classList.add("playing")}).catch(()=>{toast("Не удалось запустить аудио. Проверь подключение или выбери локальный файл.");$("play").textContent="▶";$("npPlay").textContent="▶"})};audio.addEventListener("loadedmetadata",startFromBeginning,{once:true});audio.crossOrigin="anonymous";audio.src=t.url;audio.load();if(audio.readyState>=1)startFromBeginning();$("nowTitle").textContent=t.title;$("nowArtist").textContent=t.artist+" · "+genreRu(t.genre);$("nowArt").textContent=t.symbol||"♪";$("likeBtn").classList.toggle("on",liked.has(trackKey(t)));syncNowPlaying();}
