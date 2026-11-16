@@ -997,7 +997,16 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 
 
 
-    <!-- ВНЕШНИЙ ВИД -->
+    <div class="panel" id="profileCustomizationPanel" style="margin:16px 0">
+ <h3>Оформление публичного профиля</h3><p class="photo-note">Настройте, как вас увидят другие участники TEHNOCELL.</p>
+ <label for="profileStatusInput">Статус</label><input type="text" id="profileStatusInput" maxlength="80" placeholder="Например: создаю TEHNOCELL">
+ <label for="profileThemeSelect">Стиль профиля</label><select id="profileThemeSelect"><option value="mono">Чёрно-белый</option><option value="graphite">Графитовый</option><option value="ice">Ледяной</option><option value="violet">Фиолетовый</option></select>
+ <label for="profileMusicInput">Музыка в профиле — ссылка</label><input type="url" id="profileMusicInput" maxlength="500" placeholder="Ссылка на трек">
+ <label for="profileGameInput">Во что играете</label><input type="text" id="profileGameInput" maxlength="80" placeholder="Название игры">
+ <label for="profileBannerInput">Баннер профиля</label><input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp">
+ <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка пока будет показана ссылкой — встроенное воспроизведение подключим после выбора легального музыкального каталога.</p>
+ <button class="action" id="saveCustomization" type="button">Сохранить оформление</button><p class="message" id="customizationMessage"></p>
+ </div>\n<!-- ВНЕШНИЙ ВИД -->
 
     <div class="settings-category">
 
@@ -1535,7 +1544,7 @@ async function loadAccount() {
     // Метаданные Auth остаются резервным вариантом для старых аккаунтов.
     const { data: savedProfile } = await db
         .from("profiles")
-        .select("display_name,bio,avatar_path")
+        .select("display_name,bio,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_game,profile_status")
         .eq("id", currentUser.id)
         .maybeSingle();
 
@@ -1569,7 +1578,7 @@ async function loadAccount() {
 
     $("nameInput").value = displayName;
 
-    $("bioInput").value = bio;
+    $("bioInput").value = bio;\n    $("profileStatusInput").value = savedProfile?.profile_status || "";\n    $("profileThemeSelect").value = savedProfile?.profile_theme || "mono";\n    $("profileMusicInput").value = savedProfile?.profile_music_url || "";\n    $("profileGameInput").value = savedProfile?.profile_game || "";
 
 
     /* ID И ПОЧТА */
