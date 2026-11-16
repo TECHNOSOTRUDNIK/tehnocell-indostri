@@ -623,7 +623,7 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 .tc-public-card{--pc-bg:var(--surface);--pc-text:var(--text);--pc-muted:var(--muted);background:var(--pc-bg);color:var(--pc-text);padding:0 20px 22px}.tc-public-card[data-theme="graphite"]{--pc-bg:#202226;--pc-text:#f5f5f5;--pc-muted:#b8bbc2}.tc-public-card[data-theme="ice"]{--pc-bg:#eaf0f5;--pc-text:#17212b;--pc-muted:#647383}.tc-public-card[data-theme="violet"]{--pc-bg:#211d2b;--pc-text:#f7f3ff;--pc-muted:#c0b6d2}
 .tc-preview-banner{height:150px;margin:0 -20px 0;background:linear-gradient(135deg,#303030,#090909);background-size:cover;background-position:center}.tc-preview-identity{display:flex;align-items:flex-end;gap:14px;margin-top:-38px;position:relative}.tc-preview-avatar{width:88px;height:88px;flex:0 0 88px;border:4px solid var(--pc-bg);border-radius:50%;background:#111;color:white;display:grid;place-items:center;font-size:28px;font-weight:700;overflow:hidden}.tc-preview-avatar img{width:100%;height:100%;object-fit:cover}.tc-preview-name{min-width:0;padding-bottom:5px}.tc-preview-name h2{font-size:21px;overflow-wrap:anywhere}.tc-preview-handle{font-size:13px;color:var(--pc-muted);margin-top:4px}.tc-preview-badge{display:inline-grid;place-items:center;width:17px;height:17px;margin-left:5px;border-radius:50%;background:#1685e8;color:#fff;font-size:11px;vertical-align:2px}.tc-preview-status{margin:17px 0 0;padding:12px 14px;border:1px solid color-mix(in srgb,var(--pc-muted) 25%,transparent);border-radius:12px;font-size:14px;line-height:1.45}.tc-preview-bio{margin:15px 0;color:var(--pc-text);font-size:14px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}.tc-preview-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.tc-preview-fact{padding:12px;border:1px solid color-mix(in srgb,var(--pc-muted) 22%,transparent);border-radius:11px;min-width:0}.tc-preview-fact small{display:block;color:var(--pc-muted);font-size:11px;margin-bottom:5px}.tc-preview-fact strong,.tc-preview-fact a{font-size:13px;color:var(--pc-text);overflow-wrap:anywhere}.tc-preview-date{font-size:12px;color:var(--pc-muted);margin-top:15px}.tc-preview-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch;margin-top:17px;padding-top:15px;border-top:1px solid color-mix(in srgb,var(--pc-muted) 22%,transparent)}.tc-preview-action{display:inline-flex;align-items:center;justify-content:center;min-height:38px;max-width:100%;white-space:normal;line-height:1.35;text-align:center;overflow-wrap:anywhere;flex:1 1 130px}.tc-preview-action{padding:10px 14px;border:1px solid color-mix(in srgb,var(--pc-muted) 30%,transparent);border-radius:10px;background:transparent;color:var(--pc-text);font-size:12px}.tc-preview-foot{padding:12px 20px;background:var(--background);color:var(--muted);font-size:12px;line-height:1.5;border-top:1px solid var(--border)}
 @media(max-width:480px){.tc-preview-actions{display:grid;grid-template-columns:1fr 1fr}.tc-preview-action{font-size:11px;padding:9px 8px;flex:auto}.tc-preview-top{padding:15px}.tc-preview-banner{height:122px}.tc-preview-identity{gap:10px}.tc-preview-avatar{width:76px;height:76px;flex-basis:76px}.tc-preview-name h2{font-size:18px}.tc-preview-facts{grid-template-columns:1fr 1fr}.tc-public-card{padding-left:15px;padding-right:15px}.tc-preview-banner{margin-left:-15px;margin-right:-15px}}
-</style></head>
+.tc-sound-settings{margin:17px 0;padding:15px;border:1px solid #333;border-radius:13px;background:#111}.tc-sound-settings h4{font-size:13px;margin:0 0 7px}.tc-sound-settings input[type=file]{display:block;width:100%;margin:8px 0;color:#aaa;font-size:11px}.tc-sound-settings label{display:block;margin-top:12px;font-size:11px;color:#bbb}.tc-sound-settings input[type=text]{display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #333;border-radius:9px;background:#090909;color:#fff}</style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
 </div>
@@ -933,13 +933,13 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
  <h3>Оформление публичного профиля</h3><p class="photo-note">Настройте, как вас увидят другие участники TEHNOCELL.</p>
  <label for="profileStatusInput">Статус</label><input type="text" id="profileStatusInput" maxlength="80" placeholder="Например: создаю TEHNOCELL">
  <label for="profileThemeSelect">Стиль профиля</label><select id="profileThemeSelect"><option value="mono">Чёрно-белый</option><option value="graphite">Графитовый</option><option value="ice">Ледяной</option><option value="violet">Фиолетовый</option></select>
- <label for="profileMusicInput">Музыка в профиле — ссылка</label><input type="url" id="profileMusicInput" maxlength="500" placeholder="Ссылка на трек">
+ <div class="tc-sound-settings"><h4>Музыка профиля</h4><p class="photo-note">Загрузите одну композицию — она будет доступна для прослушивания прямо в вашем публичном профиле.</p><label for="profileSoundTitle">Название композиции</label><input type="text" id="profileSoundTitle" maxlength="80" placeholder="Название трека"><label for="profileSoundArtist">Исполнитель</label><input type="text" id="profileSoundArtist" maxlength="80" placeholder="Имя исполнителя"><label>Аудиофайл</label><input type="file" id="profileSoundInput" accept="audio/mpeg,audio/mp4,audio/aac,audio/wav,audio/x-wav,audio/ogg,audio/webm,audio/flac"><p class="photo-note" id="profileSoundCurrent">Файл не выбран. Поддерживаются MP3, M4A, AAC, WAV, OGG, WEBM и FLAC до 20 МБ.</p><label>Обложка композиции</label><input type="file" id="profileSoundCoverInput" accept="image/jpeg,image/png,image/webp"><p class="photo-note">JPG, PNG или WEBP до 5 МБ.</p><button class="tc-secondary" type="button" id="removeProfileSound">Убрать музыку из профиля</button></div>
  <label for="profileGameInput">Во что играете</label><input type="text" id="profileGameInput" maxlength="80" placeholder="Название игры">
  <label>Баннер профиля</label>
  <div class="tc-banner-preview" id="profileBannerPreview"><span>Баннер ещё не установлен</span></div>
  <input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp" hidden>
  <div class="tc-banner-actions"><button class="action" type="button" id="chooseProfileBanner">Выбрать изображение</button><button class="tc-secondary" type="button" id="removeProfileBanner">Убрать баннер</button></div>
- <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка пока будет показана ссылкой — встроенное воспроизведение подключим после выбора легального музыкального каталога.</p>
+ <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка загружается в хранилище TEHNOCELL и становится публично доступной вместе с профилем. Загружайте только аудио, на которое у вас есть права или разрешение.</p>
  <button class="action" id="saveCustomization" type="button">Сохранить оформление</button><p class="message" id="customizationMessage"></p>
  </div>
 <!-- ВНЕШНИЙ ВИД -->
@@ -1146,6 +1146,9 @@ const db = window.supabase.createClient(
 
 let currentUser = null;
 let currentBannerPath = null;
+let currentSoundPath = null;
+let currentSoundCoverPath = null;
+let removeSoundRequested = false;
 let bannerPreviewObjectUrl = null;
 let tcToastTimer = null;
 function showTcToast(message){let el=$("tcToast");if(!el){el=document.createElement("div");el.id="tcToast";el.className="tc-toast";el.setAttribute("role","status");document.body.append(el);}el.textContent=message;el.classList.add("show");clearTimeout(tcToastTimer);tcToastTimer=setTimeout(()=>el.classList.remove("show"),3200);}
@@ -1483,7 +1486,7 @@ async function loadAccount() {
     // Метаданные Auth остаются резервным вариантом для старых аккаунтов.
     const { data: savedProfile } = await db
         .from("profiles")
-        .select("display_name,username,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_game,profile_status,created_at")
+        .select("display_name,username,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,created_at")
         .eq("id", currentUser.id)
         .maybeSingle();
 
@@ -1520,7 +1523,11 @@ async function loadAccount() {
     $("bioInput").value = bio;
     $("profileStatusInput").value = savedProfile?.profile_status || "";
     $("profileThemeSelect").value = savedProfile?.profile_theme || "mono";
-    $("profileMusicInput").value = savedProfile?.profile_music_url || "";
+    $("profileSoundTitle").value = savedProfile?.profile_sound_title || "";
+    $("profileSoundArtist").value = savedProfile?.profile_sound_artist || "";
+    $("profileSoundCurrent").textContent = savedProfile?.profile_sound_path ? "Музыка уже загружена. Выберите новый файл, чтобы заменить её." : "Файл не выбран. Поддерживаются MP3, M4A, AAC, WAV, OGG, WEBM и FLAC до 20 МБ.";
+    currentSoundPath = savedProfile?.profile_sound_path || null;
+    currentSoundCoverPath = savedProfile?.profile_sound_cover_path || null;
     $("profileGameInput").value = savedProfile?.profile_game || "";
     currentBannerPath = savedProfile?.profile_banner_path || null;
     setBannerPreview(currentBannerPath ? db.storage.from(AVATAR_BUCKET).getPublicUrl(currentBannerPath).data.publicUrl : null);
@@ -1678,6 +1685,8 @@ $("saveProfile").addEventListener("click", async () => {
 });
 
 
+$("removeProfileSound").addEventListener("click",()=>{removeSoundRequested=true;currentSoundPath=null;currentSoundCoverPath=null;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCurrent").textContent="Музыка будет удалена после сохранения оформления.";showTcToast("Музыка отмечена для удаления");});
+$("profileSoundInput").addEventListener("change",()=>{removeSoundRequested=false;const f=$("profileSoundInput").files[0];if(f)$("profileSoundCurrent").textContent="Выбран файл: "+f.name+" · "+(f.size/1024/1024).toFixed(1)+" МБ";});
 $("chooseProfileBanner").addEventListener("click",()=>$("profileBannerInput").click());
 $("profileBannerInput").addEventListener("change",()=>{const file=$("profileBannerInput").files[0];if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){$("customizationMessage").textContent="Выберите JPG, PNG или WEBP до 5 МБ."; $("profileBannerInput").value="";return;}if(bannerPreviewObjectUrl)URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=URL.createObjectURL(file);setBannerPreview(bannerPreviewObjectUrl);$("customizationMessage").textContent="Предпросмотр готов. Нажмите «Сохранить оформление».";});
 $("removeProfileBanner").addEventListener("click",()=>{currentBannerPath=null;$("profileBannerInput").value="";if(bannerPreviewObjectUrl){URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=null;}setBannerPreview(null);$("customizationMessage").textContent="Баннер будет удалён после сохранения.";});
@@ -1688,13 +1697,24 @@ $("saveCustomization").addEventListener("click",async()=>{
  const ext=file.name.split(".").pop().toLowerCase();bannerPath=currentUser.id+"/banner-"+Date.now()+"."+ext;
  const {error:uploadError}=await db.storage.from(AVATAR_BUCKET).upload(bannerPath,file,{upsert:false,contentType:file.type});
  if(uploadError){msg.textContent="Ошибка загрузки баннера: "+uploadError.message;btn.disabled=false;return;}}
- const music=$("profileMusicInput").value.trim();
- if(music&&!/^https:\/\//i.test(music)){msg.textContent="Ссылка на музыку должна начинаться с https://";btn.disabled=false;return;}
- const patch={profile_status:$("profileStatusInput").value.trim(),profile_theme:$("profileThemeSelect").value,profile_music_url:music||null,profile_game:$("profileGameInput").value.trim()||null};
+ const audioFile=$("profileSoundInput").files[0],coverFile=$("profileSoundCoverInput").files[0];
+ const allowedAudio=["audio/mpeg","audio/mp4","audio/aac","audio/wav","audio/x-wav","audio/ogg","audio/webm","audio/flac"];
+ if(audioFile&&(!allowedAudio.includes(audioFile.type)||audioFile.size>20*1024*1024)){msg.textContent="Аудио должно быть MP3, M4A, AAC, WAV, OGG, WEBM или FLAC до 20 МБ.";btn.disabled=false;return;}
+ if(coverFile&&(!["image/jpeg","image/png","image/webp"].includes(coverFile.type)||coverFile.size>5*1024*1024)){msg.textContent="Обложка должна быть JPG, PNG или WEBP до 5 МБ.";btn.disabled=false;return;}
+ const title=$("profileSoundTitle").value.trim(),artist=$("profileSoundArtist").value.trim();
+ if((audioFile||currentSoundPath)&&!removeSoundRequested&&title.length<1){msg.textContent="Укажите название композиции.";btn.disabled=false;return;}
+ if((audioFile||currentSoundPath)&&!removeSoundRequested&&artist.length<1){msg.textContent="Укажите исполнителя.";btn.disabled=false;return;}
+ let soundPath=currentSoundPath,coverPath=currentSoundCoverPath;const uploaded=[];
+ if(audioFile&&!removeSoundRequested){const ext=audioFile.name.split(".").pop().toLowerCase();soundPath=currentUser.id+"/identity-sound-"+Date.now()+"."+ext;const {error:e}=await db.storage.from(AVATAR_BUCKET).upload(soundPath,audioFile,{upsert:false,contentType:audioFile.type});if(e){msg.textContent="Ошибка загрузки аудио: "+e.message;btn.disabled=false;return;}uploaded.push(soundPath);}
+ if(coverFile&&!removeSoundRequested){const ext=coverFile.name.split(".").pop().toLowerCase();coverPath=currentUser.id+"/identity-cover-"+Date.now()+"."+ext;const {error:e}=await db.storage.from(AVATAR_BUCKET).upload(coverPath,coverFile,{upsert:false,contentType:coverFile.type});if(e){await db.storage.from(AVATAR_BUCKET).remove(uploaded);msg.textContent="Ошибка загрузки обложки: "+e.message;btn.disabled=false;return;}uploaded.push(coverPath);}
+ const patch={profile_status:$("profileStatusInput").value.trim(),profile_theme:$("profileThemeSelect").value,profile_game:$("profileGameInput").value.trim()||null,profile_sound_path:removeSoundRequested?null:soundPath,profile_sound_title:removeSoundRequested?null:(soundPath?title:null),profile_sound_artist:removeSoundRequested?null:(soundPath?artist:null),profile_sound_cover_path:removeSoundRequested?null:coverPath};
  if(bannerPath)patch.profile_banner_path=bannerPath;else if(!currentBannerPath)patch.profile_banner_path=null;
- const {error}=await db.from("profiles").update(patch).eq("id",currentUser.id);
- btn.disabled=false;msg.textContent=error?"Не удалось сохранить: "+error.message:"Оформление профиля сохранено.";
- if(!error){$("profileBannerInput").value="";currentBannerPath=bannerPath||currentBannerPath;if(bannerPreviewObjectUrl){URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=null;}if(currentBannerPath)setBannerPreview(db.storage.from(AVATAR_BUCKET).getPublicUrl(currentBannerPath).data.publicUrl);else setBannerPreview(null);showTcToast("Оформление профиля сохранено");}
+ const {error}=await db.from("profiles").update(patch).eq("id",currentUser.id);btn.disabled=false;
+ if(error){if(uploaded.length)await db.storage.from(AVATAR_BUCKET).remove(uploaded);msg.textContent="Не удалось сохранить: "+error.message;return;}
+ const oldPaths=[...(audioFile&&currentSoundPath?[currentSoundPath]:[]),...(coverFile&&currentSoundCoverPath?[currentSoundCoverPath]:[]),...(removeSoundRequested?[currentSoundPath,currentSoundCoverPath].filter(Boolean):[])];
+ if(oldPaths.length)await db.storage.from(AVATAR_BUCKET).remove(oldPaths);
+ currentSoundPath=patch.profile_sound_path;currentSoundCoverPath=patch.profile_sound_cover_path;removeSoundRequested=false;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCurrent").textContent=currentSoundPath?"Музыка загружена и будет показана в публичном профиле.":"Музыка профиля не установлена.";
+ $("profileBannerInput").value="";currentBannerPath=bannerPath||currentBannerPath;if(bannerPreviewObjectUrl){URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=null;}if(currentBannerPath)setBannerPreview(db.storage.from(AVATAR_BUCKET).getPublicUrl(currentBannerPath).data.publicUrl);else setBannerPreview(null);msg.textContent="Оформление профиля сохранено.";showTcToast("Оформление профиля сохранено");
 });
 
 /* =====================================
