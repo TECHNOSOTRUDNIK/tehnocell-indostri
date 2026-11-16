@@ -2010,6 +2010,67 @@ async function startAccount() {
 
 startAccount();
 
+
+/* TEHNOCELL SUPPORT */
+let activeSupportConversation = null;
+let activeSupportStatus = "waiting";
+const supportStatusLabels = {waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"};
+const supportCategoryLabels = {general:"Общий вопрос",account:"Аккаунт и профиль",birthday_correction:"Исправление даты рождения",bug:"Ошибка",idea:"Предложение"};
+$("openNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=false;$("supportSubject").focus();});
+$("cancelNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=true;});
+$("refreshSupport").addEventListener("click",loadSupportConversations);
+async function loadSupportConversations(){
+ if(!currentUser)return;
+ $("supportConversationList").innerHTML='<p class="message">Загрузка…</p>';
+ const {data,error}=await db.from("support_conversations").select("id,subject,category,status,last_message_at").eq("user_id",currentUser.id).order("last_message_at",{ascending:false});
+ if(error){$("supportConversationList").textContent="Не удалось загрузить обращения: "+error.message;return;}
+ if(!data.length){$("supportConversationList").innerHTML='<p class="message">Пока обращений нет.</p>';return;}
+ $("supportConversationList").replaceChildren();
+ data.forEach(item=>{
+  const b=document.createElement("button");b.className="support-conversation-item"+(activeSupportConversation===item.id?" active":"");
+  const title=document.createElement("strong");title.textContent=item.subject;
+  const meta=document.createElement("small");meta.textContent=(supportCategoryLabels[item.category]||"Обращение")+" · "+(supportStatusLabels[item.status]||item.status);
+  b.append(title,meta);b.addEventListener("click",()=>openSupportConversation(item.id,item.subject,item.status));$("supportConversationList").appendChild(b);
+ });
+}
+async function openSupportConversation(id,subject,status){
+ activeSupportConversation=id;activeSupportStatus=status;$("supportChatEmpty").hidden=true;$("supportChat").hidden=false;
+ $("supportChatTitle").textContent=subject;$("supportChatStatus").textContent=supportStatusLabels[status]||status;
+ $("supportMessages").innerHTML='<p class="message">Загрузка переписки…</p>';
+ const {data,error}=await db.from("support_messages").select("id,sender_id,sender_type,body,created_at").eq("conversation_id",id).order("created_at",{ascending:true});
+ if(error){$("supportMessages").textContent="Не удалось загрузить сообщения: "+error.message;return;}
+ $("supportMessages").replaceChildren();
+ data.forEach(m=>{
+  const el=document.createElement("div");el.className="support-message "+(m.sender_type==="staff"?"staff":"mine");
+  const meta=document.createElement("small");meta.textContent=(m.sender_type==="staff"?"TEHNOCELL SUPPORT":"Вы")+" · "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
+  const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("supportMessages").appendChild(el);
+ });
+ $("supportMessages").scrollTop=$("supportMessages").scrollHeight;
+ await loadSupportConversations();
+}
+$("newSupportForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!currentUser)return;
+ const subject=$("supportSubject").value.trim(),body=$("supportFirstMessage").value.trim(),category=$("supportCategory").value;
+ if(subject.length<3||!body)return;
+ const submit=e.submitter;submit.disabled=true;$("newSupportMessage").textContent="Создаём обращение…";
+ const {data,error}=await db.from("support_conversations").insert({user_id:currentUser.id,subject,category}).select("id").single();
+ if(error){submit.disabled=false;$("newSupportMessage").textContent="Ошибка: "+error.message;return;}
+ const {error:messageError}=await db.from("support_messages").insert({conversation_id:data.id,sender_id:currentUser.id,sender_type:"user",body});
+ if(messageError){$("newSupportMessage").textContent="Обращение создано, но сообщение не отправилось. Попробуйте отправить его из чата.";submit.disabled=false;await loadSupportConversations();return;}
+ $("newSupportForm").reset();$("newSupportPanel").hidden=true;submit.disabled=false;$("newSupportMessage").textContent="";
+ await loadSupportConversations();await openSupportConversation(data.id,subject,"waiting");
+});
+$("supportReplyForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!currentUser||!activeSupportConversation)return;
+ const body=$("supportReplyText").value.trim();if(!body)return;
+ const button=e.submitter;button.disabled=true;
+ const {error}=await db.from("support_messages").insert({conversation_id:activeSupportConversation,sender_id:currentUser.id,sender_type:"user",body});
+ button.disabled=false;
+ if(error){$("supportMessages").insertAdjacentText("beforeend","Не удалось отправить сообщение: "+error.message);return;}
+ $("supportReplyText").value="";
+ await openSupportConversation(activeSupportConversation,$("supportChatTitle").textContent,activeSupportStatus);
+});
+
 </script>
 
 <script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
