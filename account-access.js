@@ -6,15 +6,18 @@
     const db = window.supabase.createClient(URL, KEY);
     const { data } = await db.auth.getSession();
     const user = data?.session?.user;
-    if (!user) return;
+    if (!user) { const old = document.getElementById("tcAccountSuspension"); old?.remove(); document.documentElement.style.overflow = ""; return; }
     const { data: blocks, error } = await db.from("support_account_blocks")
       .select("id,reason,expires_at,blocked_at").eq("user_id", user.id)
       .is("unblocked_at", null).order("blocked_at", { ascending: false }).limit(10);
     if (error) return;
     const now = Date.now();
     const block = (blocks || []).find(x => !x.expires_at || new Date(x.expires_at).getTime() > now);
-    if (!block) return;
+    const old = document.getElementById("tcAccountSuspension");
+    if (!block) { old?.remove(); document.documentElement.style.overflow = ""; return; }
+    if (old) return;
     const cover = document.createElement("div");
+    cover.id = "tcAccountSuspension";
     cover.style.cssText = "position:fixed;inset:0;z-index:2147483000;overflow:auto;background:#090909;color:#fff;font:14px Arial;padding:24px;display:grid;place-items:center";
     const card = document.createElement("section");
     card.style.cssText = "width:min(100%,540px);padding:28px;border:1px solid #444;border-radius:20px;background:#151515";
@@ -41,4 +44,5 @@
     cover.append(card); document.body.append(cover); document.documentElement.style.overflow = "hidden";
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once: true }); else run();
+  setInterval(run, 30000);
 })();
