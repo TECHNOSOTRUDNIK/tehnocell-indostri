@@ -14,7 +14,36 @@
 .sidebar-bottom{margin-top:auto}.mini-profile{display:flex;align-items:center;gap:10px;padding:12px 9px;border-top:1px solid var(--line);margin-top:14px}.avatar{width:37px;height:37px;border-radius:50%;background:#292929;display:grid;place-items:center;overflow:hidden;flex:0 0 37px;font-size:13px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}.mini-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini-sub{font-size:10px;color:#777;margin-top:4px}
 .main{min-width:0;max-width:1150px;width:100%;margin:0 auto;padding:28px clamp(16px,4vw,50px) 70px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:30px}.crumb{color:#777;font-size:10px;letter-spacing:1px}.top-actions{display:flex;gap:8px}.top-btn,.secondary-btn{border:1px solid var(--line);background:#121212;color:#ddd;padding:9px 13px;border-radius:9px;font-size:11px}.primary-btn{border:1px solid #eee;background:#f2f2f2;color:#111;padding:11px 15px;border-radius:10px;font-size:11px;font-weight:800}.primary-btn:disabled,.secondary-btn:disabled{opacity:.5;cursor:wait}
 .global-search-wrap{position:relative;}.global-search-wrap:before{content:"⌕";position:absolute;left:12px;top:50%;transform:translateY(-52%);z-index:1;color:#777;font-size:17px;pointer-events:none}.global-search{padding-left:34px}.global-search-results{padding:7px}.search-people-heading{padding:10px 11px 8px;color:#777;font-size:9px;font-weight:800;letter-spacing:1.4px}.search-person{width:100%;display:flex;align-items:center;gap:11px;padding:10px;border:0;border-bottom:1px solid #252525;background:transparent;color:#fff;text-align:left;border-radius:9px}.search-person:last-child{border-bottom:0}.search-person:active,.search-person:hover{background:#1c1c1c}.search-person-avatar{width:43px;height:43px;flex:0 0 43px;border-radius:50%;overflow:hidden;background:#292929;display:grid;place-items:center;font-size:15px;font-weight:800;color:#fff}.search-person-avatar img{width:100%;height:100%;object-fit:cover}.search-person-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}.search-person-name{font-size:12px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.search-person-handle{font-size:10px;color:#888}.search-person-bio{font-size:10px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.search-person-arrow{color:#777;font-size:22px}.person-profile-head{display:flex;align-items:center;gap:14px}.person-profile-head .search-person-avatar{width:68px;height:68px;flex-basis:68px;font-size:22px}.person-profile-names h2{margin:0 0 6px;font-size:19px}.person-profile-names div{font-size:11px;color:#888}.person-profile-status{margin-top:20px;padding:12px;border:1px solid #303030;border-radius:10px;background:#191919;font-size:12px}.person-profile-bio{margin-top:15px;color:#ccc;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.person-profile-date{margin-top:20px;padding-top:13px;border-top:1px solid #292929;color:#777;font-size:10px}.global-search-wrap{position:relative;width:min( min(42vw,420px),100%)}.global-search{width:100%;min-width:180px;border:1px solid #303030;border-radius:10px;background:#111;color:#f5f5f5;padding:10px 13px;font-size:11px;outline:none}.global-search:focus{border-color:#777}.global-search-results{position:absolute;z-index:80;top:calc(100% + 8px);right:0;width:min( min(88vw,460px),calc(100vw - 28px));max-height:min(65vh,520px);overflow:auto;padding:10px;border:1px solid #353535;border-radius:13px;background:#111;box-shadow:0 18px 55px #000c}.search-group-title{padding:8px 7px 5px;color:#777;font-size:9px;font-weight:800;letter-spacing:1.3px}.search-result{display:flex;align-items:flex-start;gap:10px;padding:10px 8px;border-radius:9px;border-bottom:1px solid #242424}.search-result:last-child{border-bottom:0}.search-result-copy{min-width:0;flex:1}.search-result-name{font-size:11px;font-weight:750;color:#eee;overflow-wrap:anywhere}.search-result-meta{font-size:9px;color:#888;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}.search-empty{padding:14px 8px;color:#888;font-size:11px;line-height:1.6}.search-result .avatar{width:34px;height:34px;flex:0 0 34px;font-size:11px}@media(max-width:650px){.topbar{display:block}.top-actions{display:flex;flex-wrap:wrap;align-items:center}.global-search-wrap{order:-1;width:100%;flex:1 0 100%;margin-bottom:9px}.global-search{min-width:0;padding:12px}.global-search-results{left:0;right:auto;width:100%}.top-actions .top-btn{flex:1;text-align:center}}.notice{display:none;margin:0 0 17px;padding:12px 14px;border:1px solid #574646;border-radius:10px;color:#e2caca;background:#211616;font-size:12px;line-height:1.6}
-.page{display:none}.page.active{display:block}.eyebrow{font-size:9px;letter-spacing:2px;color:#777;font-weight:800}.page-title{font-size:clamp(26px,4vw,38px);letter-spacing:-1.4px;margin:10px 0 7px}.page-subtitle{color:#888;font-size:12px;line-height:1.65;margin:0 0 24px}
+.page{display:none}.page.active{display:block}
+#page-feed.active,#page-messages.active{animation:sectionIn .22s ease-out}
+@keyframes sectionIn{from{opacity:.65;transform:translateY(5px)}to{opacity:1;transform:none}}
+#page-feed .page-title{font-size:clamp(32px,5vw,48px);letter-spacing:-2px}
+#page-feed .eyebrow{display:inline-flex;padding:7px 10px;border:1px solid #343434;border-radius:6px;background:#111}
+#page-feed .feed-layout{grid-template-columns:minmax(0,1fr) 245px;gap:18px}
+#page-feed .composer{border-radius:16px;background:linear-gradient(120deg,#191919,#101010);padding:17px}
+#page-feed .post-card{padding:16px;border:1px solid #292929;border-radius:15px;background:linear-gradient(150deg,#151515,#0e0e0e);margin-bottom:13px}
+#page-feed .post-actions{margin-top:13px}
+#page-messages .page-title{font-size:clamp(32px,5vw,48px);letter-spacing:-2px}
+#page-messages .eyebrow{display:inline-flex;padding:7px 10px;border:1px solid #343434;border-radius:6px;background:#111}
+#page-messages .messages-layout{grid-template-columns:minmax(210px,290px) minmax(0,1fr);gap:0;min-height:590px;border:1px solid #303030;border-radius:18px;overflow:hidden;background:#0d0d0d}
+#page-messages .chat-list,#page-messages .chat-window{border:0;border-radius:0;background:transparent}
+#page-messages .chat-list{border-right:1px solid #292929;background:linear-gradient(180deg,#151515,#0d0d0d)}
+#page-messages .chat-list-head,#page-messages .chat-window-head{padding:17px 18px;min-height:58px;background:#141414;border-bottom:1px solid #292929}
+#page-messages .chat-list-items{max-height:520px;padding:9px}
+#page-messages .chat-contact{padding:12px;border-radius:12px}
+#page-messages .chat-thread{height:440px;padding:20px;background:radial-gradient(ellipse at 50% 100%,#181818 0,transparent 65%)}
+#page-messages .chat-compose{padding:13px;border-top:1px solid #292929;background:#111}
+#page-person .person-page-top{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+#page-person .person-back{border:1px solid #333;background:#151515;color:#ddd;border-radius:10px;padding:10px 13px}
+#page-person .person-page-card{max-width:850px;margin:0 auto;border:1px solid #303030;border-radius:18px;background:linear-gradient(145deg,#171717,#0d0d0d);padding:clamp(16px,4vw,28px)}
+#publicProfileContent[data-theme="graphite"]{background:linear-gradient(145deg,#242424,#111);padding:14px;border-radius:12px}
+#publicProfileContent[data-theme="ice"]{background:linear-gradient(145deg,#202a32,#101418);padding:14px;border-radius:12px}
+#publicProfileContent[data-theme="violet"]{background:linear-gradient(145deg,#292033,#111);padding:14px;border-radius:12px}
+#publicProfileContent .person-profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+#publicProfileContent .person-profile-actions button{min-height:40px}
+#publicProfileContent .person-profile-head .search-person-avatar{width:82px;height:82px;flex-basis:82px}
+@media(max-width:900px){#page-feed .feed-layout{grid-template-columns:1fr}#page-messages .messages-layout{grid-template-columns:1fr;min-height:0}#page-messages .chat-list{border-right:0;border-bottom:1px solid #292929}#page-messages .chat-list-items{display:flex;overflow-x:auto;max-height:none}#page-messages .chat-contact{min-width:190px}#page-messages .chat-thread{height:42vh;min-height:260px}}
+@media(max-width:560px){#page-person .person-page-card{padding:12px}#page-messages .chat-thread{height:38vh}}.eyebrow{font-size:9px;letter-spacing:2px;color:#777;font-weight:800}.page-title{font-size:clamp(26px,4vw,38px);letter-spacing:-1.4px;margin:10px 0 7px}.page-subtitle{color:#888;font-size:12px;line-height:1.65;margin:0 0 24px}
 .welcome{border:1px solid #333;border-radius:17px;background:radial-gradient(ellipse at 90% 0%,#292929 0,transparent 48%),linear-gradient(125deg,#1b1b1b,#101010 65%);padding:23px 24px;margin-bottom:25px;position:relative;overflow:hidden}.welcome:after{content:"T";position:absolute;right:25px;top:-30px;font-size:145px;font-weight:900;color:#ffffff08;pointer-events:none}.welcome-tag{font-size:9px;letter-spacing:2px;color:#aaa}.welcome h2{font-size:20px;margin:12px 0 7px;letter-spacing:-.5px}.welcome p{max-width:570px;color:#aaa;font-size:12px;line-height:1.7;margin:0}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 13px}.section-head h2{font-size:15px;margin:0}.section-head span{font-size:9px;color:#777;letter-spacing:1px}
 .service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.service{min-height:145px;padding:16px;border:1px solid var(--line);border-radius:13px;background:var(--surface);display:flex;flex-direction:column;transition:border-color .2s,transform .2s}.service:hover{border-color:#777;transform:translateY(-2px)}.service-icon{width:32px;height:32px;border-radius:9px;background:#eee;color:#111;display:grid;place-items:center;font-size:12px;font-weight:900;margin-bottom:14px}.service h3{font-size:13px;margin:0 0 6px}.service p{font-size:10px;line-height:1.55;color:#858585;margin:0}.service-state{margin-top:auto;padding-top:13px;font-size:8px;letter-spacing:1px;color:#777;font-weight:800}
@@ -125,6 +154,7 @@
 <div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения.</p>
 <div class="toolbar"><button class="secondary-btn" id="markAllNotifications">Отметить всё просмотренным</button></div><div id="notificationList"><div class="loading">Загружаем уведомления…</div></div>
 </section>
+<section class="page" id="page-person"><div class="person-page-top"><button class="person-back" id="personBack">← Назад</button><div><div class="eyebrow">TEHNOCELL IDENTITY</div><div style="font-size:12px;color:#888;margin-top:4px">Публичный профиль участника</div></div></div><div class="person-page-card"><div id="publicProfileContent"><div class="loading">Выберите пользователя</div></div></div></section>
 <section class="page" id="page-profile">
 <div class="eyebrow">ВАШ TEHNOCELL ID</div><h1 class="page-title">Профиль</h1><p class="page-subtitle">Единый аккаунт для сервисов и общения внутри экосистемы.</p>
 <div class="panel profile-panel"><div class="avatar" id="mainAvatar">T</div><div style="min-width:0;flex:1"><strong id="profileName">Загружаем профиль…</strong><small id="profileEmail"></small></div><a class="top-btn" href="account-user.html" id="profileManage">Настройки ID ↗</a></div>
@@ -158,6 +188,8 @@ let noticeTimer=null;function showNotice(message){const el=$("notice");el.textCo
 function avatarMarkup(name,path){if(path){const {data}=db.storage.from("profile-avatars").getPublicUrl(path);return '<img src="'+escapeHtml(data.publicUrl)+'" alt="">';}return escapeHtml((name||"T").charAt(0).toUpperCase());}
 function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
+$("personBack").addEventListener("click",()=>switchPage("feed"));
+document.addEventListener("click",e=>{const profileButton=e.target.closest("[data-profile]");if(profileButton){e.preventDefault();openPersonProfile(profileButton.dataset.profile);}});
 
 let globalSearchTimer=null, globalSearchToken=0;
 function searchText(value){return String(value||"").replace(/[\\%_]/g," ").replace(/[(),]/g," ").trim().slice(0,70);}
@@ -182,14 +214,14 @@ async function loadPeopleSearch(){
 $("globalSearch").addEventListener("focus",()=>{if(!$("globalSearchResults").hidden)return;loadPeopleSearch();});
 $("globalSearch").addEventListener("input",()=>{clearTimeout(globalSearchTimer);globalSearchTimer=setTimeout(loadPeopleSearch,220);});
 $("globalSearch").addEventListener("keydown",e=>{if(e.key==="Escape"){$("globalSearchResults").hidden=true;$("globalSearch").blur();}});
-$("globalSearchResults").addEventListener("click",e=>{const row=e.target.closest("[data-profile]");if(row)openPersonProfile(row.dataset.profile);});
+
 document.addEventListener("click",e=>{if(!e.target.closest(".global-search-wrap"))$("globalSearchResults").hidden=true;});
 async function openPersonProfile(id){
  $("globalSearchResults").hidden=true;
- $("personProfileContent").innerHTML='<div class="loading">Открываем профиль…</div>';
- openModal("personProfileModal");
+ $("publicProfileContent").innerHTML='<div class="loading">Открываем профиль…</div>';
+ switchPage("person");
  const {data,error}=await db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_game,profile_status,created_at").eq("id",id).maybeSingle();
- if(error||!data){$("personProfileContent").innerHTML='<div class="empty">Не удалось открыть профиль.</div>';return;}
+ if(error||!data){$("publicProfileContent").innerHTML='<div class="empty">Не удалось открыть профиль.</div>';return;}
  const name=data.display_name||"Пользователь";
  let action="";
  if(id===currentUser.id){action='<a class="secondary-btn" href="'+(isVerified(id)?"account.html":"account-user.html")+'">Настройки профиля</a>';}
@@ -205,15 +237,15 @@ async function openPersonProfile(id){
   else action='<button class="primary-btn" data-send-friend="'+id+'">＋ Добавить в друзья</button>';
  }
  currentProfileId=id;
- $("personProfileContent").dataset.theme=data.profile_theme||"mono";
- $("personProfileContent").innerHTML=(data.profile_banner_path?'<div style="height:112px;border-radius:12px;margin-bottom:15px;background:#222 url("'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_banner_path).data.publicUrl)+'") center/cover"></div>':'')+'<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+verifiedBadge(data.id)+'</h2><div>'+(data.username?"@"+escapeHtml(data.username):"Участник TEHNOCELL")+'</div></div></div>'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_music_url&&/^https:\/\//i.test(data.profile_music_url)?'<div class="person-profile-status">♫ <a target="_blank" rel="noopener" href="'+escapeHtml(data.profile_music_url)+'">Музыка в профиле ↗</a></div>':'')+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div>';
- $("personProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
- $("personProfileContent").querySelectorAll("[data-accept-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.acceptRequest,"accepted",id)));
- $("personProfileContent").querySelectorAll("[data-decline-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.declineRequest,"declined",id)));
- $("personProfileContent").querySelectorAll("[data-cancel-request]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.cancelRequest,id)));
- $("personProfileContent").querySelectorAll("[data-remove-friend]").forEach(b=>b.addEventListener("click",()=>removeFriend(b.dataset.removeFriend,id)));
- $("personProfileContent").querySelectorAll("[data-open-chat]").forEach(b=>b.addEventListener("click",()=>{closeModal("personProfileModal");switchPage("messages");openChat(id,name);}));
- $("personProfileContent").insertAdjacentHTML("beforeend",'<section class="profile-posts"><div class="profile-posts-title">Публикации</div><div id="personPosts" class="loading">Загружаем публикации…</div></section>');
+ $("publicProfileContent").dataset.theme=data.profile_theme||"mono";
+ $("publicProfileContent").innerHTML=(data.profile_banner_path?'<div style="height:112px;border-radius:12px;margin-bottom:15px;background:#222 url("'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_banner_path).data.publicUrl)+'") center/cover"></div>':'')+'<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+verifiedBadge(data.id)+'</h2><div>'+(data.username?"@"+escapeHtml(data.username):"Участник TEHNOCELL")+'</div></div></div>'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_music_url&&/^https:\/\//i.test(data.profile_music_url)?'<div class="person-profile-status">♫ <a target="_blank" rel="noopener" href="'+escapeHtml(data.profile_music_url)+'">Музыка в профиле ↗</a></div>':'')+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div>';
+ $("publicProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
+ $("publicProfileContent").querySelectorAll("[data-accept-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.acceptRequest,"accepted",id)));
+ $("publicProfileContent").querySelectorAll("[data-decline-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.declineRequest,"declined",id)));
+ $("publicProfileContent").querySelectorAll("[data-cancel-request]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.cancelRequest,id)));
+ $("publicProfileContent").querySelectorAll("[data-remove-friend]").forEach(b=>b.addEventListener("click",()=>removeFriend(b.dataset.removeFriend,id)));
+ $("publicProfileContent").querySelectorAll("[data-open-chat]").forEach(b=>b.addEventListener("click",()=>{switchPage("messages");openChat(id,name);}));
+ $("publicProfileContent").insertAdjacentHTML("beforeend",'<section class="profile-posts"><div class="profile-posts-title">Публикации</div><div id="personPosts" class="loading">Загружаем публикации…</div></section>');
  await loadProfilePosts(id);
 }
 async function loadProfilePosts(userId){
@@ -248,7 +280,7 @@ async function boot(){
  const account=staff.includes(currentUser.id)?"account.html":"account-user.html";
  $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
  await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial()]);
- const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile"].includes(hash))switchPage(hash);
+ const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile","person"].includes(hash))switchPage(hash);
 }
 async function loadCommunities(){
  const [{data:cs,error:cErr},{data:ms,error:mErr},{data:allMembers,error:membersErr}]=await Promise.all([
@@ -343,7 +375,7 @@ async function loadFeed(){
  document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
  document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
  document.querySelectorAll("[data-delete-post]").forEach(b=>b.addEventListener("click",()=>deletePost(b.dataset.deletePost)));
- $("feedList").querySelectorAll("[data-profile]").forEach(b=>b.addEventListener("click",()=>openPersonProfile(b.dataset.profile)));
+ 
 }
 async function toggleLike(id,button){
  button.disabled=true;const active=button.classList.contains("active");
