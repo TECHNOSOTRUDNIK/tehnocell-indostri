@@ -2080,6 +2080,7 @@ async function startAccount() {
     if (currentUser) {
 
         updateNotificationInterface();
+        startSupportRealtime();
 
     }
 
@@ -2091,6 +2092,44 @@ startAccount();
 /* TEHNOCELL SUPPORT */
 let activeSupportConversation = null;
 let activeSupportStatus = "waiting";
+let supportRealtimeChannel = null;
+
+function startSupportRealtime() {
+    if (!currentUser || supportRealtimeChannel) return;
+
+    const uid = currentUser.id;
+    supportRealtimeChannel = db.channel("tehnocell-support-user-" + uid)
+        .on("postgres_changes", {
+            event: "*",
+            schema: "public",
+            table: "support_conversations",
+            filter: "user_id=eq." + uid
+        }, async payload => {
+            await loadSupportConversations();
+            if (activeSupportConversation && payload.new?.id === activeSupportConversation) {
+                activeSupportStatus = payload.new.status || activeSupportStatus;
+                $("supportChatStatus").textContent = supportStatusLabels[activeSupportStatus] || activeSupportStatus;
+            }
+        })
+        .on("postgres_changes", {
+            event: "INSERT",
+            schema: "public",
+            table: "support_messages"
+        }, payload => {
+            const message = payload.new;
+            if (!message?.conversation_id) return;
+            if (activeSupportConversation === message.conversation_id) {
+                openSupportConversation(
+                    activeSupportConversation,
+                    $("supportChatTitle").textContent,
+                    activeSupportStatus
+                );
+            } else {
+                loadSupportConversations();
+            }
+        })
+        .subscribe();
+}
 const supportStatusLabels = {waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"};
 const supportCategoryLabels = {general:"Общий вопрос",account:"Аккаунт и профиль",birthday_correction:"Изменение даты рождения",bug:"Ошибка или неисправность",idea:"Идея или предложение",services:"Продукты TEHNOCELL",security:"Безопасность и конфиденциальность",other:"Другая тема"};
 $("openNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=false;$("supportSubject").focus();});
