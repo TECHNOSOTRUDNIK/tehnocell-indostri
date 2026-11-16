@@ -546,7 +546,7 @@ body {
     }
 }
 
-/* Праздничный значок Marmelad — действует ровно 24 часа */
+/* Праздничный значок дня рождения */
 .birthday-cake-badge{display:none;align-items:center;justify-content:center;width:29px;height:29px;margin-left:7px;border-radius:9px;background:linear-gradient(145deg,#f1dfb6,#c9ad76);color:#211b10;box-shadow:0 2px 10px rgba(177,143,83,.24);vertical-align:middle}
 .birthday-cake-badge svg{width:19px;height:19px;display:block}
 .birthday-ennie-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(7px)}
@@ -730,7 +730,13 @@ body {
 
 <!-- НАСТРОЙКИ -->
 
-<section id="settings" class="page">
+<section id="settings" class="page">\n<div class="panel birthday-settings-panel">
+<h3>Дата рождения</h3>
+<p class="photo-note">Укажите настоящую дату. Год рождения не сохраняется — только день и месяц. После сохранения изменить дату самостоятельно нельзя.</p>
+<div class="birthday-fields">
+<div><label for="birthdayDay">День</label><select id="birthdayDay"><option value="">День</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select></div>
+<div><label for="birthdayMonth">Месяц</label><select id="birthdayMonth"><option value="">Месяц</option><option value="1">Январь</option><option value="2">Февраль</option><option value="3">Март</option><option value="4">Апрель</option><option value="5">Май</option><option value="6">Июнь</option><option value="7">Июль</option><option value="8">Август</option><option value="9">Сентябрь</option><option value="10">Октябрь</option><option value="11">Ноябрь</option><option value="12">Декабрь</option></select></div>
+</div><button class="action" id="saveBirthday">Сохранить дату</button><p class="message" id="birthdaySavedText">Дата ещё не указана.</p></div>
 
 
     <!-- ПРОФИЛЬ -->
@@ -1015,8 +1021,8 @@ body {
   <div class="birthday-ennie-card">
     <button class="birthday-ennie-x" id="birthdayEnnieX" aria-label="Закрыть">×</button>
     <div class="birthday-ennie-label">ENNIE · TEHNOCELL AI</div>
-    <h2 id="birthdayEnnieTitle">С днём рождения, Влад!</h2>
-    <p>Ой, Влад, с днём рождения! Я приготовила для тебя небольшой сюрприз. Желаю побольше классных идей, смелости воплощать их и людей рядом, с которыми легко и весело. Пусть TEHNOCELL растёт вместе с твоими мечтами. А сегодня не забывай отдыхать — даже тем, кто строит будущее, иногда нужна пауза. С праздником!</p>
+    <h2 id="birthdayEnnieTitle">С днём рождения!</h2>
+    <p>Пусть впереди будет больше радостных событий, интересных идей и смелости воплощать задуманное. Желаем отличного дня и яркого нового года жизни!</p>
     <button class="birthday-ennie-close" id="birthdayEnnieClose">Спасибо, Энни!</button>
   </div>
 </div>
@@ -1030,9 +1036,6 @@ const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 
 const AVATAR_BUCKET = "profile-avatars";
-const BIRTHDAY_USER_ID = "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a";
-const BIRTHDAY_EXPIRES_AT = Date.parse("2026-11-17T00:00:00+03:00");
-
 const VERIFIED_USERS = [
     "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
     "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a",
@@ -1130,33 +1133,62 @@ function updateWelcome(user) {
    ГАЛОЧКИ РАЗРАБОТЧИКОВ
 ===================================== */
 
-function updateBirthdayEdition(user) {
-    const active = user.id === BIRTHDAY_USER_ID && Date.now() < BIRTHDAY_EXPIRES_AT;
+async function updateBirthdayEdition(user) {
     const badge = $("birthdayCakeBadge");
-    if (badge) badge.style.display = active ? "inline-flex" : "none";
-    if (active) {
-        const untilBirthdayEnd = BIRTHDAY_EXPIRES_AT - Date.now();
-        if (untilBirthdayEnd > 0) setTimeout(() => {
-            if (badge) badge.style.display = "none";
-            const overlayNow = $("birthdayEnnieOverlay");
-            if (overlayNow) overlayNow.classList.remove("show");
-        }, untilBirthdayEnd);
+    const { data, error } = await db.from("user_birthdays")
+        .select("birth_month,birth_day").eq("user_id", user.id).maybeSingle();
+    if (error) {
+        console.warn("Не удалось загрузить дату рождения:", error.message);
+        if (badge) badge.style.display = "none";
+        return;
     }
-    if (!active) return;
-
-    const seenKey = "tehnocell_birthday_ennie_seen_" + BIRTHDAY_USER_ID;
+    if (!data) {
+        if (badge) badge.style.display = "none";
+        return;
+    }
+    const now = new Date();
+    const isBirthday = now.getMonth() + 1 === data.birth_month && now.getDate() === data.birth_day;
+    if (badge) badge.style.display = isBirthday ? "inline-flex" : "none";
+    const monthNames = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+    $("birthdaySavedText").textContent = "Дата рождения сохранена: " + data.birth_day + " " + monthNames[data.birth_month - 1] + ". Изменить её можно только через поддержку.";
+    $("birthdayDay").value = String(data.birth_day);
+    $("birthdayMonth").value = String(data.birth_month);
+    $("birthdayDay").disabled = true;
+    $("birthdayMonth").disabled = true;
+    $("saveBirthday").disabled = true;
+    $("saveBirthday").textContent = "Дата сохранена";
+    if (!isBirthday) return;
+    const seenKey = "tehnocell_birthday_greeting_" + user.id + "_" + now.getFullYear();
     if (localStorage.getItem(seenKey)) return;
-
-    // Ставим отметку до показа, чтобы обновление страницы не открыло поздравление повторно.
     localStorage.setItem(seenKey, "1");
+    $("birthdayEnnieTitle").textContent = "С днём рождения, " + (user.user_metadata?.display_name || "пользователь") + "!";
     const overlay = $("birthdayEnnieOverlay");
     const close = () => overlay.classList.remove("show");
-    $("birthdayEnnieX").addEventListener("click", close);
-    $("birthdayEnnieClose").addEventListener("click", close);
-    overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+    $("birthdayEnnieX").addEventListener("click", close, {once:true});
+    $("birthdayEnnieClose").addEventListener("click", close, {once:true});
+    overlay.addEventListener("click", event => { if (event.target === overlay) close(); }, {once:true});
     setTimeout(() => overlay.classList.add("show"), 650);
 }
-
+async function saveBirthdayOnce() {
+    if (!currentUser) return;
+    const month = Number($("birthdayMonth").value);
+    const day = Number($("birthdayDay").value);
+    const days = new Date(2000, month, 0).getDate();
+    if (!month || !day || day < 1 || day > days) {
+        $("birthdaySavedText").textContent = "Проверьте дату: такого дня в выбранном месяце нет.";
+        return;
+    }
+    $("saveBirthday").disabled = true;
+    const { error } = await db.from("user_birthdays").insert({user_id:currentUser.id,birth_month:month,birth_day:day});
+    if (error) {
+        $("saveBirthday").disabled = false;
+        $("birthdaySavedText").textContent = error.code === "23505" ? "Дата уже была сохранена. Для исправления обратитесь в поддержку." : "Не удалось сохранить дату. " + error.message;
+        return;
+    }
+    $("birthdaySavedText").textContent = "Дата сохранена. Изменить её можно только через поддержку.";
+    await updateBirthdayEdition(currentUser);
+}
+$("saveBirthday").addEventListener("click", saveBirthdayOnce);
 
 function updateVerifiedStatus(user) {
 
