@@ -887,7 +887,7 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 
 
   <section class="section hits-section" id="hits">
-   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Популярное · полные версии</h2><p>Полные аудиотреки из открытого каталога. Подборка обновляется автоматически.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
+   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Хиты СНГ · сейчас в тренде</h2><p>Актуальные популярные композиции российского чарта. Подборка обновляется автоматически.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
    <div class="cards hits-grid" id="hitGrid"></div><div class="empty hits-status" id="hitsStatus">Загружаем музыкальный чарт…</div>
   </section>
 
@@ -1844,15 +1844,6 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   let items;try{items=await requestTracks("/tracks/trending?limit=100")}catch(_){items=await requestTracks("/tracks/latest?limit=100")}
   return items.map(normalizeTrack).filter(Boolean).slice(0,100);
  }
- async function fetchFreshReleases(){try{return (await requestTracks("/tracks/latest?limit=60")).map(normalizeTrack).filter(Boolean)}catch(_){return []}}
- async function buildFreshReleaseShelf(){
-  const home=document.getElementById("mivoPageHome");if(!home)return;
-  let section=document.getElementById("mivoFreshReleases");
-  if(!section){section=document.createElement("section");section.id="mivoFreshReleases";section.className="section";section.innerHTML='<div class="section-head"><div><div class="eyebrow-line">НОВЫЕ ТРЕКИ</div><h2>Недавно добавлено</h2><p>Полные аудиотреки из открытого музыкального каталога.</p></div><button class="text-btn" type="button" id="allFreshReleases">ВСЕ ↗</button></div><div class="mivo-horizontal" id="mivoFreshGrid"></div>';const mixes=document.getElementById("mixes");home.insertBefore(section,mixes||null);section.querySelector("#allFreshReleases").onclick=()=>{document.querySelector("[data-page=catalog]")?.click();document.querySelector("[data-catalog-tab=tracks]")?.click()}}
-  const grid=section.querySelector("#mivoFreshGrid");if(!grid)return;grid.replaceChildren();const fresh=await fetchFreshReleases();
-  fresh.slice(0,20).forEach(t=>{if(!allTracks().some(x=>trackKey(x)===trackKey(t)))catalogTracks.push(t);grid.append(card(t,allTracks().findIndex(x=>trackKey(x)===trackKey(t))))});
-  if(!fresh.length){const note=document.createElement("p");note.className="catalog-hint";note.textContent="Новые композиции временно недоступны.";grid.append(note)}
- }
  async function loadLiveChart(force=false){
   if(mivoHitsLoading||(!force&&mivoHitsLoaded))return;mivoHitsLoading=true;
   const status=$("hitsStatus"),grid=$("hitGrid");if(status){status.style.display="block";status.textContent="Загружаем полные версии треков…"}if(grid)grid.replaceChildren();
@@ -1860,7 +1851,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    const cached=readStore(cacheKey,null);let tracks=null;
    if(!force&&cached?.tracks?.length&&Date.now()-cached.savedAt<30*60*1000)tracks=cached.tracks;
    else{try{tracks=await fetchAudiusTrending()}catch(_){tracks=[]}if(!tracks.length&&cached?.tracks?.length)tracks=cached.tracks;if(tracks.length)writeStore(cacheKey,{savedAt:Date.now(),tracks})}
-   hitTracks=tracks||[];buildFreshReleaseShelf();grid?.replaceChildren();
+   hitTracks=tracks||[];grid?.replaceChildren();
    hitTracks.slice(0,50).forEach((t,i)=>{const node=card(t,i);node.dataset.chartRank=String(i+1);const rank=document.createElement("span");rank.className="hit-rank";rank.textContent="#"+(i+1);node.querySelector(".cover")?.append(rank);grid?.append(node)});
    if(status){status.textContent=hitTracks.length?"Полные версии · Audius · "+hitTracks.length+" треков":"Не удалось загрузить открытый музыкальный каталог. Попробуй обновить позже.";status.style.display="block"}
    mivoHitsLoaded=true;renderMixes();
