@@ -569,6 +569,20 @@ body {
 
 .verified-badge{display:none!important}
 /* Праздничный значок дня рождения */
+/* Custom birthday controls: never invoke native Android date/select UI */
+.birthday-settings-panel{padding:26px!important;border-radius:20px!important;background:linear-gradient(145deg,var(--surface),var(--background));border-color:var(--border);box-shadow:0 14px 38px rgba(0,0,0,.055)}
+.birthday-settings-panel h3{font-size:21px;margin-bottom:10px}.birthday-settings-panel>.photo-note{font-size:14px;line-height:1.65;max-width:620px;margin-bottom:22px}
+.birthday-fields{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:13px;margin:0 0 16px}
+.birthday-picker{position:relative;min-width:0}.birthday-picker label{display:block;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--muted);margin:0 0 8px}
+.birthday-picker-trigger{width:100%;min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;border:1px solid var(--border);border-radius:12px;background:var(--input);color:var(--text);font:600 15px Arial,sans-serif;text-align:left;cursor:pointer;transition:border-color .18s,background .18s}
+.birthday-picker-trigger:focus-visible{outline:2px solid var(--text);outline-offset:3px}.birthday-picker-trigger:disabled{opacity:.65;cursor:default}
+.picker-chevron{font-size:19px;color:var(--muted);transition:transform .18s}.birthday-picker-trigger[aria-expanded="true"] .picker-chevron{transform:rotate(180deg)}
+.birthday-picker-menu{position:absolute;z-index:30;left:0;right:0;top:calc(100% + 7px);max-height:230px;overflow:auto;padding:6px;border:1px solid var(--border);border-radius:13px;background:var(--surface);box-shadow:0 16px 38px rgba(0,0,0,.2)}
+.birthday-picker-menu[hidden]{display:none}.birthday-picker-option{display:block;width:100%;min-height:42px;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--text);font:14px Arial,sans-serif;text-align:left;cursor:pointer}
+.birthday-picker-option:hover{background:var(--background);font-weight:700}
+.birthday-save-row{display:flex;align-items:center;margin-top:5px}.birthday-save-row .action{min-height:48px;padding:0 22px;border-radius:11px;font-size:14px;font-weight:700}
+.birthday-saved-message{display:block;margin:16px 0 0;padding:13px 15px;border:1px solid var(--border);border-radius:11px;background:var(--background);line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:480px){.birthday-settings-panel{padding:19px!important}.birthday-fields{grid-template-columns:1fr 1.35fr;gap:9px}.birthday-picker-trigger{min-height:50px;padding:0 11px;font-size:14px}.birthday-save-row .action{width:100%}}
 .birthday-cake-badge{display:none;align-items:center;justify-content:center;width:29px;height:29px;margin-left:7px;border-radius:9px;background:linear-gradient(145deg,#f1dfb6,#c9ad76);color:#211b10;box-shadow:0 2px 10px rgba(177,143,83,.24);vertical-align:middle}
 .birthday-cake-badge svg{width:19px;height:19px;display:block}
 .birthday-ennie-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(7px)}
@@ -813,11 +827,9 @@ body {
       <h3>Дата рождения</h3>
       <p class="photo-note">Укажите настоящую дату. Год рождения не сохраняется — только день и месяц. После сохранения изменить дату самостоятельно нельзя.</p>
       <div class="birthday-fields">
-        <div><label for="birthdayDay">День</label><select id="birthdayDay"><option value="">День</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select></div>
-        <div><label for="birthdayMonth">Месяц</label><select id="birthdayMonth"><option value="">Месяц</option><option value="1">Январь</option><option value="2">Февраль</option><option value="3">Март</option><option value="4">Апрель</option><option value="5">Май</option><option value="6">Июнь</option><option value="7">Июль</option><option value="8">Август</option><option value="9">Сентябрь</option><option value="10">Октябрь</option><option value="11">Ноябрь</option><option value="12">Декабрь</option></select></div>
-      </div>
-      <button class="action" id="saveBirthday">Сохранить дату</button>
-      <p class="message" id="birthdaySavedText">Дата ещё не указана.</p>
+<div class="birthday-picker"><label>День</label><button class="birthday-picker-trigger" type="button" id="birthdayDayTrigger" aria-expanded="false"><span id="birthdayDayLabel">Выберите день</span><span class="picker-chevron">⌄</span></button><div class="birthday-picker-menu" id="birthdayDayMenu" hidden></div><input type="hidden" id="birthdayDay"></div>
+<div class="birthday-picker"><label>Месяц</label><button class="birthday-picker-trigger" type="button" id="birthdayMonthTrigger" aria-expanded="false"><span id="birthdayMonthLabel">Выберите месяц</span><span class="picker-chevron">⌄</span></button><div class="birthday-picker-menu" id="birthdayMonthMenu" hidden></div><input type="hidden" id="birthdayMonth"></div>
+</div><div class="birthday-save-row"><button class="action" id="saveBirthday" type="button">Сохранить дату</button></div><p class="message birthday-saved-message" id="birthdaySavedText">Дата ещё не указана.</p>
     </div>
 
 
@@ -1254,6 +1266,12 @@ function updateWelcome(user) {
    ГАЛОЧКИ РАЗРАБОТЧИКОВ
 ===================================== */
 
+const birthdayMonthLabels=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+function setBirthdayPicker(kind,value,disabled=false){const d=kind==="day",input=$(d?"birthdayDay":"birthdayMonth"),label=$(d?"birthdayDayLabel":"birthdayMonthLabel"),trigger=$(d?"birthdayDayTrigger":"birthdayMonthTrigger");input.value=value?String(value):"";label.textContent=value?(d?String(value):birthdayMonthLabels[Number(value)-1]):(d?"Выберите день":"Выберите месяц");trigger.disabled=disabled;}
+function buildBirthdayPicker(kind){const d=kind==="day",menu=$(d?"birthdayDayMenu":"birthdayMonthMenu"),values=d?Array.from({length:31},(_,i)=>[String(i+1),String(i+1)]):birthdayMonthLabels.map((n,i)=>[String(i+1),n]);menu.replaceChildren();values.forEach(([v,t])=>{const b=document.createElement("button");b.type="button";b.className="birthday-picker-option";b.textContent=t;b.addEventListener("click",()=>{setBirthdayPicker(kind,v);closeBirthdayPickers();});menu.appendChild(b);});}
+function closeBirthdayPickers(){["day","month"].forEach(k=>{const d=k==="day",m=$(d?"birthdayDayMenu":"birthdayMonthMenu"),t=$(d?"birthdayDayTrigger":"birthdayMonthTrigger");m.hidden=true;t.setAttribute("aria-expanded","false");});}
+function toggleBirthdayPicker(kind){const d=kind==="day",m=$(d?"birthdayDayMenu":"birthdayMonthMenu"),t=$(d?"birthdayDayTrigger":"birthdayMonthTrigger");if(t.disabled)return;const open=m.hidden;closeBirthdayPickers();m.hidden=!open;t.setAttribute("aria-expanded",String(open));}
+buildBirthdayPicker("day");buildBirthdayPicker("month");$("birthdayDayTrigger").addEventListener("click",()=>toggleBirthdayPicker("day"));$("birthdayMonthTrigger").addEventListener("click",()=>toggleBirthdayPicker("month"));document.addEventListener("click",e=>{if(!e.target.closest(".birthday-picker"))closeBirthdayPickers();});
 async function updateBirthdayEdition(user) {
     const badge = $("birthdayCakeBadge");
     const { data, error } = await db.from("user_birthdays")
@@ -1280,10 +1298,8 @@ async function updateBirthdayEdition(user) {
     }
     const monthNames = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
     $("birthdaySavedText").textContent = "Дата рождения сохранена: " + data.birth_day + " " + monthNames[data.birth_month - 1] + ". Изменить её можно только через поддержку.";
-    $("birthdayDay").value = String(data.birth_day);
-    $("birthdayMonth").value = String(data.birth_month);
-    $("birthdayDay").disabled = true;
-    $("birthdayMonth").disabled = true;
+    setBirthdayPicker("day",data.birth_day,true);
+    setBirthdayPicker("month",data.birth_month,true);
     $("saveBirthday").disabled = true;
     $("saveBirthday").textContent = "Дата сохранена";
     if (!isBirthday) return;
