@@ -1217,6 +1217,14 @@ async function updateBirthdayEdition(user) {
     const now = new Date();
     const isBirthday = now.getMonth() + 1 === data.birth_month && now.getDate() === data.birth_day;
     if (badge) badge.style.display = isBirthday ? "inline-flex" : "none";
+    if (isBirthday) {
+        const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 1);
+        setTimeout(() => {
+            if (badge) badge.style.display = "none";
+            const overlayNow = $("birthdayEnnieOverlay");
+            if (overlayNow) overlayNow.classList.remove("show");
+        }, Math.max(1000, nextMidnight.getTime() - now.getTime()));
+    }
     const monthNames = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
     $("birthdaySavedText").textContent = "Дата рождения сохранена: " + data.birth_day + " " + monthNames[data.birth_month - 1] + ". Изменить её можно только через поддержку.";
     $("birthdayDay").value = String(data.birth_day);
