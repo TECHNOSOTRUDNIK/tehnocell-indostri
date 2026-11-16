@@ -204,6 +204,7 @@ async function openPersonProfile(id){
   else if(relation?.status==="pending") action='<button class="primary-btn" data-accept-request="'+relation.id+'">Принять заявку</button><button class="secondary-btn" data-decline-request="'+relation.id+'">Отклонить</button>';
   else action='<button class="primary-btn" data-send-friend="'+id+'">＋ Добавить в друзья</button>';
  }
+ currentProfileId=id;
  $("personProfileContent").dataset.theme=data.profile_theme||"mono";
  $("personProfileContent").innerHTML=(data.profile_banner_path?'<div style="height:112px;border-radius:12px;margin-bottom:15px;background:#222 url("'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_banner_path).data.publicUrl)+'") center/cover"></div>':'')+'<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+verifiedBadge(data.id)+'</h2><div>'+(data.username?"@"+escapeHtml(data.username):"Участник TEHNOCELL")+'</div></div></div>'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_music_url&&/^https:\/\//i.test(data.profile_music_url)?'<div class="person-profile-status">♫ <a target="_blank" rel="noopener" href="'+escapeHtml(data.profile_music_url)+'">Музыка в профиле ↗</a></div>':'')+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div>';
  $("personProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
@@ -212,6 +213,22 @@ async function openPersonProfile(id){
  $("personProfileContent").querySelectorAll("[data-cancel-request]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.cancelRequest,id)));
  $("personProfileContent").querySelectorAll("[data-remove-friend]").forEach(b=>b.addEventListener("click",()=>removeFriend(b.dataset.removeFriend,id)));
  $("personProfileContent").querySelectorAll("[data-open-chat]").forEach(b=>b.addEventListener("click",()=>{closeModal("personProfileModal");switchPage("messages");openChat(id,name);}));
+ $("personProfileContent").insertAdjacentHTML("beforeend",'<section class="profile-posts"><div class="profile-posts-title">Публикации</div><div id="personPosts" class="loading">Загружаем публикации…</div></section>');
+ await loadProfilePosts(id);
+}
+async function loadProfilePosts(userId){
+ const box=$("personPosts");if(!box||currentProfileId!==userId)return;box.innerHTML='<div class="loading">Загружаем публикации…</div>';
+ const {data:posts,error}=await db.from("tc_posts").select("id,author_id,body,photo_paths,created_at").eq("author_id",userId).order("created_at",{ascending:false}).limit(12);
+ if(error){box.innerHTML='<div class="empty">Не удалось загрузить публикации.</div>';return;}
+ if(!posts?.length){box.innerHTML='<div class="empty">Пока нет публикаций.</div>';return;}
+ const ids=posts.map(p=>p.id);
+ const [{data:reactions},{data:comments}]=await Promise.all([db.from("tc_post_reactions").select("post_id,user_id").in("post_id",ids),db.from("tc_comments").select("post_id").in("post_id",ids)]);
+ const rc=new Map(),cc=new Map();(reactions||[]).forEach(x=>rc.set(x.post_id,(rc.get(x.post_id)||0)+1));(comments||[]).forEach(x=>cc.set(x.post_id,(cc.get(x.post_id)||0)+1));
+ const liked=new Set((reactions||[]).filter(x=>x.user_id===currentUser.id).map(x=>x.post_id));
+ box.innerHTML=posts.map(p=>{const photos=Array.isArray(p.photo_paths)?p.photo_paths:[];const gallery=photos.length?'<div class="post-gallery '+(photos.length===1?"one":"")+'">'+photos.map(path=>'<img loading="lazy" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl)+'" alt="Фотография публикации">').join("")+'</div>':"";return '<article class="post-card"><div class="post-detail">'+new Date(p.created_at).toLocaleString("ru-RU")+'</div><div class="post-body">'+escapeHtml(p.body)+'</div>'+gallery+'<div class="post-actions"><button class="post-action '+(liked.has(p.id)?"active":"")+'" data-like="'+p.id+'">♡ Нравится · '+(rc.get(p.id)||0)+'</button><button class="post-action" data-comments="'+p.id+'">Комментарии · '+(cc.get(p.id)||0)+'</button>'+(p.author_id===currentUser.id?'<button class="post-action" data-delete-post="'+p.id+'">Удалить</button>':"")+'</div></article>';}).join("");
+ box.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
+ box.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
+ box.querySelectorAll("[data-delete-post]").forEach(b=>b.addEventListener("click",()=>deletePost(b.dataset.deletePost)));
 }
 function openModal(id){$(id).classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(id){$(id).classList.remove("open");document.body.style.overflow="";}
@@ -330,11 +347,11 @@ async function loadFeed(){
 async function toggleLike(id,button){
  button.disabled=true;const active=button.classList.contains("active");
  const result=active?await db.from("tc_post_reactions").delete().eq("post_id",id).eq("user_id",currentUser.id):await db.from("tc_post_reactions").insert({post_id:id,user_id:currentUser.id,reaction:"like"});
- button.disabled=false;if(result.error){showNotice("Не удалось изменить реакцию: "+result.error.message);return;}loadFeed();
+ button.disabled=false;if(result.error){showNotice("Не удалось изменить реакцию: "+result.error.message);return;}if(currentPage==="feed")loadFeed();if(currentProfileId)loadProfilePosts(currentProfileId);
 }
 async function deletePost(id){
  const {error}=await db.from("tc_posts").delete().eq("id",id).eq("author_id",currentUser.id);
- if(error){showNotice("Не удалось удалить публикацию: "+error.message);return;}loadFeed();showNotice("Публикация удалена.");
+ if(error){showNotice("Не удалось удалить публикацию: "+error.message);return;}if(currentPage==="feed")loadFeed();if(currentProfileId)loadProfilePosts(currentProfileId);showNotice("Публикация удалена.");
 }
 async function openComments(postId){
  currentCommentPost=postId;$("modalComments").innerHTML='<div class="loading">Загружаем обсуждение…</div>';$("modalCommentText").value="";$("commentStatus").textContent="";openModal("commentsModal");
