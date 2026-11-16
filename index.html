@@ -7,6 +7,12 @@
 <meta name="yandex-verification" content="2eda6662c50412a2">
 <meta name="description" content="TEHNOCELL INDOSTRI — независимая технологическая компания.">
 <meta name="theme-color" content="#111111">
+<link rel="manifest" href="/tehnocell-indostri/manifest.webmanifest">
+<link rel="icon" href="/tehnocell-indostri/app-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/tehnocell-indostri/app-icon.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TEHNOCELL">
 
 <title>TEHNOCELL INDOSTRI — Technology Company</title>
 
@@ -1392,5 +1398,14 @@ initializeProfile();
 
 <script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
 <script src="account-access.js?v=3"></script>
+<script>
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/tehnocell-indostri/service-worker.js", {
+      scope: "/tehnocell-indostri/"
+    }).catch(error => console.warn("Не удалось подключить режим приложения:", error));
+  });
+}
+</script>
 </body>
 </html>
