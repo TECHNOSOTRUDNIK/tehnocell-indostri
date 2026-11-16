@@ -1134,6 +1134,14 @@ function updateBirthdayEdition(user) {
     const active = user.id === BIRTHDAY_USER_ID && Date.now() < BIRTHDAY_EXPIRES_AT;
     const badge = $("birthdayCakeBadge");
     if (badge) badge.style.display = active ? "inline-flex" : "none";
+    if (active) {
+        const untilBirthdayEnd = BIRTHDAY_EXPIRES_AT - Date.now();
+        if (untilBirthdayEnd > 0) setTimeout(() => {
+            if (badge) badge.style.display = "none";
+            const overlayNow = $("birthdayEnnieOverlay");
+            if (overlayNow) overlayNow.classList.remove("show");
+        }, untilBirthdayEnd);
+    }
     if (!active) return;
 
     const seenKey = "tehnocell_birthday_ennie_seen_" + BIRTHDAY_USER_ID;
