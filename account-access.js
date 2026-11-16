@@ -1,6 +1,6 @@
 (() => {
   const URL = "https://jvagiuiregvlrfooxdao.supabase.co";
-  const KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0We8o9";
+  const KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
   async function run() {
     if (!window.supabase) return;
     const db = window.supabase.createClient(URL, KEY);
