@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080808">
+<title>TEHNOCELL — Поздравление для Влада</title>
+<style>
+:root{color-scheme:dark;--bg:#080808;--panel:#111;--line:#292929;--muted:#929292;--white:#fff}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 8%,#242424 0%,#101010 35%,#080808 75%);color:var(--white);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+button{font:inherit}
+.top{height:68px;padding:0 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff12;position:relative;z-index:2}
+.brand{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:900;letter-spacing:1.5px}
+.mark{width:31px;height:31px;background:#fff;color:#090909;border-radius:7px;display:grid;place-items:center;font-size:19px;font-weight:1000}
+.brand small{display:block;color:#777;font-size:8px;letter-spacing:2.4px;margin-top:3px}
+.preview{font-size:9px;letter-spacing:1.8px;color:#888;border:1px solid #333;padding:8px 10px;border-radius:30px}
+main{width:min(760px,calc(100% - 32px));margin:0 auto;padding:48px 0 55px;position:relative;z-index:1}
+.kicker{text-align:center;color:#aaa;font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase}
+.kicker:before,.kicker:after{content:"";display:inline-block;width:23px;height:1px;background:#777;vertical-align:middle;margin:0 12px}
+h1{text-align:center;font-size:clamp(36px,8vw,66px);letter-spacing:-3px;line-height:.98;margin:20px 0 12px;font-weight:900}
+h1 span{color:#777}
+.sub{text-align:center;color:#999;font-size:13px;line-height:1.7;max-width:460px;margin:0 auto 35px}
+.card{position:relative;overflow:hidden;border:1px solid #3a3a3a;border-radius:22px;background:linear-gradient(145deg,#1b1b1b,#0d0d0d 65%);padding:34px clamp(22px,6vw,55px) 32px;box-shadow:0 30px 100px #0009}
+.card:before{content:"";position:absolute;width:370px;height:370px;border:1px solid #ffffff12;border-radius:50%;right:-180px;top:-210px;box-shadow:0 0 0 35px #ffffff08,0 0 0 70px #ffffff05;pointer-events:none}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#858585;font-size:9px;letter-spacing:2px;font-weight:800}
+.seal{width:42px;height:42px;border:1px solid #555;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:19px}
+.birthday-mark{width:94px;height:94px;margin:30px auto 18px;border:1px solid #555;border-radius:50%;display:grid;place-items:center;position:relative;background:radial-gradient(circle,#333,#111 70%);box-shadow:0 0 55px #fff1}
+.birthday-mark:before,.birthday-mark:after{content:"";position:absolute;inset:-9px;border:1px solid #ffffff18;border-radius:50%}
+.birthday-mark:after{inset:-18px;border-color:#ffffff0d}
+.birthday-mark svg{width:42px;height:42px}
+.card h2{text-align:center;font-size:clamp(30px,7vw,48px);letter-spacing:-2px;margin:0 0 8px}
+.role{text-align:center;color:#aaa;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#555,transparent);margin:0 auto 25px;max-width:430px}
+.message{max-width:490px;margin:0 auto;text-align:center;font-size:15px;line-height:1.9;color:#d4d4d4}
+.message strong{color:#fff}
+.signature{margin-top:28px;text-align:center;color:#888;font-size:10px;letter-spacing:2px;line-height:1.8}
+.signature b{display:block;color:#fff;font-size:12px;letter-spacing:1.4px;margin-top:5px}
+.card-foot{border-top:1px solid #ffffff16;margin-top:28px;padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#777;font-size:8px;letter-spacing:1.5px}
+.badge-demo{margin:25px auto 0;width:max-content;max-width:100%;display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid #393939;border-radius:12px;background:#ffffff08}
+.badge-icon{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#111;font-size:15px}
+.badge-text{font-size:10px;font-weight:800;letter-spacing:.6px}
+.badge-text small{display:block;color:#888;font-size:8px;font-weight:500;letter-spacing:1px;margin-top:3px}
+.note{text-align:center;color:#686868;font-size:10px;line-height:1.7;margin:18px auto 0;max-width:420px}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}
+.btn{border:1px solid #555;background:transparent;color:#fff;padding:13px 19px;border-radius:8px;font-size:10px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:.2s}
+.btn.primary{background:#fff;color:#080808;border-color:#fff}
+.btn:hover{transform:translateY(-2px);border-color:#fff}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#fff;color:#111;padding:12px 18px;border-radius:30px;font-size:12px;font-weight:700;transition:.25s;z-index:5;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.confetti{position:fixed;top:-12px;width:5px;height:9px;background:#fff;opacity:.7;z-index:0;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translate3d(var(--drift),110vh,0) rotate(720deg);opacity:0}}
+footer{text-align:center;color:#555;font-size:9px;letter-spacing:1.5px;padding:0 15px 28px}
+@media(max-width:520px){.top{height:60px;padding:0 16px}.preview{font-size:8px;padding:7px 8px}main{padding-top:38px}.card{border-radius:17px;padding-top:25px}.card-foot{font-size:7px}.message{font-size:14px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="mark">T</div><div>TEHNOCELL<small>INDOSTRI</small></div></div>
+  <div class="preview">ПРЕДВАРИТЕЛЬНЫЙ ПРОСМОТР</div>
+</header>
+<main>
+  <div class="kicker">A special day at TEHNOCELL</div>
+  <h1>Сегодня твой<br><span>день, Влад.</span></h1>
+  <p class="sub">Небольшой знак внимания от команды TEHNOCELL INDOSTRI — для человека, который помогает создавать наше будущее.</p>
+  <article class="card">
+    <div class="card-top"><span>TEHNOCELL INDOSTRI<br>PERSONAL GREETING</span><div class="seal">T</div></div>
+    <div class="birthday-mark" aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none"><path d="M12 25h24l-2 15H14l-2-15Z" stroke="white" stroke-width="1.7"/><path d="M10 25h28M17 25v-5m7 5v-8m7 8v-5" stroke="white" stroke-width="1.7" stroke-linecap="round"/><path d="M17 15c-2-2 2-3 0-6m7 4c-2-2 2-3 0-6m7 8c-2-2 2-3 0-6" stroke="white" stroke-width="1.7" stroke-linecap="round"/><path d="M17 33h14" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <h2>С днём рождения!</h2>
+    <div class="role">Разработчику TEHNOCELL · Владу</div>
+    <div class="divider"></div>
+    <p class="message">Влад, поздравляем тебя с днём рождения!<br><br>Спасибо за твой вклад, идеи и время, которое ты вкладываешь в развитие <strong>TEHNOCELL INDOSTRI</strong>. Пусть впереди будет больше смелых задумок, сильных проектов, приятных открытий и поводов гордиться своей работой.<br><br>Желаем вдохновения, уверенности и чтобы даже самые сложные задачи однажды становились твоими победами. Сегодня — твой день. Наслаждайся им!</p>
+    <div class="signature">С теплом и уважением,<b>ТВОЯ КОМАНДА TEHNOCELL</b></div>
+    <div class="card-foot"><span>MADE WITH APPRECIATION</span><span>TC · BIRTHDAY EDITION</span></div>
+  </article>
+  <div class="badge-demo"><div class="badge-icon">✦</div><div class="badge-text">ИМЕНИННИК<small>ВРЕМЕННЫЙ ЗНАЧОК · 24 ЧАСА</small></div></div>
+  <p class="note">Так значок может выглядеть рядом с ником Влада в TEHNOCELL ID и других разделах сайта. Это пока демонстрация дизайна.</p>
+  <div class="actions"><button class="btn primary" id="celebrate">УСТРОИТЬ ПРАЗДНИК</button><button class="btn" id="copy">СКОПИРОВАТЬ ПОЗДРАВЛЕНИЕ</button></div>
+</main>
+<footer>TEHNOCELL INDOSTRI · С ОСОБЫМ ВНИМАНИЕМ К ЛЮДЯМ, КОТОРЫЕ СОЗДАЮТ</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const celebrate=document.getElementById('celebrate'),toast=document.getElementById('toast');
+function notify(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2400)}
+celebrate.addEventListener('click',()=>{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){for(let i=0;i<75;i++){const p=document.createElement('i');p.className='confetti';p.style.left=Math.random()*100+'vw';p.style.setProperty('--drift',(Math.random()*180-90)+'px');p.style.animationDuration=(2.5+Math.random()*2.5)+'s';p.style.animationDelay=(Math.random()*.8)+'s';p.style.opacity=.25+Math.random()*.65;document.body.appendChild(p);setTimeout(()=>p.remove(),6500)}}notify('С праздником, Влад!')});
+document.getElementById('copy').addEventListener('click',async()=>{const t='Влад, поздравляем тебя с днём рождения! Спасибо за твой вклад, идеи и время, которое ты вкладываешь в развитие TEHNOCELL INDOSTRI. Желаем вдохновения, уверенности, сильных проектов и поводов гордиться своей работой. С теплом и уважением, команда TEHNOCELL.';try{await navigator.clipboard.writeText(t);notify('Поздравление скопировано')}catch(e){notify('Копирование недоступно в этом браузере')}});
+</script>
+</body>
+</html>
