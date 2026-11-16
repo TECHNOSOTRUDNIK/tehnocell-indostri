@@ -1221,6 +1221,10 @@ function showLoggedIn(user) {
   profileLink.href = "account.html";
   const birthdayActive = user.id === "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a" && Date.now() < Date.parse("2026-11-17T00:00:00+03:00");
   profileLink.classList.toggle("birthday-account-glow", birthdayActive);
+  if (birthdayActive) {
+    const untilBirthdayEnd = Date.parse("2026-11-17T00:00:00+03:00") - Date.now();
+    if (untilBirthdayEnd > 0) setTimeout(() => profileLink.classList.remove("birthday-account-glow"), untilBirthdayEnd);
+  }
   profileName.textContent = displayName;
 
   profileAvatar.replaceChildren();
