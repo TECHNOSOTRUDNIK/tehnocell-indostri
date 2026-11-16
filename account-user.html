@@ -2152,6 +2152,16 @@ function startSupportRealtime() {
             filter: "user_id=eq." + uid
         }, async payload => {
             await loadSupportConversations();
+            const changedId = payload.new?.id || payload.old?.id;
+            if (payload.eventType === "DELETE" && activeSupportConversation === changedId) {
+                activeSupportConversation = null;
+                activeSupportStatus = "waiting";
+                $("supportChat").hidden = true;
+                $("supportChatEmpty").hidden = false;
+                $("supportChatEmpty").querySelector("h3").textContent = "Обращение удалено";
+                $("supportChatEmpty").querySelector("p").textContent = "Эта тема была удалена службой поддержки.";
+                return;
+            }
             if (activeSupportConversation && payload.new?.id === activeSupportConversation) {
                 activeSupportStatus = payload.new.status || activeSupportStatus;
                 $("supportChatStatus").textContent = supportStatusLabels[activeSupportStatus] || activeSupportStatus;
