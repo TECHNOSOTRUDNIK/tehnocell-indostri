@@ -580,9 +580,31 @@ body {
 .support-empty-mark{font-size:28px;font-weight:900;color:var(--text);margin-bottom:12px}
 .support-empty h3{color:var(--text);margin-bottom:7px}
 .support-messages{height:340px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:14px 0}
-.support-message{max-width:88%;padding:11px 13px;border:1px solid var(--border);border-radius:13px;background:var(--background);overflow-wrap:anywhere}
-.support-message.mine{align-self:flex-end;background:var(--text);color:var(--background)}
-.support-message.staff{align-self:flex-start}
+.support-message{max-width:88%;padding:12px 14px;border:1px solid var(--border);border-radius:15px;background:#ededed;color:#171717;overflow-wrap:anywhere;box-shadow:0 3px 12px rgba(0,0,0,.035)}
+.support-message.mine{align-self:flex-end;background:#ededed;color:#171717;border-color:#d7d7d7;border-bottom-right-radius:5px}
+.support-message.staff{align-self:flex-start;background:#111;color:#fff;border-color:#111;border-bottom-left-radius:5px}
+.support-message.chief{background:#171511;color:#fff;border:1.5px solid #c9ad76;box-shadow:0 4px 18px rgba(177,143,83,.13)}
+.support-message small{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.15px;opacity:1;margin-bottom:7px;color:#666}
+.support-message.staff small{color:#c8c8c8}
+.support-message.chief small{color:#dfc99b}
+.support-role-mark{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:5px;font-size:10px;font-weight:900;background:#d8d8d8;color:#222}
+.support-message.staff .support-role-mark{background:#fff;color:#111}
+.support-message.chief .support-role-mark{background:#dfc99b;color:#17130d}
+.support-status{padding:5px 9px;border:1px solid var(--border);border-radius:20px}
+.support-chat-head{padding-bottom:12px;border-bottom:1px solid var(--border)}
+.support-intro{position:relative;overflow:hidden;border-radius:17px;background:linear-gradient(120deg,#111 0%,#222 70%,#30291e 100%);border-color:#39352c}
+.support-intro:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(223,201,155,.22);border-radius:50%;right:-75px;top:-110px;pointer-events:none}
+.support-intro>*{position:relative;z-index:1}
+.support-kicker{color:#dfc99b}
+.support-intro .action{background:#dfc99b;color:#17130d;font-weight:700}
+.support-list-panel,.support-chat-panel{box-shadow:0 8px 28px rgba(0,0,0,.035)}
+.support-conversation-item{transition:border-color .15s,transform .15s}
+.support-conversation-item:active{transform:scale(.99)}
+.support-conversation-item.active{border-color:#bda477;box-shadow:inset 3px 0 #bda477}
+.support-empty-mark{font-size:22px;letter-spacing:2px}
+.support-empty-mark:after{content:" SUPPORT";font-size:10px;letter-spacing:2px;color:var(--muted)}
+.support-reply-form .action{min-width:112px}
+@media(max-width:720px){.support-reply-form .action{align-self:stretch}}
 .support-message small{display:block;font-size:10px;opacity:.65;margin-bottom:5px}
 .support-reply-form{display:flex;gap:9px;align-items:flex-end;border-top:1px solid var(--border);padding-top:13px}
 .support-reply-form textarea,.support-new-panel textarea{flex:1;min-height:48px;max-height:130px;resize:vertical;padding:12px;border:1px solid var(--border);border-radius:9px;background:var(--input);color:var(--text);font:inherit}
@@ -2050,8 +2072,13 @@ async function openSupportConversation(id,subject,status){
  if(error){$("supportMessages").textContent="Не удалось загрузить сообщения: "+error.message;return;}
  $("supportMessages").replaceChildren();
  data.forEach(m=>{
-  const el=document.createElement("div");el.className="support-message "+(m.sender_type==="staff"?"staff":"mine");
-  const meta=document.createElement("small");meta.textContent=(m.sender_type==="staff"?"TEHNOCELL SUPPORT":"Вы")+" · "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
+  const isStaff=m.sender_type==="staff",isChief=isStaff&&m.sender_id===currentUser.id;
+  const el=document.createElement("div");el.className="support-message "+(isStaff?"staff":"mine")+(isChief?" chief":"");
+  const meta=document.createElement("small");
+  const mark=document.createElement("span");mark.className="support-role-mark";mark.textContent=isChief?"★":isStaff?"T":"●";
+  const label=document.createElement("span");label.textContent=isChief?"Главный специалист":isStaff?"TEHNOCELL SUPPORT":"Вы";
+  const time=document.createElement("span");time.textContent="· "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
+  meta.append(mark,label,time);
   const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("supportMessages").appendChild(el);
  });
  $("supportMessages").scrollTop=$("supportMessages").scrollHeight;
