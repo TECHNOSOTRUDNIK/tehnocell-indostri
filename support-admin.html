@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TEHNOCELL SUPPORT — Панель команды</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f1f1f1;color:#111;font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#111;color:#fff;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:900;letter-spacing:.4px}.brand span{color:#aaa;font-weight:400}
+main{max-width:1200px;margin:auto;padding:26px 18px 50px}
+h1{font-size:25px;margin:0 0 8px}h2{font-size:18px;margin:0}
+.muted{color:#777;font-size:13px}.panel{background:#fff;border:1px solid #ddd;border-radius:14px;padding:18px;margin-bottom:15px}
+.layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.4fr);gap:15px}
+button,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;background:#111;color:#fff;padding:11px 15px}
+button.secondary{background:#fff;color:#111;border:1px solid #ddd}
+input,select,textarea{width:100%;border:1px solid #ddd;border-radius:9px;padding:12px;background:#fff;color:#111}
+label{display:block;font-size:13px;margin:13px 0 7px}
+.ticket{width:100%;display:block;text-align:left;background:#fff;color:#111;border:1px solid #e4e4e4;margin-top:8px}
+.ticket.active{border-color:#111;background:#f6f6f6}.ticket strong,.ticket small{display:block}.ticket small{color:#777;margin-top:6px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.chat{height:390px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:14px 0}
+.msg{max-width:88%;padding:11px 13px;border-radius:12px;background:#f1f1f1;overflow-wrap:anywhere}
+.msg.staff{align-self:flex-end;background:#111;color:#fff}.msg small{display:block;font-size:10px;opacity:.65;margin-bottom:5px}
+.reply{display:flex;gap:9px;align-items:flex-end;border-top:1px solid #eee;padding-top:13px}.reply textarea{min-height:50px;max-height:130px}
+.statusrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.statusrow select{max-width:220px}
+#denied{max-width:600px;margin:70px auto;text-align:center}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.chat{height:300px}.reply{flex-direction:column;align-items:stretch}.reply button{align-self:flex-end}}
+</style>
+</head>
+<body>
+<header><div class="brand">TEHNOCELL <span>SUPPORT / STAFF</span></div><button class="secondary" id="logout">Выйти</button></header>
+<main>
+<div id="denied" class="panel" hidden><h1>Доступ закрыт</h1><p class="muted">Эта панель доступна только сотрудникам поддержки TEHNOCELL.</p></div>
+<div id="workspace" hidden>
+<div style="margin-bottom:18px"><h1>Центр обращений</h1><p class="muted">Внутренняя панель обработки запросов пользователей.</p></div>
+<div class="layout">
+<section class="panel"><div class="toolbar"><h2>Все обращения</h2><button class="secondary" id="refresh">Обновить</button></div><div id="tickets"><p class="muted">Загрузка…</p></div></section>
+<section class="panel">
+<div id="empty"><h2>Выберите обращение</h2><p class="muted">Переписка и управление статусом появятся здесь.</p></div>
+<div id="detail" hidden>
+<div class="toolbar"><div><h2 id="subject"></h2><p class="muted" id="ticketMeta"></p></div></div>
+<div class="statusrow"><label for="status" style="margin:0">Статус</label><select id="status"><option value="waiting">Ожидает ответа</option><option value="in_progress">В работе</option><option value="resolved">Решено</option></select><button id="saveStatus">Сохранить</button></div>
+<div class="chat" id="messages"></div>
+<form class="reply" id="replyForm"><textarea id="replyText" maxlength="5000" placeholder="Ответ пользователю…" required></textarea><button type="submit">Ответить</button></form>
+<div id="birthdayTools" hidden style="border-top:1px solid #eee;margin-top:18px;padding-top:15px">
+<h2>Исправление даты рождения</h2><p class="muted">Изменение будет выполнено только после проверки обращения.</p>
+<div style="display:grid;grid-template-columns:1fr 2fr;gap:10px">
+<div><label for="bdDay">День</label><select id="bdDay"></select></div>
+<div><label for="bdMonth">Месяц</label><select id="bdMonth"></select></div>
+</div><button id="saveBirthdayCorrection" type="button">Сохранить исправление</button><p class="muted" id="birthdayCorrectionMessage"></p>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<script>
+const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
+const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let staffUser=null,selectedTicket=null;
+const $=id=>document.getElementById(id);
+const statusNames={waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"};
+const categoryNames={general:"Общий вопрос",account:"Аккаунт",birthday_correction:"Исправление даты рождения",bug:"Ошибка",idea:"Предложение"};
+for(let d=1;d<=31;d++)$("bdDay").add(new Option(d,d));
+["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"].forEach((m,i)=>$("bdMonth").add(new Option(m,i+1)));
+async function init(){
+ const {data,error}=await db.auth.getSession();
+ if(error||!data.session){location.href="login.html";return;}
+ staffUser=data.session.user;
+ if(staffUser.app_metadata?.support_role!=="staff"){$("denied").hidden=false;return;}
+ $("workspace").hidden=false;await loadTickets();
+}
+async function loadTickets(){
+ $("tickets").innerHTML='<p class="muted">Загрузка…</p>';
+ const {data,error}=await db.from("support_conversations").select("id,user_id,subject,category,status,last_message_at").order("last_message_at",{ascending:false});
+ if(error){$("tickets").textContent="Ошибка доступа: "+error.message;return;}
+ if(!data.length){$("tickets").innerHTML='<p class="muted">Новых обращений пока нет.</p>';return;}
+ $("tickets").replaceChildren();
+ data.forEach(t=>{
+  const b=document.createElement("button");b.className="ticket"+(selectedTicket?.id===t.id?" active":"");
+  const title=document.createElement("strong");title.textContent=t.subject;
+  const meta=document.createElement("small");meta.textContent=(categoryNames[t.category]||t.category)+" · "+(statusNames[t.status]||t.status)+" · TC-"+t.user_id.replace(/-/g,"").slice(0,8).toUpperCase();
+  b.append(title,meta);b.addEventListener("click",()=>openTicket(t));$("tickets").appendChild(b);
+ });
+}
+async function openTicket(t){
+ selectedTicket=t;$("empty").hidden=true;$("detail").hidden=false;
+ $("subject").textContent=t.subject;$("ticketMeta").textContent=(categoryNames[t.category]||t.category)+" · TC-"+t.user_id.replace(/-/g,"").slice(0,8).toUpperCase();
+ $("status").value=t.status;
+ $("birthdayTools").hidden=t.category!=="birthday_correction";
+ await loadMessages();
+ if(t.category==="birthday_correction"){
+  const {data}=await db.from("user_birthdays").select("birth_month,birth_day").eq("user_id",t.user_id).maybeSingle();
+  if(data){$("bdDay").value=data.birth_day;$("bdMonth").value=data.birth_month;$("birthdayCorrectionMessage").textContent="Сейчас в аккаунте: "+data.birth_day+"."+String(data.birth_month).padStart(2,"0");}
+  else $("birthdayCorrectionMessage").textContent="Пользователь ещё не указал дату рождения.";
+ }
+ await loadTickets();
+}
+async function loadMessages(){
+ $("messages").innerHTML='<p class="muted">Загрузка…</p>';
+ const {data,error}=await db.from("support_messages").select("id,sender_type,body,created_at").eq("conversation_id",selectedTicket.id).order("created_at",{ascending:true});
+ if(error){$("messages").textContent="Ошибка: "+error.message;return;}
+ $("messages").replaceChildren();
+ data.forEach(m=>{const el=document.createElement("div");el.className="msg "+(m.sender_type==="staff"?"staff":"");const meta=document.createElement("small");meta.textContent=(m.sender_type==="staff"?"TEHNOCELL SUPPORT":"Пользователь")+" · "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("messages").appendChild(el);});
+ $("messages").scrollTop=$("messages").scrollHeight;
+}
+$("refresh").addEventListener("click",loadTickets);
+$("saveStatus").addEventListener("click",async()=>{
+ if(!selectedTicket)return;
+ const {error}=await db.from("support_conversations").update({status:$("status").value}).eq("id",selectedTicket.id);
+ if(error){alert("Не удалось обновить статус: "+error.message);return;}
+ selectedTicket.status=$("status").value;await loadTickets();$("ticketMeta").textContent=(categoryNames[selectedTicket.category]||selectedTicket.category)+" · "+statusNames[selectedTicket.status];
+});
+$("replyForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!selectedTicket)return;const body=$("replyText").value.trim();if(!body)return;
+ const button=e.submitter;button.disabled=true;
+ const {error}=await db.from("support_messages").insert({conversation_id:selectedTicket.id,sender_id:staffUser.id,sender_type:"staff",body});
+ button.disabled=false;if(error){alert("Не удалось отправить ответ: "+error.message);return;}
+ $("replyText").value="";await loadMessages();await loadTickets();
+});
+$("saveBirthdayCorrection").addEventListener("click",async()=>{
+ if(!selectedTicket||selectedTicket.category!=="birthday_correction")return;
+ const month=Number($("bdMonth").value),day=Number($("bdDay").value),max=new Date(2000,month,0).getDate();
+ if(!month||!day||day<1||day>max){$("birthdayCorrectionMessage").textContent="Проверьте дату.";return;}
+ const {error}=await db.from("user_birthdays").update({birth_month:month,birth_day:day}).eq("user_id",selectedTicket.user_id);
+ $("birthdayCorrectionMessage").textContent=error?"Ошибка: "+error.message:"Дата рождения исправлена.";
+});
+$("logout").addEventListener("click",async()=>{await db.auth.signOut();location.href="login.html";});
+init();
+</script>
+</body></html>
