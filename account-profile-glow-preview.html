@@ -623,7 +623,6 @@ body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 4
 @media(prefers-reduced-motion:reduce){.bday-confetti{display:none!important}*{scroll-behavior:auto!important}}
 
 
-/* Мягкая бежевая подсветка карточки профиля */
 .profile-card.birthday-profile-glow{border-color:rgba(190,158,103,.72);box-shadow:0 0 0 1px rgba(190,158,103,.16),0 0 22px rgba(190,158,103,.18),0 8px 28px rgba(126,96,49,.09);animation:profileWarmGlow 4.8s ease-in-out infinite;transition:box-shadow .5s ease,border-color .5s ease}
 @keyframes profileWarmGlow{0%,100%{box-shadow:0 0 0 1px rgba(190,158,103,.12),0 0 15px rgba(190,158,103,.13),0 8px 25px rgba(126,96,49,.06)}50%{box-shadow:0 0 0 1px rgba(190,158,103,.22),0 0 25px rgba(190,158,103,.22),0 8px 30px rgba(126,96,49,.10)}}
 @media(prefers-reduced-motion:reduce){.profile-card.birthday-profile-glow{animation:none}}
@@ -1075,12 +1074,7 @@ body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 4
 </section>
 
 </main>
-<div class="birthday-modal" id="birthdayModal" role="dialog" aria-modal="true" aria-labelledby="birthdayModalTitle">
-  <div class="birthday-dialog"><div class="big-cake">🎂</div><div class="bday-kicker">ENNIE · ЛИЧНОЕ СООБЩЕНИЕ</div><h2 id="birthdayModalTitle">С днём рождения, Влад!</h2>
-  <p>Сегодня особенный день — твой. Желаю тебе вдохновения, смелых идей и радости от того, что ты создаёшь. Пусть рядом будут люди, которые поддерживают, а впереди ждут проекты, которыми ты будешь гордиться.</p>
-  <div class="ennie-note"><b>ENNIE · TEHNOCELL AI</b><span>И не забудь сегодня немного отдохнуть. Даже разработчикам, которые строят будущее, иногда нужен перерыв. С праздником!</span></div>
-  <button class="bday-btn" id="closeEnnie">Спасибо, Энни!</button></div>
-</div><div class="bday-toast" id="bdayToast"></div>
+<div class="bday-toast" id="bdayToast"></div>
 <script>
 const $=id=>document.getElementById(id);
 const profileCard=document.querySelector(".profile-card");
