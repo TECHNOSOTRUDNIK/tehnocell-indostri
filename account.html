@@ -585,6 +585,22 @@ body {
 .birthday-save-row{display:flex;align-items:center;margin-top:5px}.birthday-save-row .action{min-height:48px;padding:0 22px;border-radius:11px;font-size:14px;font-weight:700}
 .birthday-saved-message{display:block;margin:16px 0 0;padding:13px 15px;border:1px solid var(--border);border-radius:11px;background:var(--background);line-height:1.5;overflow-wrap:anywhere}
 @media(max-width:480px){.birthday-settings-panel{padding:19px!important}.birthday-fields{grid-template-columns:1fr 1.35fr;gap:9px}.birthday-picker-trigger{min-height:50px;padding:0 11px;font-size:14px}.birthday-save-row .action{width:100%}}
+/* Праздничное оформление всего кабинета в день рождения */
+body.birthday-mode{background-color:#f5f0e5;background-image:radial-gradient(ellipse at 8% 0%,rgba(222,197,151,.25),transparent 38%),radial-gradient(ellipse at 94% 18%,rgba(206,177,126,.18),transparent 34%)}
+body.birthday-mode .header{background:linear-gradient(110deg,#fffdf8,#f4ecdc);border-bottom-color:#dfcfad}
+body.birthday-mode .profile-card{background:linear-gradient(125deg,#fffefa,#f5eddd);border-color:#d8c49c;box-shadow:0 12px 34px rgba(135,103,52,.12)}
+body.birthday-mode .card,body.birthday-mode .panel{border-color:#e2d5bb}
+.birthday-page-banner{display:none;position:relative;overflow:hidden;align-items:center;gap:14px;margin:0 0 22px;padding:17px 19px;border:1px solid #d8c49c;border-radius:17px;background:linear-gradient(115deg,#282319,#17140f);color:#fff;box-shadow:0 12px 30px rgba(80,59,27,.14)}
+.birthday-page-banner::after{content:"";position:absolute;width:170px;height:170px;right:-48px;top:-92px;border-radius:50%;border:1px solid rgba(231,211,174,.28);box-shadow:0 0 0 15px rgba(231,211,174,.05),0 0 0 31px rgba(231,211,174,.035)}
+.birthday-page-banner-mark{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#f1dfb6,#c9ad76);color:#211b10;font-size:22px}
+.birthday-page-banner strong{display:block;font-size:14px;letter-spacing:1.4px;margin-bottom:4px}
+.birthday-page-banner span{display:block;color:#d7cbb5;font-size:13px;line-height:1.45}
+body.birthday-mode .birthday-page-banner{display:flex}
+body.dark-theme.birthday-mode{background-color:#17140f;background-image:radial-gradient(ellipse at 8% 0%,rgba(169,135,79,.15),transparent 38%),radial-gradient(ellipse at 94% 18%,rgba(169,135,79,.10),transparent 34%)}
+body.dark-theme.birthday-mode .header{background:linear-gradient(110deg,#211e18,#17140f);border-bottom-color:#51452f}
+body.dark-theme.birthday-mode .profile-card{background:linear-gradient(125deg,#262219,#1b1914);border-color:#665638}
+body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-color:#51452f}
+@media(max-width:480px){.birthday-page-banner{padding:14px;border-radius:14px}.birthday-page-banner-mark{width:39px;height:39px;flex-basis:39px}.birthday-page-banner strong{font-size:12px}.birthday-page-banner span{font-size:12px}}
 .birthday-cake-badge{display:none;align-items:center;justify-content:center;width:29px;height:29px;margin-left:7px;border-radius:9px;background:linear-gradient(145deg,#f1dfb6,#c9ad76);color:#211b10;box-shadow:0 2px 10px rgba(177,143,83,.24);vertical-align:middle}
 .birthday-cake-badge svg{width:19px;height:19px;display:block}
 .birthday-ennie-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(7px)}
@@ -636,6 +652,8 @@ body {
 <!-- ОБЗОР АККАУНТА -->
 
 <section id="home" class="page active">
+
+    <div class="birthday-page-banner" id="birthdayPageBanner"><div class="birthday-page-banner-mark" aria-hidden="true">✦</div><div><strong>TEHNOCELL · BIRTHDAY EDITION</strong><span>Сегодня ваш день. Пусть он будет по-настоящему особенным.</span></div></div>
 
     <div class="profile-card">
 
@@ -1187,6 +1205,7 @@ async function updateBirthdayEdition(user) {
     if (error) {
         console.warn("Не удалось загрузить дату рождения:", error.message);
         if (badge) badge.style.display = "none";
+        document.body.classList.remove("birthday-mode");
         return;
     }
     if (!data) {
@@ -1196,6 +1215,7 @@ async function updateBirthdayEdition(user) {
     const now = new Date();
     const isBirthday = now.getMonth() + 1 === data.birth_month && now.getDate() === data.birth_day;
     if (badge) badge.style.display = isBirthday ? "inline-flex" : "none";
+    document.body.classList.toggle("birthday-mode", isBirthday);
     const monthNames = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
     $("birthdaySavedText").textContent = "Дата рождения сохранена: " + data.birth_day + " " + monthNames[data.birth_month - 1] + ". Изменить её можно только через поддержку.";
     setBirthdayPicker("day",data.birth_day,true);
