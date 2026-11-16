@@ -1219,12 +1219,19 @@ function showLoggedIn(user) {
     metadata.display_name || "Пользователь";
 
   profileLink.href = "account.html";
-  const birthdayActive = user.id === "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a" && Date.now() < Date.parse("2026-11-17T00:00:00+03:00");
-  profileLink.classList.toggle("birthday-account-glow", birthdayActive);
-  if (birthdayActive) {
-    const untilBirthdayEnd = Date.parse("2026-11-17T00:00:00+03:00") - Date.now();
-    if (untilBirthdayEnd > 0) setTimeout(() => profileLink.classList.remove("birthday-account-glow"), untilBirthdayEnd);
-  }
+  profileLink.classList.remove("birthday-account-glow");
+  db.from("user_birthdays").select("birth_month,birth_day").eq("user_id", user.id).maybeSingle()
+    .then(({data,error}) => {
+      if (error) { console.warn("Не удалось проверить день рождения:", error.message); return; }
+      const refreshBirthdayGlow = () => {
+        const now = new Date();
+        const active = !!data && now.getMonth() + 1 === data.birth_month && now.getDate() === data.birth_day;
+        profileLink.classList.toggle("birthday-account-glow", active);
+        const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 1);
+        setTimeout(refreshBirthdayGlow, Math.max(1000, nextMidnight.getTime() - now.getTime()));
+      };
+      refreshBirthdayGlow();
+    });
   profileName.textContent = displayName;
 
   profileAvatar.replaceChildren();
