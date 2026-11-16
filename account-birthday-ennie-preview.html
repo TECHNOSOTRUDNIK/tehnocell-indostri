@@ -617,10 +617,10 @@ body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 4
 .ennie-note span{font-size:12px;line-height:1.7;color:#d6d0c4}
 .bday-toast{position:fixed;z-index:1200;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#e0cca0;color:#17130d;padding:11px 17px;border-radius:30px;font-size:12px;font-weight:800;transition:.25s}
 .bday-toast.show{opacity:1;transform:translate(-50%,0)}
-.bday-confetti{position:fixed;z-index:1100;top:-10px;width:6px;height:10px;background:#e0cca0;animation:bdayfall 3.8s linear forwards;pointer-events:none}
+.bday-confetti{position:fixed;z-index:4500;top:-14px;width:7px;height:12px;background:#e0cca0;border-radius:2px;animation:bdayfall 3.2s cubic-bezier(.25,.6,.35,1) forwards;pointer-events:none;will-change:transform,opacity}
 @keyframes bdayfall{to{transform:translate(var(--dx),110vh) rotate(700deg);opacity:0}}
 @media(max-width:650px){.birthday-strip{padding:16px}.bday-title{font-size:18px}.bday-mini{max-height:220px;padding:17px}.bday-mini h2{font-size:22px}}
-@media(prefers-reduced-motion:reduce){.bday-confetti{display:none!important}*{scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 
 
 /* ENNIE birthday mini */
@@ -636,7 +636,7 @@ body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 4
 .ennie-cake-stage{height:180px;display:grid;place-items:center;margin:4px 0 14px;position:relative;overflow:hidden;border-radius:16px;background:radial-gradient(ellipse at 50% 80%,#a78a5030,transparent 65%)}
 .ennie-cake-svg{width:160px;height:160px;overflow:visible;animation:cakeFloat 2.6s ease-in-out infinite;filter:drop-shadow(0 12px 12px #0008)}
 .cake-flame{transform-box:fill-box;transform-origin:center bottom;animation:flame 720ms ease-in-out infinite alternate}.cake-flame:nth-of-type(1){animation-delay:-180ms}.cake-flame:nth-of-type(2){animation-delay:-420ms}.cake-flame:nth-of-type(3){animation-delay:-80ms}
-.cake-spark{animation:spark 1.8s ease-in-out infinite}
+.cake-spark{transform-box:fill-box;transform-origin:center;animation:spark 2.1s ease-in-out infinite}.cake-spark.spark-left{animation-delay:-.35s}.cake-spark.spark-right{animation-delay:-1.25s}
 .ennie-controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
 .ennie-controls button{flex:1;min-width:120px;border-radius:11px;padding:12px 14px;border:1px solid #b59a65;background:#d8c397;color:#17130d;font-weight:700}
 .ennie-controls button.secondary{background:transparent;color:#eee;border-color:#ffffff40}
@@ -645,7 +645,7 @@ body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 4
 @keyframes orbPulse{50%{transform:scale(1.08);filter:brightness(1.25)}}
 @keyframes cakeFloat{0%,100%{transform:translateY(4px) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
 @keyframes flame{from{transform:scaleY(.88)}to{transform:scaleY(1.08)}}
-@keyframes spark{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes spark{0%,100%{opacity:.48;transform:scale(.94)}50%{opacity:1;transform:scale(1.04)}}
 @media(prefers-reduced-motion:reduce){.ennie-orb,.ennie-cake-svg,.cake-flame,.cake-spark{animation:none!important}}
 </style></head>
 <body><header class="header"><div class="logo">
@@ -1123,7 +1123,7 @@ body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 4
     <path class="cake-flame" fill="#f8d47b" d="M64 48c-9-9 3-14 1-22 11 9 9 16 3 22z"/><path class="cake-flame" fill="#f8d47b" d="M94 42c-9-9 3-14 1-22 11 9 9 16 3 22z"/><path class="cake-flame" fill="#f8d47b" d="M124 48c-9-9 3-14 1-22 11 9 9 16 3 22z"/>
     <path d="M31 143h118" stroke="url(#cakeGold)" stroke-width="4" stroke-linecap="round"/>
     <g fill="#b18d52"><circle cx="58" cy="96" r="2.5"/><circle cx="90" cy="96" r="2.5"/><circle cx="122" cy="96" r="2.5"/><circle cx="48" cy="130" r="2.5"/><circle cx="90" cy="132" r="2.5"/><circle cx="132" cy="130" r="2.5"/></g>
-    <g class="cake-spark" fill="#f4dfad"><path d="M25 49l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M151 63l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+    <path class="cake-spark spark-left" fill="#f4dfad" d="M25 49l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path class="cake-spark spark-right" fill="#f4dfad" d="M151 63l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>
    </svg>
   </div>
   <div class="ennie-label">ЛИЧНОЕ СООБЩЕНИЕ</div>
@@ -1148,51 +1148,74 @@ $("profileInitial").textContent="В";$("settingsInitial").textContent="В";
 $("welcomeBlock").style.display="none";
 document.querySelectorAll(".nav button[data-page]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$(btn.dataset.page).classList.add("active");$("pageTitle").textContent=btn.dataset.page==="home"?"Праздничный обзор":"Настройки аккаунта"}));
 function toast(t){const el=$("bdayToast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
-function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;for(let i=0;i<65;i++){const p=document.createElement("i");p.className="bday-confetti";p.style.left=Math.random()*100+"vw";p.style.setProperty("--dx",(Math.random()*180-90)+"px");p.style.animationDelay=Math.random()+ "s";p.style.opacity=.4+Math.random()*.6;document.body.appendChild(p);setTimeout(()=>p.remove(),5000)}}
+function confetti(){for(let i=0;i<100;i++){const p=document.createElement("i");p.className="bday-confetti";p.style.left=Math.random()*100+"vw";p.style.setProperty("--dx",(Math.random()*100-50)+"px");p.style.animationDelay=(Math.random()*.35)+"s";p.style.opacity=.65+Math.random()*.35;p.style.transform="translateY(0)";document.body.appendChild(p);setTimeout(()=>p.remove(),3900)}}
 
 const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let ennieAudio = null;
 let ennieAudioUrl = null;
+function splitGreetingIntoChunks(text){
+ const sentences=String(text||"").match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[String(text||"")];
+ const chunks=[];let current="";
+ for(const sentence of sentences){
+  const part=sentence.trim();if(!part)continue;
+  if(current&&(current.length+part.length>105)){chunks.push(current.trim());current="";}
+  current+=(current?" ":"")+part;
+ }
+ if(current.trim())chunks.push(current.trim());
+ return chunks;
+}
+async function requestEnnieAudio(text,accessToken){
+ const response=await fetch(SUPABASE_URL+"/functions/v1/ennie-voice",{
+  method:"POST",
+  headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+accessToken},
+  body:JSON.stringify({text})
+ });
+ if(!response.ok){
+  let message="Сервис голоса Энни вернул ошибку "+response.status;
+  try{const details=await response.json();if(details.error)message=details.error;}catch(_){}
+  throw new Error(message);
+ }
+ const blob=await response.blob();
+ if(!blob.size)throw new Error("Сервис голоса Энни вернул пустое аудио.");
+ return URL.createObjectURL(blob);
+}
 async function speakEnnie(){
- const button=$("speakEnnie");
- const status=$("ennieStatus");
+ const button=$("speakEnnie"),status=$("ennieStatus");
  button.disabled=true;
- status.textContent="Энни готовит голосовое поздравление…";
+ status.textContent="Энни начинает поздравление…";
  try{
   const {data,error}=await supabaseClient.auth.getSession();
-  if(error) throw error;
+  if(error)throw error;
   const accessToken=data.session?.access_token;
-  if(!accessToken) throw new Error("Сначала войди в TEHNOCELL ID — для голоса Энни нужна твоя активная сессия.");
+  if(!accessToken)throw new Error("Сначала войди в TEHNOCELL ID — для голоса Энни нужна активная сессия.");
   if(ennieAudio){ennieAudio.pause();ennieAudio=null;}
   if(ennieAudioUrl){URL.revokeObjectURL(ennieAudioUrl);ennieAudioUrl=null;}
-  const response=await fetch(SUPABASE_URL+"/functions/v1/ennie-voice",{
-   method:"POST",
-   headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+accessToken},
-   body:JSON.stringify({text:$("ennieGreeting").textContent.trim()})
-  });
-  if(!response.ok){
-   let message="Сервис голоса Энни вернул ошибку "+response.status;
-   try{const details=await response.json();if(details.error)message=details.error;}catch(_){}
-   throw new Error(message);
+  const chunks=splitGreetingIntoChunks($("ennieGreeting").textContent.trim());
+  if(!chunks.length)throw new Error("Текст поздравления пуст.");
+  let nextUrlPromise=requestEnnieAudio(chunks[0],accessToken);
+  for(let i=0;i<chunks.length;i++){
+   const url=await nextUrlPromise;
+   if(i+1<chunks.length)nextUrlPromise=requestEnnieAudio(chunks[i+1],accessToken);
+   ennieAudioUrl=url;
+   ennieAudio=new Audio(url);
+   status.textContent=i===0?"Энни поздравляет тебя…":"Энни продолжает поздравление…";
+   await new Promise((resolve,reject)=>{
+    ennieAudio.onended=resolve;
+    ennieAudio.onerror=()=>reject(new Error("Не удалось воспроизвести голосовую часть поздравления."));
+    ennieAudio.play().catch(reject);
+   });
+   URL.revokeObjectURL(url);ennieAudioUrl=null;ennieAudio=null;
   }
-  const blob=await response.blob();
-  if(!blob.size) throw new Error("Сервис голоса Энни вернул пустое аудио.");
-  ennieAudioUrl=URL.createObjectURL(blob);
-  ennieAudio=new Audio(ennieAudioUrl);
-  ennieAudio.onplay=()=>status.textContent="Энни поздравляет тебя…";
-  ennieAudio.onended=()=>status.textContent="Вот и всё! Ещё раз с праздником!";
-  await ennieAudio.play();
+  status.textContent="Вот и всё! Ещё раз с праздником!";
  }catch(error){
   console.error("ENNIE voice:",error);
   status.textContent=error.message||"Не удалось включить голос Энни. Попробуй ещё раз.";
- }finally{
-  button.disabled=false;
- }
+ }finally{button.disabled=false;}
 }
-function openEnnie(){ $("birthdayModal").classList.add("show");confetti();setTimeout(()=>speakEnnie(),450); }
-function closeEnnie(){ $("birthdayModal").classList.remove("show");if(ennieAudio){ennieAudio.pause();ennieAudio.currentTime=0;}}
+function openEnnie(){ $("birthdayModal").classList.add("show");confetti();speakEnnie(); }
+function closeEnnie(){ $("birthdayModal").classList.remove("show");if(ennieAudio){ennieAudio.pause();ennieAudio.currentTime=0;}if(ennieAudioUrl){URL.revokeObjectURL(ennieAudioUrl);ennieAudioUrl=null;}}
 $("openEnnie").addEventListener("click",openEnnie);$("closeEnnie").addEventListener("click",closeEnnie);$("closeEnnieBottom").addEventListener("click",closeEnnie);$("speakEnnie").addEventListener("click",speakEnnie);
 $("birthdayModal").addEventListener("click",e=>{if(e.target===$("birthdayModal"))closeEnnie()});
 $("miniConfetti").addEventListener("click",()=>{confetti();toast("Праздник начинается!")});
