@@ -545,6 +545,19 @@ body {
         font-size: 23px;
     }
 }
+
+/* Праздничный значок Marmelad — действует ровно 24 часа */
+.birthday-cake-badge{display:none;align-items:center;justify-content:center;width:29px;height:29px;margin-left:7px;border-radius:9px;background:linear-gradient(145deg,#f1dfb6,#c9ad76);color:#211b10;box-shadow:0 2px 10px rgba(177,143,83,.24);vertical-align:middle}
+.birthday-cake-badge svg{width:19px;height:19px;display:block}
+.birthday-ennie-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.72);backdrop-filter:blur(7px)}
+.birthday-ennie-overlay.show{display:flex}
+.birthday-ennie-card{position:relative;width:min(100%,480px);padding:28px 25px 24px;border:1px solid rgba(205,177,127,.72);border-radius:22px;background:linear-gradient(145deg,#25221b,#101010 72%);color:#f7f2e8;box-shadow:0 20px 70px rgba(0,0,0,.48)}
+.birthday-ennie-label{font-size:10px;letter-spacing:2.5px;color:#d9c49a;font-weight:800;margin-bottom:14px}
+.birthday-ennie-card h2{font-size:25px;line-height:1.2;margin:0 36px 15px 0;color:#fff}
+.birthday-ennie-card p{font-size:15px;line-height:1.75;color:#ddd5c7;margin:0 0 22px}
+.birthday-ennie-close{border:0;border-radius:10px;background:#dfc99b;color:#17130d;font-weight:800;font-size:14px;padding:13px 20px;cursor:pointer}
+.birthday-ennie-x{position:absolute;right:17px;top:15px;width:34px;height:34px;border:1px solid #625744;border-radius:50%;background:transparent;color:#fff;font-size:21px;cursor:pointer}
+@media(max-width:480px){.birthday-ennie-card{padding:25px 20px 20px}.birthday-ennie-card h2{font-size:22px}.birthday-ennie-card p{font-size:14px}}
 </style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
@@ -606,6 +619,11 @@ body {
 
                 <span class="verified-badge" id="profileBadge">
                     ✓
+                </span>
+                <span class="birthday-cake-badge" id="birthdayCakeBadge" title="День рождения — временный значок" aria-label="Праздничный значок на один день">
+                    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 25h22l-2-3H7l-2 3Z"/><path d="M7 22v-5c0-2 2-3.5 9-3.5s9 1.5 9 3.5v5H7Z"/><path d="M7 18c1.7 0 1.7 1.5 3.4 1.5s1.7-1.5 3.4-1.5 1.7 1.5 3.4 1.5 1.7-1.5 3.4-1.5 1.7 1.5 3.4 1.5"/><path d="M12 13V8m4 5V6m4 7V8"/><path d="M12 7c-1.5-1-1.2-2.2 0-3 1.2.8 1.5 2 0 3Zm4-2c-1.5-1-1.2-2.2 0-3 1.2.8 1.5 2 0 3Zm4 2c-1.5-1-1.2-2.2 0-3 1.2.8 1.5 2 0 3Z"/>
+                    </svg>
                 </span>
 
             </h2>
@@ -993,6 +1011,15 @@ body {
 </section>
 
 </main>
+<div class="birthday-ennie-overlay" id="birthdayEnnieOverlay" role="dialog" aria-modal="true" aria-labelledby="birthdayEnnieTitle">
+  <div class="birthday-ennie-card">
+    <button class="birthday-ennie-x" id="birthdayEnnieX" aria-label="Закрыть">×</button>
+    <div class="birthday-ennie-label">ENNIE · TEHNOCELL AI</div>
+    <h2 id="birthdayEnnieTitle">С днём рождения, Влад!</h2>
+    <p>Ой, Влад, с днём рождения! Я приготовила для тебя небольшой сюрприз. Желаю побольше классных идей, смелости воплощать их и людей рядом, с которыми легко и весело. Пусть TEHNOCELL растёт вместе с твоими мечтами. А сегодня не забывай отдыхать — даже тем, кто строит будущее, иногда нужна пауза. С праздником!</p>
+    <button class="birthday-ennie-close" id="birthdayEnnieClose">Спасибо, Энни!</button>
+  </div>
+</div>
 <script>
 /* =====================================
    SUPABASE
@@ -1003,6 +1030,8 @@ const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 
 const AVATAR_BUCKET = "profile-avatars";
+const BIRTHDAY_USER_ID = "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a";
+const BIRTHDAY_EXPIRES_AT = Date.parse("2026-11-17T16:01:22+03:00");
 
 const VERIFIED_USERS = [
     "1762dd53-22ee-4f97-a9e4-1914e7b7f2d4",
@@ -1100,6 +1129,26 @@ function updateWelcome(user) {
 /* =====================================
    ГАЛОЧКИ РАЗРАБОТЧИКОВ
 ===================================== */
+
+function updateBirthdayEdition(user) {
+    const active = user.id === BIRTHDAY_USER_ID && Date.now() < BIRTHDAY_EXPIRES_AT;
+    const badge = $("birthdayCakeBadge");
+    if (badge) badge.style.display = active ? "inline-flex" : "none";
+    if (!active) return;
+
+    const seenKey = "tehnocell_birthday_ennie_seen_" + BIRTHDAY_USER_ID;
+    if (localStorage.getItem(seenKey)) return;
+
+    // Ставим отметку до показа, чтобы обновление страницы не открыло поздравление повторно.
+    localStorage.setItem(seenKey, "1");
+    const overlay = $("birthdayEnnieOverlay");
+    const close = () => overlay.classList.remove("show");
+    $("birthdayEnnieX").addEventListener("click", close);
+    $("birthdayEnnieClose").addEventListener("click", close);
+    overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+    setTimeout(() => overlay.classList.add("show"), 650);
+}
+
 
 function updateVerifiedStatus(user) {
 
@@ -1312,6 +1361,7 @@ async function loadAccount() {
     /* ГАЛОЧКИ */
 
     updateVerifiedStatus(currentUser);
+    updateBirthdayEdition(currentUser);
 
 
     /* ПРИВЕТСТВИЕ */
