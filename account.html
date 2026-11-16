@@ -933,7 +933,7 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
  <h3>Оформление публичного профиля</h3><p class="photo-note">Настройте, как вас увидят другие участники TEHNOCELL.</p>
  <label for="profileStatusInput">Статус</label><input type="text" id="profileStatusInput" maxlength="80" placeholder="Например: создаю TEHNOCELL">
  <label for="profileThemeSelect">Стиль профиля</label><select id="profileThemeSelect"><option value="mono">Чёрно-белый</option><option value="graphite">Графитовый</option><option value="ice">Ледяной</option><option value="violet">Фиолетовый</option></select>
- <div class="tc-sound-settings"><h4>Музыка профиля</h4><p class="photo-note">Загрузите одну композицию — она будет доступна для прослушивания прямо в вашем публичном профиле.</p><label for="profileSoundTitle">Название композиции</label><input type="text" id="profileSoundTitle" maxlength="80" placeholder="Название трека"><label for="profileSoundArtist">Исполнитель</label><input type="text" id="profileSoundArtist" maxlength="80" placeholder="Имя исполнителя"><label>Аудиофайл</label><input type="file" id="profileSoundInput" accept="audio/mpeg,audio/mp4,audio/aac,audio/wav,audio/x-wav,audio/ogg,audio/webm,audio/flac"><p class="photo-note" id="profileSoundCurrent">Файл не выбран. Поддерживаются MP3, M4A, AAC, WAV, OGG, WEBM и FLAC до 20 МБ.</p><label>Обложка композиции</label><input type="file" id="profileSoundCoverInput" accept="image/jpeg,image/png,image/webp"><p class="photo-note">JPG, PNG или WEBP до 5 МБ.</p><button class="tc-secondary" type="button" id="removeProfileSound">Убрать музыку из профиля</button></div>
+ <div class="tc-sound-settings"><h4>Музыка профиля</h4><p class="photo-note">Загрузите одну композицию — она будет доступна для прослушивания прямо в вашем публичном профиле.</p><label for="profileSoundTitle">Название композиции</label><input type="text" id="profileSoundTitle" maxlength="80" placeholder="Название трека"><label for="profileSoundArtist">Исполнитель</label><input type="text" id="profileSoundArtist" maxlength="80" placeholder="Имя исполнителя"><label>Аудиофайл</label><input type="file" id="profileSoundInput" accept="audio/mpeg,audio/mp4,audio/aac,audio/wav,audio/x-wav,audio/ogg,audio/webm,audio/flac"><p class="photo-note" id="profileSoundCurrent">Файл не выбран. Поддерживаются MP3, M4A, AAC, WAV, OGG, WEBM и FLAC до 20 МБ.</p><label>Обложка композиции</label><input type="file" id="profileSoundCoverInput" accept="image/jpeg,image/png,image/webp"><p class="photo-note">Обложка автоматически берётся из аудиофайла. Если её нет, TEHNOCELL создаст собственную. При желании можно загрузить свою.</p><img id="profileSoundCoverPreview" alt="Обложка композиции" hidden style="width:76px;height:76px;object-fit:cover;border-radius:10px;margin:8px 0;border:1px solid #333"><button class="tc-secondary" type="button" id="removeProfileSound">Убрать музыку из профиля</button></div>
  <label for="profileGameInput">Во что играете</label><input type="text" id="profileGameInput" maxlength="80" placeholder="Название игры">
  <label>Баннер профиля</label>
  <div class="tc-banner-preview" id="profileBannerPreview"><span>Баннер ещё не установлен</span></div>
@@ -1123,6 +1123,7 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
     <button class="birthday-ennie-close" id="birthdayEnnieClose">Спасибо, Энни!</button>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
 <script>
 /* =====================================
    SUPABASE
@@ -1149,9 +1150,26 @@ let currentBannerPath = null;
 let currentSoundPath = null;
 let currentSoundCoverPath = null;
 let removeSoundRequested = false;
+let detectedSoundCoverFile = null;
+let soundCoverPreviewUrl = null;
 let bannerPreviewObjectUrl = null;
 let tcToastTimer = null;
 function showTcToast(message){let el=$("tcToast");if(!el){el=document.createElement("div");el.id="tcToast";el.className="tc-toast";el.setAttribute("role","status");document.body.append(el);}el.textContent=message;el.classList.add("show");clearTimeout(tcToastTimer);tcToastTimer=setTimeout(()=>el.classList.remove("show"),3200);}
+function makeIdentityCover(title,artist){
+ const canvas=document.createElement("canvas");canvas.width=600;canvas.height=600;const x=canvas.getContext("2d");
+ const g=x.createLinearGradient(0,0,600,600);g.addColorStop(0,"#292929");g.addColorStop(1,"#050505");x.fillStyle=g;x.fillRect(0,0,600,600);
+ x.strokeStyle="#555";x.lineWidth=2;x.beginPath();x.arc(300,260,170,0,Math.PI*2);x.stroke();x.beginPath();x.arc(300,260,135,0,Math.PI*2);x.stroke();
+ x.fillStyle="#fff";x.textAlign="center";x.font="bold 108px Arial";x.fillText("TC",300,300);
+ x.font="bold 27px Arial";x.fillText(String(title||"МОЯ МУЗЫКА").slice(0,32).toUpperCase(),300,500);
+ x.fillStyle="#aaa";x.font="20px Arial";x.fillText(String(artist||"TEHNOCELL USER").slice(0,38).toUpperCase(),300,540);
+ return new Promise(resolve=>canvas.toBlob(blob=>resolve(new File([blob],"tehnocell-cover.png",{type:"image/png"})),"image/png"));
+}
+function readSoundTags(file){
+ return new Promise(resolve=>{
+  if(!window.jsmediatags){resolve(null);return;}
+  window.jsmediatags.read(file,{onSuccess:r=>resolve(r.tags||{}),onError:()=>resolve(null)});
+ });
+}
 function setBannerPreview(url){const box=$("profileBannerPreview");if(!box)return;box.style.backgroundImage=url?`url("${url}")`:"linear-gradient(135deg,#292929,#090909)";box.classList.toggle("has-image",!!url);box.innerHTML=url?"": "<span>Баннер ещё не установлен</span>";}
 let presenceChannel = null;
 
@@ -1685,8 +1703,20 @@ $("saveProfile").addEventListener("click", async () => {
 });
 
 
-$("removeProfileSound").addEventListener("click",()=>{removeSoundRequested=true;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCurrent").textContent="Музыка будет удалена после сохранения оформления.";showTcToast("Музыка отмечена для удаления");});
-$("profileSoundInput").addEventListener("change",()=>{removeSoundRequested=false;const f=$("profileSoundInput").files[0];if(f)$("profileSoundCurrent").textContent="Выбран файл: "+f.name+" · "+(f.size/1024/1024).toFixed(1)+" МБ";});
+$("removeProfileSound").addEventListener("click",()=>{removeSoundRequested=true;detectedSoundCoverFile=null;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCoverPreview").hidden=true;$("profileSoundCurrent").textContent="Музыка будет удалена после сохранения оформления.";showTcToast("Музыка отмечена для удаления");});
+$("profileSoundInput").addEventListener("change",async()=>{
+ const f=$("profileSoundInput").files[0];if(!f)return;removeSoundRequested=false;detectedSoundCoverFile=null;
+ $("profileSoundCurrent").textContent="Читаем данные композиции…";
+ const tags=await readSoundTags(f);
+ const base=f.name.replace(/\.[^.]+$/,"").replace(/[_-]+/g," ").trim();
+ $("profileSoundTitle").value=(tags&&tags.title)||base||"Без названия";
+ $("profileSoundArtist").value=(tags&&tags.artist)||"Неизвестный исполнитель";
+ if(tags&&tags.picture&&tags.picture.data){const pic=tags.picture;const mime=pic.format||"image/jpeg";const blob=new Blob([new Uint8Array(pic.data)],{type:mime});detectedSoundCoverFile=new File([blob],"embedded-cover."+(mime.split("/").pop()||"jpg"),{type:mime});}
+ if(!detectedSoundCoverFile)detectedSoundCoverFile=await makeIdentityCover($("profileSoundTitle").value,$("profileSoundArtist").value);
+ if(soundCoverPreviewUrl)URL.revokeObjectURL(soundCoverPreviewUrl);
+ soundCoverPreviewUrl=URL.createObjectURL(detectedSoundCoverFile);const preview=$("profileSoundCoverPreview");preview.src=soundCoverPreviewUrl;preview.hidden=false;
+ $("profileSoundCurrent").textContent="Готово: название, автор и обложка заполнены автоматически.";
+});
 $("profileSoundCoverInput").addEventListener("change",()=>{if($("profileSoundCoverInput").files[0])removeSoundRequested=false;});
 $("chooseProfileBanner").addEventListener("click",()=>$("profileBannerInput").click());
 $("profileBannerInput").addEventListener("change",()=>{const file=$("profileBannerInput").files[0];if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){$("customizationMessage").textContent="Выберите JPG, PNG или WEBP до 5 МБ."; $("profileBannerInput").value="";return;}if(bannerPreviewObjectUrl)URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=URL.createObjectURL(file);setBannerPreview(bannerPreviewObjectUrl);$("customizationMessage").textContent="Предпросмотр готов. Нажмите «Сохранить оформление».";});
@@ -1698,7 +1728,7 @@ $("saveCustomization").addEventListener("click",async()=>{
  const ext=file.name.split(".").pop().toLowerCase();bannerPath=currentUser.id+"/banner-"+Date.now()+"."+ext;
  const {error:uploadError}=await db.storage.from(AVATAR_BUCKET).upload(bannerPath,file,{upsert:false,contentType:file.type});
  if(uploadError){msg.textContent="Ошибка загрузки баннера: "+uploadError.message;btn.disabled=false;return;}}
- const audioFile=$("profileSoundInput").files[0],coverFile=$("profileSoundCoverInput").files[0];
+ const audioFile=$("profileSoundInput").files[0];let coverFile=$("profileSoundCoverInput").files[0]||detectedSoundCoverFile;
  const allowedAudio=["audio/mpeg","audio/mp4","audio/aac","audio/wav","audio/x-wav","audio/ogg","audio/webm","audio/flac"];
  if(audioFile&&(!allowedAudio.includes(audioFile.type)||audioFile.size>20*1024*1024)){msg.textContent="Аудио должно быть MP3, M4A, AAC, WAV, OGG, WEBM или FLAC до 20 МБ.";btn.disabled=false;return;}
  if(coverFile&&(!["image/jpeg","image/png","image/webp"].includes(coverFile.type)||coverFile.size>5*1024*1024)){msg.textContent="Обложка должна быть JPG, PNG или WEBP до 5 МБ.";btn.disabled=false;return;}
