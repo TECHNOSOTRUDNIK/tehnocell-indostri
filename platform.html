@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909">
+<title>TEHNOCELL — Платформа</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:dark;--bg:#090909;--surface:#121212;--surface2:#181818;--line:#292929;--text:#f5f5f5;--muted:#888;--white:#fff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}body{min-height:100vh}a{color:inherit;text-decoration:none}button{font:inherit}
+.layout{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;padding:25px 17px;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#0c0c0c}
+.brand{display:flex;align-items:center;gap:11px;padding:0 9px 29px}.brand-mark{width:38px;height:38px;border:1px solid #555;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:19px}.brand-name{font-size:13px;font-weight:850;letter-spacing:1.3px}.brand-name small{display:block;color:#777;font-size:8px;letter-spacing:2.5px;margin-top:4px}
+.nav-label{padding:10px 11px;color:#656565;font-size:9px;font-weight:800;letter-spacing:1.8px}
+.nav{display:grid;gap:5px}.nav a,.nav button{width:100%;border:0;background:transparent;color:#999;text-align:left;padding:12px 13px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:12px;cursor:pointer}.nav a.active,.nav button.active{background:#f2f2f2;color:#111;font-weight:750}.nav .ico{width:19px;text-align:center;font-size:15px}
+.sidebar-bottom{margin-top:auto}.mini-profile{display:flex;align-items:center;gap:10px;padding:12px 9px;border-top:1px solid var(--line);margin-top:14px}.avatar{width:36px;height:36px;border-radius:50%;background:#292929;display:grid;place-items:center;overflow:hidden;flex:0 0 36px;font-size:13px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}.mini-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini-sub{font-size:10px;color:#777;margin-top:4px}
+.main{min-width:0;max-width:1180px;width:100%;margin:0 auto;padding:30px clamp(18px,4vw,54px) 70px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:38px}.crumb{color:#777;font-size:11px;letter-spacing:1px}.top-actions{display:flex;gap:9px}.top-btn{border:1px solid var(--line);background:#121212;color:#ddd;padding:9px 13px;border-radius:9px;font-size:11px}
+.greeting{margin-bottom:29px}.eyebrow{font-size:9px;letter-spacing:2px;color:#777;font-weight:800}.greeting h1{font-size:clamp(28px,4vw,42px);letter-spacing:-1.8px;margin:11px 0 8px}.greeting p{margin:0;color:#888;font-size:13px;line-height:1.65}
+.welcome{border:1px solid #333;border-radius:18px;background:radial-gradient(ellipse at 90% 0%,#292929 0,transparent 48%),linear-gradient(125deg,#1b1b1b,#101010 65%);padding:25px 26px;margin-bottom:28px;position:relative;overflow:hidden}.welcome:after{content:"T";position:absolute;right:28px;top:-27px;font-size:150px;font-weight:900;color:#ffffff08;pointer-events:none}.welcome-tag{font-size:9px;letter-spacing:2px;color:#aaa}.welcome h2{font-size:21px;margin:13px 0 8px;letter-spacing:-.5px}.welcome p{max-width:580px;color:#aaa;font-size:12px;line-height:1.7;margin:0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:31px 0 14px}.section-head h2{font-size:16px;margin:0}.section-head span{font-size:10px;color:#777}
+.service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.service{min-height:155px;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:flex;flex-direction:column;transition:border-color .2s,transform .2s}.service:hover{border-color:#777;transform:translateY(-2px)}.service-icon{width:34px;height:34px;border-radius:10px;background:#eee;color:#111;display:grid;place-items:center;font-size:12px;font-weight:900;margin-bottom:17px}.service h3{font-size:14px;margin:0 0 7px}.service p{font-size:11px;line-height:1.55;color:#858585;margin:0}.service-state{margin-top:auto;padding-top:15px;font-size:8px;letter-spacing:1.1px;color:#777;font-weight:800}
+.activity-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:19px}.panel h3{font-size:13px;margin:0 0 8px}.panel p{font-size:11px;color:#858585;line-height:1.65;margin:0}.empty{border:1px dashed #333;border-radius:10px;padding:17px;margin-top:14px;color:#777;font-size:11px;line-height:1.6}
+.profile-card{display:flex;align-items:center;gap:13px}.profile-card .avatar{width:49px;height:49px;flex-basis:49px}.profile-card strong{font-size:13px}.profile-card small{display:block;color:#777;font-size:10px;margin-top:5px;overflow-wrap:anywhere}
+.mobile-nav{display:none}
+.loading{color:#888;font-size:13px;padding:35px 0}.notice{display:none;margin:0 0 20px;padding:13px 15px;border:1px solid #574646;border-radius:10px;color:#e2caca;background:#211616;font-size:12px;line-height:1.6}
+@media(max-width:900px){.layout{grid-template-columns:210px minmax(0,1fr)}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.layout{display:block}.sidebar{display:none}.main{padding:21px 16px calc(90px + env(safe-area-inset-bottom))}.topbar{margin-bottom:29px}.top-actions .top-btn:first-child{display:none}.greeting{margin-bottom:22px}.welcome{padding:21px;margin-bottom:22px}.welcome:after{right:5px;font-size:115px}.service-grid{gap:9px}.service{min-height:150px;padding:15px}.activity-grid{grid-template-columns:1fr}.section-head{margin-top:26px}.mobile-nav{position:fixed;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);left:10px;right:10px;bottom:calc(9px + env(safe-area-inset-bottom));padding:7px;background:rgba(20,20,20,.96);border:1px solid #333;border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 8px 35px #0009}.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;color:#888;font-size:8px}.mobile-nav a.active{color:#fff}.mobile-nav b{font-size:16px;font-weight:500}.topbar{align-items:center}.crumb{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <a class="brand" href="platform.html"><span class="brand-mark">T</span><span class="brand-name">TEHNOCELL<small>INDOSTRI PLATFORM</small></span></a>
+  <div class="nav-label">ПРОСТРАНСТВО</div>
+  <nav class="nav">
+    <a class="active" href="platform.html"><span class="ico">⌂</span>Главная</a>
+    <a href="#communities" data-coming><span class="ico">◫</span>Сообщества</a>
+    <a href="#messages" data-coming><span class="ico">▤</span>Сообщения</a>
+    <a href="#notifications" data-coming><span class="ico">♧</span>Уведомления</a>
+  </nav>
+  <div class="nav-label" style="margin-top:20px">АККАУНТ</div>
+  <nav class="nav"><a href="account.html"><span class="ico">◎</span>TEHNOCELL ID</a><a href="index.html"><span class="ico">↗</span>Сайт компании</a></nav>
+  <div class="sidebar-bottom"><div class="mini-profile"><div class="avatar" id="sideAvatar">T</div><div style="min-width:0"><div class="mini-name" id="sideName">Загрузка…</div><div class="mini-sub">TEHNOCELL ID</div></div></div></div>
+</aside>
+<main class="main">
+  <div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="account.html">Мой аккаунт</a></div></div>
+  <div class="notice" id="notice"></div>
+  <div class="greeting"><div class="eyebrow">ЕДИНОЕ ЦИФРОВОЕ ПРОСТРАНСТВО</div><h1>Добро пожаловать, <span id="greetingName">...</span></h1><p>Здесь постепенно объединяются общение, сообщества и сервисы TEHNOCELL.</p></div>
+  <section class="welcome"><div class="welcome-tag">TEHNOCELL PLATFORM / 001</div><h2>Всё важное — в одном пространстве.</h2><p>Начинаем с простого и понятного центра. Новые возможности будут появляться постепенно — без перегруза и лишних элементов.</p></section>
+  <div class="section-head"><h2>Сервисы TEHNOCELL</h2><span>ВАШЕ ЦИФРОВОЕ ПРОСТРАНСТВО</span></div>
+  <div class="service-grid">
+    <a class="service" href="ennie.html"><div class="service-icon">E</div><h3>ENNIE</h3><p>Ваш интеллектуальный помощник TEHNOCELL.</p><span class="service-state">ОТКРЫТЬ СЕРВИС ↗</span></a>
+    <a class="service" href="weather.html"><div class="service-icon">W</div><h3>WEATHER</h3><p>Погода и актуальная информация об условиях.</p><span class="service-state">ОТКРЫТЬ СЕРВИС ↗</span></a>
+    <a class="service" href="mivo.html"><div class="service-icon">M</div><h3>MIVO</h3><p>Музыкальная платформа TEHNOCELL.</p><span class="service-state">РАЗРАБОТКА НА ПАУЗЕ</span></a>
+    <a class="service" href="soft.html"><div class="service-icon">S</div><h3>TEHNOCELLSOFT</h3><p>Программные продукты и инструменты.</p><span class="service-state">ОТКРЫТЬ НАПРАВЛЕНИЕ ↗</span></a>
+    <a class="service" href="game.html"><div class="service-icon">G</div><h3>TEHNOCELLGAME</h3><p>Игры и интерактивные проекты.</p><span class="service-state">ОТКРЫТЬ НАПРАВЛЕНИЕ ↗</span></a>
+  </div>
+  <div class="section-head"><h2>Ваше пространство</h2><span>ОСНОВА ПЛАТФОРМЫ</span></div>
+  <div class="activity-grid">
+    <section class="panel" id="communities"><h3>Сообщества и публикации</h3><p>Здесь появятся тематические сообщества, публикации и обсуждения.</p><div class="empty">Этот раздел пока готовится. Мы не показываем пустую ленту и не создаём фальшивую активность.</div></section>
+    <section class="panel" id="messages"><h3>Общение</h3><p>Личные и групповые сообщения будут доступны в этом пространстве.</p><div class="empty">Система сообщений ещё не подключена.</div></section>
+  </div>
+  <div class="section-head"><h2>TEHNOCELL ID</h2><span>ЕДИНЫЙ АККАУНТ</span></div>
+  <section class="panel profile-card"><div class="avatar" id="mainAvatar">T</div><div style="min-width:0"><strong id="profileName">Загружаем профиль…</strong><small id="profileEmail"></small></div><a class="top-btn" style="margin-left:auto;white-space:nowrap" href="account.html">Открыть ID ↗</a></section>
+</main>
+</div>
+<nav class="mobile-nav" aria-label="Основная навигация">
+<a class="active" href="platform.html"><b>⌂</b>Главная</a>
+<a href="#communities" data-coming><b>◫</b>Сообщества</a>
+<a href="#messages" data-coming><b>▤</b>Сообщения</a>
+<a href="#notifications" data-coming><b>♧</b>Уведомления</a>
+<a href="account.html"><b>◎</b>Профиль</a>
+</nav>
+<script>
+const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
+const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const notice=document.getElementById("notice");
+function setAvatar(el,user,name){
+  el.replaceChildren();
+  const path=user.user_metadata?.avatar_path;
+  if(path){
+    const {data}=db.storage.from("profile-avatars").getPublicUrl(path);
+    const img=document.createElement("img");img.src=data.publicUrl;img.alt="Аватар";
+    img.onerror=()=>{el.replaceChildren();el.textContent=(name||"T").charAt(0).toUpperCase()};
+    el.append(img);
+  }else el.textContent=(name||"T").charAt(0).toUpperCase();
+}
+async function boot(){
+  const {data,error}=await db.auth.getSession();
+  if(error){notice.style.display="block";notice.textContent="Не удалось проверить сессию. Обновите страницу.";return}
+  const user=data.session?.user;
+  if(!user){location.replace("login.html?next=platform");return}
+  const name=user.user_metadata?.display_name||"Пользователь";
+  document.getElementById("greetingName").textContent=name;
+  document.getElementById("sideName").textContent=name;
+  document.getElementById("profileName").textContent=name;
+  document.getElementById("profileEmail").textContent=user.email||"";
+  setAvatar(document.getElementById("sideAvatar"),user,name);
+  setAvatar(document.getElementById("mainAvatar"),user,name);
+}
+document.querySelectorAll("[data-coming]").forEach(link=>link.addEventListener("click",e=>{
+  e.preventDefault();notice.style.display="block";notice.textContent="Этот раздел пока находится в разработке. Сейчас мы создаём его основу.";
+  window.scrollTo({top:0,behavior:"smooth"});
+}));
+boot();
+db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session)location.replace("login.html?next=platform")});
+</script>
+<script src="account-access.js?v=3"></script>
+</body>
+</html>
