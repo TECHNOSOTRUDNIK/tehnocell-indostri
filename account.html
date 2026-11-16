@@ -913,7 +913,8 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
  <label for="profileBannerInput">Баннер профиля</label><input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp">
  <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка пока будет показана ссылкой — встроенное воспроизведение подключим после выбора легального музыкального каталога.</p>
  <button class="action" id="saveCustomization" type="button">Сохранить оформление</button><p class="message" id="customizationMessage"></p>
- </div>\n<!-- ВНЕШНИЙ ВИД -->
+ </div>
+<!-- ВНЕШНИЙ ВИД -->
 
     <div class="settings-category">
 
@@ -1456,7 +1457,11 @@ async function loadAccount() {
 
     $("nameInput").value = displayName;
 
-    $("bioInput").value = bio;\n    $("profileStatusInput").value = savedProfile?.profile_status || "";\n    $("profileThemeSelect").value = savedProfile?.profile_theme || "mono";\n    $("profileMusicInput").value = savedProfile?.profile_music_url || "";\n    $("profileGameInput").value = savedProfile?.profile_game || "";
+    $("bioInput").value = bio;
+    $("profileStatusInput").value = savedProfile?.profile_status || "";
+    $("profileThemeSelect").value = savedProfile?.profile_theme || "mono";
+    $("profileMusicInput").value = savedProfile?.profile_music_url || "";
+    $("profileGameInput").value = savedProfile?.profile_game || "";
 
 
     /* ID И ПОЧТА */
@@ -1609,6 +1614,22 @@ $("saveProfile").addEventListener("click", async () => {
 
 });
 
+
+$("saveCustomization").addEventListener("click",async()=>{
+ if(!currentUser)return;const msg=$("customizationMessage"),btn=$("saveCustomization");btn.disabled=true;msg.textContent="Сохраняем…";
+ let bannerPath=null;const file=$("profileBannerInput").files[0];
+ if(file){if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){msg.textContent="Выберите JPG, PNG или WEBP до 5 МБ.";btn.disabled=false;return;}
+ const ext=file.name.split(".").pop().toLowerCase();bannerPath=currentUser.id+"/banner-"+Date.now()+"."+ext;
+ const {error:uploadError}=await db.storage.from(AVATAR_BUCKET).upload(bannerPath,file,{upsert:false,contentType:file.type});
+ if(uploadError){msg.textContent="Ошибка загрузки баннера: "+uploadError.message;btn.disabled=false;return;}}
+ const music=$("profileMusicInput").value.trim();
+ if(music&&!/^https:\/\//i.test(music)){msg.textContent="Ссылка на музыку должна начинаться с https://";btn.disabled=false;return;}
+ const patch={profile_status:$("profileStatusInput").value.trim(),profile_theme:$("profileThemeSelect").value,profile_music_url:music||null,profile_game:$("profileGameInput").value.trim()||null};
+ if(bannerPath)patch.profile_banner_path=bannerPath;
+ const {error}=await db.from("profiles").update(patch).eq("id",currentUser.id);
+ btn.disabled=false;msg.textContent=error?"Не удалось сохранить: "+error.message:"Оформление профиля сохранено.";
+ if(!error)$("profileBannerInput").value="";
+});
 
 /* =====================================
    СМЕНА ПАРОЛЯ
