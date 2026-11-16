@@ -810,6 +810,17 @@ footer {
     transition: none !important;
   }
 }
+
+/* 24-часовая праздничная подсветка аккаунта Marmelad */
+.profile-link.birthday-account-glow{
+  box-shadow:0 0 0 1px rgba(219,195,151,.76),0 0 13px 3px rgba(219,195,151,.28),0 0 27px 7px rgba(219,195,151,.14);
+  animation:birthdayAccountGlow 4s ease-in-out infinite;
+}
+@keyframes birthdayAccountGlow{
+  0%,100%{box-shadow:0 0 0 1px rgba(219,195,151,.55),0 0 9px 2px rgba(219,195,151,.20),0 0 19px 5px rgba(219,195,151,.10)}
+  50%{box-shadow:0 0 0 1px rgba(231,211,174,.92),0 0 16px 4px rgba(231,211,174,.36),0 0 31px 8px rgba(219,195,151,.19)}
+}
+@media(prefers-reduced-motion:reduce){.profile-link.birthday-account-glow{animation:none}}
 </style>
 </head>
 
@@ -1188,6 +1199,7 @@ document.getElementById("currentYear").textContent =
 
 
 function showLoggedOut() {
+  profileLink.classList.remove("birthday-account-glow");
   profileLink.href = "login.html";
   profileName.textContent = "Войти";
   profileAvatar.textContent = "?";
@@ -1207,6 +1219,8 @@ function showLoggedIn(user) {
     metadata.display_name || "Пользователь";
 
   profileLink.href = "account.html";
+  const birthdayActive = user.id === "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a" && Date.now() < Date.parse("2026-11-17T16:01:22+03:00");
+  profileLink.classList.toggle("birthday-account-glow", birthdayActive);
   profileName.textContent = displayName;
 
   profileAvatar.replaceChildren();
