@@ -145,6 +145,9 @@ const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null, communities=[], memberships=new Set(), memberCounts=new Map(), currentCommentPost=null, communityFilter="all", activeChatId=null, activeChatName="", currentPage="home";
+const VERIFIED_TEAM=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
+function isVerified(id){return VERIFIED_TEAM.includes(id);}
+function verifiedBadge(id){return isVerified(id)?'<span class="verified-badge" title="Подтверждённая команда TEHNOCELL" aria-label="Подтверждённая команда TEHNOCELL">✓</span>':"";}
 const $=id=>document.getElementById(id);
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showNotice(message){$("notice").textContent=message;$("notice").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}
@@ -214,14 +217,12 @@ async function boot(){
  if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
  currentUser=data.session?.user;
  if(!currentUser){location.replace("login.html?next=platform");return;}
- const name=currentUser.user_metadata?.display_name||"Пользователь";
- const path=currentUser.user_metadata?.avatar_path;
+ const {data:profile}=await db.from("profiles").select("display_name,avatar_path").eq("id",currentUser.id).maybeSingle();
+ const name=profile?.display_name||currentUser.user_metadata?.display_name||"Пользователь";
+ const path=profile?.avatar_path||currentUser.user_metadata?.avatar_path||null;
  $("greetingName").textContent=name;$("sideName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileEmail").textContent=currentUser.email||"";
  $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);
- const VERIFIED_TEAM=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
-function isVerified(id){return VERIFIED_TEAM.includes(id);}
-function verifiedBadge(id){return isVerified(id)?'<span class="verified-badge" title="Подтверждённая команда TEHNOCELL" aria-label="Подтверждённая команда TEHNOCELL">✓</span>':"";}
-const staff=VERIFIED_TEAM;
+ const staff=VERIFIED_TEAM;
  const account=staff.includes(currentUser.id)?"account.html":"account-user.html";
  $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
  await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial()]);
