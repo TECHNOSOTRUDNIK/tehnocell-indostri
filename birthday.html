@@ -39,10 +39,24 @@ h1 span{color:#777}
 .signature b{display:block;color:#fff;font-size:12px;letter-spacing:1.4px;margin-top:5px}
 .card-foot{border-top:1px solid #ffffff16;margin-top:28px;padding-top:18px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#777;font-size:8px;letter-spacing:1.5px}
 .badge-demo{margin:25px auto 0;width:max-content;max-width:100%;display:flex;align-items:center;gap:10px;padding:11px 15px;border:1px solid #393939;border-radius:12px;background:#ffffff08}
-.badge-icon{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#111;font-size:15px}
+.badge-icon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#fff;color:#111;box-shadow:0 0 22px #fff2}.badge-icon svg{width:23px;height:23px}
 .badge-text{font-size:10px;font-weight:800;letter-spacing:.6px}
 .badge-text small{display:block;color:#888;font-size:8px;font-weight:500;letter-spacing:1px;margin-top:3px}
 .note{text-align:center;color:#686868;font-size:10px;line-height:1.7;margin:18px auto 0;max-width:420px}
+.extra-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:34px}
+.extra{border:1px solid #303030;border-radius:15px;background:linear-gradient(145deg,#171717,#0d0d0d);padding:19px}
+.extra-label{font-size:8px;letter-spacing:1.8px;color:#888;font-weight:800}
+.extra h3{font-size:16px;margin:12px 0 7px}
+.extra p{font-size:11px;line-height:1.7;color:#999;margin:0}
+.gift-symbol{font-size:25px;margin-bottom:12px}
+.surprise{display:none;margin-top:13px;padding:14px;border:1px dashed #555;border-radius:12px;text-align:center;color:#ddd;font-size:12px;line-height:1.7}
+.surprise.show{display:block;animation:reveal .45s ease}
+@keyframes reveal{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ennie-panel{margin-top:14px;padding:20px;border:1px solid #333;border-radius:15px;background:#ffffff06;display:flex;gap:14px;align-items:flex-start}
+.ennie-orb{flex:0 0 38px;height:38px;border:1px solid #777;border-radius:50%;display:grid;place-items:center;font-size:17px}
+.ennie-panel strong{display:block;font-size:11px;letter-spacing:1px;margin:2px 0 7px}
+.ennie-panel p{margin:0;color:#aaa;font-size:11px;line-height:1.7}
+@media(max-width:520px){.extra-grid{grid-template-columns:1fr}.ennie-panel{padding:16px}}
 .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:28px}
 .btn{border:1px solid #555;background:transparent;color:#fff;padding:13px 19px;border-radius:8px;font-size:10px;font-weight:800;letter-spacing:1px;cursor:pointer;transition:.2s}
 .btn.primary{background:#fff;color:#080808;border-color:#fff}
@@ -77,9 +91,15 @@ footer{text-align:center;color:#555;font-size:9px;letter-spacing:1.5px;padding:0
     <div class="signature">С теплом и уважением,<b>ТВОЯ КОМАНДА TEHNOCELL</b></div>
     <div class="card-foot"><span>MADE WITH APPRECIATION</span><span>TC · BIRTHDAY EDITION</span></div>
   </article>
-  <div class="badge-demo"><div class="badge-icon">✦</div><div class="badge-text">ИМЕНИННИК<small>ВРЕМЕННЫЙ ЗНАЧОК · 24 ЧАСА</small></div></div>
-  <p class="note">Так значок может выглядеть рядом с ником Влада в TEHNOCELL ID и других разделах сайта. Это пока демонстрация дизайна.</p>
-  <div class="actions"><button class="btn primary" id="celebrate">УСТРОИТЬ ПРАЗДНИК</button><button class="btn" id="copy">СКОПИРОВАТЬ ПОЗДРАВЛЕНИЕ</button></div>
+  <div class="badge-demo"><div class="badge-icon" aria-label="Значок тортика"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15h20l-2 12H8L6 15Z"/><path d="M5 15c0-2 3-2 3-4 0 2 3 2 3 4 0-2 3-2 3-4 0 2 3 2 3 4 0-2 3-2 3-4 0 2 3 2 3 4"/><path d="M11 9V6m5 3V4m5 5V6"/><path d="M11 21h10"/></svg></div><div class="badge-text">ИМЕНИННИК<small>ТОЛЬКО В ДЕНЬ РОЖДЕНИЯ · 24 ЧАСА</small></div></div>
+  <p class="note">Такой значок-тортик можно показывать рядом с ником Влада в TEHNOCELL ID и других разделах сайта. Это пока демонстрация дизайна.</p>
+  <section class="extra-grid" aria-label="Праздничные детали">
+    <div class="extra"><div class="gift-symbol">✧</div><div class="extra-label">DIGITAL RECOGNITION</div><h3>Особенный день</h3><p>Сегодня профиль Влада отмечен праздничным статусом TEHNOCELL Birthday.</p></div>
+    <div class="extra"><div class="gift-symbol">▣</div><div class="extra-label">PERSONAL AWARD</div><h3>Памятный сертификат</h3><p>Цифровая открытка как знак благодарности от команды. Не денежный сертификат.</p></div>
+  </section>
+  <div class="ennie-panel"><div class="ennie-orb">✧</div><div><strong>ENNIE · ЛИЧНОЕ ПОЗДРАВЛЕНИЕ</strong><p>Влад, сегодня можно ненадолго отложить задачи и просто насладиться своим днём. Спасибо, что ты часть истории TEHNOCELL!</p></div></div>
+  <div class="surprise" id="surprise">🎉 Сюрприз от команды: пусть новый год жизни принесёт тебе идеи, которыми захочется гордиться, и людей, с которыми приятно создавать большое!</div>
+  <div class="actions"><button class="btn primary" id="celebrate">УСТРОИТЬ ПРАЗДНИК</button><button class="btn" id="reveal">ОТКРЫТЬ СЮРПРИЗ</button><button class="btn" id="copy">СКОПИРОВАТЬ ПОЗДРАВЛЕНИЕ</button></div>
 </main>
 <footer>TEHNOCELL INDOSTRI · С ОСОБЫМ ВНИМАНИЕМ К ЛЮДЯМ, КОТОРЫЕ СОЗДАЮТ</footer>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -87,7 +107,7 @@ footer{text-align:center;color:#555;font-size:9px;letter-spacing:1.5px;padding:0
 const celebrate=document.getElementById('celebrate'),toast=document.getElementById('toast');
 function notify(t){toast.textContent=t;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2400)}
 celebrate.addEventListener('click',()=>{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){for(let i=0;i<75;i++){const p=document.createElement('i');p.className='confetti';p.style.left=Math.random()*100+'vw';p.style.setProperty('--drift',(Math.random()*180-90)+'px');p.style.animationDuration=(2.5+Math.random()*2.5)+'s';p.style.animationDelay=(Math.random()*.8)+'s';p.style.opacity=.25+Math.random()*.65;document.body.appendChild(p);setTimeout(()=>p.remove(),6500)}}notify('С праздником, Влад!')});
-document.getElementById('copy').addEventListener('click',async()=>{const t='Влад, поздравляем тебя с днём рождения! Спасибо за твой вклад, идеи и время, которое ты вкладываешь в развитие TEHNOCELL INDOSTRI. Желаем вдохновения, уверенности, сильных проектов и поводов гордиться своей работой. С теплом и уважением, команда TEHNOCELL.';try{await navigator.clipboard.writeText(t);notify('Поздравление скопировано')}catch(e){notify('Копирование недоступно в этом браузере')}});
+document.getElementById('reveal').addEventListener('click',()=>{document.getElementById('surprise').classList.toggle('show')});\ndocument.getElementById('copy').addEventListener('click',async()=>{const t='Влад, поздравляем тебя с днём рождения! Спасибо за твой вклад, идеи и время, которое ты вкладываешь в развитие TEHNOCELL INDOSTRI. Желаем вдохновения, уверенности, сильных проектов и поводов гордиться своей работой. С теплом и уважением, команда TEHNOCELL.';try{await navigator.clipboard.writeText(t);notify('Поздравление скопировано')}catch(e){notify('Копирование недоступно в этом браузере')}});
 </script>
 </body>
 </html>
