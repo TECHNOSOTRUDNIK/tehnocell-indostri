@@ -188,7 +188,7 @@ async function openPersonProfile(id){
  $("globalSearchResults").hidden=true;
  $("personProfileContent").innerHTML='<div class="loading">Открываем профиль…</div>';
  openModal("personProfileModal");
- const {data,error}=await db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,created_at").eq("id",id).maybeSingle();
+ const {data,error}=await db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_game,profile_status,created_at").eq("id",id).maybeSingle();
  if(error||!data){$("personProfileContent").innerHTML='<div class="empty">Не удалось открыть профиль.</div>';return;}
  const name=data.display_name||"Пользователь";
  let action="";
