@@ -1424,6 +1424,30 @@ function setAvatar(initial, url = null) {
 }
 
 
+function renderPublicProfilePreview(profile,user){
+ const name=profile?.display_name||user.user_metadata?.display_name||"Пользователь";
+ const bio=profile?.bio??user.user_metadata?.bio??"";
+ const theme=profile?.profile_theme||"mono";
+ $("tcPublicPreview").dataset.theme=theme;
+ $("tcPreviewName").textContent=name;
+ $("tcPreviewName").innerHTML=name.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))+(VERIFIED_USERS.includes(user.id)?'<span class="tc-preview-badge" aria-label="Подтверждённый аккаунт">✓</span>':'');
+ $("tcPreviewHandle").textContent=profile?.username?"@"+profile.username:"Участник TEHNOCELL";
+ $("tcPreviewBio").textContent=bio||"Пользователь пока ничего не рассказал о себе.";
+ const status=profile?.profile_status||profile?.status_text||"";
+ $("tcPreviewStatus").textContent=status;$("tcPreviewStatus").hidden=!status;
+ const banner=profile?.profile_banner_path?db.storage.from(AVATAR_BUCKET).getPublicUrl(profile.profile_banner_path).data.publicUrl:null;
+ $("tcPreviewBanner").style.backgroundImage=banner?'url("'+banner.replace(/"/g,"%22")+'")':'linear-gradient(135deg,#303030,#090909)';
+ const avatarPath=profile?.avatar_path||user.user_metadata?.avatar_path||null;
+ const avatar=avatarPath?db.storage.from(AVATAR_BUCKET).getPublicUrl(avatarPath).data.publicUrl:null;
+ $("tcPreviewAvatar").innerHTML=avatar?'<img src="'+avatar.replace(/"/g,"%22")+'" alt="">':(name.trim()[0]||"T").toUpperCase();
+ const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ const facts=[];
+ if(profile?.profile_game)facts.push('<div class="tc-preview-fact"><small>Сейчас играет</small><strong>'+esc(profile.profile_game)+'</strong></div>');
+ if(profile?.profile_music_url&&/^https:\/\//i.test(profile.profile_music_url))facts.push('<div class="tc-preview-fact"><small>Музыка</small><a href="'+esc(profile.profile_music_url)+'" target="_blank" rel="noopener">Открыть ссылку ↗</a></div>');
+ $("tcPreviewFacts").innerHTML=facts.join("");
+ $("tcPreviewDate").textContent="В TEHNOCELL с "+new Date(user.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+}
+
 /* =====================================
    ЗАГРУЗКА АККАУНТА
 ===================================== */
