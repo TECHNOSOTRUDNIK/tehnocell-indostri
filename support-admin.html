@@ -70,9 +70,15 @@ const categoryNames={general:"Общий вопрос",account:"Аккаунт",
 for(let d=1;d<=31;d++)$("bdDay").add(new Option(d,d));
 ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"].forEach((m,i)=>$("bdMonth").add(new Option(m,i+1)));
 async function init(){
- const {data,error}=await db.auth.getSession();
- if(error||!data.session){location.href="login.html";return;}
- staffUser=data.session.user;
+ let session=null;
+ const refreshed=await db.auth.refreshSession();
+ if(!refreshed.error&&refreshed.data?.session)session=refreshed.data.session;
+ if(!session){
+  const current=await db.auth.getSession();
+  if(current.error||!current.data.session){location.href="login.html";return;}
+  session=current.data.session;
+ }
+ staffUser=session.user;
  if(staffUser.app_metadata?.support_role!=="staff"){$("denied").hidden=false;return;}
  $("workspace").hidden=false;await loadTickets();
 }
