@@ -118,7 +118,7 @@
 </div>
 </section>
 <section class="page" id="page-notifications">
-<div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Реакции и комментарии к вашим публикациям.</p>
+<div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения.</p>
 <div id="notificationList"><div class="loading">Загружаем уведомления…</div></div>
 </section>
 <section class="page" id="page-profile">
@@ -216,7 +216,7 @@ async function boot(){
  if(!currentUser){location.replace("login.html?next=platform");return;}
  const name=currentUser.user_metadata?.display_name||"Пользователь";
  const path=currentUser.user_metadata?.avatar_path;
- $("greetingName").textContent=name;$("sideName").textContent=name;$("profileName").textContent=name;$("profileEmail").textContent=currentUser.email||"";
+ $("greetingName").textContent=name;$("sideName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileEmail").textContent=currentUser.email||"";
  $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);
  const VERIFIED_TEAM=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
 function isVerified(id){return VERIFIED_TEAM.includes(id);}
@@ -301,7 +301,7 @@ async function loadFeed(){
  const liked=new Set((reactions||[]).filter(r=>r.user_id===currentUser.id).map(r=>r.post_id));
  $("feedList").innerHTML=posts.map(p=>{
   const author=pm.get(p.author_id)||"Участник";
-  return '<article class="post-card" data-post="'+p.id+'"><div class="post-head"><div class="avatar">'+escapeHtml(author.charAt(0).toUpperCase())+'</div><div style="min-width:0"><div class="post-author">'+escapeHtml(author)+'</div><div class="post-detail"><span class="post-community">'+escapeHtml(cm.get(p.community_id)||"Сообщество")+'</span> · '+new Date(p.created_at).toLocaleString("ru-RU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+'</div></div></div><div class="post-body">'+escapeHtml(p.body)+'</div><div class="post-actions"><button class="post-action '+(liked.has(p.id)?"active":"")+'" data-like="'+p.id+'">♡ Нравится · '+(rc.get(p.id)||0)+'</button><button class="post-action" data-comments="'+p.id+'">Комментарии · '+(cc.get(p.id)||0)+'</button>'+(p.author_id===currentUser.id?'<button class="post-action" data-delete-post="'+p.id+'">Удалить</button>':'')+'</div></article>';
+  return '<article class="post-card" data-post="'+p.id+'"><div class="post-head"><div class="avatar">'+escapeHtml(author.charAt(0).toUpperCase())+'</div><div style="min-width:0"><div class="post-author">'+escapeHtml(author)+verifiedBadge(p.author_id)+'</div><div class="post-detail"><span class="post-community">'+escapeHtml(cm.get(p.community_id)||"Сообщество")+'</span> · '+new Date(p.created_at).toLocaleString("ru-RU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+'</div></div></div><div class="post-body">'+escapeHtml(p.body)+'</div><div class="post-actions"><button class="post-action '+(liked.has(p.id)?"active":"")+'" data-like="'+p.id+'">♡ Нравится · '+(rc.get(p.id)||0)+'</button><button class="post-action" data-comments="'+p.id+'">Комментарии · '+(cc.get(p.id)||0)+'</button>'+(p.author_id===currentUser.id?'<button class="post-action" data-delete-post="'+p.id+'">Удалить</button>':'')+'</div></article>';
  }).join("");
  document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
  document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
