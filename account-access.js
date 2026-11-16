@@ -31,9 +31,9 @@
     const input = document.createElement("textarea"); input.required = true; input.minLength = 10; input.maxLength = 3000; input.placeholder = "Объясните, почему блокировку стоит пересмотреть"; input.style.cssText = "width:100%;min-height:130px;padding:12px;background:#090909;color:#fff;border:1px solid #555;border-radius:10px;box-sizing:border-box";
     const button = document.createElement("button"); button.type = "submit"; button.textContent = "Подать обжалование"; button.style.cssText = "width:100%;padding:14px;margin-top:12px;background:#fff;color:#111;border:0;border-radius:10px;font-weight:bold";
     form.append(input, button);
-    const { data: appeals } = await db.from("support_appeals").select("id,status").eq("block_id", block.id).eq("user_id", user.id).order("submitted_at", { ascending: false }).limit(5);
+    const { data: appeals } = await db.from("support_appeals").select("id,status,decision_reason").eq("block_id", block.id).eq("user_id", user.id).order("submitted_at", { ascending: false }).limit(5);
     if ((appeals || []).some(a => a.status === "pending")) { status.textContent = "Обжалование отправлено и ожидает рассмотрения."; form.hidden = true; }
-    else if (appeals?.[0]?.status === "rejected") status.textContent = "Предыдущее обжалование отклонено. Вы можете подать новое.";
+    else if (appeals?.[0]?.status === "rejected") status.textContent = "Предыдущее обжалование отклонено. Причина: " + (appeals[0].decision_reason || "не указана") + ". Вы можете подать новое.";
     form.addEventListener("submit", async e => {
       e.preventDefault(); button.disabled = true;
       const result = await db.from("support_appeals").insert({ block_id: block.id, user_id: user.id, message: input.value.trim() });
