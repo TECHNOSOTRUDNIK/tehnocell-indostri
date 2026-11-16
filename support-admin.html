@@ -3,49 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TEHNOCELL SUPPORT — Панель команды</title>
+<title>TEHNOCELL SUPPORT — Центр поддержки</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f1f1f1;color:#111;font-family:Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;background:#111;color:#fff;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{font-weight:900;letter-spacing:.4px}.brand span{color:#aaa;font-weight:400}
-main{max-width:1200px;margin:auto;padding:26px 18px 50px}
-h1{font-size:25px;margin:0 0 8px}h2{font-size:18px;margin:0}
-.muted{color:#777;font-size:13px}.panel{background:#fff;border:1px solid #ddd;border-radius:14px;padding:18px;margin-bottom:15px}
-.layout{display:grid;grid-template-columns:minmax(270px,.8fr) minmax(0,1.4fr);gap:15px}
-button,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;background:#111;color:#fff;padding:11px 15px}
-button.secondary{background:#fff;color:#111;border:1px solid #ddd}
-input,select,textarea{width:100%;border:1px solid #ddd;border-radius:9px;padding:12px;background:#fff;color:#111}
-label{display:block;font-size:13px;margin:13px 0 7px}
-.ticket{width:100%;display:block;text-align:left;background:#fff;color:#111;border:1px solid #e4e4e4;margin-top:8px}
-.ticket.active{border-color:#111;background:#f6f6f6}.ticket strong,.ticket small{display:block}.ticket small{color:#777;margin-top:6px}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-.chat{height:390px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:14px 0}
-.msg{max-width:88%;padding:12px 14px;border-radius:15px;background:#ededed;color:#171717;border:1px solid #d7d7d7;overflow-wrap:anywhere;box-shadow:0 3px 12px rgba(0,0,0,.035);border-bottom-left-radius:5px}
-.msg.staff{align-self:flex-end;background:#111;color:#fff;border:1px solid #111;border-bottom-right-radius:5px}
-.msg.chief{background:#171511;color:#fff;border:1.5px solid #c9ad76;box-shadow:0 4px 18px rgba(177,143,83,.13)}
-.msg small{display:flex;align-items:center;gap:7px;font-size:10px;opacity:1;margin-bottom:7px;color:#666}
-.msg.staff small{color:#c8c8c8}.msg.chief small{color:#dfc99b}
-.role-mark{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:5px;font-size:10px;font-weight:900;background:#d8d8d8;color:#222}
-.msg.staff .role-mark{background:#fff;color:#111}.msg.chief .role-mark{background:#dfc99b;color:#17130d}
-.ticket.active{border-color:#bda477;box-shadow:inset 3px 0 #bda477}
-.ticket{border-radius:12px;transition:border-color .15s,transform .15s}
-.ticket:active{transform:scale(.99)}
-.panel{box-shadow:0 8px 28px rgba(0,0,0,.035)}
-#workspace>.layout>.panel:last-child{border-radius:16px}
-.statusrow select{border-radius:20px}
-button{transition:opacity .15s,transform .15s}button:active{transform:scale(.98)}
-.reply button{min-width:112px}
-.reply{display:flex;gap:9px;align-items:flex-end;border-top:1px solid #eee;padding-top:13px}.reply textarea{min-height:50px;max-height:130px}
-.statusrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.statusrow select{max-width:220px}
-#denied{max-width:600px;margin:70px auto;text-align:center}
-@media(max-width:760px){.layout{grid-template-columns:1fr}.chat{height:300px}.reply{flex-direction:column;align-items:stretch}.reply button{align-self:flex-end}}
-</style>
+<style>*{box-sizing:border-box}
+:root{color-scheme:dark;--bg:#090909;--surface:#151515;--line:#303030;--text:#f5f5f5;--muted:#999;--gold:#c9ad76}
+html,body{min-height:100%;margin:0}
+body{background:radial-gradient(ellipse at 50% -20%,#252525 0%,#101010 42%,var(--bg) 78%);color:var(--text);font-family:Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:rgba(10,10,10,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:17px clamp(18px,5vw,64px);display:flex;justify-content:space-between;align-items:center;gap:14px}
+.brand{font-weight:900;letter-spacing:.35px;font-size:18px}.brand span{color:#aaa;font-weight:400}
+main{max-width:1240px;margin:auto;padding:34px 20px 64px}
+h1{font-size:clamp(25px,4vw,34px);letter-spacing:-.7px;margin:0 0 8px}h2{font-size:18px;margin:0}
+.muted{color:var(--muted);font-size:13px;line-height:1.55}
+.panel{background:linear-gradient(145deg,#1a1a1a,#131313);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 16px 45px rgba(0,0,0,.22)}
+.layout{display:grid;grid-template-columns:minmax(280px,.82fr) minmax(0,1.5fr);gap:16px}
+button,select,textarea{font:inherit}button{cursor:pointer;border:1px solid #f2f2f2;border-radius:11px;background:#f2f2f2;color:#111;padding:12px 17px;font-weight:700;transition:transform .15s,opacity .15s}button:active{transform:scale(.98)}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#171717;color:#f5f5f5;border:1px solid #444}
+input,select,textarea{width:100%;border:1px solid #3b3b3b;border-radius:11px;padding:13px;background:#101010;color:#f5f5f5}
+label{display:block;font-size:13px;color:#bbb;margin:13px 0 7px}
+.ticket{width:100%;display:block;text-align:left;background:#181818;color:#f5f5f5;border:1px solid #333;margin-top:9px;padding:14px 15px;border-radius:12px;transition:border-color .15s,transform .15s}.ticket.active{border-color:var(--gold);background:#211e18;box-shadow:inset 3px 0 var(--gold)}.ticket strong,.ticket small{display:block}.ticket small{color:#aaa;margin-top:7px;line-height:1.45}.ticket:active{transform:scale(.99)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.chat{height:410px;overflow:auto;display:flex;flex-direction:column;gap:11px;padding:16px 3px}
+.msg{max-width:88%;padding:13px 15px;border-radius:15px;background:#e8e8e8;color:#171717;border:1px solid #d7d7d7;overflow-wrap:anywhere;box-shadow:0 3px 12px rgba(0,0,0,.12);border-bottom-left-radius:5px;line-height:1.5}.msg.staff{align-self:flex-end;background:#080808;color:#fff;border:1px solid #454545;border-bottom-right-radius:5px}.msg.chief{background:#171511;color:#fff;border:1.5px solid var(--gold);box-shadow:0 4px 18px rgba(177,143,83,.13)}
+.msg small{display:flex;align-items:center;gap:7px;font-size:10px;margin-bottom:7px;color:#555}.msg.staff small{color:#bbb}.msg.chief small{color:#dfc99b}
+.role-mark{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:6px;font-size:10px;font-weight:900;background:#d8d8d8;color:#222}.msg.staff .role-mark{background:#fff;color:#111}.msg.chief .role-mark{background:var(--gold);color:#17130d}
+.reply{display:flex;gap:10px;align-items:flex-end;border-top:1px solid #303030;padding-top:15px}.reply textarea{min-height:54px;max-height:140px;resize:vertical;line-height:1.45}.reply button{min-width:112px}
+.statusrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.statusrow select{max-width:230px;border-radius:11px}
+#denied{max-width:650px;margin:clamp(55px,12vh,120px) auto;text-align:center;padding:clamp(25px,6vw,48px)}.denied-mark{width:58px;height:58px;margin:0 auto 20px;border:1px solid #555;border-radius:18px;display:grid;place-items:center;font-size:24px;color:var(--gold);background:#111}#denied h1{font-size:clamp(26px,5vw,36px);margin-bottom:12px}#denied .muted{max-width:440px;margin:0 auto 24px;font-size:15px}#denied button{min-width:220px}
+.workspace-heading{margin-bottom:22px}.workspace-heading p{margin:0}#birthdayTools{border-top:1px solid #333!important}
+@media(max-width:760px){header{padding:14px 18px}.brand{font-size:15px}main{padding:24px 14px 45px}.layout{grid-template-columns:1fr}.chat{height:330px}.reply{flex-direction:column;align-items:stretch}.reply button{align-self:stretch;width:100%}.statusrow{align-items:stretch}.statusrow select{max-width:none;flex:1}.toolbar{align-items:flex-start}}
+@media(max-width:380px){.brand span{display:block;margin-top:3px}.panel{padding:15px}}</style>
 </head>
 <body>
-<header><div class="brand">TEHNOCELL <span>SUPPORT / STAFF</span></div><button class="secondary" id="logout">Выйти</button></header>
+<header><div class="brand">TEHNOCELL <span>SUPPORT / STAFF</span></div><button class="secondary" id="logout">В личный кабинет</button></header>
 <main>
-<div id="denied" class="panel" hidden><h1>Доступ закрыт</h1><p class="muted">Эта панель доступна только сотрудникам поддержки TEHNOCELL.</p></div>
+<div id="denied" class="panel" hidden><div class="denied-mark">◈</div><h1>Доступ пока не открыт</h1><p class="muted">Эта рабочая зона предназначена для сотрудников TEHNOCELL SUPPORT. Для вашего аккаунта роль сотрудника ещё не включена.</p><button type="button" id="returnAccount">Вернуться в личный кабинет</button></div>
 <div id="workspace" hidden>
 <div style="margin-bottom:18px"><h1>Центр обращений</h1><p class="muted">Внутренняя панель обработки запросов пользователей.</p></div>
 <div class="layout">
@@ -150,7 +140,12 @@ $("saveBirthdayCorrection").addEventListener("click",async()=>{
  const {error}=await db.from("user_birthdays").update({birth_month:month,birth_day:day}).eq("user_id",selectedTicket.user_id);
  $("birthdayCorrectionMessage").textContent=error?"Ошибка: "+error.message:"Дата рождения исправлена.";
 });
-$("logout").addEventListener("click",async()=>{await db.auth.signOut();location.href="login.html";});
+function returnToAccount(){
+ const developers=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
+ location.href=staffUser&&developers.includes(staffUser.id)?"account.html":"account-user.html";
+}
+$("logout").addEventListener("click",returnToAccount);
+$("returnAccount").addEventListener("click",returnToAccount);
 init();
 </script>
 </body></html>
