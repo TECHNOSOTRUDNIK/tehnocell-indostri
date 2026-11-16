@@ -1211,26 +1211,38 @@ function renderSearchSuggestions(list,query,message){
  box.classList.add("open");
 }
 let artistSearchTracks=[],artistSearchSequence=0;
-async function fetchArtistDiscography(name){const norm=s=>String(s||"").toLowerCase().replace(/ё/g,"е").replace(/[^a-z0-9а-я]/gi,"");const r=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(name)+"&entity=musicArtist&limit=20&country=ru");if(!r.ok)throw Error("artist search");const d=await r.json(),a=d.results||[],w=norm(name),artist=a.find(x=>norm(x.artistName)===w)||a.find(x=>norm(x.artistName).includes(w)||w.includes(norm(x.artistName)));if(!artist?.artistId)return [];const lr=await fetch("https://itunes.apple.com/lookup?id="+artist.artistId+"&entity=song&limit=200&country=ru");if(!lr.ok)throw Error("artist lookup");const ld=await lr.json();return (ld.results||[]).filter(x=>x.wrapperType==="track"&&x.trackId).map(x=>({id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName||artist.artistName,genre:x.primaryGenreName||"Музыка",collectionName:x.collectionName||"",artworkUrl100:x.artworkUrl100||"",trackViewUrl:x.trackViewUrl||"",url:"",previewUrl:x.previewUrl||"",releaseDate:x.releaseDate||"",symbol:"♪",style:"c1"}))}
+function mapAudiusTrack(t,i=0){
+ if(!t||!t.id||!t.title||t.is_streamable===false)return null;
+ const art=t.artwork||{};
+ return {id:"audius:"+t.id,title:t.title,artist:t.user?.name||t.user?.handle||"Неизвестный исполнитель",genre:t.genre||"Музыка",collectionName:t.album_title||"",artworkUrl100:art["480x480"]||art["150x150"]||art["1000x1000"]||"",trackViewUrl:t.permalink||"",url:"https://api.audius.co/v1/tracks/"+encodeURIComponent(t.id)+"/stream?app_name=MIVO",releaseDate:t.release_date||t.created_at||"",duration:Number(t.duration)||0,symbol:"♪",style:"c1"};
+}
+async function fetchArtistDiscography(name){
+ const base="https://api.audius.co/v1",app="app_name=MIVO";
+ const r=await fetch(base+"/users/search?query="+encodeURIComponent(name)+"&limit=20&"+app);
+ if(!r.ok)throw Error("artist search");const d=await r.json(),users=d.data||[];
+ const norm=x=>String(x||"").toLowerCase().replace(/ё/g,"е").replace(/[^a-z0-9а-я]/gi,""),wanted=norm(name);
+ const artist=users.find(x=>norm(x.name)===wanted)||users.find(x=>norm(x.name||x.handle).includes(wanted)||wanted.includes(norm(x.name||x.handle)));
+ if(!artist?.id)return [];
+ const lr=await fetch(base+"/users/"+encodeURIComponent(artist.id)+"/tracks?limit=100&"+app);
+ if(!lr.ok)throw Error("artist tracks");const ld=await lr.json();
+ return (ld.data||[]).map(mapAudiusTrack).filter(Boolean);
+}
 async function searchWorldwideSongs(query){
  const status=$("emptyState"),sequence=++searchSequence;
  if(searchController)searchController.abort();searchController=new AbortController();
- status.style.display="block";status.textContent="Ищем музыку…";
+ status.style.display="block";status.textContent="Ищем полные версии…";
  try{
-  const term=encodeURIComponent(query),signal=searchController.signal;
-  let response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=200&country=ru",{signal});
-  if(!response.ok)throw new Error("search");
-  let data=await response.json(),results=data.results||[];
-  if(!results.length){response=await fetch("https://itunes.apple.com/search?term="+term+"&entity=song&limit=200&country=us",{signal});if(!response.ok)throw new Error("search");data=await response.json();results=data.results||[]}
-  if(sequence!==searchSequence)return;
+  const response=await fetch("https://api.audius.co/v1/tracks/search?query="+encodeURIComponent(query)+"&limit=100&app_name=MIVO",{signal:searchController.signal,cache:"no-store"});
+  if(!response.ok)throw new Error("Audius search");
+  const data=await response.json();if(sequence!==searchSequence)return;
   const seen=new Set();
-  catalogTracks=results.filter(x=>x.trackId&&!seen.has(x.trackId)&&(seen.add(x.trackId),true)).map(x=>({id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Music",collectionName:x.collectionName,artworkUrl100:x.artworkUrl100,trackViewUrl:x.trackViewUrl,url:"",symbol:"♪",style:"c1"}));
+  catalogTracks=(data.data||[]).map(mapAudiusTrack).filter(t=>t&&!seen.has(t.id)&&(seen.add(t.id),true));
   persistCatalog();renderSearchSuggestions(catalogTracks,query);render([...catalogTracks,...localTracks]);renderMixes();
-  status.textContent=catalogTracks.length?"Найдено "+catalogTracks.length+" песен. В этом каталоге доступны только данные и обложки; короткие ознакомительные фрагменты MIVO не запускает.":"Ничего не найдено. Попробуй другой запрос.";
+  status.textContent=catalogTracks.length?"Найдено "+catalogTracks.length+" доступных полных треков.":"Ничего не найдено. Попробуй другой запрос.";
   status.style.display=catalogTracks.length||localTracks.length?"none":"block";
  }catch(err){
   if(err.name==="AbortError"||sequence!==searchSequence)return;
-  catalogTracks=[];renderSearchSuggestions([],query,"Не удалось подключиться к музыкальному поиску.");render(localTracks);status.style.display=localTracks.length?"none":"block";status.textContent="Не удалось подключиться к музыкальному поиску. Проверь интернет и попробуй ещё раз.";
+  catalogTracks=[];renderSearchSuggestions([],query,"Не удалось подключиться к открытому музыкальному каталогу.");render(localTracks);status.style.display=localTracks.length?"none":"block";status.textContent="Не удалось подключиться к каталогу. Проверь интернет и попробуй ещё раз.";
  }
 }
 $("searchInput").addEventListener("input",e=>{
