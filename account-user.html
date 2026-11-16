@@ -703,6 +703,10 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 #supportReplyForm>#supportReplyFileList{grid-column:1/-1!important;grid-row:3!important;min-width:0!important;max-width:100%!important}
 #supportReplyForm>button[type=submit]{grid-column:2!important;grid-row:2!important;align-self:stretch!important;justify-self:end!important;min-height:44px!important;white-space:nowrap!important}
 }
+
+.tc-banner-preview{height:132px;width:100%;border:1px dashed var(--border);border-radius:14px;background:linear-gradient(135deg,#292929,#090909);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;margin:10px 0;overflow:hidden}
+.tc-banner-preview.has-image{border-style:solid}.tc-banner-actions{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 14px}.tc-secondary{padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit}
+.tc-toast{position:fixed;z-index:100001;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,18px);width:min( calc(100% - 32px),420px);padding:13px 16px;border:1px solid #444;border-radius:13px;background:#111;color:#fff;box-shadow:0 12px 38px #0005;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.tc-toast.show{opacity:1;transform:translate(-50%,0)}
 </style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
@@ -1003,7 +1007,10 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
  <label for="profileThemeSelect">Стиль профиля</label><select id="profileThemeSelect"><option value="mono">Чёрно-белый</option><option value="graphite">Графитовый</option><option value="ice">Ледяной</option><option value="violet">Фиолетовый</option></select>
  <label for="profileMusicInput">Музыка в профиле — ссылка</label><input type="url" id="profileMusicInput" maxlength="500" placeholder="Ссылка на трек">
  <label for="profileGameInput">Во что играете</label><input type="text" id="profileGameInput" maxlength="80" placeholder="Название игры">
- <label for="profileBannerInput">Баннер профиля</label><input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp">
+ <label>Баннер профиля</label>
+ <div class="tc-banner-preview" id="profileBannerPreview"><span>Баннер ещё не установлен</span></div>
+ <input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp" hidden>
+ <div class="tc-banner-actions"><button class="action" type="button" id="chooseProfileBanner">Выбрать изображение</button><button class="tc-secondary" type="button" id="removeProfileBanner">Убрать баннер</button></div>
  <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка пока будет показана ссылкой — встроенное воспроизведение подключим после выбора легального музыкального каталога.</p>
  <button class="action" id="saveCustomization" type="button">Сохранить оформление</button><p class="message" id="customizationMessage"></p>
  </div>
@@ -1242,6 +1249,11 @@ const db = window.supabase.createClient(
 );
 
 let currentUser = null;
+let currentBannerPath = null;
+let bannerPreviewObjectUrl = null;
+let tcToastTimer = null;
+function showTcToast(message){let el=$("tcToast");if(!el){el=document.createElement("div");el.id="tcToast";el.className="tc-toast";el.setAttribute("role","status");document.body.append(el);}el.textContent=message;el.classList.add("show");clearTimeout(tcToastTimer);tcToastTimer=setTimeout(()=>el.classList.remove("show"),3200);}
+function setBannerPreview(url){const box=$("profileBannerPreview");if(!box)return;box.style.backgroundImage=url?`url("${url}")`:"linear-gradient(135deg,#292929,#090909)";box.classList.toggle("has-image",!!url);box.innerHTML=url?"": "<span>Баннер ещё не установлен</span>";}
 let presenceChannel = null;
 
 
@@ -1584,6 +1596,8 @@ async function loadAccount() {
     $("profileThemeSelect").value = savedProfile?.profile_theme || "mono";
     $("profileMusicInput").value = savedProfile?.profile_music_url || "";
     $("profileGameInput").value = savedProfile?.profile_game || "";
+    currentBannerPath = savedProfile?.profile_banner_path || null;
+    setBannerPreview(currentBannerPath ? db.storage.from(AVATAR_BUCKET).getPublicUrl(currentBannerPath).data.publicUrl : null);
 
 
     /* ID И ПОЧТА */
@@ -1734,6 +1748,9 @@ $("saveProfile").addEventListener("click", async () => {
 });
 
 
+$("chooseProfileBanner").addEventListener("click",()=>$("profileBannerInput").click());
+$("profileBannerInput").addEventListener("change",()=>{const file=$("profileBannerInput").files[0];if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){$("customizationMessage").textContent="Выберите JPG, PNG или WEBP до 5 МБ."; $("profileBannerInput").value="";return;}if(bannerPreviewObjectUrl)URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=URL.createObjectURL(file);setBannerPreview(bannerPreviewObjectUrl);$("customizationMessage").textContent="Предпросмотр готов. Нажмите «Сохранить оформление».";});
+$("removeProfileBanner").addEventListener("click",()=>{currentBannerPath=null;$("profileBannerInput").value="";if(bannerPreviewObjectUrl){URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=null;}setBannerPreview(null);$("customizationMessage").textContent="Баннер будет удалён после сохранения.";});
 $("saveCustomization").addEventListener("click",async()=>{
  if(!currentUser)return;const msg=$("customizationMessage"),btn=$("saveCustomization");btn.disabled=true;msg.textContent="Сохраняем…";
  let bannerPath=null;const file=$("profileBannerInput").files[0];
@@ -1744,10 +1761,10 @@ $("saveCustomization").addEventListener("click",async()=>{
  const music=$("profileMusicInput").value.trim();
  if(music&&!/^https:\/\//i.test(music)){msg.textContent="Ссылка на музыку должна начинаться с https://";btn.disabled=false;return;}
  const patch={profile_status:$("profileStatusInput").value.trim(),profile_theme:$("profileThemeSelect").value,profile_music_url:music||null,profile_game:$("profileGameInput").value.trim()||null};
- if(bannerPath)patch.profile_banner_path=bannerPath;
+ if(bannerPath)patch.profile_banner_path=bannerPath;else if(!currentBannerPath)patch.profile_banner_path=null;
  const {error}=await db.from("profiles").update(patch).eq("id",currentUser.id);
  btn.disabled=false;msg.textContent=error?"Не удалось сохранить: "+error.message:"Оформление профиля сохранено.";
- if(!error)$("profileBannerInput").value="";
+ if(!error){$("profileBannerInput").value="";currentBannerPath=bannerPath||currentBannerPath;if(bannerPreviewObjectUrl){URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=null;}if(currentBannerPath)setBannerPreview(db.storage.from(AVATAR_BUCKET).getPublicUrl(currentBannerPath).data.publicUrl);else setBannerPreview(null);showTcToast("Оформление профиля сохранено");}
 });
 
 /* =====================================
