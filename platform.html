@@ -343,6 +343,7 @@ async function loadFeed(){
  document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
  document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
  document.querySelectorAll("[data-delete-post]").forEach(b=>b.addEventListener("click",()=>deletePost(b.dataset.deletePost)));
+ $("feedList").querySelectorAll("[data-profile]").forEach(b=>b.addEventListener("click",()=>openPersonProfile(b.dataset.profile)));
 }
 async function toggleLike(id,button){
  button.disabled=true;const active=button.classList.contains("active");
