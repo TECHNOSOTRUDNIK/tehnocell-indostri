@@ -34,7 +34,25 @@
 /* Социальные функции */
 .verified-badge{display:inline-grid;place-items:center;width:15px;height:15px;margin-left:5px;border-radius:50%;background:#2588ff;color:#fff;font-size:10px;font-weight:900;vertical-align:middle;box-shadow:0 0 0 2px #111}
 .person-profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
-.social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.social-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.messages-layout{display:grid;grid-template-columns:minmax(190px,260px) minmax(0,1fr);gap:12px;min-height:390px}
+.chat-list,.chat-window{border:1px solid var(--line);border-radius:13px;background:var(--surface);min-width:0;overflow:hidden}
+.chat-list-head,.chat-window-head{padding:13px;border-bottom:1px solid #292929;font-size:11px;font-weight:800}
+.chat-list-items{max-height:520px;overflow:auto;padding:6px}
+.chat-contact{display:flex;width:100%;align-items:center;gap:9px;padding:10px;border:0;border-radius:9px;background:transparent;color:#eee;text-align:left}
+.chat-contact.active,.chat-contact:hover{background:#242424}
+.chat-contact .search-person-avatar{width:37px;height:37px;flex-basis:37px}
+.chat-contact-copy{min-width:0;flex:1}
+.chat-contact-name{font-size:11px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-contact-preview{font-size:9px;color:#888;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-thread{height:350px;overflow:auto;padding:13px;display:flex;flex-direction:column;gap:8px}
+.chat-bubble{max-width:82%;padding:9px 11px;border:1px solid #333;border-radius:12px;background:#1a1a1a;color:#eee;font-size:11px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;align-self:flex-start}
+.chat-bubble.mine{align-self:flex-end;background:#eee;color:#111;border-color:#eee}
+.chat-bubble time{display:block;margin-top:5px;font-size:8px;opacity:.55;text-align:right}
+.chat-compose{display:flex;gap:7px;padding:10px;border-top:1px solid #292929}
+.chat-compose input{flex:1;min-width:0}
+.chat-empty{padding:20px;text-align:center;color:#777;font-size:10px;line-height:1.7}
+@media(max-width:650px){.social-grid{grid-template-columns:1fr}.messages-layout{grid-template-columns:1fr}.chat-list-items{max-height:190px}.chat-thread{height:42dvh;min-height:230px}}
 .social-box{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:15px;min-width:0}
 .social-box h3{font-size:12px;margin:0 0 12px}
 .social-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #252525}
@@ -92,8 +110,12 @@
 <div id="communityList"><div class="loading">Загружаем сообщества…</div></div>
 </section>
 <section class="page" id="page-messages">
-<div class="eyebrow">ЛИЧНОЕ ОБЩЕНИЕ</div><h1 class="page-title">Сообщения</h1><p class="page-subtitle">Личные и групповые переписки будут частью платформы.</p>
-<div class="panel"><h3>Подготовка мессенджера</h3><p>Сейчас мы закладываем основу сообществ и публикаций. Следующим этапом подключим личные чаты, групповые беседы, отправку фотографий и уведомления о новых сообщениях. Пока переписки не активны — мы не будем показывать вымышленные диалоги.</p></div>
+<div class="eyebrow">ЛИЧНОЕ ОБЩЕНИЕ</div><h1 class="page-title">Сообщения</h1><p class="page-subtitle">Личные переписки доступны только между друзьями TEHNOCELL.</p>
+<div class="messages-layout">
+ <div class="chat-list"><div class="chat-list-head">Переписки</div><div class="chat-list-items" id="chatContacts"><div class="chat-empty">Загружаем…</div></div></div>
+ <div class="chat-window"><div class="chat-window-head" id="chatTitle">Выберите друга</div><div class="chat-thread" id="chatThread"><div class="chat-empty">Чтобы начать общение, сначала добавьте человека в друзья.</div></div>
+ <form class="chat-compose" id="chatForm"><input class="field" id="chatInput" maxlength="4000" placeholder="Напишите сообщение…" autocomplete="off" disabled><button class="primary-btn" id="chatSend" disabled>Отправить</button></form></div>
+</div>
 </section>
 <section class="page" id="page-notifications">
 <div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Реакции и комментарии к вашим публикациям.</p>
@@ -105,6 +127,7 @@
 <div class="section-head"><h2>Социальный профиль</h2><span>ЛЮДИ TEHNOCELL</span></div>
 <div class="social-grid">
  <div class="social-box"><h3>Входящие заявки <span id="incomingCount" class="tiny"></span></h3><div id="incomingRequests"><div class="loading">Загрузка…</div></div></div>
+ <div class="social-box"><h3>Отправленные <span id="outgoingCount" class="tiny"></span></h3><div id="outgoingRequests"><div class="loading">Загрузка…</div></div></div>
  <div class="social-box"><h3>Мои друзья <span id="friendsCount" class="tiny"></span></h3><div id="friendsList"><div class="loading">Загрузка…</div></div></div>
 </div>
 <div class="section-head"><h2>Аккаунт</h2></div><div class="panel"><p>Имя, описание профиля, фотография и настройки безопасности управляются через TEHNOCELL ID.</p><a class="panel-link" href="account-user.html" id="profileManage2">Открыть личный кабинет →</a></div>
@@ -121,12 +144,12 @@
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null, communities=[], memberships=new Set(), memberCounts=new Map(), currentCommentPost=null, communityFilter="all";
+let currentUser=null, communities=[], memberships=new Set(), memberCounts=new Map(), currentCommentPost=null, communityFilter="all", activeChatId=null, activeChatName="", currentPage="home";
 const $=id=>document.getElementById(id);
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showNotice(message){$("notice").textContent=message;$("notice").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}
 function avatarMarkup(name,path){if(path){const {data}=db.storage.from("profile-avatars").getPublicUrl(path);return '<img src="'+escapeHtml(data.publicUrl)+'" alt="">';}return escapeHtml((name||"T").charAt(0).toUpperCase());}
-function switchPage(name){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
+function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
 
 let globalSearchTimer=null, globalSearchToken=0;
@@ -164,8 +187,11 @@ async function openPersonProfile(id){
  let action="";
  if(id===currentUser.id){action='<a class="secondary-btn" href="'+(isVerified(id)?"account.html":"account-user.html")+'">Настройки профиля</a>';}
  else{
-  const {data:rows}=await db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).in("status",["pending","accepted"]).limit(100);
-  const relation=(rows||[]).find(r=>(r.sender_id===currentUser.id&&r.receiver_id===id)||(r.sender_id===id&&r.receiver_id===currentUser.id));
+  const [sent,received]=await Promise.all([
+   db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").eq("sender_id",currentUser.id).eq("receiver_id",id).in("status",["pending","accepted"]).maybeSingle(),
+   db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").eq("sender_id",id).eq("receiver_id",currentUser.id).in("status",["pending","accepted"]).maybeSingle()
+  ]);
+  const relation=sent.data||received.data;
   if(relation?.status==="accepted") action='<button class="secondary-btn" data-remove-friend="'+relation.id+'">Удалить из друзей</button><span class="tiny">Вы друзья</span>';
   else if(relation?.status==="pending"&&relation.sender_id===currentUser.id) action='<button class="secondary-btn" disabled>Заявка отправлена</button><button class="secondary-btn" data-cancel-request="'+relation.id+'">Отменить</button>';
   else if(relation?.status==="pending") action='<button class="primary-btn" data-accept-request="'+relation.id+'">Принять заявку</button><button class="secondary-btn" data-decline-request="'+relation.id+'">Отклонить</button>';
@@ -313,16 +339,20 @@ async function loadSocial(){
  if(error){$("incomingRequests").innerHTML='<div class="social-empty">Не удалось загрузить заявки.</div>';$("friendsList").innerHTML='<div class="social-empty">Не удалось загрузить друзей.</div>';return;}
  const incoming=rows.filter(r=>r.receiver_id===currentUser.id&&r.status==="pending");
  const friends=rows.filter(r=>r.status==="accepted");
+ const outgoing=rows.filter(r=>r.sender_id===currentUser.id&&r.status==="pending");
  $("incomingCount").textContent=incoming.length?"· "+incoming.length:"";
+ $("outgoingCount").textContent=outgoing.length?"· "+outgoing.length:"";
  $("friendsCount").textContent=friends.length?"· "+friends.length:"";
  const ids=[...new Set(rows.map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))];
  const {data:people}=ids.length?await db.from("profiles").select("id,display_name,username,avatar_path").in("id",ids):{data:[]};
  const pm=new Map((people||[]).map(p=>[p.id,p]));
  const rowMarkup=(p,sub,buttons="")=>'<div class="social-row"><div class="search-person-avatar">'+avatarMarkup(p?.display_name||"Пользователь",p?.avatar_path)+'</div><div class="social-row-copy"><div class="social-row-name">'+escapeHtml(p?.display_name||"Участник")+verifiedBadge(p?.id)+'</div><div class="social-row-meta">'+escapeHtml(sub)+'</div></div>'+buttons+'</div>';
  $("incomingRequests").innerHTML=incoming.length?incoming.map(r=>{const p=pm.get(r.sender_id)||{};return rowMarkup(p,"Хочет добавить вас",'<div class="social-row-actions"><button class="primary-btn" data-social-accept="'+r.id+'">Принять</button><button class="secondary-btn" data-social-decline="'+r.id+'">×</button></div>');}).join(""):'<div class="social-empty">Новых заявок пока нет.</div>';
+ $("outgoingRequests").innerHTML=outgoing.length?outgoing.map(r=>{const p=pm.get(r.receiver_id)||{};return rowMarkup(p,"Ожидает ответа",'<div class="social-row-actions"><button class="secondary-btn" data-social-cancel="'+r.id+'">Отменить</button></div>');}).join(""):'<div class="social-empty">Вы пока никому не отправляли заявки.</div>';
  $("friendsList").innerHTML=friends.length?friends.map(r=>{const id=r.sender_id===currentUser.id?r.receiver_id:r.sender_id,p=pm.get(id)||{};return '<button type="button" class="social-row" data-profile="'+id+'" style="width:100%;border:0;background:transparent;color:inherit;text-align:left">'+ '<div class="search-person-avatar">'+avatarMarkup(p.display_name||"Пользователь",p.avatar_path)+'</div><div class="social-row-copy"><div class="social-row-name">'+escapeHtml(p.display_name||"Участник")+verifiedBadge(id)+'</div><div class="social-row-meta">Друг TEHNOCELL</div></div><span class="tiny">Открыть ›</span></button>';}).join(""):'<div class="social-empty">Пока нет друзей. Найдите людей через поиск вверху и отправьте заявку.</div>';
  document.querySelectorAll("[data-social-accept]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.socialAccept,"accepted")));
  document.querySelectorAll("[data-social-decline]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.socialDecline,"declined")));
+ document.querySelectorAll("[data-social-cancel]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.socialCancel)));
  $("friendsList").querySelectorAll("[data-profile]").forEach(b=>b.addEventListener("click",()=>openPersonProfile(b.dataset.profile)));
 }
 async function sendFriendRequest(id){
@@ -346,14 +376,58 @@ async function removeFriend(id,profileId){
  showNotice("Пользователь удалён из друзей.");await loadSocial();await openPersonProfile(profileId);
 }
 
+
+async function loadConversations(){
+ $("chatContacts").innerHTML='<div class="chat-empty">Загружаем переписки…</div>';
+ const {data:messages,error}=await db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).order("created_at",{ascending:false}).limit(500);
+ if(error){$("chatContacts").innerHTML='<div class="chat-empty">Не удалось загрузить сообщения. '+escapeHtml(error.message)+'</div>';return;}
+ const latest=new Map();
+ (messages||[]).forEach(m=>{const other=m.sender_id===currentUser.id?m.receiver_id:m.sender_id;if(!latest.has(other))latest.set(other,m);});
+ const ids=[...latest.keys()];
+ const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[]};
+ const pm=new Map((profiles||[]).map(p=>[p.id,p]));
+ $("chatContacts").innerHTML=ids.length?ids.map(id=>{const p=pm.get(id)||{},m=latest.get(id);return '<button class="chat-contact '+(activeChatId===id?"active":"")+'" data-chat="'+id+'"><div class="search-person-avatar">'+avatarMarkup(p.display_name||"Пользователь",p.avatar_path)+'</div><div class="chat-contact-copy"><div class="chat-contact-name">'+escapeHtml(p.display_name||"Участник")+verifiedBadge(id)+'</div><div class="chat-contact-preview">'+(m.sender_id===currentUser.id?"Вы: ":"")+escapeHtml(m.body.slice(0,65))+'</div></div></button>';}).join(""):'<div class="chat-empty">Переписок пока нет. Добавьте человека в друзья и откройте его профиль, чтобы начать общение.</div>';
+ $("chatContacts").querySelectorAll("[data-chat]").forEach(b=>b.addEventListener("click",()=>openChat(b.dataset.chat,pm.get(b.dataset.chat)?.display_name||"Участник")));
+ if(activeChatId&&pm.has(activeChatId))await loadChatThread();
+}
+async function openChat(id,name){
+ activeChatId=id;activeChatName=name;$("chatTitle").textContent=name;
+ $("chatInput").disabled=false;$("chatSend").disabled=false;
+ await loadChatThread();document.querySelectorAll("[data-chat]").forEach(b=>b.classList.toggle("active",b.dataset.chat===id));
+}
+async function loadChatThread(){
+ if(!activeChatId)return;
+ const other=activeChatId;
+ const [sent,received]=await Promise.all([
+  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at").eq("sender_id",currentUser.id).eq("receiver_id",other).order("created_at",{ascending:true}).limit(200),
+  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at").eq("sender_id",other).eq("receiver_id",currentUser.id).order("created_at",{ascending:true}).limit(200)
+ ]);
+ if(sent.error||received.error){$("chatThread").innerHTML='<div class="chat-empty">Не удалось загрузить переписку.</div>';return;}
+ const all=[...(sent.data||[]),...(received.data||[])].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+ $("chatThread").innerHTML=all.length?all.map(m=>'<div class="chat-bubble '+(m.sender_id===currentUser.id?"mine":"")+'">'+escapeHtml(m.body)+'<time>'+new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+(m.sender_id===currentUser.id?(m.read_at?" · Прочитано":" · Отправлено"):"")+'</time></div>').join(""):'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
+ $("chatThread").scrollTop=$("chatThread").scrollHeight;
+ const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at);
+ if(unread.length){
+  await db.from("tc_direct_messages").update({read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));
+ }
+}
+$("chatForm").addEventListener("submit",async e=>{
+ e.preventDefault();const body=$("chatInput").value.trim();if(!body||!activeChatId)return;
+ $("chatSend").disabled=true;
+ const {error}=await db.from("tc_direct_messages").insert({sender_id:currentUser.id,receiver_id:activeChatId,body});
+ $("chatSend").disabled=false;
+ if(error){showNotice("Не удалось отправить сообщение: "+error.message);return;}
+ $("chatInput").value="";await loadChatThread();await loadConversations();
+});
+
 async function loadNotifications(){
  $("notificationList").innerHTML='<div class="loading">Загружаем уведомления…</div>';
  const {data:rows,error}=await db.from("tc_notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(50);
  if(error){$("notificationList").innerHTML='<div class="empty">Не удалось загрузить уведомления: '+escapeHtml(error.message)+'</div>';return;}
  if(!rows?.length){$("notificationList").innerHTML='<div class="empty">Пока нет новых событий. Здесь появятся уведомления о реакциях и комментариях.</div>';return;}
  const ids=[...new Set(rows.map(x=>x.actor_id).filter(Boolean))];const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name").in("id",ids):{data:[]};const names=new Map((profiles||[]).map(x=>[x.id,x.display_name]));
- const noticeText=n=>n.kind==="like"?"оценил(а) вашу публикацию":n.kind==="comment"?"оставил(а) комментарий к вашей публикации":n.kind==="friend_request"?"отправил(а) вам заявку в друзья":"принял(а) вашу заявку в друзья";
- const noticeIcon=n=>n.kind==="like"?"♡":n.kind==="comment"?"↳":n.kind==="friend_request"?"＋":"✓";
+ const noticeText=n=>n.kind==="like"?"оценил(а) вашу публикацию":n.kind==="comment"?"оставил(а) комментарий к вашей публикации":n.kind==="friend_request"?"отправил(а) вам заявку в друзья":n.kind==="friend_accepted"?"принял(а) вашу заявку в друзья":"написал(а) вам сообщение";
+ const noticeIcon=n=>n.kind==="like"?"♡":n.kind==="comment"?"↳":n.kind==="friend_request"?"＋":n.kind==="friend_accepted"?"✓":"✉";
  $("notificationList").innerHTML='<div class="panel">'+rows.map(n=>'<div class="notification '+(!n.read_at?"unread":"")+'"><div class="notification-mark">'+noticeIcon(n)+'</div><div class="notification-copy"><strong>'+escapeHtml(names.get(n.actor_id)||"Участник")+'</strong> '+noticeText(n)+'<small>'+new Date(n.created_at).toLocaleString("ru-RU")+'</small></div><button class="secondary-btn" data-read="'+n.id+'" '+(n.read_at?"disabled":"")+'> '+(n.read_at?"Просмотрено":"Отметить")+' </button></div>').join("")+'</div>';
  document.querySelectorAll("[data-read]").forEach(b=>b.addEventListener("click",async()=>{b.disabled=true;const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.read).eq("user_id",currentUser.id);if(error){b.disabled=false;showNotice("Не удалось отметить уведомление.");return;}loadNotifications();loadHomeCounts();}));
 }
