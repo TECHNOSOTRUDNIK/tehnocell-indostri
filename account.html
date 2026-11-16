@@ -491,23 +491,44 @@ body {
 
 @media (max-width: 650px) {
     .header {
-        padding: 13px 5%;
+        padding: 12px 5%;
         flex-wrap: wrap;
-        gap: 13px;
+        gap: 10px;
     }
 
     .header-actions {
         width: 100%;
-        justify-content: space-between;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+    }
+
+    .home-button {
+        flex: 0 0 auto;
+        white-space: nowrap;
     }
 
     .nav {
-        gap: 3px;
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
     }
 
+    .nav::-webkit-scrollbar { display: none; }
+
     .nav button {
+        flex: 0 0 auto;
         padding: 9px 11px;
         font-size: 13px;
+        white-space: nowrap;
     }
 
     .main {
