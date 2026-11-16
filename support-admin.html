@@ -21,8 +21,21 @@ label{display:block;font-size:13px;margin:13px 0 7px}
 .ticket.active{border-color:#111;background:#f6f6f6}.ticket strong,.ticket small{display:block}.ticket small{color:#777;margin-top:6px}
 .toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .chat{height:390px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding:14px 0}
-.msg{max-width:88%;padding:11px 13px;border-radius:12px;background:#f1f1f1;overflow-wrap:anywhere}
-.msg.staff{align-self:flex-end;background:#111;color:#fff}.msg small{display:block;font-size:10px;opacity:.65;margin-bottom:5px}
+.msg{max-width:88%;padding:12px 14px;border-radius:15px;background:#ededed;color:#171717;border:1px solid #d7d7d7;overflow-wrap:anywhere;box-shadow:0 3px 12px rgba(0,0,0,.035);border-bottom-left-radius:5px}
+.msg.staff{align-self:flex-end;background:#111;color:#fff;border:1px solid #111;border-bottom-right-radius:5px}
+.msg.chief{background:#171511;color:#fff;border:1.5px solid #c9ad76;box-shadow:0 4px 18px rgba(177,143,83,.13)}
+.msg small{display:flex;align-items:center;gap:7px;font-size:10px;opacity:1;margin-bottom:7px;color:#666}
+.msg.staff small{color:#c8c8c8}.msg.chief small{color:#dfc99b}
+.role-mark{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:5px;font-size:10px;font-weight:900;background:#d8d8d8;color:#222}
+.msg.staff .role-mark{background:#fff;color:#111}.msg.chief .role-mark{background:#dfc99b;color:#17130d}
+.ticket.active{border-color:#bda477;box-shadow:inset 3px 0 #bda477}
+.ticket{border-radius:12px;transition:border-color .15s,transform .15s}
+.ticket:active{transform:scale(.99)}
+.panel{box-shadow:0 8px 28px rgba(0,0,0,.035)}
+#workspace>.layout>.panel:last-child{border-radius:16px}
+.statusrow select{border-radius:20px}
+button{transition:opacity .15s,transform .15s}button:active{transform:scale(.98)}
+.reply button{min-width:112px}
 .reply{display:flex;gap:9px;align-items:flex-end;border-top:1px solid #eee;padding-top:13px}.reply textarea{min-height:50px;max-height:130px}
 .statusrow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.statusrow select{max-width:220px}
 #denied{max-width:600px;margin:70px auto;text-align:center}
@@ -104,7 +117,16 @@ async function loadMessages(){
  const {data,error}=await db.from("support_messages").select("id,sender_type,body,created_at").eq("conversation_id",selectedTicket.id).order("created_at",{ascending:true});
  if(error){$("messages").textContent="Ошибка: "+error.message;return;}
  $("messages").replaceChildren();
- data.forEach(m=>{const el=document.createElement("div");el.className="msg "+(m.sender_type==="staff"?"staff":"");const meta=document.createElement("small");meta.textContent=(m.sender_type==="staff"?"TEHNOCELL SUPPORT":"Пользователь")+" · "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("messages").appendChild(el);});
+ data.forEach(m=>{
+  const isStaff=m.sender_type==="staff",isChief=isStaff&&m.sender_id===staffUser.id;
+  const el=document.createElement("div");el.className="msg"+(isStaff?" staff":"")+(isChief?" chief":"");
+  const meta=document.createElement("small"),mark=document.createElement("span"),label=document.createElement("span"),time=document.createElement("span");
+  mark.className="role-mark";mark.textContent=isChief?"★":isStaff?"T":"●";
+  label.textContent=isChief?"Главный специалист":isStaff?"TEHNOCELL SUPPORT":"Пользователь";
+  time.textContent="· "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
+  meta.append(mark,label,time);
+  const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("messages").appendChild(el);
+ });
  $("messages").scrollTop=$("messages").scrollHeight;
 }
 $("refresh").addEventListener("click",loadTickets);
