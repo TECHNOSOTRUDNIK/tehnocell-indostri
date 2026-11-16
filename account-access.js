@@ -1,9 +1,10 @@
 (() => {
   const URL = "https://jvagiuiregvlrfooxdao.supabase.co";
   const KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+  let db = null;
   async function run() {
     if (!window.supabase) return;
-    const db = window.supabase.createClient(URL, KEY);
+    if (!db) db = window.supabase.createClient(URL, KEY);
     const { data } = await db.auth.getSession();
     const user = data?.session?.user;
     if (!user) { const old = document.getElementById("tcAccountSuspension"); old?.remove(); document.documentElement.style.overflow = ""; return; }
