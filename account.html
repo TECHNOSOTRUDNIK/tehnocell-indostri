@@ -619,8 +619,8 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 
 <div class="header-actions">
 
-    <a href="platform.html" class="home-button">
-        ← На главную
+    <a href="platform.html" class="home-button" id="tcBackButton">
+        ← Назад
     </a>
 
     <nav class="nav">
@@ -2027,5 +2027,20 @@ startAccount();
 
 <script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
 <script src="account-access.js?v=3"></script>
+<script>
+(function(){
+ const back=document.getElementById("tcBackButton");
+ if(!back)return;
+ back.addEventListener("click",function(event){
+  const ref=document.referrer;
+  let safe=false;
+  try{
+   const url=new URL(ref);
+   safe=url.origin===location.origin&&!/\/(login|register|account|account-user)\.html$/.test(url.pathname);
+  }catch(_){}
+  if(safe&&history.length>1){event.preventDefault();history.back();}
+ });
+})();
+</script>
 </body>
 </html>
