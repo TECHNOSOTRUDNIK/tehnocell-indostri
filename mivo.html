@@ -629,7 +629,7 @@ body[data-mivo-theme]{background:radial-gradient(ellipse at 78% 0%,color-mix(in 
 .mini-equalizer i{height:8px!important}
 
 .lyrics-loading{white-space:pre-wrap}
-.audius-music-hub{margin:34px 0;padding:24px;border:1px solid #303030;border-radius:22px;background:linear-gradient(135deg,#111,#080808);position:relative}.audius-hub-kicker{font-size:10px;letter-spacing:2px;color:#aaa}.audius-hub-title{font-size:clamp(22px,4vw,32px);margin:8px 0}.audius-hub-copy,.audius-hub-foot{color:#999;line-height:1.55;font-size:13px;max-width:700px}.audius-hub-actions,.audius-hub-search{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.audius-hub-btn{border:1px solid #555;background:#fff;color:#050505;border-radius:999px;padding:12px 17px;font-weight:800;cursor:pointer}.audius-hub-btn.secondary{background:#151515;color:#fff}.audius-hub-search input{flex:1;min-width:180px;background:#090909;border:1px solid #333;border-radius:12px;color:#fff;padding:13px}.audius-hub-status{font-size:12px;color:#aaa;margin-top:13px;min-height:18px}.audius-hub-results{display:grid;gap:8px;margin-top:14px}.audius-hub-track,.audius-hub-now{display:flex;align-items:center;gap:12px;padding:9px;border:1px solid #292929;background:#0b0b0b;border-radius:13px}.audius-hub-track img,.audius-hub-now img{width:48px;height:48px;object-fit:cover;border-radius:8px;background:#222}.audius-hub-track .meta,.audius-hub-now .meta{min-width:0;flex:1}.audius-hub-track strong,.audius-hub-track small,.audius-hub-now strong,.audius-hub-now small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.audius-hub-track small,.audius-hub-now small{color:#888;margin-top:4px}.audius-hub-track button,.audius-hub-now button{border:1px solid #555;background:#fff;color:#000;border-radius:50%;width:38px;height:38px;font-size:16px;cursor:pointer}.audius-hub-now{margin-top:14px}.audius-hub-foot{font-size:11px;margin-top:12px}@media(max-width:600px){.audius-music-hub{padding:17px}.audius-hub-search button{width:100%}}</style>
+@media(max-width:600px){}</style>
 <style>
 /* MIVO mobile-first layout and expanded settings */
 .catalog-tabs{display:flex;gap:8px;overflow-x:auto;padding:3px 0 14px;scrollbar-width:none}
@@ -883,25 +883,11 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
     <div class="hero-copy"><div class="kicker">МУЗЫКАЛЬНАЯ ПЛАТФОРМА TEHNOCELL INDOSTRI</div><h1>ТВОЙ МИР.<br><span>В ЗВУКЕ.</span></h1><p>Открывай новые голоса, находи любимые звучания и собирай собственную музыкальную вселенную.</p><div class="hero-buttons"><button class="primary" id="exploreBtn">СЛУШАТЬ МУЗЫКУ ↗</button><button class="secondary" id="uploadHero">ДОБАВИТЬ СВОЮ МУЗЫКУ +</button></div></div>
     <div class="hero-visual" aria-hidden="true"><div class="hero-disc"><div class="disc-core">M</div></div><div class="hero-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="hero-orbit orbit-one"></span><span class="hero-orbit orbit-two"></span><div class="hero-visual-caption"><span class="caption-dot"></span> ЗВУКОВАЯ СЦЕНА MIVO <b>01 / ∞</b></div></div><div class="hero-stamp">МУЗЫКА БЕЗ ГРАНИЦ</div>
   </section>
-<section class="audius-music-hub" id="audiusMusicHub">
- <div class="audius-hub-kicker">MIVO / ПОЛНОФОРМАТНЫЙ АУДИОКАТАЛОГ</div>
- <h2 class="audius-hub-title">Слушай музыку целиком</h2>
- <p class="audius-hub-copy">Поиск и потоковое воспроизведение через открытый каталог Audius. Здесь доступны полные аудиотреки, если автор разрешил их потоковую передачу. Это не весь каталог популярных релизов и не замена лицензированным библиотекам крупных лейблов.</p>
- <form class="audius-hub-search" id="audiusSearchForm">
-  <input id="audiusSearchInput" type="search" maxlength="120" placeholder="Найти трек или исполнителя…" aria-label="Поиск музыки Audius" autocomplete="off">
-  <button class="audius-hub-btn" type="submit">Найти музыку</button>
- </form>
- <div class="audius-hub-actions">
-  <button class="audius-hub-btn secondary" id="audiusTrending" type="button">Популярное в Audius</button>
- </div>
- <div class="audius-hub-status" id="audiusHubStatus" role="status" aria-live="polite">Подключаем открытый музыкальный каталог…</div>
- <div class="audius-hub-results" id="audiusHubResults"></div>
- <p class="audius-hub-foot">Источник аудио: Audius. Воспроизводятся только треки, доступные для потоковой передачи. MIVO не скачивает и не хранит музыку. Название и исполнитель могут совпадать с известными релизами, но наличие оригинальной записи не гарантируется. <a href="https://audius.co" target="_blank" rel="noopener noreferrer">О каталоге Audius ↗</a></p>
-</section>
+
 
 
   <section class="section hits-section" id="hits">
-   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Хиты СНГ · сейчас в тренде</h2><p>Популярная музыка России и стран СНГ. Подборка обновляется по доступным музыкальным данным.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
+   <div class="section-head"><div><div class="eyebrow-line">MIVO / СЕЙЧАС СЛУШАЮТ <span></span></div><h2>Хиты СНГ · сейчас в тренде</h2><p>Актуальные популярные композиции российского чарта. Подборка обновляется автоматически.</p></div><button class="text-btn" id="refreshHits" type="button">ОБНОВИТЬ ↻</button></div>
    <div class="cards hits-grid" id="hitGrid"></div><div class="empty hits-status" id="hitsStatus">Загружаем музыкальный чарт…</div>
   </section>
 
@@ -1072,7 +1058,7 @@ function card(t,i,local=false){
  const fallback=t.style||("c"+((Math.abs(String(t.title||"M").split("").reduce((a,c)=>a+c.charCodeAt(0),0))%8)+1));
  d.innerHTML='<div class="cover '+fallback+'">'+(art?'<img class="cover-photo" loading="lazy" decoding="async" src="'+art+'" alt="Обложка '+escapeHtml(t.title)+'">':'<span class="cover-symbol">'+escapeHtml(t.symbol||"♪")+'</span>')+'<span class="cover-play">▶</span><span class="cover-kind">MIVO</span></div><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+(t.collectionName?" · "+escapeHtml(t.collectionName):"")+'</small><button class="card-add" type="button" aria-label="Добавить в плейлист" title="Добавить в плейлист">＋</button>';
  const img=d.querySelector(".cover-photo");if(img)img.addEventListener("error",()=>{img.remove();const icon=document.createElement("span");icon.className="cover-symbol";icon.textContent=t.symbol||"♪";d.querySelector(".cover").prepend(icon)});
- d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;const liveIndex=allTracks().findIndex(x=>trackKey(x)===trackKey(t));if(liveIndex<0)return;if(!t.url){const hub=document.getElementById("audiusMusicHub"),input=document.getElementById("audiusSearchInput");if(hub&&typeof searchAudius==="function"){if(input)input.value=t.title+" "+t.artist;hub.scrollIntoView({behavior:"smooth",block:"start"});searchAudius(t.title+" "+t.artist)}else toast("Полная версия этой композиции пока не найдена в доступном аудиокаталоге");return}playTrack(liveIndex)});
+ d.addEventListener("click",e=>{if(e.target.closest(".card-add"))return;const liveIndex=allTracks().findIndex(x=>trackKey(x)===trackKey(t));if(liveIndex<0)return;if(!t.url){toast("Полная версия этой композиции пока недоступна в подключённом источнике");return}playTrack(liveIndex)});
  d.querySelector(".card-add").addEventListener("click",e=>{e.stopPropagation();choosePlaylistForTrack(t)});
  return d;
 }
@@ -1916,103 +1902,6 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
  // Catalog tabs are page controls, not dead links or scroll shortcuts.
  document.querySelectorAll(".catalog-tabs [data-catalog-tab]").forEach(btn=>btn.addEventListener("click",()=>{const tab=btn.dataset.catalogTab;document.querySelectorAll(".catalog-tabs [data-catalog-tab]").forEach(x=>x.classList.toggle("active",x===btn));if(tab==="mixes"||tab==="wave"){activate("wave");renderWaveShelves();fillWave()}else{activate("catalog");$("trackGrid").hidden=tab!=="tracks";$("releaseGrid").hidden=tab!=="releases";$("catalogHint").hidden=tab!=="releases";if(tab==="releases")renderReleases();else if(tab==="tracks")render(allTracks())}}));
 
- // MIVO full-audio catalog: Audius public read-only API.
- // Only streamable tracks are passed to the native MIVO audio player; no preview URLs.
- const AUDIUS_API_BASE = "https://api.audius.co/v1";
- const audiusStatus = $("audiusHubStatus");
- const audiusResults = $("audiusHubResults");
- const audiusForm = $("audiusSearchForm");
- const audiusInput = $("audiusSearchInput");
- let audiusSearchSequence = 0;
- let audiusLoadedTrending = false;
- function audiusSay(message){ if(audiusStatus) audiusStatus.textContent = message; }
- async function audiusGet(path){
-  const response = await fetch(AUDIUS_API_BASE + path, {headers:{Accept:"application/json"}, cache:"no-store"});
-  if(!response.ok) throw new Error("Каталог Audius временно недоступен ("+response.status+").");
-  const payload = await response.json();
-  if(payload && payload.data !== undefined) return payload.data;
-  return payload;
- }
- function normalizeAudiusTrack(track){
-  if(!track || !track.id || track.isStreamable === false || track.isStreamable === "false") return null;
-  const user = track.user || {};
-  const title = String(track.title || "").trim();
-  const artist = String(user.name || user.handle || track.artist || "Неизвестный исполнитель").trim();
-  if(!title) return null;
-  const artwork = track.artwork || {};
-  const stream = AUDIUS_API_BASE + "/tracks/" + encodeURIComponent(track.id) + "/stream";
-  return {
-   id:"audius:"+track.id, audiusId:String(track.id), source:"Audius",
-   title, artist, genre:track.genre || "Музыка",
-   collectionName:"Audius · полная аудиозапись",
-   artworkUrl100:artwork._480x480 || artwork._1000x1000 || artwork._150x150 || "",
-   trackViewUrl:track.permalink || (user.handle ? "https://audius.co/"+encodeURIComponent(user.handle) : "https://audius.co"),
-   sourceUrl:track.permalink || "https://audius.co",
-   url:stream, previewUrl:"", duration:Number(track.duration)||0,
-   releaseDate:track.releaseDate || "", symbol:"♪", style:"c1"
-  };
- }
- function addAudiusToCatalog(rawTracks){
-  const added=[];
-  rawTracks.map(normalizeAudiusTrack).filter(Boolean).forEach(track=>{
-   const existing=catalogTracks.find(item=>trackKey(item)===trackKey(track));
-   const item=existing||track;
-   if(!existing) catalogTracks.push(item);
-   added.push(item);
-  });
-  return [...new Map(added.map(track=>[trackKey(track),track])).values()];
- }
- function renderAudiusResults(rawTracks){
-  if(!audiusResults)return;
-  audiusResults.replaceChildren();
-  const tracks=addAudiusToCatalog(rawTracks);
-  tracks.forEach(track=>{
-   const index=allTracks().findIndex(item=>trackKey(item)===trackKey(track));
-   audiusResults.append(card(track,index));
-  });
-  if(!tracks.length){
-   const empty=document.createElement("p");
-   empty.className="catalog-hint";
-   empty.textContent="Не найдено доступных для потокового воспроизведения треков. Попробуй другое написание или запрос.";
-   audiusResults.append(empty);
-  }
-  return tracks.length;
- }
- async function searchAudius(query){
-  const q=String(query||"").trim();
-  if(!q)return;
-  const seq=++audiusSearchSequence;
-  audiusSay("Ищем полные аудиотреки в Audius…");
-  if(audiusResults)audiusResults.replaceChildren();
-  try{
-   const params=new URLSearchParams({query:q,limit:"30",sort_method:"relevant"});
-   const data=await audiusGet("/tracks/search?"+params.toString());
-   if(seq!==audiusSearchSequence)return;
-   const list=Array.isArray(data)?data:[];
-   const count=renderAudiusResults(list);
-   audiusSay(count ? "Найдено "+count+" доступных аудиотреков. Нажми на обложку или ▶, чтобы слушать целиком." : "В Audius не найдено доступных полных записей по этому запросу.");
-  }catch(error){
-   if(seq!==audiusSearchSequence)return;
-   audiusSay(error.message || "Не удалось выполнить поиск Audius. Попробуй позже.");
-  }
- }
- async function loadAudiusTrending(){
-  if(audiusLoadedTrending)return;
-  audiusSay("Загружаем популярные аудиотреки Audius…");
-  if(audiusResults)audiusResults.replaceChildren();
-  try{
-   const params=new URLSearchParams({time:"week",limit:"24"});
-   const data=await audiusGet("/tracks/trending?"+params.toString());
-   const count=renderAudiusResults(Array.isArray(data)?data:[]);
-   audiusLoadedTrending=true;
-   audiusSay(count ? "Популярные треки Audius · "+count+" полных аудиозаписей доступны для воспроизведения." : "Пока нет доступных популярных треков.");
-  }catch(error){
-   audiusSay(error.message || "Не удалось загрузить популярные треки Audius.");
-  }
- }
- audiusForm?.addEventListener("submit",event=>{event.preventDefault();searchAudius(audiusInput?.value)});
- $("audiusTrending")?.addEventListener("click",()=>loadAudiusTrending());
- if(audiusStatus) loadAudiusTrending();
 
  activate("home");
  const startPref=window.MIVO_UI_PREFS?.().start;const startMap={home:"home",wave:"wave",discover:"catalog",library:"collection",settings:"settings"};if(startPref&&startMap[startPref])activate(startMap[startPref]);
@@ -2021,9 +1910,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
 <script>
 (function(){
  const norm=s=>String(s||"").toLowerCase().replace(/ё/g,"е").replace(/[^a-z0-9а-я]/gi,"");
- const fallback=[
- ["Земляк","Koss, ПЛУТТО"],["КИС Ю","NEXTIME, Даник"],["ДИНАСТИЯ","VILLIAN, madk1d"],["Украсть тебя","МАЯК X"],["Ледяное сердце","Татьяна Буланова"],["А её демоны имба","NoНейма, ANAKIRA"],["ЗНАК","Toxi$, Дора"],["Танцуешь на поминках","АлСми"],["Ты не бойся ночи","ENZRO"],["Омут","Полка, YASMI"],["ПЕРВЫЙ РАЗ","GATASKI"],["Лампочки","ARTIK & ASTI"],["Была, не была","Jakone, Kiliana"],["andy warhol","Kai Angel"],["Феникс","BEARWOLF"],["Позывной Келин","eneshka soul"],["Отпускаю","BRVZ"],["Пьяный","Катрин Штоль"],["Санта Лючия","GAYAZOV$ BROTHER$"],["ты в моих мыслях навсегда","урал гайсин, снялцепи"],["Весь этот мир","NEMIGA, Дорогой Дневник"],["GAZ","Zivert"],["Шадэ","By Индия, Xcho, MOT"],["BAD TIMES","Imael Angel"],["Магнит","Xassa"],["Мальборо","SAYAN"],["Родная сторона","Ramila"],["Дофамин x Oohc","YungMeechy, Kanatbek"],["Мои слёзы","Света"],["БАНК","ICEGERGERT, Zivert"],["ЭКСПОНАТ","MIA BOYKA"],["Любовная","Akmal'"],["Сгореть","NAVAI"],["так по***","madk1d"],["В сигаретном дыму","Баста, Гуф"],["I Got Love","Miyagi & Эндшпиль feat. Рем Дигга"],["Purosangue","MACAN, Jakone"],["Я ТЕБЯ МОГНУ","ЦУЕФА, Вирсавия, Милана Некрасова"],["Отмели","N1NT3ND0"],["Счастье вокруг","Руслан Добрый"],["Ненавидеть","МИЛЕНА MIBREOO, Давид Туров"],["Не звони мне","ALMARY, A.V.G"],["Молодость","RAIKAHO"],["Мой дом","Лирида"],["Бит шатает голову","Хаски"],["В сигаретном дыму","Баста, Гуф"],["Мутный тип","Jakone, Kiliana, Вектор А"],["Тону","HOLLYFLAME"],["Сайга","YASMI"],["Письмо домой","ГУФ"]
- ];
+
  async function fetchAppleRuChart(){
   const url="https://rss.applemarketingtools.com/api/v2/ru/music/most-played/100/songs.json";
   const response=await fetch(url,{cache:"no-store"});if(!response.ok)throw new Error("chart feed");
@@ -2037,7 +1924,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    return {id:"applechart:"+id,title:x.name||full.trackName,artist:x.artistName||full.artistName,genre:full.primaryGenreName||x.genres?.[0]?.name||"Поп",collectionName:full.collectionName||"",artworkUrl100:art.replace("{w}","300").replace("{h}","300"),trackViewUrl:x.url||full.trackViewUrl||"",url:"",previewUrl:full.previewUrl||"",releaseDate:full.releaseDate||x.releaseDate||"",symbol:"♪",style:"c1",chartRank:i+1,chartSource:"Apple Music Россия"};
   }).filter(t=>t.title&&t.artist&&/[а-яё]/i.test(t.title+" "+t.artist));
  }
- async function fetchVkSnapshot(){const out=new Array(fallback.length);let cursor=0;async function worker(){while(cursor<fallback.length){const index=cursor++,[title,artist]=fallback[index];try{const res=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(title+" "+artist)+"&entity=song&limit=12&country=ru");if(!res.ok)continue;const data=await res.json(),wanted=norm(title),words=artist.split(/[ ,&]+/).map(norm).filter(x=>x.length>2);const match=(data.results||[]).find(x=>norm(x.trackName)===wanted&&words.some(w=>norm(x.artistName).includes(w)));if(match)out[index]={id:"vkchart:"+match.trackId,title:match.trackName,artist:match.artistName,genre:match.primaryGenreName||"Музыка",collectionName:match.collectionName,artworkUrl100:match.artworkUrl100,trackViewUrl:match.trackViewUrl,url:"",previewUrl:match.previewUrl||"",releaseDate:match.releaseDate||"",symbol:"♪",style:"c1"}}catch(_){}}}await Promise.all(Array.from({length:6},worker));return out.filter(Boolean)}
+
  async function fetchFreshReleases(){const queries=["русская музыка 2026","русский рэп 2026","поп музыка Россия 2026","музыка СНГ 2026"],out=new Map();let cursor=0;async function worker(){while(cursor<queries.length){const q=queries[cursor++];try{const r=await fetch("https://itunes.apple.com/search?term="+encodeURIComponent(q)+"&entity=song&limit=200&country=ru");if(!r.ok)continue;const d=await r.json();(d.results||[]).forEach(x=>{if(!x.trackId||!x.releaseDate)return;const dt=new Date(x.releaseDate);if(!Number.isFinite(dt.getTime())||dt.getTime()>Date.now()+86400000||dt.getTime()<Date.now()-180*86400000)return;if(!/[а-яё]/i.test(String(x.artistName||"")+" "+String(x.trackName||"")))return;out.set(String(x.trackId),{id:"apple:"+x.trackId,title:x.trackName,artist:x.artistName,genre:x.primaryGenreName||"Поп",collectionName:x.collectionName||"",artworkUrl100:x.artworkUrl100||"",trackViewUrl:x.trackViewUrl||"",url:"",previewUrl:x.previewUrl||"",releaseDate:x.releaseDate,symbol:"♪",style:"c1"})})}catch(_){}}}await Promise.all([worker(),worker()]);return [...out.values()].sort((a,b)=>new Date(b.releaseDate)-new Date(a.releaseDate)).slice(0,60)}
  async function buildFreshReleaseShelf(){
   const home=document.getElementById("mivoPageHome");if(!home)return;
@@ -2056,7 +1943,7 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
    if(!force&&cached?.tracks?.length&&Date.now()-cached.savedAt<6*60*60*1000){tracks=cached.tracks;source=cached.source}
    else{
     try{tracks=await fetchAppleRuChart();source="Ежедневный чарт Apple Music Россия"}
-    catch(_){tracks=await fetchVkSnapshot();source="Снимок чарта VK Музыки от 13 ноября 2026"}
+    catch(_){tracks=[];source="Официальный чарт Apple Music Россия"}
     if(!tracks.length&&cached?.tracks?.length){tracks=cached.tracks;source=cached.source}
     if(tracks.length)writeStore(key,{savedAt:Date.now(),tracks,source});
    }
