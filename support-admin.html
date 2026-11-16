@@ -1,157 +1,119 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TEHNOCELL SUPPORT — Центр поддержки</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>*{box-sizing:border-box}
-:root{color-scheme:dark;--bg:#090909;--surface:#151515;--line:#303030;--text:#f5f5f5;--muted:#999;--gold:#c9ad76}
-html,body{min-height:100%;margin:0}
-body{background:radial-gradient(ellipse at 50% -20%,#252525 0%,#101010 42%,var(--bg) 78%);color:var(--text);font-family:Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;background:rgba(10,10,10,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:17px clamp(18px,5vw,64px);display:flex;justify-content:space-between;align-items:center;gap:14px}
-.brand{font-weight:900;letter-spacing:.35px;font-size:18px}.brand span{color:#aaa;font-weight:400}
-main{max-width:1240px;margin:auto;padding:34px 20px 64px}
-h1{font-size:clamp(25px,4vw,34px);letter-spacing:-.7px;margin:0 0 8px}h2{font-size:18px;margin:0}
-.muted{color:var(--muted);font-size:13px;line-height:1.55}
-.panel{background:linear-gradient(145deg,#1a1a1a,#131313);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 16px 45px rgba(0,0,0,.22)}
-.layout{display:grid;grid-template-columns:minmax(280px,.82fr) minmax(0,1.5fr);gap:16px}
-button,select,textarea{font:inherit}button{cursor:pointer;border:1px solid #f2f2f2;border-radius:11px;background:#f2f2f2;color:#111;padding:12px 17px;font-weight:700;transition:transform .15s,opacity .15s}button:active{transform:scale(.98)}button:disabled{opacity:.55;cursor:wait}button.secondary{background:#171717;color:#f5f5f5;border:1px solid #444}
-input,select,textarea{width:100%;border:1px solid #3b3b3b;border-radius:11px;padding:13px;background:#101010;color:#f5f5f5}
-label{display:block;font-size:13px;color:#bbb;margin:13px 0 7px}
-.ticket{width:100%;display:block;text-align:left;background:#181818;color:#f5f5f5;border:1px solid #333;margin-top:9px;padding:14px 15px;border-radius:12px;transition:border-color .15s,transform .15s}.ticket.active{border-color:var(--gold);background:#211e18;box-shadow:inset 3px 0 var(--gold)}.ticket strong,.ticket small{display:block}.ticket small{color:#aaa;margin-top:7px;line-height:1.45}.ticket:active{transform:scale(.99)}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
-.chat{height:410px;overflow:auto;display:flex;flex-direction:column;gap:11px;padding:16px 3px}
-.msg{max-width:88%;padding:13px 15px;border-radius:15px;background:#e8e8e8;color:#171717;border:1px solid #d7d7d7;overflow-wrap:anywhere;box-shadow:0 3px 12px rgba(0,0,0,.12);border-bottom-left-radius:5px;line-height:1.5}.msg.staff{align-self:flex-end;background:#080808;color:#fff;border:1px solid #454545;border-bottom-right-radius:5px}.msg.chief{background:#171511;color:#fff;border:1.5px solid var(--gold);box-shadow:0 4px 18px rgba(177,143,83,.13)}
-.msg small{display:flex;align-items:center;gap:7px;font-size:10px;margin-bottom:7px;color:#555}.msg.staff small{color:#bbb}.msg.chief small{color:#dfc99b}
-.role-mark{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:6px;font-size:10px;font-weight:900;background:#d8d8d8;color:#222}.msg.staff .role-mark{background:#fff;color:#111}.msg.chief .role-mark{background:var(--gold);color:#17130d}
-.reply{display:flex;gap:10px;align-items:flex-end;border-top:1px solid #303030;padding-top:15px}.reply textarea{min-height:54px;max-height:140px;resize:vertical;line-height:1.45}.reply button{min-width:112px}
-.statusrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.statusrow select{max-width:230px;border-radius:11px}
-#denied{max-width:650px;margin:clamp(55px,12vh,120px) auto;text-align:center;padding:clamp(25px,6vw,48px)}.denied-mark{width:58px;height:58px;margin:0 auto 20px;border:1px solid #555;border-radius:18px;display:grid;place-items:center;font-size:24px;color:var(--gold);background:#111}#denied h1{font-size:clamp(26px,5vw,36px);margin-bottom:12px}#denied .muted{max-width:440px;margin:0 auto 24px;font-size:15px}#denied button{min-width:220px}
-.workspace-heading{margin-bottom:22px}.workspace-heading p{margin:0}#birthdayTools{border-top:1px solid #333!important}
-@media(max-width:760px){header{padding:14px 18px}.brand{font-size:15px}main{padding:24px 14px 45px}.layout{grid-template-columns:1fr}.chat{height:330px}.reply{flex-direction:column;align-items:stretch}.reply button{align-self:stretch;width:100%}.statusrow{align-items:stretch}.statusrow select{max-width:none;flex:1}.toolbar{align-items:flex-start}}
-@media(max-width:380px){.brand span{display:block;margin-top:3px}.panel{padding:15px}}</style>
-</head>
-<body>
-<header><div class="brand">TEHNOCELL <span>SUPPORT / STAFF</span></div><button class="secondary" id="logout">В личный кабинет</button></header>
-<main>
-<div id="denied" class="panel" hidden><div class="denied-mark">◈</div><h1>Доступ пока не открыт</h1><p class="muted">Эта рабочая зона предназначена для сотрудников TEHNOCELL SUPPORT. Для вашего аккаунта роль сотрудника ещё не включена.</p><button type="button" id="returnAccount">Вернуться в личный кабинет</button></div>
+<html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#090909">
+<title>TEHNOCELL SUPPORT — Рабочий центр</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box} :root{color-scheme:dark;--bg:#090909;--panel:#151515;--line:#303030;--text:#f5f5f5;--muted:#999;--gold:#c9ad76;--green:#9fc7a7;--blue:#a9c4df}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}body{background:radial-gradient(ellipse at 52% -25%,#252525 0%,#101010 48%,#080808 82%)}
+button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:3px}button:disabled{opacity:.55;cursor:wait}[hidden]{display:none!important}
+.topbar{position:sticky;top:0;z-index:20;min-height:68px;padding:12px clamp(14px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:14px;background:#090909ed;border-bottom:1px solid var(--line);backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:37px;height:37px;border:1px solid #555;border-radius:12px;display:grid;place-items:center;font-weight:900;background:linear-gradient(145deg,#242424,#101010)}.brand-copy{font-size:15px;font-weight:900;letter-spacing:.5px}.brand-copy span{font-weight:400;color:#999;margin-left:8px}
+.btn{border:1px solid #eee;background:#f1f1f1;color:#111;border-radius:11px;padding:10px 15px;font-weight:750;min-height:41px;transition:transform .15s}.btn:active{transform:scale(.98)}.btn.secondary{background:#171717;color:#eee;border-color:#414141}.btn.ghost{background:transparent;color:#ddd;border-color:#393939}.btn.gold{background:var(--gold);border-color:var(--gold);color:#17130c}
+.shell{max-width:1440px;margin:auto;padding:28px clamp(12px,3vw,34px) 65px}.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:21px}.eyebrow{font-size:10px;letter-spacing:2px;color:var(--gold);font-weight:800;text-transform:uppercase;margin-bottom:8px}
+h1{font-size:clamp(27px,4vw,39px);letter-spacing:-1px;margin:0 0 7px}.heading p{color:var(--muted);margin:0;line-height:1.5;font-size:13px}.staff-chip{padding:9px 12px;border:1px solid #5c4e35;border-radius:999px;background:#1b1812;color:#e2cfaa;font-size:11px;font-weight:700;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:17px}.stat{border:1px solid var(--line);border-radius:15px;padding:14px;background:linear-gradient(145deg,#191919,#111);min-height:87px}.stat-label{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:7px}.dot{width:7px;height:7px;border-radius:50%;background:#aaa}.waiting .dot{background:var(--gold)}.progress .dot{background:var(--blue)}.done .dot{background:var(--green)}.stat-value{font-size:27px;font-weight:800;margin-top:8px}
+.workspace{display:grid;grid-template-columns:minmax(270px,.78fr) minmax(0,1.6fr);gap:15px;align-items:start}.panel{background:linear-gradient(145deg,#181818,#121212);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 55px #0005}
+.inbox{padding:16px;position:sticky;top:85px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.panel-head h2{font-size:16px;margin:0}.count-pill{font-size:10px;color:#bbb;background:#242424;border:1px solid #393939;border-radius:999px;padding:5px 9px}
+.searchbox{position:relative;margin-bottom:9px}.searchbox input{padding-left:37px}.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#888;font-size:17px;pointer-events:none}
+.field{width:100%;border:1px solid #3a3a3a;border-radius:11px;background:#101010;color:#f4f4f4;padding:11px 12px;min-height:43px}.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}.filters select{font-size:11px;padding:9px 8px;min-width:0}
+.ticket-list{display:flex;flex-direction:column;gap:8px;max-height:calc(100vh - 360px);min-height:160px;overflow:auto;padding:2px 3px 3px 0;scrollbar-width:thin;scrollbar-color:#454545 transparent}
+.ticket{width:100%;text-align:left;display:block;border:1px solid #303030;border-radius:12px;padding:12px;background:#151515;color:#f5f5f5;transition:border-color .15s,background .15s}.ticket:hover{border-color:#626262;background:#1a1a1a}.ticket.active{border-color:var(--gold);background:linear-gradient(110deg,#242016,#171614);box-shadow:inset 3px 0 var(--gold)}
+.ticket-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}.ticket-title{font-size:12px;font-weight:750;line-height:1.35;overflow-wrap:anywhere}.ticket-time{font-size:9px;color:#888;white-space:nowrap}.ticket-preview{font-size:10px;color:#aaa;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;margin-bottom:8px}.ticket-bottom{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}.ticket-category{font-size:9px;color:#aaa}
+.status{display:inline-flex;align-items:center;gap:5px;border:1px solid #444;border-radius:999px;padding:4px 7px;font-size:9px;white-space:nowrap;color:#ddd;background:#202020}.status:before{content:"";width:6px;height:6px;border-radius:50%;background:#aaa}.status.waiting{color:#e6d3aa;border-color:#625338;background:#211d15}.status.waiting:before{background:var(--gold)}.status.in_progress{color:#c1d4e8;border-color:#42576d;background:#151d25}.status.in_progress:before{background:var(--blue)}.status.resolved{color:#c2dec8;border-color:#3e5944;background:#151e17}.status.resolved:before{background:var(--green)}
+.empty-list{padding:25px 12px;text-align:center;color:#888;font-size:12px;line-height:1.6;border:1px dashed #353535;border-radius:12px}
+.detail{padding:0;overflow:hidden;min-height:570px}.detail-empty{min-height:570px;display:grid;place-items:center;text-align:center;padding:28px}.empty-symbol{width:64px;height:64px;margin:0 auto 15px;border-radius:19px;border:1px solid #454545;background:#191919;display:grid;place-items:center;font-size:24px;color:var(--gold)}.detail-empty h2{font-size:19px;margin:0 0 8px}.detail-empty p{max-width:320px;color:#888;font-size:12px;line-height:1.6;margin:0 auto}
+.detail-content{display:flex;flex-direction:column;min-height:570px}.ticket-head{padding:19px 20px 15px;border-bottom:1px solid var(--line)}.ticket-head-top{display:flex;align-items:flex-start;justify-content:space-between;gap:13px}.ticket-heading{min-width:0}.ticket-heading h2{font-size:20px;letter-spacing:-.4px;margin:0 0 7px;overflow-wrap:anywhere}.ticket-subline{display:flex;flex-wrap:wrap;gap:7px;color:#999;font-size:10px}.ticket-id{font-family:ui-monospace,monospace;color:#bbb}
+.ticket-controls{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:14px}.ticket-controls select{width:auto;min-width:165px;min-height:39px;padding:8px 10px;font-size:11px}.ticket-controls .btn{min-height:39px;padding:8px 12px;font-size:11px}
+.user-strip{margin-top:12px;padding:9px 11px;background:#101010;border:1px solid #2c2c2c;border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:9px}.user-id-label{font-size:9px;color:#888;margin-bottom:4px}.user-id{font-size:10px;color:#ccc;font-family:ui-monospace,monospace;overflow-wrap:anywhere}
+.chat{flex:1;min-height:290px;max-height:calc(100vh - 370px);overflow:auto;padding:17px 18px;display:flex;flex-direction:column;gap:11px;scroll-behavior:smooth}.day-divider{align-self:center;color:#777;font-size:9px;padding:5px 10px;border:1px solid #303030;border-radius:999px;background:#151515}
+.message{max-width:min(83%,620px);padding:11px 13px;border-radius:14px;background:#e9e9e9;color:#161616;border:1px solid #d7d7d7;line-height:1.5;font-size:12px;overflow-wrap:anywhere;box-shadow:0 4px 14px #0002;border-bottom-left-radius:5px}.message.staff{align-self:flex-end;background:#080808;color:#f5f5f5;border-color:#4a4a4a;border-bottom-left-radius:14px;border-bottom-right-radius:5px}.message.chief{background:#17140e;border:1px solid var(--gold);box-shadow:0 4px 20px #c9ad7614}.message-meta{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:9px;color:#555}.message.staff .message-meta{color:#aaa}.message.chief .message-meta{color:#d6c092}.role-mark{width:17px;height:17px;display:grid;place-items:center;border-radius:6px;background:#d4d4d4;color:#222;font-size:9px;font-weight:900;flex:0 0 auto}.message.staff .role-mark{background:#f4f4f4;color:#111}.message.chief .role-mark{background:var(--gold);color:#17130c}.message-time{margin-left:auto;white-space:nowrap;opacity:.8}.message-body{white-space:pre-wrap;word-break:break-word}
+.composer-wrap{border-top:1px solid var(--line);padding:13px 17px 16px;background:#111}.quick-replies{display:flex;gap:7px;overflow:auto;padding:1px 1px 9px;scrollbar-width:none}.quick-replies::-webkit-scrollbar{display:none}.quick{white-space:nowrap;border:1px solid #393939;border-radius:999px;background:#191919;color:#ccc;padding:7px 10px;font-size:10px}.quick:hover{border-color:#777;color:#fff}
+.composer{display:flex;align-items:flex-end;gap:9px}.composer textarea{flex:1;min-height:50px;max-height:145px;resize:vertical;line-height:1.45;padding:12px 13px}.composer .btn{min-width:106px;min-height:47px}.composer-hint{display:flex;justify-content:space-between;gap:9px;color:#777;font-size:9px;margin-top:7px}
+.birthday-box{margin:0 17px 16px;padding:14px;border:1px solid #51452f;border-radius:13px;background:linear-gradient(135deg,#211d15,#15130f)}.birthday-box h3{font-size:14px;margin:0 0 5px}.birthday-box p{font-size:10px;color:#b6aa91;line-height:1.5;margin:0 0 11px}.birthday-fields{display:grid;grid-template-columns:.8fr 1.3fr;gap:9px}.picker{position:relative;min-width:0}.picker-label{font-size:9px;color:#b6aa91;display:block;margin:0 0 5px}.picker-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;gap:7px;background:#100f0c;color:#f5f0e5;border:1px solid #554a34;border-radius:9px;min-height:41px;padding:8px 10px;font-size:11px;text-align:left}.picker-menu{position:absolute;z-index:10;left:0;right:0;bottom:calc(100% + 6px);max-height:180px;overflow:auto;padding:5px;border:1px solid #554a34;border-radius:10px;background:#171510;box-shadow:0 12px 30px #000b}.picker-menu[hidden]{display:none}.picker-option{display:block;width:100%;text-align:left;padding:8px 9px;border:0;border-radius:7px;background:transparent;color:#eee;font-size:11px}.picker-option:hover{background:#30291c}.birthday-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:11px}.birthday-message{font-size:10px;color:#d4c39f;min-height:15px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,18px);z-index:60;max-width:92vw;padding:11px 15px;border:1px solid #555;border-radius:11px;background:#202020;color:#fff;box-shadow:0 12px 35px #0009;font-size:12px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+#denied{max-width:590px;margin:10vh auto;padding:32px;text-align:center}.denied-mark{width:58px;height:58px;margin:0 auto 17px;border:1px solid #625338;border-radius:18px;display:grid;place-items:center;color:var(--gold);font-size:24px}#denied h1{font-size:26px;margin-bottom:9px}#denied p{color:#999;line-height:1.6;font-size:13px;margin:0 auto 20px;max-width:410px}.loading{color:#888;text-align:center;padding:20px;font-size:11px}
+@media(max-width:900px){.workspace{grid-template-columns:minmax(245px,.72fr) minmax(0,1.4fr)}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ticket-list{max-height:420px}}
+@media(max-width:680px){.topbar{min-height:60px;padding:9px 12px}.brand-mark{width:33px;height:33px}.brand-copy{font-size:12px}.brand-copy span{display:block;margin:2px 0 0;font-size:9px}.topbar .btn{padding:8px 10px;min-height:36px;font-size:10px}.shell{padding:19px 11px 42px}.heading{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:15px}.heading p{font-size:11px}.stats{gap:7px}.stat{min-height:77px;padding:11px}.stat-value{font-size:23px}.workspace{grid-template-columns:1fr;gap:11px}.inbox{position:static;padding:12px}.ticket-list{max-height:280px;min-height:90px}.detail{min-height:500px}.detail-empty{min-height:400px}.detail-content{min-height:500px}.ticket-head{padding:14px 12px 12px}.ticket-heading h2{font-size:17px}.ticket-controls{gap:6px}.ticket-controls select{flex:1;min-width:0}.ticket-controls .btn{flex:1}.chat{padding:13px 10px;min-height:250px;max-height:52vh}.message{max-width:93%;font-size:11px;padding:10px 11px}.composer-wrap{padding:11px}.composer{gap:7px}.composer .btn{min-width:80px;padding:9px;font-size:11px}.composer textarea{font-size:12px}.user-strip{align-items:flex-start}.birthday-box{margin:0 10px 12px;padding:12px}}
+@media(max-width:360px){.filters{grid-template-columns:1fr}.ticket-controls select{width:100%}.message{max-width:97%}.composer{flex-direction:column;align-items:stretch}.composer .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style></head><body>
+<header class="topbar"><div class="brand"><div class="brand-mark">T</div><div class="brand-copy">TEHNOCELL<span>SUPPORT / WORKSPACE</span></div></div><button class="btn secondary" id="returnAccount">В личный кабинет</button></header>
+<main class="shell">
+<section id="denied" class="panel" hidden><div class="denied-mark">◈</div><h1>Доступ пока не открыт</h1><p>Эта рабочая зона доступна только сотрудникам TEHNOCELL SUPPORT. Войдите в назначенный аккаунт сотрудника.</p><button class="btn" id="deniedReturn">Вернуться в личный кабинет</button></section>
 <div id="workspace" hidden>
-<div style="margin-bottom:18px"><h1>Центр обращений</h1><p class="muted">Внутренняя панель обработки запросов пользователей.</p></div>
-<div class="layout">
-<section class="panel"><div class="toolbar"><h2>Все обращения</h2><button class="secondary" id="refresh">Обновить</button></div><div id="tickets"><p class="muted">Загрузка…</p></div></section>
-<section class="panel">
-<div id="empty"><h2>Выберите обращение</h2><p class="muted">Переписка и управление статусом появятся здесь.</p></div>
-<div id="detail" hidden>
-<div class="toolbar"><div><h2 id="subject"></h2><p class="muted" id="ticketMeta"></p></div></div>
-<div class="statusrow"><label for="status" style="margin:0">Статус</label><select id="status"><option value="waiting">Ожидает ответа</option><option value="in_progress">В работе</option><option value="resolved">Решено</option></select><button id="saveStatus">Сохранить</button></div>
-<div class="chat" id="messages"></div>
-<form class="reply" id="replyForm"><textarea id="replyText" maxlength="5000" placeholder="Ответ пользователю…" required></textarea><button type="submit">Ответить</button></form>
-<div id="birthdayTools" hidden style="border-top:1px solid #eee;margin-top:18px;padding-top:15px">
-<h2>Исправление даты рождения</h2><p class="muted">Изменение будет выполнено только после проверки обращения.</p>
-<div style="display:grid;grid-template-columns:1fr 2fr;gap:10px">
-<div><label for="bdDay">День</label><select id="bdDay"></select></div>
-<div><label for="bdMonth">Месяц</label><select id="bdMonth"></select></div>
-</div><button id="saveBirthdayCorrection" type="button">Сохранить исправление</button><p class="muted" id="birthdayCorrectionMessage"></p>
-</div>
-</div>
-</section>
-</div>
-</div>
-</main>
+<div class="heading"><div><div class="eyebrow">Внутренняя система TEHNOCELL</div><h1>Центр поддержки</h1><p>Обращения пользователей, переписки и инструменты помощи — в одном рабочем пространстве.</p></div><div class="staff-chip">★ Главный специалист · COLOSSAL</div></div>
+<section class="stats"><div class="stat"><div class="stat-label"><i class="dot"></i>Всего обращений</div><div class="stat-value" id="statAll">0</div></div><div class="stat waiting"><div class="stat-label"><i class="dot"></i>Ожидают ответа</div><div class="stat-value" id="statWaiting">0</div></div><div class="stat progress"><div class="stat-label"><i class="dot"></i>В работе</div><div class="stat-value" id="statProgress">0</div></div><div class="stat done"><div class="stat-label"><i class="dot"></i>Решено</div><div class="stat-value" id="statResolved">0</div></div></section>
+<div class="workspace">
+<aside class="panel inbox"><div class="panel-head"><h2>Входящие обращения</h2><span class="count-pill" id="ticketCount">0</span></div>
+<div class="searchbox"><span class="search-icon">⌕</span><input class="field" id="ticketSearch" type="search" placeholder="Поиск по теме или ID…" autocomplete="off" aria-label="Поиск обращений"></div>
+<div class="filters"><select class="field" id="statusFilter" aria-label="Фильтр по статусу"><option value="all">Все статусы</option><option value="waiting">Ожидают ответа</option><option value="in_progress">В работе</option><option value="resolved">Решено</option></select><select class="field" id="categoryFilter" aria-label="Фильтр по теме"><option value="all">Все темы</option><option value="general">Общий вопрос</option><option value="account">Аккаунт</option><option value="birthday_correction">Дата рождения</option><option value="bug">Ошибка</option><option value="idea">Предложение</option></select></div>
+<div class="ticket-list" id="ticketList"><div class="loading">Загрузка обращений…</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:11px"><span id="updatedAt" style="font-size:9px;color:#777">Ожидание загрузки</span><button class="btn ghost" id="refresh" style="padding:7px 10px;min-height:32px;font-size:10px">↻ Обновить</button></div></aside>
+<section class="panel detail"><div class="detail-empty" id="emptyState"><div><div class="empty-symbol">◈</div><h2>Рабочее пространство</h2><p>Выберите обращение слева. Здесь появятся переписка, сведения о запросе и инструменты для ответа.</p></div></div>
+<div class="detail-content" id="detailContent" hidden>
+<div class="ticket-head"><div class="ticket-head-top"><div class="ticket-heading"><h2 id="ticketSubject">Обращение</h2><div class="ticket-subline"><span id="ticketCategory"></span><span>·</span><span id="ticketCreated"></span></div></div><button class="btn ghost" id="copyTicketId" title="Скопировать номер обращения" aria-label="Скопировать номер обращения">⧉</button></div>
+<div class="ticket-controls"><select class="field" id="statusSelect" aria-label="Статус обращения"><option value="waiting">◷ Ожидает ответа</option><option value="in_progress">◉ В работе</option><option value="resolved">✓ Решено</option></select><button class="btn" id="saveStatus">Сохранить статус</button><button class="btn secondary" id="markResolved">✓ Завершить</button></div>
+<div class="user-strip"><div><div class="user-id-label">АККАУНТ ПОЛЬЗОВАТЕЛЯ</div><div class="user-id" id="ticketUserId">—</div></div><button class="btn ghost" id="copyUserId" style="min-height:32px;padding:6px 9px;font-size:9px">Копировать ID</button></div></div>
+<div class="chat" id="messageList" aria-live="polite"><div class="loading">Загрузка переписки…</div></div>
+<div class="composer-wrap"><div class="quick-replies" aria-label="Быстрые ответы">
+<button class="quick" data-reply="Здравствуйте! Спасибо, что написали в TEHNOCELL SUPPORT. Мы проверим ваш вопрос и постараемся помочь.">Приветствие</button>
+<button class="quick" data-reply="Спасибо за подробности. Мы проверяем ситуацию. Пожалуйста, немного подождите — вернёмся с ответом.">Проверяем</button>
+<button class="quick" data-reply="Пожалуйста, уточните, на каком устройстве и в каком браузере возникает проблема. Если возможно, приложите скриншот.">Уточнить детали</button>
+<button class="quick" data-reply="Проблема исправлена. Пожалуйста, обновите страницу и проверьте, всё ли теперь работает. Если проблема останется, ответьте сюда.">Исправлено</button>
+<button class="quick" data-reply="Спасибо за предложение! Мы передали его на рассмотрение команды TEHNOCELL.">Предложение</button></div>
+<form class="composer" id="replyForm"><textarea id="replyText" class="field" maxlength="5000" rows="2" placeholder="Напишите ответ пользователю…" required></textarea><button class="btn" id="sendReply" type="submit">Отправить ↗</button></form><div class="composer-hint"><span>Ctrl + Enter — отправить</span><span id="charCount">0 / 5000</span></div></div>
+<section class="birthday-box" id="birthdayBox" hidden><h3>Коррекция даты рождения</h3><p>Используйте инструмент после проверки обращения. Год рождения не хранится.</p><div class="birthday-fields">
+<div class="picker"><label class="picker-label" for="bdDayTrigger">День</label><button type="button" class="picker-trigger" id="bdDayTrigger" aria-expanded="false"><span id="bdDayLabel">Выберите день</span><span>⌄</span></button><div class="picker-menu" id="bdDayMenu" hidden></div></div>
+<div class="picker"><label class="picker-label" for="bdMonthTrigger">Месяц</label><button type="button" class="picker-trigger" id="bdMonthTrigger" aria-expanded="false"><span id="bdMonthLabel">Выберите месяц</span><span>⌄</span></button><div class="picker-menu" id="bdMonthMenu" hidden></div></div></div>
+<div class="birthday-actions"><button type="button" class="btn gold" id="saveBirthday">Сохранить исправление</button><span class="birthday-message" id="birthdayMessage" aria-live="polite"></span></div></section>
+</div></section></div></div></main><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
-const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let staffUser=null,selectedTicket=null;
-const $=id=>document.getElementById(id);
-const statusNames={waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"};
-const categoryNames={general:"Общий вопрос",account:"Аккаунт",birthday_correction:"Исправление даты рождения",bug:"Ошибка",idea:"Предложение"};
-for(let d=1;d<=31;d++)$("bdDay").add(new Option(d,d));
-["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"].forEach((m,i)=>$("bdMonth").add(new Option(m,i+1)));
-async function init(){
- let session=null;
- const refreshed=await db.auth.refreshSession();
- if(!refreshed.error&&refreshed.data?.session)session=refreshed.data.session;
- if(!session){
-  const current=await db.auth.getSession();
-  if(current.error||!current.data.session){location.href="login.html";return;}
-  session=current.data.session;
- }
- staffUser=session.user;
- if(staffUser.app_metadata?.support_role!=="staff"){$("denied").hidden=false;return;}
- $("workspace").hidden=false;await loadTickets();
-}
-async function loadTickets(){
- $("tickets").innerHTML='<p class="muted">Загрузка…</p>';
- const {data,error}=await db.from("support_conversations").select("id,user_id,subject,category,status,last_message_at").order("last_message_at",{ascending:false});
- if(error){$("tickets").textContent="Ошибка доступа: "+error.message;return;}
- if(!data.length){$("tickets").innerHTML='<p class="muted">Новых обращений пока нет.</p>';return;}
- $("tickets").replaceChildren();
- data.forEach(t=>{
-  const b=document.createElement("button");b.className="ticket"+(selectedTicket?.id===t.id?" active":"");
-  const title=document.createElement("strong");title.textContent=t.subject;
-  const meta=document.createElement("small");meta.textContent=(categoryNames[t.category]||t.category)+" · "+(statusNames[t.status]||t.status)+" · TC-"+t.user_id.replace(/-/g,"").slice(0,8).toUpperCase();
-  b.append(title,meta);b.addEventListener("click",()=>openTicket(t));$("tickets").appendChild(b);
- });
-}
-async function openTicket(t){
- selectedTicket=t;$("empty").hidden=true;$("detail").hidden=false;
- $("subject").textContent=t.subject;$("ticketMeta").textContent=(categoryNames[t.category]||t.category)+" · TC-"+t.user_id.replace(/-/g,"").slice(0,8).toUpperCase();
- $("status").value=t.status;
- $("birthdayTools").hidden=t.category!=="birthday_correction";
- await loadMessages();
- if(t.category==="birthday_correction"){
-  const {data}=await db.from("user_birthdays").select("birth_month,birth_day").eq("user_id",t.user_id).maybeSingle();
-  if(data){$("bdDay").value=data.birth_day;$("bdMonth").value=data.birth_month;$("birthdayCorrectionMessage").textContent="Сейчас в аккаунте: "+data.birth_day+"."+String(data.birth_month).padStart(2,"0");}
-  else $("birthdayCorrectionMessage").textContent="Пользователь ещё не указал дату рождения.";
- }
- await loadTickets();
-}
-async function loadMessages(){
- $("messages").innerHTML='<p class="muted">Загрузка…</p>';
- const {data,error}=await db.from("support_messages").select("id,sender_type,body,created_at").eq("conversation_id",selectedTicket.id).order("created_at",{ascending:true});
- if(error){$("messages").textContent="Ошибка: "+error.message;return;}
- $("messages").replaceChildren();
- data.forEach(m=>{
-  const isStaff=m.sender_type==="staff",isChief=isStaff&&m.sender_id===staffUser.id;
-  const el=document.createElement("div");el.className="msg"+(isStaff?" staff":"")+(isChief?" chief":"");
-  const meta=document.createElement("small"),mark=document.createElement("span"),label=document.createElement("span"),time=document.createElement("span");
-  mark.className="role-mark";mark.textContent=isChief?"★":isStaff?"T":"●";
-  label.textContent=isChief?"Главный специалист":isStaff?"TEHNOCELL SUPPORT":"Пользователь";
-  time.textContent="· "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
-  meta.append(mark,label,time);
-  const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("messages").appendChild(el);
- });
- $("messages").scrollTop=$("messages").scrollHeight;
-}
-$("refresh").addEventListener("click",loadTickets);
-$("saveStatus").addEventListener("click",async()=>{
- if(!selectedTicket)return;
- const {error}=await db.from("support_conversations").update({status:$("status").value}).eq("id",selectedTicket.id);
- if(error){alert("Не удалось обновить статус: "+error.message);return;}
- selectedTicket.status=$("status").value;await loadTickets();$("ticketMeta").textContent=(categoryNames[selectedTicket.category]||selectedTicket.category)+" · "+statusNames[selectedTicket.status];
-});
-$("replyForm").addEventListener("submit",async e=>{
- e.preventDefault();if(!selectedTicket)return;const body=$("replyText").value.trim();if(!body)return;
- const button=e.submitter;button.disabled=true;
- const {error}=await db.from("support_messages").insert({conversation_id:selectedTicket.id,sender_id:staffUser.id,sender_type:"staff",body});
- button.disabled=false;if(error){alert("Не удалось отправить ответ: "+error.message);return;}
- $("replyText").value="";await loadMessages();await loadTickets();
-});
-$("saveBirthdayCorrection").addEventListener("click",async()=>{
- if(!selectedTicket||selectedTicket.category!=="birthday_correction")return;
- const month=Number($("bdMonth").value),day=Number($("bdDay").value),max=new Date(2000,month,0).getDate();
- if(!month||!day||day<1||day>max){$("birthdayCorrectionMessage").textContent="Проверьте дату.";return;}
- const {error}=await db.from("user_birthdays").update({birth_month:month,birth_day:day}).eq("user_id",selectedTicket.user_id);
- $("birthdayCorrectionMessage").textContent=error?"Ошибка: "+error.message:"Дата рождения исправлена.";
-});
-function returnToAccount(){
- const developers=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
- location.href=staffUser&&developers.includes(staffUser.id)?"account.html":"account-user.html";
-}
-$("logout").addEventListener("click",returnToAccount);
-$("returnAccount").addEventListener("click",returnToAccount);
-init();
-</script>
-</body></html>
+const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co",SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X",db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY),$=id=>document.getElementById(id);
+const statusNames={waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"},categoryNames={general:"Общий вопрос",account:"Аккаунт и профиль",birthday_correction:"Исправление даты рождения",bug:"Ошибка или неисправность",idea:"Предложение"},months=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+let staffUser=null,tickets=[],selectedTicket=null,messages=[],refreshTimer=null,realtimeChannel=null,toastTimer=null;
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2700)}
+function formatDate(v,withTime=true){if(!v)return"—";const d=new Date(v);return Number.isNaN(d.getTime())?"—":d.toLocaleString("ru-RU",withTime?{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}:{day:"numeric",month:"long",year:"numeric"})}
+function shortId(id){return"TC-"+String(id||"").replace(/-/g,"").slice(0,8).toUpperCase()}
+function returnToAccount(){const dev=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];location.href=staffUser&&dev.includes(staffUser.id)?"account.html":"account-user.html"}
+$("returnAccount").addEventListener("click",returnToAccount);$("deniedReturn").addEventListener("click",returnToAccount);
+function setStats(){const c={waiting:0,in_progress:0,resolved:0};tickets.forEach(t=>c[t.status]=(c[t.status]||0)+1);$("statAll").textContent=tickets.length;$("statWaiting").textContent=c.waiting;$("statProgress").textContent=c.in_progress;$("statResolved").textContent=c.resolved}
+function lastMap(rows){const map={};rows.forEach(m=>{if(!map[m.conversation_id]||new Date(m.created_at)>new Date(map[m.conversation_id].created_at))map[m.conversation_id]=m});return map}
+async function loadTickets(keep=true){$("refresh").disabled=true;const {data,error}=await db.from("support_conversations").select("id,user_id,subject,category,status,created_at,updated_at,last_message_at").order("last_message_at",{ascending:false}).limit(1000);$("refresh").disabled=false;
+if(error){$("ticketList").textContent="Не удалось загрузить обращения: "+error.message;toast("Ошибка загрузки");return}
+tickets=data||[];if(tickets.length){const {data:ms}=await db.from("support_messages").select("conversation_id,body,sender_type,created_at").in("conversation_id",tickets.map(t=>t.id)).order("created_at",{ascending:false});const map=lastMap(ms||[]);tickets.forEach(t=>t.lastMessage=map[t.id]||null)}
+setStats();renderTickets();$("updatedAt").textContent="Обновлено: "+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+if(keep&&selectedTicket){const fresh=tickets.find(t=>t.id===selectedTicket.id);if(fresh){selectedTicket=fresh;updateHeader()}else{selectedTicket=null;showEmpty()}}}
+function renderTickets(){const q=$("ticketSearch").value.trim().toLocaleLowerCase("ru-RU"),sf=$("statusFilter").value,cf=$("categoryFilter").value,filtered=tickets.filter(t=>(sf==="all"||t.status===sf)&&(cf==="all"||t.category===cf)&&(!q||(t.subject+" "+t.user_id+" "+shortId(t.id)+" "+(t.lastMessage?.body||"")).toLocaleLowerCase("ru-RU").includes(q)));
+$("ticketCount").textContent=filtered.length+" / "+tickets.length;$("ticketList").replaceChildren();if(!filtered.length){const e=document.createElement("div");e.className="empty-list";e.textContent=tickets.length?"По выбранным фильтрам ничего не найдено.":"Обращений пока нет. Новые обращения появятся здесь."; $("ticketList").appendChild(e);return}
+filtered.forEach(t=>{const b=document.createElement("button");b.type="button";b.className="ticket"+(selectedTicket?.id===t.id?" active":"");b.setAttribute("aria-pressed",String(selectedTicket?.id===t.id));
+const top=document.createElement("div");top.className="ticket-top";const title=document.createElement("span");title.className="ticket-title";title.textContent=t.subject;const time=document.createElement("span");time.className="ticket-time";time.textContent=formatDate(t.last_message_at||t.created_at);top.append(title,time);
+const preview=document.createElement("div");preview.className="ticket-preview";preview.textContent=t.lastMessage?(t.lastMessage.sender_type==="staff"?"Вы: ":"Пользователь: ")+t.lastMessage.body:"Сообщений пока нет";
+const bottom=document.createElement("div");bottom.className="ticket-bottom";const cat=document.createElement("span");cat.className="ticket-category";cat.textContent=(categoryNames[t.category]||t.category)+" · "+shortId(t.user_id);const st=document.createElement("span");st.className="status "+t.status;st.textContent=statusNames[t.status]||t.status;bottom.append(cat,st);b.append(top,preview,bottom);b.addEventListener("click",()=>openTicket(t.id));$("ticketList").appendChild(b)})}
+function showEmpty(){$("emptyState").hidden=false;$("detailContent").hidden=true}
+function updateHeader(){if(!selectedTicket)return;$("ticketSubject").textContent=selectedTicket.subject;$("ticketCategory").textContent=categoryNames[selectedTicket.category]||selectedTicket.category;$("ticketCreated").textContent="Создано "+formatDate(selectedTicket.created_at,false);$("ticketUserId").textContent=selectedTicket.user_id;$("statusSelect").value=selectedTicket.status;$("birthdayBox").hidden=selectedTicket.category!=="birthday_correction"}
+async function openTicket(id){const t=tickets.find(x=>x.id===id);if(!t)return;selectedTicket=t;renderTickets();$("emptyState").hidden=true;$("detailContent").hidden=false;updateHeader();$("messageList").innerHTML='<div class="loading">Загружаем переписку…</div>';await loadMessages();if(t.category==="birthday_correction")await loadBirthday()}
+async function loadMessages(){if(!selectedTicket)return;const id=selectedTicket.id,{data,error}=await db.from("support_messages").select("id,sender_id,sender_type,body,created_at").eq("conversation_id",id).order("created_at",{ascending:true}).limit(1000);if(error){$("messageList").textContent="Не удалось загрузить сообщения: "+error.message;return}if(selectedTicket?.id!==id)return;messages=data||[];$("messageList").replaceChildren();let prev="";
+if(!messages.length){const e=document.createElement("div");e.className="loading";e.textContent="В этом обращении пока нет сообщений.";$("messageList").appendChild(e)}
+messages.forEach(m=>{const d=new Date(m.created_at),day=d.toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});if(day!==prev){const div=document.createElement("div");div.className="day-divider";div.textContent=day;$("messageList").appendChild(div);prev=day}
+const staff=m.sender_type==="staff",chief=staff&&m.sender_id===staffUser.id,box=document.createElement("article");box.className="message"+(staff?" staff":"")+(chief?" chief":"");const meta=document.createElement("div");meta.className="message-meta";const mark=document.createElement("span");mark.className="role-mark";mark.textContent=chief?"★":staff?"T":"●";const label=document.createElement("span");label.textContent=chief?"Главный специалист":staff?"TEHNOCELL SUPPORT":"Пользователь";const time=document.createElement("time");time.className="message-time";time.dateTime=m.created_at;time.textContent=d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});meta.append(mark,label,time);const body=document.createElement("div");body.className="message-body";body.textContent=m.body;box.append(meta,body);$("messageList").appendChild(box)});
+$("messageList").scrollTop=$("messageList").scrollHeight}
+async function loadBirthday(){if(!selectedTicket)return;const uid=selectedTicket.user_id;$("birthdayMessage").textContent="Проверяем дату…";const {data,error}=await db.from("user_birthdays").select("birth_month,birth_day").eq("user_id",uid).maybeSingle();if(selectedTicket?.user_id!==uid)return;if(error){$("birthdayMessage").textContent="Ошибка чтения: "+error.message;return}if(!data){$("birthdayMessage").textContent="Пользователь ещё не указал дату рождения.";return}setPicker("day",data.birth_day);setPicker("month",data.birth_month);$("birthdayMessage").textContent="Текущая дата: "+data.birth_day+" "+months[data.birth_month-1]+"."}
+function buildPicker(kind){const day=kind==="day",menu=$(day?"bdDayMenu":"bdMonthMenu"),items=day?Array.from({length:31},(_,i)=>[i+1,String(i+1)]):months.map((m,i)=>[i+1,m]);menu.replaceChildren();items.forEach(([v,label])=>{const b=document.createElement("button");b.type="button";b.className="picker-option";b.textContent=label;b.addEventListener("click",()=>{setPicker(kind,v);closePickers()});menu.appendChild(b)})}
+function setPicker(kind,v){const d=kind==="day";$(d?"bdDayLabel":"bdMonthLabel").textContent=v?(d?String(v):months[Number(v)-1]):(d?"Выберите день":"Выберите месяц");$(d?"bdDayTrigger":"bdMonthTrigger").dataset.value=v||""}
+function closePickers(){["day","month"].forEach(k=>{const d=k==="day";$(d?"bdDayMenu":"bdMonthMenu").hidden=true;$(d?"bdDayTrigger":"bdMonthTrigger").setAttribute("aria-expanded","false")})}
+function togglePicker(kind){const d=kind==="day",m=$(d?"bdDayMenu":"bdMonthMenu"),t=$(d?"bdDayTrigger":"bdMonthTrigger"),open=m.hidden;closePickers();m.hidden=!open;t.setAttribute("aria-expanded",String(open))}
+buildPicker("day");buildPicker("month");$("bdDayTrigger").addEventListener("click",()=>togglePicker("day"));$("bdMonthTrigger").addEventListener("click",()=>togglePicker("month"));document.addEventListener("click",e=>{if(!e.target.closest(".picker"))closePickers()});
+$("saveBirthday").addEventListener("click",async()=>{if(!selectedTicket||selectedTicket.category!=="birthday_correction")return;const day=Number($("bdDayTrigger").dataset.value),month=Number($("bdMonthTrigger").dataset.value),max=month===2?29:[4,6,9,11].includes(month)?30:31;if(!day||!month||day>max){$("birthdayMessage").textContent="Проверьте выбранный день и месяц.";return}const b=$("saveBirthday");b.disabled=true;const {error}=await db.from("user_birthdays").update({birth_day:day,birth_month:month}).eq("user_id",selectedTicket.user_id);b.disabled=false;if(error){$("birthdayMessage").textContent="Не удалось сохранить: "+error.message;return}$("birthdayMessage").textContent="Дата исправлена: "+day+" "+months[month-1]+".";toast("Дата рождения исправлена")});
+$("saveStatus").addEventListener("click",async()=>{if(!selectedTicket)return;const next=$("statusSelect").value,b=$("saveStatus");b.disabled=true;const {error}=await db.from("support_conversations").update({status:next}).eq("id",selectedTicket.id);b.disabled=false;if(error){toast("Не удалось изменить статус: "+error.message);return}selectedTicket.status=next;await loadTickets();updateHeader();toast("Статус обновлён")});
+$("markResolved").addEventListener("click",()=>{$("statusSelect").value="resolved";$("saveStatus").click()});
+$("replyForm").addEventListener("submit",async e=>{e.preventDefault();if(!selectedTicket)return;const body=$("replyText").value.trim();if(!body)return;const b=$("sendReply");b.disabled=true;const {error}=await db.from("support_messages").insert({conversation_id:selectedTicket.id,sender_id:staffUser.id,sender_type:"staff",body});b.disabled=false;if(error){toast("Не удалось отправить: "+error.message);return}$("replyText").value="";updateCount();await loadMessages();await loadTickets();toast("Ответ отправлен")});
+document.querySelectorAll("[data-reply]").forEach(b=>b.addEventListener("click",()=>{const a=$("replyText");a.value=a.value?(a.value.trimEnd()+"\n"+b.dataset.reply):b.dataset.reply;updateCount();a.focus()}));
+function updateCount(){$("charCount").textContent=$("replyText").value.length+" / 5000"}$("replyText").addEventListener("input",updateCount);$("replyText").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();$("replyForm").requestSubmit()}});
+$("ticketSearch").addEventListener("input",renderTickets);$("statusFilter").addEventListener("change",renderTickets);$("categoryFilter").addEventListener("change",renderTickets);
+$("refresh").addEventListener("click",async()=>{await loadTickets();if(selectedTicket)await loadMessages();toast("Список обновлён")});
+async function copyText(v){try{await navigator.clipboard.writeText(v);toast("Скопировано")}catch{toast("Не удалось скопировать — выделите текст вручную")}}
+$("copyTicketId").addEventListener("click",()=>selectedTicket&&copyText(selectedTicket.id));$("copyUserId").addEventListener("click",()=>selectedTicket&&copyText(selectedTicket.user_id));
+function startLive(){try{realtimeChannel=db.channel("tehnocell-support-staff").on("postgres_changes",{event:"*",schema:"public",table:"support_conversations"},()=>loadTickets()).on("postgres_changes",{event:"INSERT",schema:"public",table:"support_messages"},p=>{if(selectedTicket&&p.new?.conversation_id===selectedTicket.id)loadMessages();loadTickets()}).subscribe()}catch(e){console.warn("Realtime unavailable",e)}refreshTimer=setInterval(()=>{loadTickets();if(selectedTicket)loadMessages()},45000)}
+async function init(){const fresh=await db.auth.refreshSession();let session=fresh.data?.session||null;if(!session){const cur=await db.auth.getSession();session=cur.data?.session||null}if(!session){location.href="login.html";return}staffUser=session.user;if(staffUser.app_metadata?.support_role!=="staff"){$("denied").hidden=false;return}$("workspace").hidden=false;await loadTickets(false);startLive()}
+window.addEventListener("beforeunload",()=>{if(refreshTimer)clearInterval(refreshTimer);if(realtimeChannel)db.removeChannel(realtimeChannel)});init();
+</script></body></html>
