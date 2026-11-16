@@ -99,7 +99,7 @@
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null, communities=[], memberships=new Set(), currentCommentPost=null, communityFilter="all";
+let currentUser=null, communities=[], memberships=new Set(), memberCounts=new Map(), currentCommentPost=null, communityFilter="all";
 const $=id=>document.getElementById(id);
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showNotice(message){$("notice").textContent=message;$("notice").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}
@@ -126,12 +126,15 @@ async function boot(){
  const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile"].includes(hash))switchPage(hash);
 }
 async function loadCommunities(){
- const [{data:cs,error:cErr},{data:ms,error:mErr}]=await Promise.all([
+ const [{data:cs,error:cErr},{data:ms,error:mErr},{data:allMembers,error:membersErr}]=await Promise.all([
   db.from("tc_communities").select("*").order("created_at",{ascending:false}).limit(100),
-  db.from("tc_community_members").select("community_id").eq("user_id",currentUser.id)
+  db.from("tc_community_members").select("community_id").eq("user_id",currentUser.id),
+  db.from("tc_community_members").select("community_id")
  ]);
- if(cErr||mErr){showNotice("Не удалось загрузить сообщества. "+(cErr?.message||mErr?.message));return;}
- communities=cs||[];memberships=new Set((ms||[]).map(x=>x.community_id));renderCommunities();fillPostCommunity();
+ if(cErr||mErr||membersErr){showNotice("Не удалось загрузить сообщества. "+(cErr?.message||mErr?.message||membersErr?.message));return;}
+ communities=cs||[];memberships=new Set((ms||[]).map(x=>x.community_id));memberCounts=new Map();
+ (allMembers||[]).forEach(x=>memberCounts.set(x.community_id,(memberCounts.get(x.community_id)||0)+1));
+ renderCommunities();fillPostCommunity();
 }
 function renderCommunities(){
  const q=($("communitySearch")?.value||"").trim().toLowerCase();
@@ -139,7 +142,7 @@ function renderCommunities(){
  if(!list.length){$("communityList").innerHTML='<div class="empty">'+(communityFilter==="mine"?"Вы пока не вступили ни в одно сообщество.":"Пока сообществ нет. Создайте первое — оно появится здесь.")+'</div>';return;}
  $("communityList").innerHTML='<div class="community-grid">'+list.map(c=>{
   const owner=c.owner_id===currentUser.id,joined=memberships.has(c.id);
-  return '<article class="community-card"><div class="community-top"><div class="community-mark">'+escapeHtml(c.name.charAt(0).toUpperCase())+'</div><div style="min-width:0"><h3>'+escapeHtml(c.name)+'</h3><div class="community-meta">'+escapeHtml(c.category)+' · '+new Date(c.created_at).toLocaleDateString("ru-RU")+'</div></div></div><p class="community-desc">'+escapeHtml(c.description||"У этого сообщества пока нет описания.")+'</p><div class="community-actions"><span class="tiny">'+(owner?"ВАШЕ СООБЩЕСТВО":joined?"ВЫ УЧАСТНИК":"ОТКРЫТОЕ СООБЩЕСТВО")+'</span>'+(owner?'<button class="secondary-btn" disabled>Владелец</button>':joined?'<button class="secondary-btn" data-leave="'+c.id+'">Выйти</button>':'<button class="primary-btn" data-join="'+c.id+'">Вступить</button>')+'</div></article>';
+  return '<article class="community-card"><div class="community-top"><div class="community-mark">'+escapeHtml(c.name.charAt(0).toUpperCase())+'</div><div style="min-width:0"><h3>'+escapeHtml(c.name)+'</h3><div class="community-meta">'+escapeHtml(c.category)+' · '+(memberCounts.get(c.id)||0)+' участн. · '+new Date(c.created_at).toLocaleDateString("ru-RU")+'</div></div></div><p class="community-desc">'+escapeHtml(c.description||"У этого сообщества пока нет описания.")+'</p><div class="community-actions"><span class="tiny">'+(owner?"ВАШЕ СООБЩЕСТВО":joined?"ВЫ УЧАСТНИК":"ОТКРЫТОЕ СООБЩЕСТВО")+'</span>'+(owner?'<button class="secondary-btn" disabled>Владелец</button>':joined?'<button class="secondary-btn" data-leave="'+c.id+'">Выйти</button>':'<button class="primary-btn" data-join="'+c.id+'">Вступить</button>')+'</div></article>';
  }).join("")+'</div>';
  document.querySelectorAll("[data-join]").forEach(b=>b.addEventListener("click",()=>joinCommunity(b.dataset.join,b)));
  document.querySelectorAll("[data-leave]").forEach(b=>b.addEventListener("click",()=>leaveCommunity(b.dataset.leave,b)));
@@ -159,12 +162,12 @@ $("communityForm").addEventListener("submit",async e=>{
 async function joinCommunity(id,button){
  button.disabled=true;const {error}=await db.from("tc_community_members").insert({community_id:id,user_id:currentUser.id});
  if(error&&error.code!=="23505"){button.disabled=false;showNotice("Не удалось вступить: "+error.message);return;}
- memberships.add(id);renderCommunities();fillPostCommunity();loadHomeCounts();
+ memberships.add(id);memberCounts.set(id,(memberCounts.get(id)||0)+1);renderCommunities();fillPostCommunity();loadHomeCounts();
 }
 async function leaveCommunity(id,button){
  button.disabled=true;const {error}=await db.from("tc_community_members").delete().eq("community_id",id).eq("user_id",currentUser.id);
  if(error){button.disabled=false;showNotice("Не удалось выйти: "+error.message);return;}
- memberships.delete(id);renderCommunities();fillPostCommunity();loadHomeCounts();
+ memberships.delete(id);memberCounts.set(id,Math.max(0,(memberCounts.get(id)||0)-1));renderCommunities();fillPostCommunity();loadHomeCounts();
 }
 function fillPostCommunity(){
  const available=communities.filter(c=>c.owner_id===currentUser.id||memberships.has(c.id));
