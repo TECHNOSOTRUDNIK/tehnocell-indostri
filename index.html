@@ -1219,7 +1219,7 @@ function showLoggedIn(user) {
     metadata.display_name || "Пользователь";
 
   profileLink.href = "account.html";
-  const birthdayActive = user.id === "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a" && Date.now() < Date.parse("2026-11-17T16:01:22+03:00");
+  const birthdayActive = user.id === "b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a" && Date.now() < Date.parse("2026-11-17T00:00:00+03:00");
   profileLink.classList.toggle("birthday-account-glow", birthdayActive);
   profileName.textContent = displayName;
 
