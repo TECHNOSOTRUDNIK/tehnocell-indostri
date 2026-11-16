@@ -30,6 +30,22 @@
 @media(max-width:900px){.layout{grid-template-columns:205px minmax(0,1fr)}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.feed-layout{grid-template-columns:1fr}.feed-aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 @media(max-width:650px){.layout{display:block}.sidebar{display:none}.main{padding:19px 14px calc(90px + env(safe-area-inset-bottom))}.topbar{margin-bottom:25px}.top-actions .top-btn:first-child{display:none}.page-title{font-size:28px}.welcome{padding:19px;margin-bottom:20px}.welcome:after{right:3px;font-size:110px}.service-grid{gap:8px}.service{min-height:140px;padding:13px}.community-grid{grid-template-columns:1fr}.feed-aside{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:30;display:grid;grid-template-columns:repeat(6,1fr);left:9px;right:9px;bottom:calc(8px + env(safe-area-inset-bottom));padding:6px;background:rgba(20,20,20,.97);border:1px solid #333;border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 8px 35px #0009}.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;color:#888;font-size:8px}.mobile-nav a.active{color:#fff}.mobile-nav b{font-size:16px;font-weight:500}.toolbar{gap:7px}.search{flex-basis:100%}.topbar{align-items:center}.crumb{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Социальные функции */
+.verified-badge{display:inline-grid;place-items:center;width:15px;height:15px;margin-left:5px;border-radius:50%;background:#2588ff;color:#fff;font-size:10px;font-weight:900;vertical-align:middle;box-shadow:0 0 0 2px #111}
+.person-profile-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:17px}
+.social-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.social-box{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:15px;min-width:0}
+.social-box h3{font-size:12px;margin:0 0 12px}
+.social-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #252525}
+.social-row:last-child{border-bottom:0}
+.social-row .search-person-avatar{width:37px;height:37px;flex-basis:37px}
+.social-row-copy{flex:1;min-width:0}
+.social-row-name{font-size:11px;font-weight:750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.social-row-meta{font-size:9px;color:#888;margin-top:4px}
+.social-row-actions{display:flex;gap:5px;flex-wrap:wrap}
+.social-empty{font-size:10px;color:#777;line-height:1.6;padding:7px 0}
+@media(max-width:650px){.social-grid{grid-template-columns:1fr}.person-profile-actions>*{flex:1}}
 </style>
 </head>
 <body>
@@ -86,6 +102,11 @@
 <section class="page" id="page-profile">
 <div class="eyebrow">ВАШ TEHNOCELL ID</div><h1 class="page-title">Профиль</h1><p class="page-subtitle">Единый аккаунт для сервисов и общения внутри экосистемы.</p>
 <div class="panel profile-panel"><div class="avatar" id="mainAvatar">T</div><div style="min-width:0;flex:1"><strong id="profileName">Загружаем профиль…</strong><small id="profileEmail"></small></div><a class="top-btn" href="account-user.html" id="profileManage">Настройки ID ↗</a></div>
+<div class="section-head"><h2>Социальный профиль</h2><span>ЛЮДИ TEHNOCELL</span></div>
+<div class="social-grid">
+ <div class="social-box"><h3>Входящие заявки <span id="incomingCount" class="tiny"></span></h3><div id="incomingRequests"><div class="loading">Загрузка…</div></div></div>
+ <div class="social-box"><h3>Мои друзья <span id="friendsCount" class="tiny"></span></h3><div id="friendsList"><div class="loading">Загрузка…</div></div></div>
+</div>
 <div class="section-head"><h2>Аккаунт</h2></div><div class="panel"><p>Имя, описание профиля, фотография и настройки безопасности управляются через TEHNOCELL ID.</p><a class="panel-link" href="account-user.html" id="profileManage2">Открыть личный кабинет →</a></div>
 </section>
 </main></div>
@@ -105,13 +126,13 @@ const $=id=>document.getElementById(id);
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function showNotice(message){$("notice").textContent=message;$("notice").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}
 function avatarMarkup(name,path){if(path){const {data}=db.storage.from("profile-avatars").getPublicUrl(path);return '<img src="'+escapeHtml(data.publicUrl)+'" alt="">';}return escapeHtml((name||"T").charAt(0).toUpperCase());}
-function switchPage(name){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
+function switchPage(name){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
 
 let globalSearchTimer=null, globalSearchToken=0;
 function searchText(value){return String(value||"").replace(/[\\%_]/g," ").replace(/[(),]/g," ").trim().slice(0,70);}
 function personAvatar(person){return '<div class="search-person-avatar">'+avatarMarkup(person.display_name||person.username||"Пользователь",person.avatar_path)+'</div>';}
-function renderPerson(person){const name=person.display_name||"Пользователь";const handle=person.username?"@"+person.username:"Участник TEHNOCELL";return '<button type="button" class="search-person" data-profile="'+escapeHtml(person.id)+'">'+personAvatar(person)+'<span class="search-person-copy"><span class="search-person-name">'+escapeHtml(name)+'</span><span class="search-person-handle">'+escapeHtml(handle)+'</span>'+(person.bio?'<span class="search-person-bio">'+escapeHtml(person.bio.slice(0,90))+'</span>':'')+'</span><span class="search-person-arrow">›</span></button>';}
+function renderPerson(person){const name=person.display_name||"Пользователь";const handle=person.username?"@"+person.username:"Участник TEHNOCELL";return '<button type="button" class="search-person" data-profile="'+escapeHtml(person.id)+'">'+personAvatar(person)+'<span class="search-person-copy"><span class="search-person-name">'+escapeHtml(name)+verifiedBadge(person.id)+'</span><span class="search-person-handle">'+escapeHtml(handle)+'</span>'+(person.bio?'<span class="search-person-bio">'+escapeHtml(person.bio.slice(0,90))+'</span>':'')+'</span><span class="search-person-arrow">›</span></button>';}
 function showSearchMessage(message){$("globalSearchResults").hidden=false;$("globalSearchResults").innerHTML='<div class="search-empty">'+escapeHtml(message)+'</div>';}
 async function loadPeopleSearch(){
  const input=$("globalSearch"),box=$("globalSearchResults"),term=searchText(input.value),token=++globalSearchToken;
@@ -140,7 +161,22 @@ async function openPersonProfile(id){
  const {data,error}=await db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,created_at").eq("id",id).maybeSingle();
  if(error||!data){$("personProfileContent").innerHTML='<div class="empty">Не удалось открыть профиль.</div>';return;}
  const name=data.display_name||"Пользователь";
- $("personProfileContent").innerHTML='<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+'</h2><div>'+(data.username?"@"+escapeHtml(data.username):"Участник TEHNOCELL")+'</div></div></div>'+(data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div><div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div>';
+ let action="";
+ if(id===currentUser.id){action='<a class="secondary-btn" href="'+(isVerified(id)?"account.html":"account-user.html")+'">Настройки профиля</a>';}
+ else{
+  const {data:rows}=await db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).in("status",["pending","accepted"]).limit(100);
+  const relation=(rows||[]).find(r=>(r.sender_id===currentUser.id&&r.receiver_id===id)||(r.sender_id===id&&r.receiver_id===currentUser.id));
+  if(relation?.status==="accepted") action='<button class="secondary-btn" data-remove-friend="'+relation.id+'">Удалить из друзей</button><span class="tiny">Вы друзья</span>';
+  else if(relation?.status==="pending"&&relation.sender_id===currentUser.id) action='<button class="secondary-btn" disabled>Заявка отправлена</button><button class="secondary-btn" data-cancel-request="'+relation.id+'">Отменить</button>';
+  else if(relation?.status==="pending") action='<button class="primary-btn" data-accept-request="'+relation.id+'">Принять заявку</button><button class="secondary-btn" data-decline-request="'+relation.id+'">Отклонить</button>';
+  else action='<button class="primary-btn" data-send-friend="'+id+'">＋ Добавить в друзья</button>';
+ }
+ $("personProfileContent").innerHTML='<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+verifiedBadge(data.id)+'</h2><div>'+(data.username?"@"+escapeHtml(data.username):"Участник TEHNOCELL")+'</div></div></div>'+(data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div><div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div>';
+ $("personProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
+ $("personProfileContent").querySelectorAll("[data-accept-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.acceptRequest,"accepted",id)));
+ $("personProfileContent").querySelectorAll("[data-decline-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.declineRequest,"declined",id)));
+ $("personProfileContent").querySelectorAll("[data-cancel-request]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.cancelRequest,id)));
+ $("personProfileContent").querySelectorAll("[data-remove-friend]").forEach(b=>b.addEventListener("click",()=>removeFriend(b.dataset.removeFriend,id)));
 }
 function openModal(id){$(id).classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(id){$(id).classList.remove("open");document.body.style.overflow="";}
@@ -155,10 +191,13 @@ async function boot(){
  const path=currentUser.user_metadata?.avatar_path;
  $("greetingName").textContent=name;$("sideName").textContent=name;$("profileName").textContent=name;$("profileEmail").textContent=currentUser.email||"";
  $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);
- const staff=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
+ const VERIFIED_TEAM=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
+function isVerified(id){return VERIFIED_TEAM.includes(id);}
+function verifiedBadge(id){return isVerified(id)?'<span class="verified-badge" title="Подтверждённая команда TEHNOCELL" aria-label="Подтверждённая команда TEHNOCELL">✓</span>':"";}
+const staff=VERIFIED_TEAM;
  const account=staff.includes(currentUser.id)?"account.html":"account-user.html";
  $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
- await Promise.all([loadCommunities(),loadHomeCounts()]);
+ await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial()]);
  const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile"].includes(hash))switchPage(hash);
 }
 async function loadCommunities(){
@@ -265,13 +304,57 @@ $("modalCommentForm").addEventListener("submit",async e=>{
  if(error){$("commentStatus").textContent="Ошибка: "+error.message;return;}
  $("modalCommentText").value="";$("commentStatus").textContent="Комментарий опубликован.";openComments(currentCommentPost);loadFeed();
 });
+
+async function loadSocial(){
+ if(!currentUser)return;
+ $("incomingRequests").innerHTML='<div class="loading">Загружаем…</div>';
+ $("friendsList").innerHTML='<div class="loading">Загружаем…</div>';
+ const {data:rows,error}=await db.from("tc_friend_requests").select("id,sender_id,receiver_id,status,created_at").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).in("status",["pending","accepted"]).order("created_at",{ascending:false}).limit(200);
+ if(error){$("incomingRequests").innerHTML='<div class="social-empty">Не удалось загрузить заявки.</div>';$("friendsList").innerHTML='<div class="social-empty">Не удалось загрузить друзей.</div>';return;}
+ const incoming=rows.filter(r=>r.receiver_id===currentUser.id&&r.status==="pending");
+ const friends=rows.filter(r=>r.status==="accepted");
+ $("incomingCount").textContent=incoming.length?"· "+incoming.length:"";
+ $("friendsCount").textContent=friends.length?"· "+friends.length:"";
+ const ids=[...new Set(rows.map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id))];
+ const {data:people}=ids.length?await db.from("profiles").select("id,display_name,username,avatar_path").in("id",ids):{data:[]};
+ const pm=new Map((people||[]).map(p=>[p.id,p]));
+ const rowMarkup=(p,sub,buttons="")=>'<div class="social-row"><div class="search-person-avatar">'+avatarMarkup(p?.display_name||"Пользователь",p?.avatar_path)+'</div><div class="social-row-copy"><div class="social-row-name">'+escapeHtml(p?.display_name||"Участник")+verifiedBadge(p?.id)+'</div><div class="social-row-meta">'+escapeHtml(sub)+'</div></div>'+buttons+'</div>';
+ $("incomingRequests").innerHTML=incoming.length?incoming.map(r=>{const p=pm.get(r.sender_id)||{};return rowMarkup(p,"Хочет добавить вас",'<div class="social-row-actions"><button class="primary-btn" data-social-accept="'+r.id+'">Принять</button><button class="secondary-btn" data-social-decline="'+r.id+'">×</button></div>');}).join(""):'<div class="social-empty">Новых заявок пока нет.</div>';
+ $("friendsList").innerHTML=friends.length?friends.map(r=>{const id=r.sender_id===currentUser.id?r.receiver_id:r.sender_id,p=pm.get(id)||{};return '<button type="button" class="social-row" data-profile="'+id+'" style="width:100%;border:0;background:transparent;color:inherit;text-align:left">'+ '<div class="search-person-avatar">'+avatarMarkup(p.display_name||"Пользователь",p.avatar_path)+'</div><div class="social-row-copy"><div class="social-row-name">'+escapeHtml(p.display_name||"Участник")+verifiedBadge(id)+'</div><div class="social-row-meta">Друг TEHNOCELL</div></div><span class="tiny">Открыть ›</span></button>';}).join(""):'<div class="social-empty">Пока нет друзей. Найдите людей через поиск вверху и отправьте заявку.</div>';
+ document.querySelectorAll("[data-social-accept]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.socialAccept,"accepted")));
+ document.querySelectorAll("[data-social-decline]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.socialDecline,"declined")));
+ $("friendsList").querySelectorAll("[data-profile]").forEach(b=>b.addEventListener("click",()=>openPersonProfile(b.dataset.profile)));
+}
+async function sendFriendRequest(id){
+ const {error}=await db.from("tc_friend_requests").insert({sender_id:currentUser.id,receiver_id:id,status:"pending"});
+ if(error){showNotice(error.code==="23505"?"Заявка или дружба с этим человеком уже существует.":"Не удалось отправить заявку: "+error.message);return;}
+ showNotice("Заявка в друзья отправлена.");await loadSocial();await openPersonProfile(id);
+}
+async function updateFriendRequest(id,status,profileId){
+ const {error}=await db.from("tc_friend_requests").update({status}).eq("id",id);
+ if(error){showNotice("Не удалось обновить заявку: "+error.message);return;}
+ await loadSocial();if(profileId)await openPersonProfile(profileId);else showNotice(status==="accepted"?"Теперь вы друзья.":"Заявка отклонена.");
+}
+async function cancelFriendRequest(id,profileId){
+ const {error}=await db.from("tc_friend_requests").delete().eq("id",id);
+ if(error){showNotice("Не удалось отменить заявку: "+error.message);return;}
+ await loadSocial();await openPersonProfile(profileId);
+}
+async function removeFriend(id,profileId){
+ const {error}=await db.from("tc_friend_requests").delete().eq("id",id);
+ if(error){showNotice("Не удалось удалить из друзей: "+error.message);return;}
+ showNotice("Пользователь удалён из друзей.");await loadSocial();await openPersonProfile(profileId);
+}
+
 async function loadNotifications(){
  $("notificationList").innerHTML='<div class="loading">Загружаем уведомления…</div>';
  const {data:rows,error}=await db.from("tc_notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(50);
  if(error){$("notificationList").innerHTML='<div class="empty">Не удалось загрузить уведомления: '+escapeHtml(error.message)+'</div>';return;}
  if(!rows?.length){$("notificationList").innerHTML='<div class="empty">Пока нет новых событий. Здесь появятся уведомления о реакциях и комментариях.</div>';return;}
  const ids=[...new Set(rows.map(x=>x.actor_id).filter(Boolean))];const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name").in("id",ids):{data:[]};const names=new Map((profiles||[]).map(x=>[x.id,x.display_name]));
- $("notificationList").innerHTML='<div class="panel">'+rows.map(n=>'<div class="notification '+(!n.read_at?"unread":"")+'"><div class="notification-mark">'+(n.kind==="like"?"♡":"↳")+'</div><div class="notification-copy"><strong>'+escapeHtml(names.get(n.actor_id)||"Участник")+'</strong> '+(n.kind==="like"?"оценил(а) вашу публикацию":"оставил(а) комментарий к вашей публикации")+'<small>'+new Date(n.created_at).toLocaleString("ru-RU")+'</small></div><button class="secondary-btn" data-read="'+n.id+'" '+(n.read_at?"disabled":"")+'> '+(n.read_at?"Просмотрено":"Отметить")+' </button></div>').join("")+'</div>';
+ const noticeText=n=>n.kind==="like"?"оценил(а) вашу публикацию":n.kind==="comment"?"оставил(а) комментарий к вашей публикации":n.kind==="friend_request"?"отправил(а) вам заявку в друзья":"принял(а) вашу заявку в друзья";
+ const noticeIcon=n=>n.kind==="like"?"♡":n.kind==="comment"?"↳":n.kind==="friend_request"?"＋":"✓";
+ $("notificationList").innerHTML='<div class="panel">'+rows.map(n=>'<div class="notification '+(!n.read_at?"unread":"")+'"><div class="notification-mark">'+noticeIcon(n)+'</div><div class="notification-copy"><strong>'+escapeHtml(names.get(n.actor_id)||"Участник")+'</strong> '+noticeText(n)+'<small>'+new Date(n.created_at).toLocaleString("ru-RU")+'</small></div><button class="secondary-btn" data-read="'+n.id+'" '+(n.read_at?"disabled":"")+'> '+(n.read_at?"Просмотрено":"Отметить")+' </button></div>').join("")+'</div>';
  document.querySelectorAll("[data-read]").forEach(b=>b.addEventListener("click",async()=>{b.disabled=true;const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.read).eq("user_id",currentUser.id);if(error){b.disabled=false;showNotice("Не удалось отметить уведомление.");return;}loadNotifications();loadHomeCounts();}));
 }
 async function loadHomeCounts(){
