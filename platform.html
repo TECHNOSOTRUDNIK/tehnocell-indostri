@@ -1,113 +1,251 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090909">
-<title>TEHNOCELL — Платформа</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090909"><title>TEHNOCELL — Платформа</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{color-scheme:dark;--bg:#090909;--surface:#121212;--surface2:#181818;--line:#292929;--text:#f5f5f5;--muted:#888;--white:#fff}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}body{min-height:100vh}a{color:inherit;text-decoration:none}button{font:inherit}
-.layout{min-height:100vh;display:grid;grid-template-columns:248px minmax(0,1fr)}
-.sidebar{position:sticky;top:0;height:100vh;padding:25px 17px;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#0c0c0c}
+:root{color-scheme:dark;--bg:#090909;--surface:#121212;--surface2:#191919;--line:#292929;--text:#f5f5f5;--muted:#888;--soft:#bcbcbc;--white:#fff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}body{min-height:100vh}button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+.layout{min-height:100vh;display:grid;grid-template-columns:238px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;padding:24px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;background:#0c0c0c}
 .brand{display:flex;align-items:center;gap:11px;padding:0 9px 29px}.brand-mark{width:38px;height:38px;border:1px solid #555;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:19px}.brand-name{font-size:13px;font-weight:850;letter-spacing:1.3px}.brand-name small{display:block;color:#777;font-size:8px;letter-spacing:2.5px;margin-top:4px}
-.nav-label{padding:10px 11px;color:#656565;font-size:9px;font-weight:800;letter-spacing:1.8px}
-.nav{display:grid;gap:5px}.nav a,.nav button{width:100%;border:0;background:transparent;color:#999;text-align:left;padding:12px 13px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:12px;cursor:pointer}.nav a.active,.nav button.active{background:#f2f2f2;color:#111;font-weight:750}.nav .ico{width:19px;text-align:center;font-size:15px}
-.sidebar-bottom{margin-top:auto}.mini-profile{display:flex;align-items:center;gap:10px;padding:12px 9px;border-top:1px solid var(--line);margin-top:14px}.avatar{width:36px;height:36px;border-radius:50%;background:#292929;display:grid;place-items:center;overflow:hidden;flex:0 0 36px;font-size:13px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}.mini-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini-sub{font-size:10px;color:#777;margin-top:4px}
-.main{min-width:0;max-width:1180px;width:100%;margin:0 auto;padding:30px clamp(18px,4vw,54px) 70px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:38px}.crumb{color:#777;font-size:11px;letter-spacing:1px}.top-actions{display:flex;gap:9px}.top-btn{border:1px solid var(--line);background:#121212;color:#ddd;padding:9px 13px;border-radius:9px;font-size:11px}
-.greeting{margin-bottom:29px}.eyebrow{font-size:9px;letter-spacing:2px;color:#777;font-weight:800}.greeting h1{font-size:clamp(28px,4vw,42px);letter-spacing:-1.8px;margin:11px 0 8px}.greeting p{margin:0;color:#888;font-size:13px;line-height:1.65}
-.welcome{border:1px solid #333;border-radius:18px;background:radial-gradient(ellipse at 90% 0%,#292929 0,transparent 48%),linear-gradient(125deg,#1b1b1b,#101010 65%);padding:25px 26px;margin-bottom:28px;position:relative;overflow:hidden}.welcome:after{content:"T";position:absolute;right:28px;top:-27px;font-size:150px;font-weight:900;color:#ffffff08;pointer-events:none}.welcome-tag{font-size:9px;letter-spacing:2px;color:#aaa}.welcome h2{font-size:21px;margin:13px 0 8px;letter-spacing:-.5px}.welcome p{max-width:580px;color:#aaa;font-size:12px;line-height:1.7;margin:0}
-.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:31px 0 14px}.section-head h2{font-size:16px;margin:0}.section-head span{font-size:10px;color:#777}
-.service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.service{min-height:155px;padding:18px;border:1px solid var(--line);border-radius:14px;background:var(--surface);display:flex;flex-direction:column;transition:border-color .2s,transform .2s}.service:hover{border-color:#777;transform:translateY(-2px)}.service-icon{width:34px;height:34px;border-radius:10px;background:#eee;color:#111;display:grid;place-items:center;font-size:12px;font-weight:900;margin-bottom:17px}.service h3{font-size:14px;margin:0 0 7px}.service p{font-size:11px;line-height:1.55;color:#858585;margin:0}.service-state{margin-top:auto;padding-top:15px;font-size:8px;letter-spacing:1.1px;color:#777;font-weight:800}
-.activity-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:19px}.panel h3{font-size:13px;margin:0 0 8px}.panel p{font-size:11px;color:#858585;line-height:1.65;margin:0}.empty{border:1px dashed #333;border-radius:10px;padding:17px;margin-top:14px;color:#777;font-size:11px;line-height:1.6}
-.profile-card{display:flex;align-items:center;gap:13px}.profile-card .avatar{width:49px;height:49px;flex-basis:49px}.profile-card strong{font-size:13px}.profile-card small{display:block;color:#777;font-size:10px;margin-top:5px;overflow-wrap:anywhere}
+.nav-label{padding:10px 11px;color:#656565;font-size:9px;font-weight:800;letter-spacing:1.8px}.nav{display:grid;gap:5px}.nav a,.nav button{width:100%;border:0;background:transparent;color:#999;text-align:left;padding:12px 13px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:12px}.nav a.active,.nav button.active{background:#f2f2f2;color:#111;font-weight:750}.nav .ico{width:19px;text-align:center;font-size:15px}
+.sidebar-bottom{margin-top:auto}.mini-profile{display:flex;align-items:center;gap:10px;padding:12px 9px;border-top:1px solid var(--line);margin-top:14px}.avatar{width:37px;height:37px;border-radius:50%;background:#292929;display:grid;place-items:center;overflow:hidden;flex:0 0 37px;font-size:13px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}.mini-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini-sub{font-size:10px;color:#777;margin-top:4px}
+.main{min-width:0;max-width:1150px;width:100%;margin:0 auto;padding:28px clamp(16px,4vw,50px) 70px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:30px}.crumb{color:#777;font-size:10px;letter-spacing:1px}.top-actions{display:flex;gap:8px}.top-btn,.secondary-btn{border:1px solid var(--line);background:#121212;color:#ddd;padding:9px 13px;border-radius:9px;font-size:11px}.primary-btn{border:1px solid #eee;background:#f2f2f2;color:#111;padding:11px 15px;border-radius:10px;font-size:11px;font-weight:800}.primary-btn:disabled,.secondary-btn:disabled{opacity:.5;cursor:wait}
+.notice{display:none;margin:0 0 17px;padding:12px 14px;border:1px solid #574646;border-radius:10px;color:#e2caca;background:#211616;font-size:12px;line-height:1.6}
+.page{display:none}.page.active{display:block}.eyebrow{font-size:9px;letter-spacing:2px;color:#777;font-weight:800}.page-title{font-size:clamp(26px,4vw,38px);letter-spacing:-1.4px;margin:10px 0 7px}.page-subtitle{color:#888;font-size:12px;line-height:1.65;margin:0 0 24px}
+.welcome{border:1px solid #333;border-radius:17px;background:radial-gradient(ellipse at 90% 0%,#292929 0,transparent 48%),linear-gradient(125deg,#1b1b1b,#101010 65%);padding:23px 24px;margin-bottom:25px;position:relative;overflow:hidden}.welcome:after{content:"T";position:absolute;right:25px;top:-30px;font-size:145px;font-weight:900;color:#ffffff08;pointer-events:none}.welcome-tag{font-size:9px;letter-spacing:2px;color:#aaa}.welcome h2{font-size:20px;margin:12px 0 7px;letter-spacing:-.5px}.welcome p{max-width:570px;color:#aaa;font-size:12px;line-height:1.7;margin:0}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 13px}.section-head h2{font-size:15px;margin:0}.section-head span{font-size:9px;color:#777;letter-spacing:1px}
+.service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.service{min-height:145px;padding:16px;border:1px solid var(--line);border-radius:13px;background:var(--surface);display:flex;flex-direction:column;transition:border-color .2s,transform .2s}.service:hover{border-color:#777;transform:translateY(-2px)}.service-icon{width:32px;height:32px;border-radius:9px;background:#eee;color:#111;display:grid;place-items:center;font-size:12px;font-weight:900;margin-bottom:14px}.service h3{font-size:13px;margin:0 0 6px}.service p{font-size:10px;line-height:1.55;color:#858585;margin:0}.service-state{margin-top:auto;padding-top:13px;font-size:8px;letter-spacing:1px;color:#777;font-weight:800}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:16px 0}.search{min-width:0;flex:1;background:#111;border:1px solid #303030;border-radius:10px;padding:12px 14px;color:#fff;font-size:12px;outline:none}.search:focus,.field:focus,.textarea:focus{border-color:#888}.filter-btn{border:1px solid var(--line);background:#121212;color:#999;border-radius:9px;padding:10px 12px;font-size:10px}.filter-btn.active{background:#eee;color:#111;border-color:#eee}
+.community-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.community-card,.post-card,.panel{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:17px;min-width:0}.community-top{display:flex;align-items:center;gap:11px}.community-mark{width:39px;height:39px;display:grid;place-items:center;background:#252525;border:1px solid #383838;border-radius:12px;font-size:13px;font-weight:900;flex:0 0 39px}.community-card h3{font-size:13px;margin:0 0 5px;overflow-wrap:anywhere}.community-meta{font-size:9px;color:#777}.community-desc{font-size:11px;line-height:1.6;color:#999;margin:13px 0 15px;min-height:35px;overflow-wrap:anywhere}.community-actions{display:flex;align-items:center;justify-content:space-between;gap:8px}.tiny{font-size:9px;color:#777}
+.feed-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:start}.feed-column{min-width:0}.composer{padding:15px;border:1px solid var(--line);border-radius:14px;background:#111;display:flex;align-items:center;gap:12px;margin-bottom:13px}.composer-avatar{width:36px;height:36px;border-radius:50%;background:#252525;display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 36px}.composer-prompt{flex:1;min-width:0;text-align:left;border:1px solid #303030;background:#171717;color:#888;border-radius:10px;padding:11px 13px;font-size:11px}
+.post-card{margin-bottom:11px}.post-head{display:flex;align-items:center;gap:10px}.post-author{font-size:11px;font-weight:750}.post-detail{font-size:9px;color:#777;margin-top:4px}.post-community{color:#bbb}.post-body{font-size:12px;line-height:1.75;color:#e5e5e5;white-space:pre-wrap;overflow-wrap:anywhere;margin:15px 0}.post-actions{display:flex;align-items:center;gap:8px;border-top:1px solid #282828;padding-top:11px}.post-action{border:0;background:transparent;color:#888;font-size:10px;padding:6px 8px;border-radius:7px}.post-action.active{color:#fff;background:#282828}.post-action:last-child{margin-left:auto}.comments-box{display:none;border-top:1px solid #282828;margin-top:12px;padding-top:12px}.comments-box.open{display:block}.comment-row{font-size:10px;line-height:1.6;color:#bbb;padding:7px 0;border-bottom:1px solid #242424}.comment-row strong{color:#eee;margin-right:5px}.comment-form{display:flex;gap:7px;margin-top:10px}.comment-form input{flex:1;min-width:0}
+.panel h3{font-size:12px;margin:0 0 8px}.panel p{font-size:10px;color:#888;line-height:1.65;margin:0}.panel-link{display:block;margin-top:12px;color:#ddd;font-size:10px}
+.empty{border:1px dashed #333;border-radius:11px;padding:20px;color:#777;font-size:11px;line-height:1.7;text-align:center}.loading{color:#888;font-size:12px;padding:25px 0}.profile-panel{display:flex;align-items:center;gap:13px}.profile-panel .avatar{width:50px;height:50px;flex-basis:50px}.profile-panel strong{font-size:13px}.profile-panel small{display:block;color:#777;font-size:10px;margin-top:5px;overflow-wrap:anywhere}
+.notification{display:flex;align-items:flex-start;gap:11px;padding:14px 0;border-bottom:1px solid #252525}.notification.unread{background:#151515;margin:0 -10px;padding:14px 10px;border-radius:8px}.notification-mark{width:30px;height:30px;border-radius:9px;background:#252525;display:grid;place-items:center;font-size:12px;flex:0 0 30px}.notification-copy{font-size:11px;line-height:1.6;color:#bbb;flex:1}.notification-copy strong{color:#fff}.notification-copy small{display:block;color:#777;font-size:9px;margin-top:4px}
+.modal-backdrop{position:fixed;inset:0;z-index:1000;background:#000b;display:none;align-items:center;justify-content:center;padding:16px}.modal-backdrop.open{display:flex}.modal{width:min(100%,480px);max-height:min(88dvh,720px);overflow:auto;border:1px solid #3b3b3b;border-radius:18px;background:#121212;padding:21px;box-shadow:0 20px 80px #000b}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}.modal-head h2{font-size:17px;margin:0}.close-btn{border:1px solid #333;border-radius:9px;background:#1c1c1c;color:#aaa;width:33px;height:33px}.field-label{display:block;font-size:10px;color:#999;margin:13px 0 7px}.field,.textarea,.select{display:block;width:100%;border:1px solid #333;border-radius:10px;background:#090909;color:#f4f4f4;padding:12px;font-size:12px;outline:none}.textarea{min-height:120px;resize:vertical;line-height:1.6}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.modal-status{font-size:10px;color:#999;line-height:1.6;margin-top:10px;min-height:14px}
 .mobile-nav{display:none}
-.loading{color:#888;font-size:13px;padding:35px 0}.notice{display:none;margin:0 0 20px;padding:13px 15px;border:1px solid #574646;border-radius:10px;color:#e2caca;background:#211616;font-size:12px;line-height:1.6}
-@media(max-width:900px){.layout{grid-template-columns:210px minmax(0,1fr)}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:650px){.layout{display:block}.sidebar{display:none}.main{padding:21px 16px calc(90px + env(safe-area-inset-bottom))}.topbar{margin-bottom:29px}.top-actions .top-btn:first-child{display:none}.greeting{margin-bottom:22px}.welcome{padding:21px;margin-bottom:22px}.welcome:after{right:5px;font-size:115px}.service-grid{gap:9px}.service{min-height:150px;padding:15px}.activity-grid{grid-template-columns:1fr}.section-head{margin-top:26px}.mobile-nav{position:fixed;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);left:10px;right:10px;bottom:calc(9px + env(safe-area-inset-bottom));padding:7px;background:rgba(20,20,20,.96);border:1px solid #333;border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 8px 35px #0009}.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;color:#888;font-size:8px}.mobile-nav a.active{color:#fff}.mobile-nav b{font-size:16px;font-weight:500}.topbar{align-items:center}.crumb{font-size:9px}}
+@media(max-width:900px){.layout{grid-template-columns:205px minmax(0,1fr)}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.feed-layout{grid-template-columns:1fr}.feed-aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+@media(max-width:650px){.layout{display:block}.sidebar{display:none}.main{padding:19px 14px calc(90px + env(safe-area-inset-bottom))}.topbar{margin-bottom:25px}.top-actions .top-btn:first-child{display:none}.page-title{font-size:28px}.welcome{padding:19px;margin-bottom:20px}.welcome:after{right:3px;font-size:110px}.service-grid{gap:8px}.service{min-height:140px;padding:13px}.community-grid{grid-template-columns:1fr}.feed-aside{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);left:9px;right:9px;bottom:calc(8px + env(safe-area-inset-bottom));padding:6px;background:rgba(20,20,20,.97);border:1px solid #333;border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 8px 35px #0009}.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;color:#888;font-size:8px}.mobile-nav a.active{color:#fff}.mobile-nav b{font-size:16px;font-weight:500}.toolbar{gap:7px}.search{flex-basis:100%}.topbar{align-items:center}.crumb{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div class="layout">
 <aside class="sidebar">
-  <a class="brand" href="platform.html"><span class="brand-mark">T</span><span class="brand-name">TEHNOCELL<small>INDOSTRI PLATFORM</small></span></a>
-  <div class="nav-label">ПРОСТРАНСТВО</div>
-  <nav class="nav">
-    <a class="active" href="platform.html"><span class="ico">⌂</span>Главная</a>
-    <a href="#communities" data-coming><span class="ico">◫</span>Сообщества</a>
-    <a href="#messages" data-coming><span class="ico">▤</span>Сообщения</a>
-    <a href="#notifications" data-coming><span class="ico">♧</span>Уведомления</a>
-  </nav>
-  <div class="nav-label" style="margin-top:20px">АККАУНТ</div>
-  <nav class="nav"><a href="account.html"><span class="ico">◎</span>TEHNOCELL ID</a><a href="index.html"><span class="ico">↗</span>Сайт компании</a></nav>
-  <div class="sidebar-bottom"><div class="mini-profile"><div class="avatar" id="sideAvatar">T</div><div style="min-width:0"><div class="mini-name" id="sideName">Загрузка…</div><div class="mini-sub">TEHNOCELL ID</div></div></div></div>
+<a class="brand" href="platform.html"><span class="brand-mark">T</span><span class="brand-name">TEHNOCELL<small>INDOSTRI PLATFORM</small></span></a>
+<div class="nav-label">ПРОСТРАНСТВО</div>
+<nav class="nav">
+<a href="#home" data-page="home" class="active"><span class="ico">⌂</span>Главная</a>
+<a href="#feed" data-page="feed"><span class="ico">▤</span>Лента</a>
+<a href="#communities" data-page="communities"><span class="ico">◫</span>Сообщества</a>
+<a href="#messages" data-page="messages"><span class="ico">✉</span>Сообщения</a>
+<a href="#notifications" data-page="notifications"><span class="ico">♧</span>Уведомления <span id="unreadBadge" style="margin-left:auto;color:#fff"></span></a>
+<div class="nav-label" style="margin-top:13px">АККАУНТ</div>
+<a href="#profile" data-page="profile"><span class="ico">◎</span>Профиль</a>
+<a href="index.html"><span class="ico">↗</span>Сайт компании</a>
+</nav>
+<div class="sidebar-bottom"><div class="mini-profile"><div class="avatar" id="sideAvatar">T</div><div style="min-width:0"><div class="mini-name" id="sideName">Загрузка…</div><div class="mini-sub">TEHNOCELL ID</div></div></div></div>
 </aside>
 <main class="main">
-  <div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="account.html">Мой аккаунт</a></div></div>
-  <div class="notice" id="notice"></div>
-  <div class="greeting"><div class="eyebrow">ЕДИНОЕ ЦИФРОВОЕ ПРОСТРАНСТВО</div><h1>Добро пожаловать, <span id="greetingName">...</span></h1><p>Здесь постепенно объединяются общение, сообщества и сервисы TEHNOCELL.</p></div>
-  <section class="welcome"><div class="welcome-tag">TEHNOCELL PLATFORM / 001</div><h2>Всё важное — в одном пространстве.</h2><p>Начинаем с простого и понятного центра. Новые возможности будут появляться постепенно — без перегруза и лишних элементов.</p></section>
-  <div class="section-head"><h2>Сервисы TEHNOCELL</h2><span>ВАШЕ ЦИФРОВОЕ ПРОСТРАНСТВО</span></div>
-  <div class="service-grid">
-    <a class="service" href="ennie.html"><div class="service-icon">E</div><h3>ENNIE</h3><p>Ваш интеллектуальный помощник TEHNOCELL.</p><span class="service-state">ОТКРЫТЬ СЕРВИС ↗</span></a>
-    <a class="service" href="weather.html"><div class="service-icon">W</div><h3>WEATHER</h3><p>Погода и актуальная информация об условиях.</p><span class="service-state">ОТКРЫТЬ СЕРВИС ↗</span></a>
-    <a class="service" href="mivo.html"><div class="service-icon">M</div><h3>MIVO</h3><p>Музыкальная платформа TEHNOCELL.</p><span class="service-state">РАЗРАБОТКА НА ПАУЗЕ</span></a>
-    <a class="service" href="soft.html"><div class="service-icon">S</div><h3>TEHNOCELLSOFT</h3><p>Программные продукты и инструменты.</p><span class="service-state">ОТКРЫТЬ НАПРАВЛЕНИЕ ↗</span></a>
-    <a class="service" href="game.html"><div class="service-icon">G</div><h3>TEHNOCELLGAME</h3><p>Игры и интерактивные проекты.</p><span class="service-state">ОТКРЫТЬ НАПРАВЛЕНИЕ ↗</span></a>
-  </div>
-  <div class="section-head"><h2>Ваше пространство</h2><span>ОСНОВА ПЛАТФОРМЫ</span></div>
-  <div class="activity-grid">
-    <section class="panel" id="communities"><h3>Сообщества и публикации</h3><p>Здесь появятся тематические сообщества, публикации и обсуждения.</p><div class="empty">Этот раздел пока готовится. Мы не показываем пустую ленту и не создаём фальшивую активность.</div></section>
-    <section class="panel" id="messages"><h3>Общение</h3><p>Личные и групповые сообщения будут доступны в этом пространстве.</p><div class="empty">Система сообщений ещё не подключена.</div></section>
-  </div>
-  <div class="section-head"><h2>TEHNOCELL ID</h2><span>ЕДИНЫЙ АККАУНТ</span></div>
-  <section class="panel profile-card"><div class="avatar" id="mainAvatar">T</div><div style="min-width:0"><strong id="profileName">Загружаем профиль…</strong><small id="profileEmail"></small></div><a class="top-btn" style="margin-left:auto;white-space:nowrap" href="account.html">Открыть ID ↗</a></section>
-</main>
+<div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="account.html" id="accountLink">TEHNOCELL ID</a></div></div>
+<div class="notice" id="notice" role="status"></div>
+<section class="page active" id="page-home">
+<div class="eyebrow">ЕДИНОЕ ЦИФРОВОЕ ПРОСТРАНСТВО</div><h1 class="page-title">Добро пожаловать, <span id="greetingName">...</span></h1><p class="page-subtitle">Общение, сообщества и сервисы TEHNOCELL — в одном пространстве.</p>
+<div class="welcome"><div class="welcome-tag">TEHNOCELL PLATFORM / 001</div><h2>Всё важное — в одном пространстве.</h2><p>Публикуйте идеи, находите сообщества и открывайте сервисы. Платформа будет расширяться постепенно — без перегруза и лишних элементов.</p></div>
+<div class="section-head"><h2>Сервисы TEHNOCELL</h2><span>ВАШЕ ЦИФРОВОЕ ПРОСТРАНСТВО</span></div>
+<div class="service-grid">
+<a class="service" href="ennie.html"><div class="service-icon">E</div><h3>ENNIE</h3><p>Интеллектуальный помощник TEHNOCELL.</p><span class="service-state">ОТКРЫТЬ ↗</span></a>
+<a class="service" href="weather.html"><div class="service-icon">W</div><h3>WEATHER</h3><p>Погода и актуальная информация об условиях.</p><span class="service-state">ОТКРЫТЬ ↗</span></a>
+<a class="service" href="mivo.html"><div class="service-icon">M</div><h3>MIVO</h3><p>Музыкальная платформа TEHNOCELL.</p><span class="service-state">РАЗРАБОТКА НА ПАУЗЕ</span></a>
+<a class="service" href="soft.html"><div class="service-icon">S</div><h3>TEHNOCELLSOFT</h3><p>Программные продукты и инструменты.</p><span class="service-state">ОТКРЫТЬ ↗</span></a>
+<a class="service" href="game.html"><div class="service-icon">G</div><h3>TEHNOCELLGAME</h3><p>Игры и интерактивные проекты.</p><span class="service-state">ОТКРЫТЬ ↗</span></a>
 </div>
+<div class="section-head"><h2>Ваше пространство</h2><span>СООБЩЕСТВО И ОБЩЕНИЕ</span></div>
+<div class="feed-layout"><div class="feed-column"><div class="panel"><h3>Что нового в TEHNOCELL?</h3><p>Теперь можно создавать сообщества, публиковать записи, обсуждать их и ставить отметки «Нравится».</p><a class="panel-link" href="#feed" data-page="feed">Перейти к ленте →</a></div></div><aside class="feed-aside"><div class="panel"><h3>Мои сообщества</h3><p id="homeCommunityCount">Загружаем ваши сообщества…</p><a class="panel-link" href="#communities" data-page="communities">Открыть сообщества →</a></div><div class="panel"><h3>Уведомления</h3><p id="homeNotificationCount">Проверяем уведомления…</p><a class="panel-link" href="#notifications" data-page="notifications">Посмотреть →</a></div></aside></div>
+</section>
+<section class="page" id="page-feed">
+<div class="eyebrow">ПУБЛИКАЦИИ УЧАСТНИКОВ</div><h1 class="page-title">Лента</h1><p class="page-subtitle">Последние публикации из открытых сообществ.</p>
+<div class="feed-layout"><div class="feed-column"><div class="composer"><div class="composer-avatar" id="composerAvatar">T</div><button class="composer-prompt" id="openPostModal">Поделитесь тем, что у вас нового…</button></div><div id="feedList"><div class="loading">Загружаем публикации…</div></div></div><aside class="feed-aside"><div class="panel"><h3>Создать публикацию</h3><p>Выберите сообщество, участником которого вы являетесь, и поделитесь своей мыслью.</p><button class="primary-btn" style="margin-top:13px" id="openPostModalSide">Написать запись</button></div><div class="panel"><h3>Правила общения</h3><p>Уважайте других участников. Не публикуйте личные данные, оскорбления и опасный контент.</p></div></aside></div>
+</section>
+<section class="page" id="page-communities">
+<div class="eyebrow">ЛЮДИ И ИНТЕРЕСЫ</div><h1 class="page-title">Сообщества</h1><p class="page-subtitle">Создавайте пространства по интересам, вступайте в сообщества и общайтесь с участниками.</p>
+<div class="toolbar"><input class="search" id="communitySearch" placeholder="Найти сообщество…" autocomplete="off"><button class="filter-btn active" data-community-filter="all">Все</button><button class="filter-btn" data-community-filter="mine">Мои</button><button class="primary-btn" id="openCommunityModal">＋ Создать</button></div>
+<div id="communityList"><div class="loading">Загружаем сообщества…</div></div>
+</section>
+<section class="page" id="page-messages">
+<div class="eyebrow">ЛИЧНОЕ ОБЩЕНИЕ</div><h1 class="page-title">Сообщения</h1><p class="page-subtitle">Личные и групповые переписки будут частью платформы.</p>
+<div class="panel"><h3>Подготовка мессенджера</h3><p>Сейчас мы закладываем основу сообществ и публикаций. Следующим этапом подключим личные чаты, групповые беседы, отправку фотографий и уведомления о новых сообщениях. Пока переписки не активны — мы не будем показывать вымышленные диалоги.</p></div>
+</section>
+<section class="page" id="page-notifications">
+<div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Реакции и комментарии к вашим публикациям.</p>
+<div id="notificationList"><div class="loading">Загружаем уведомления…</div></div>
+</section>
+<section class="page" id="page-profile">
+<div class="eyebrow">ВАШ TEHNOCELL ID</div><h1 class="page-title">Профиль</h1><p class="page-subtitle">Единый аккаунт для сервисов и общения внутри экосистемы.</p>
+<div class="panel profile-panel"><div class="avatar" id="mainAvatar">T</div><div style="min-width:0;flex:1"><strong id="profileName">Загружаем профиль…</strong><small id="profileEmail"></small></div><a class="top-btn" href="account-user.html" id="profileManage">Настройки ID ↗</a></div>
+<div class="section-head"><h2>Аккаунт</h2></div><div class="panel"><p>Имя, описание профиля, фотография и настройки безопасности управляются через TEHNOCELL ID.</p><a class="panel-link" href="account-user.html" id="profileManage2">Открыть личный кабинет →</a></div>
+</section>
+</main></div>
 <nav class="mobile-nav" aria-label="Основная навигация">
-<a class="active" href="platform.html"><b>⌂</b>Главная</a>
-<a href="#communities" data-coming><b>◫</b>Сообщества</a>
-<a href="#messages" data-coming><b>▤</b>Сообщения</a>
-<a href="#notifications" data-coming><b>♧</b>Уведомления</a>
-<a href="account.html"><b>◎</b>Профиль</a>
+<a class="active" href="#home" data-page="home"><b>⌂</b>Главная</a><a href="#feed" data-page="feed"><b>▤</b>Лента</a><a href="#communities" data-page="communities"><b>◫</b>Сообщества</a><a href="#notifications" data-page="notifications"><b>♧</b>События</a><a href="#profile" data-page="profile"><b>◎</b>Профиль</a>
 </nav>
+<div class="modal-backdrop" id="communityModal"><div class="modal"><div class="modal-head"><h2>Новое сообщество</h2><button class="close-btn" data-close="communityModal">×</button></div><form id="communityForm"><label class="field-label" for="communityName">Название</label><input class="field" id="communityName" maxlength="48" minlength="3" placeholder="Например, Мир технологий" required><label class="field-label" for="communityCategory">Категория</label><select class="select" id="communityCategory"><option>Общее</option><option>Технологии</option><option>Игры</option><option>Музыка</option><option>Творчество</option><option>Образование</option><option>Общение</option></select><label class="field-label" for="communityDescription">Описание</label><textarea class="textarea" id="communityDescription" maxlength="500" placeholder="Расскажите, о чём это сообщество"></textarea><div class="modal-status" id="communityStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="communityModal">Отмена</button><button class="primary-btn" id="communitySubmit">Создать сообщество</button></div></form></div></div>
+<div class="modal-backdrop" id="postModal"><div class="modal"><div class="modal-head"><h2>Новая публикация</h2><button class="close-btn" data-close="postModal">×</button></div><form id="postForm"><label class="field-label" for="postCommunity">Сообщество</label><select class="select" id="postCommunity" required></select><label class="field-label" for="postBody">Текст публикации</label><textarea class="textarea" id="postBody" maxlength="5000" placeholder="О чём хотите рассказать?" required></textarea><div class="modal-status" id="postStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="postModal">Отмена</button><button class="primary-btn" id="postSubmit">Опубликовать</button></div></form></div></div>
+<div class="modal-backdrop" id="commentsModal"><div class="modal"><div class="modal-head"><h2>Обсуждение</h2><button class="close-btn" data-close="commentsModal">×</button></div><div id="modalComments"></div><form id="modalCommentForm"><label class="field-label" for="modalCommentText">Ваш комментарий</label><textarea class="textarea" id="modalCommentText" maxlength="2000" placeholder="Напишите комментарий…" required style="min-height:80px"></textarea><div class="modal-status" id="commentStatus"></div><div class="modal-actions"><button class="primary-btn" id="commentSubmit">Отправить</button></div></form></div></div>
 <script>
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const notice=document.getElementById("notice");
-function setAvatar(el,user,name){
-  el.replaceChildren();
-  const path=user.user_metadata?.avatar_path;
-  if(path){
-    const {data}=db.storage.from("profile-avatars").getPublicUrl(path);
-    const img=document.createElement("img");img.src=data.publicUrl;img.alt="Аватар";
-    img.onerror=()=>{el.replaceChildren();el.textContent=(name||"T").charAt(0).toUpperCase()};
-    el.append(img);
-  }else el.textContent=(name||"T").charAt(0).toUpperCase();
-}
+let currentUser=null, communities=[], memberships=new Set(), currentCommentPost=null, communityFilter="all";
+const $=id=>document.getElementById(id);
+function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function showNotice(message){$("notice").textContent=message;$("notice").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}
+function avatarMarkup(name,path){if(path){const {data}=db.storage.from("profile-avatars").getPublicUrl(path);return '<img src="'+escapeHtml(data.publicUrl)+'" alt="">';}return escapeHtml((name||"T").charAt(0).toUpperCase());}
+function switchPage(name){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
+document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
+function openModal(id){$(id).classList.add("open");document.body.style.overflow="hidden";}
+function closeModal(id){$(id).classList.remove("open");document.body.style.overflow="";}
+document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
+document.querySelectorAll(".modal-backdrop").forEach(b=>b.addEventListener("click",e=>{if(e.target===b)closeModal(b.id)}));
 async function boot(){
-  const {data,error}=await db.auth.getSession();
-  if(error){notice.style.display="block";notice.textContent="Не удалось проверить сессию. Обновите страницу.";return}
-  const user=data.session?.user;
-  if(!user){location.replace("login.html?next=platform");return}
-  const name=user.user_metadata?.display_name||"Пользователь";
-  document.getElementById("greetingName").textContent=name;
-  document.getElementById("sideName").textContent=name;
-  document.getElementById("profileName").textContent=name;
-  document.getElementById("profileEmail").textContent=user.email||"";
-  setAvatar(document.getElementById("sideAvatar"),user,name);
-  setAvatar(document.getElementById("mainAvatar"),user,name);
+ const {data,error}=await db.auth.getSession();
+ if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
+ currentUser=data.session?.user;
+ if(!currentUser){location.replace("login.html?next=platform");return;}
+ const name=currentUser.user_metadata?.display_name||"Пользователь";
+ const path=currentUser.user_metadata?.avatar_path;
+ $("greetingName").textContent=name;$("sideName").textContent=name;$("profileName").textContent=name;$("profileEmail").textContent=currentUser.email||"";
+ $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);
+ const staff=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
+ const account=staff.includes(currentUser.id)?"account.html":"account-user.html";
+ $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
+ await Promise.all([loadCommunities(),loadHomeCounts()]);
+ const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile"].includes(hash))switchPage(hash);
 }
-document.querySelectorAll("[data-coming]").forEach(link=>link.addEventListener("click",e=>{
-  e.preventDefault();notice.style.display="block";notice.textContent="Этот раздел пока находится в разработке. Сейчас мы создаём его основу.";
-  window.scrollTo({top:0,behavior:"smooth"});
-}));
+async function loadCommunities(){
+ const [{data:cs,error:cErr},{data:ms,error:mErr}]=await Promise.all([
+  db.from("tc_communities").select("*").order("created_at",{ascending:false}).limit(100),
+  db.from("tc_community_members").select("community_id").eq("user_id",currentUser.id)
+ ]);
+ if(cErr||mErr){showNotice("Не удалось загрузить сообщества. "+(cErr?.message||mErr?.message));return;}
+ communities=cs||[];memberships=new Set((ms||[]).map(x=>x.community_id));renderCommunities();fillPostCommunity();
+}
+function renderCommunities(){
+ const q=($("communitySearch")?.value||"").trim().toLowerCase();
+ const list=communities.filter(c=>(communityFilter!=="mine"||c.owner_id===currentUser.id||memberships.has(c.id))&&(!q||(c.name+" "+c.description+" "+c.category).toLowerCase().includes(q)));
+ if(!list.length){$("communityList").innerHTML='<div class="empty">'+(communityFilter==="mine"?"Вы пока не вступили ни в одно сообщество.":"Пока сообществ нет. Создайте первое — оно появится здесь.")+'</div>';return;}
+ $("communityList").innerHTML='<div class="community-grid">'+list.map(c=>{
+  const owner=c.owner_id===currentUser.id,joined=memberships.has(c.id);
+  return '<article class="community-card"><div class="community-top"><div class="community-mark">'+escapeHtml(c.name.charAt(0).toUpperCase())+'</div><div style="min-width:0"><h3>'+escapeHtml(c.name)+'</h3><div class="community-meta">'+escapeHtml(c.category)+' · '+new Date(c.created_at).toLocaleDateString("ru-RU")+'</div></div></div><p class="community-desc">'+escapeHtml(c.description||"У этого сообщества пока нет описания.")+'</p><div class="community-actions"><span class="tiny">'+(owner?"ВАШЕ СООБЩЕСТВО":joined?"ВЫ УЧАСТНИК":"ОТКРЫТОЕ СООБЩЕСТВО")+'</span>'+(owner?'<button class="secondary-btn" disabled>Владелец</button>':joined?'<button class="secondary-btn" data-leave="'+c.id+'">Выйти</button>':'<button class="primary-btn" data-join="'+c.id+'">Вступить</button>')+'</div></article>';
+ }).join("")+'</div>';
+ document.querySelectorAll("[data-join]").forEach(b=>b.addEventListener("click",()=>joinCommunity(b.dataset.join,b)));
+ document.querySelectorAll("[data-leave]").forEach(b=>b.addEventListener("click",()=>leaveCommunity(b.dataset.leave,b)));
+}
+$("communitySearch").addEventListener("input",renderCommunities);
+document.querySelectorAll("[data-community-filter]").forEach(b=>b.addEventListener("click",()=>{communityFilter=b.dataset.communityFilter;document.querySelectorAll("[data-community-filter]").forEach(x=>x.classList.toggle("active",x===b));renderCommunities();}));
+$("openCommunityModal").addEventListener("click",()=>{ $("communityStatus").textContent="";$("communityForm").reset();openModal("communityModal");});
+function slugify(s){return s.toLowerCase().trim().replace(/ё/g,"e").replace(/[^a-z0-9а-я]+/gi,"-").replace(/[а-я]/g,ch=>"abcdefghijklmnopqrstuvwxyz"[("абвгдеёжзийклмнопрстуфхцчшщъыьэюя".indexOf(ch))]||"").replace(/^-|-$/g,"").slice(0,38)||"community";}
+$("communityForm").addEventListener("submit",async e=>{
+ e.preventDefault();const button=$("communitySubmit");button.disabled=true;button.textContent="Создаём…";$("communityStatus").textContent="Сохраняем сообщество…";
+ const name=$("communityName").value.trim();let slug=slugify(name)+"-"+Math.random().toString(36).slice(2,6);
+ const {data,error}=await db.from("tc_communities").insert({name,slug,category:$("communityCategory").value,description:$("communityDescription").value.trim(),owner_id:currentUser.id}).select().single();
+ button.disabled=false;button.textContent="Создать сообщество";
+ if(error){$("communityStatus").textContent="Не удалось создать: "+error.message;return;}
+ communities.unshift(data);closeModal("communityModal");renderCommunities();fillPostCommunity();loadHomeCounts();showNotice("Сообщество «"+name+"» создано.");
+});
+async function joinCommunity(id,button){
+ button.disabled=true;const {error}=await db.from("tc_community_members").insert({community_id:id,user_id:currentUser.id});
+ if(error&&error.code!=="23505"){button.disabled=false;showNotice("Не удалось вступить: "+error.message);return;}
+ memberships.add(id);renderCommunities();fillPostCommunity();loadHomeCounts();
+}
+async function leaveCommunity(id,button){
+ button.disabled=true;const {error}=await db.from("tc_community_members").delete().eq("community_id",id).eq("user_id",currentUser.id);
+ if(error){button.disabled=false;showNotice("Не удалось выйти: "+error.message);return;}
+ memberships.delete(id);renderCommunities();fillPostCommunity();loadHomeCounts();
+}
+function fillPostCommunity(){
+ const available=communities.filter(c=>c.owner_id===currentUser.id||memberships.has(c.id));
+ $("postCommunity").innerHTML=available.length?available.map(c=>'<option value="'+c.id+'">'+escapeHtml(c.name)+'</option>').join(""):'<option value="">Сначала вступите в сообщество</option>';
+}
+function openPost(){fillPostCommunity();$("postStatus").textContent="";$("postForm").reset();fillPostCommunity();if(!$("postCommunity").value){showNotice("Чтобы публиковать записи, сначала создайте сообщество или вступите в существующее.");switchPage("communities");return;}openModal("postModal");}
+$("openPostModal").addEventListener("click",openPost);$("openPostModalSide").addEventListener("click",openPost);
+$("postForm").addEventListener("submit",async e=>{
+ e.preventDefault();const button=$("postSubmit");button.disabled=true;button.textContent="Публикуем…";$("postStatus").textContent="Сохраняем публикацию…";
+ const {error}=await db.from("tc_posts").insert({community_id:$("postCommunity").value,author_id:currentUser.id,body:$("postBody").value.trim()});
+ button.disabled=false;button.textContent="Опубликовать";
+ if(error){$("postStatus").textContent="Не удалось опубликовать: "+error.message;return;}
+ closeModal("postModal");$("postBody").value="";showNotice("Публикация добавлена в ленту.");switchPage("feed");loadFeed();
+});
+async function loadFeed(){
+ $("feedList").innerHTML='<div class="loading">Загружаем публикации…</div>';
+ const {data:posts,error}=await db.from("tc_posts").select("*").order("created_at",{ascending:false}).limit(40);
+ if(error){$("feedList").innerHTML='<div class="empty">Не удалось загрузить ленту: '+escapeHtml(error.message)+'</div>';return;}
+ if(!posts?.length){$("feedList").innerHTML='<div class="empty">Публикаций пока нет. Создайте сообщество и поделитесь первой записью.</div>';return;}
+ const ids=[...new Set(posts.map(p=>p.author_id))],cids=[...new Set(posts.map(p=>p.community_id))],pids=posts.map(p=>p.id);
+ const [{data:profiles},{data:cs},{data:reactions},{data:comments}] = await Promise.all([
+  db.from("profiles").select("id,display_name").in("id",ids),
+  db.from("tc_communities").select("id,name").in("id",cids),
+  db.from("tc_post_reactions").select("post_id,user_id").in("post_id",pids),
+  db.from("tc_comments").select("post_id").in("post_id",pids)
+ ]);
+ const pm=new Map((profiles||[]).map(p=>[p.id,p.display_name])),cm=new Map((cs||[]).map(c=>[c.id,c.name]));
+ const rc=new Map(),cc=new Map();(reactions||[]).forEach(r=>rc.set(r.post_id,(rc.get(r.post_id)||0)+1));(comments||[]).forEach(c=>cc.set(c.post_id,(cc.get(c.post_id)||0)+1));
+ const liked=new Set((reactions||[]).filter(r=>r.user_id===currentUser.id).map(r=>r.post_id));
+ $("feedList").innerHTML=posts.map(p=>{
+  const author=pm.get(p.author_id)||"Участник";
+  return '<article class="post-card" data-post="'+p.id+'"><div class="post-head"><div class="avatar">'+escapeHtml(author.charAt(0).toUpperCase())+'</div><div style="min-width:0"><div class="post-author">'+escapeHtml(author)+'</div><div class="post-detail"><span class="post-community">'+escapeHtml(cm.get(p.community_id)||"Сообщество")+'</span> · '+new Date(p.created_at).toLocaleString("ru-RU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+'</div></div></div><div class="post-body">'+escapeHtml(p.body)+'</div><div class="post-actions"><button class="post-action '+(liked.has(p.id)?"active":"")+'" data-like="'+p.id+'">♡ Нравится · '+(rc.get(p.id)||0)+'</button><button class="post-action" data-comments="'+p.id+'">Комментарии · '+(cc.get(p.id)||0)+'</button>'+(p.author_id===currentUser.id?'<button class="post-action" data-delete-post="'+p.id+'">Удалить</button>':'')+'</div></article>';
+ }).join("");
+ document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
+ document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
+ document.querySelectorAll("[data-delete-post]").forEach(b=>b.addEventListener("click",()=>deletePost(b.dataset.deletePost)));
+}
+async function toggleLike(id,button){
+ button.disabled=true;const active=button.classList.contains("active");
+ const result=active?await db.from("tc_post_reactions").delete().eq("post_id",id).eq("user_id",currentUser.id):await db.from("tc_post_reactions").insert({post_id:id,user_id:currentUser.id,reaction:"like"});
+ button.disabled=false;if(result.error){showNotice("Не удалось изменить реакцию: "+result.error.message);return;}loadFeed();
+}
+async function deletePost(id){
+ const {error}=await db.from("tc_posts").delete().eq("id",id).eq("author_id",currentUser.id);
+ if(error){showNotice("Не удалось удалить публикацию: "+error.message);return;}loadFeed();showNotice("Публикация удалена.");
+}
+async function openComments(postId){
+ currentCommentPost=postId;$("modalComments").innerHTML='<div class="loading">Загружаем обсуждение…</div>';$("modalCommentText").value="";$("commentStatus").textContent="";openModal("commentsModal");
+ const {data:rows,error}=await db.from("tc_comments").select("*").eq("post_id",postId).order("created_at",{ascending:true}).limit(100);
+ if(error){$("modalComments").textContent="Не удалось загрузить комментарии: "+error.message;return;}
+ if(!rows?.length){$("modalComments").innerHTML='<div class="empty">Пока нет комментариев. Начните обсуждение.</div>';return;}
+ const ids=[...new Set(rows.map(x=>x.author_id))];const {data:profiles}=await db.from("profiles").select("id,display_name").in("id",ids);const names=new Map((profiles||[]).map(x=>[x.id,x.display_name]));
+ $("modalComments").innerHTML=rows.map(c=>'<div class="comment-row"><strong>'+escapeHtml(names.get(c.author_id)||"Участник")+'</strong>'+escapeHtml(c.body)+'<div class="tiny">'+new Date(c.created_at).toLocaleString("ru-RU")+'</div></div>').join("");
+}
+$("modalCommentForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!currentCommentPost)return;const b=$("commentSubmit");b.disabled=true;b.textContent="Отправляем…";
+ const {error}=await db.from("tc_comments").insert({post_id:currentCommentPost,author_id:currentUser.id,body:$("modalCommentText").value.trim()});
+ b.disabled=false;b.textContent="Отправить";
+ if(error){$("commentStatus").textContent="Ошибка: "+error.message;return;}
+ $("modalCommentText").value="";$("commentStatus").textContent="Комментарий опубликован.";openComments(currentCommentPost);loadFeed();
+});
+async function loadNotifications(){
+ $("notificationList").innerHTML='<div class="loading">Загружаем уведомления…</div>';
+ const {data:rows,error}=await db.from("tc_notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(50);
+ if(error){$("notificationList").innerHTML='<div class="empty">Не удалось загрузить уведомления: '+escapeHtml(error.message)+'</div>';return;}
+ if(!rows?.length){$("notificationList").innerHTML='<div class="empty">Пока нет новых событий. Здесь появятся уведомления о реакциях и комментариях.</div>';return;}
+ const ids=[...new Set(rows.map(x=>x.actor_id).filter(Boolean))];const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name").in("id",ids):{data:[]};const names=new Map((profiles||[]).map(x=>[x.id,x.display_name]));
+ $("notificationList").innerHTML='<div class="panel">'+rows.map(n=>'<div class="notification '+(!n.read_at?"unread":"")+'"><div class="notification-mark">'+(n.kind==="like"?"♡":"↳")+'</div><div class="notification-copy"><strong>'+escapeHtml(names.get(n.actor_id)||"Участник")+'</strong> '+(n.kind==="like"?"оценил(а) вашу публикацию":"оставил(а) комментарий к вашей публикации")+'<small>'+new Date(n.created_at).toLocaleString("ru-RU")+'</small></div><button class="secondary-btn" data-read="'+n.id+'" '+(n.read_at?"disabled":"")+'> '+(n.read_at?"Просмотрено":"Отметить")+' </button></div>').join("")+'</div>';
+ document.querySelectorAll("[data-read]").forEach(b=>b.addEventListener("click",async()=>{b.disabled=true;const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("id",b.dataset.read).eq("user_id",currentUser.id);if(error){b.disabled=false;showNotice("Не удалось отметить уведомление.");return;}loadNotifications();loadHomeCounts();}));
+}
+async function loadHomeCounts(){
+ const [{count:communityCount},{count:notificationCount}]=await Promise.all([
+  db.from("tc_community_members").select("*",{count:"exact",head:true}).eq("user_id",currentUser.id),
+  db.from("tc_notifications").select("*",{count:"exact",head:true}).eq("user_id",currentUser.id).is("read_at",null)
+ ]);
+ $("homeCommunityCount").textContent=(communityCount||0)+" сообществ, в которых вы состоите.";
+ $("homeNotificationCount").textContent=(notificationCount||0)+" непрочитанных событий.";
+ $("unreadBadge").textContent=notificationCount?String(notificationCount):"";
+}
+db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session)location.replace("login.html?next=platform");});
 boot();
-db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session)location.replace("login.html?next=platform")});
 </script>
 <script src="account-access.js?v=3"></script>
-</body>
-</html>
+</body></html>
