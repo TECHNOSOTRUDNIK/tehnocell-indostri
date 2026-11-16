@@ -1,0 +1,1185 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>TEHNOCELL ID — Праздничный просмотр</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --background: #f2f2f2;
+    --surface: #ffffff;
+    --text: #111111;
+    --muted: #777777;
+    --border: #e5e5e5;
+    --input: #ffffff;
+    --accent: #111111;
+    --accent-text: #ffffff;
+}
+
+body.dark-theme {
+    --background: #111111;
+    --surface: #1c1c1c;
+    --text: #f5f5f5;
+    --muted: #999999;
+    --border: #333333;
+    --input: #252525;
+    --accent: #f5f5f5;
+    --accent-text: #111111;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    transition: background .2s, color .2s;
+}
+
+/* HEADER */
+
+.header {
+    min-height: 72px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 6%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.logo span {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.home-button {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+/* NAVIGATION */
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav button {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.nav button.active {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.nav button.logout {
+    color: var(--muted);
+}
+
+/* MAIN */
+
+.main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 38px 25px 60px;
+}
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.heading h1 {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.heading p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* PROFILE */
+
+.profile-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    margin-bottom: 25px;
+}
+
+.avatar,
+.profile-photo {
+    background: #111;
+    color: white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+}
+
+.profile-photo {
+    width: 105px;
+    height: 105px;
+    font-size: 30px;
+}
+
+.avatar img,
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: none;
+    position: absolute;
+    inset: 0;
+}
+
+.presence-dot {
+    display: none;
+    width: 17px;
+    height: 17px;
+    background: #22c55e;
+    border: 3px solid var(--surface);
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+}
+
+.avatar .presence-dot {
+    width: 14px;
+    height: 14px;
+}
+
+.profile-info {
+    min-width: 0;
+}
+
+.profile-info h2 {
+    font-size: 21px;
+    margin-bottom: 7px;
+}
+
+.profile-bio {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.verified-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.verified-badge {
+    display: none;
+    width: 17px;
+    height: 17px;
+    background: #1685e8;
+    color: white;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* WELCOME */
+
+.welcome {
+    background: #111;
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome::after {
+    content: "";
+    width: 190px;
+    height: 190px;
+    border: 1px solid #444;
+    border-radius: 50%;
+    position: absolute;
+    right: -65px;
+    top: -95px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.welcome-content {
+    position: relative;
+    z-index: 2;
+}
+
+.welcome small {
+    color: #aaa;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+.welcome h2 {
+    font-size: 27px;
+    margin: 13px 0 9px;
+}
+
+.welcome p {
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* TITLES */
+
+.section-title {
+    font-size: 19px;
+    margin-bottom: 17px;
+}
+
+/* GRID AND CARDS */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.card,
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 22px;
+}
+
+.card-label {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 18px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.card-description {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+/* SETTINGS */
+
+.settings-category {
+    margin-bottom: 25px;
+}
+
+.settings-category-title {
+    font-size: 18px;
+    margin-bottom: 13px;
+}
+
+.panel {
+    margin-bottom: 15px;
+}
+
+.panel h3 {
+    font-size: 16px;
+    margin-bottom: 17px;
+}
+
+.panel label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: var(--muted);
+}
+
+.panel input,
+.panel textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--input);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.panel textarea {
+    resize: vertical;
+    min-height: 85px;
+}
+
+.panel input:focus,
+.panel textarea:focus {
+    border-color: var(--muted);
+}
+
+/* BUTTONS */
+
+.action {
+    background: var(--accent);
+    color: var(--accent-text);
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.action.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.action:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.action.danger {
+    background: #d93636;
+    color: white;
+}
+
+/* EXTRA */
+
+.divider {
+    height: 1px;
+    background: var(--border);
+    margin: 22px 0;
+}
+
+.message {
+    font-size: 13px;
+    margin-top: 12px;
+    color: var(--muted);
+}
+
+.photo-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.photo-note {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+.photo-input {
+    display: none;
+}
+
+/* THEME OPTIONS */
+
+.theme-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.theme-option {
+    padding: 13px 20px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.theme-option.active {
+    border-color: var(--text);
+    font-weight: bold;
+}
+
+/* NOTIFICATIONS */
+
+.notification-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+.notification-options button {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.notification-options button.active {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+/* PAGES */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+    .header {
+        padding: 13px 5%;
+        flex-wrap: wrap;
+        gap: 13px;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav {
+        gap: 3px;
+    }
+
+    .nav button {
+        padding: 9px 11px;
+        font-size: 13px;
+    }
+
+    .main {
+        padding: 28px 16px 45px;
+    }
+
+    .heading h1 {
+        font-size: 23px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card {
+        padding: 18px;
+        gap: 15px;
+    }
+
+    .profile-photo {
+        width: 80px;
+        height: 80px;
+        font-size: 25px;
+    }
+
+    .profile-info h2 {
+        font-size: 18px;
+    }
+
+    .welcome {
+        padding: 25px;
+    }
+
+    .welcome h2 {
+        font-size: 23px;
+    }
+}
+
+
+/* BIRTHDAY PROFILE FRAME */
+.profile-card.birthday-profile-frame{
+  position:relative;
+  border:1px solid #b99b61;
+  border-radius:18px;
+  background:linear-gradient(145deg,var(--surface),#d9c18e12);
+  box-shadow:0 0 0 4px #b99b611c,0 14px 38px #8b70401c;
+}
+.profile-card.birthday-profile-frame:before{
+  content:"";
+  position:absolute;
+  inset:6px;
+  border:1px solid #b99b614d;
+  border-radius:12px;
+  pointer-events:none;
+}
+.profile-card.birthday-profile-frame:after{
+  content:none;
+  position:absolute;
+  top:-10px;
+  right:22px;
+  width:22px;
+  height:22px;
+  display:grid;
+  place-items:center;
+  color:#8b7040;
+  background:var(--surface);
+  font-size:14px;
+}
+.bday-cake svg{width:31px;height:31px}
+.cake-badge{width:25px;height:25px;border-radius:8px}
+.cake-badge svg{width:19px;height:19px}
+
+/* BIRTHDAY PREVIEW — isolated copy */
+body{background:radial-gradient(ellipse at 50% 0%,#34302a 0%,var(--background) 48%)}
+.header{background:rgba(18,18,18,.96);color:#fff;border-bottom-color:#51483a}
+.logo span{color:#d7c39a}
+.header .home-button{color:#fff;border-color:#615746}
+.nav button{color:#c7c0b4}
+.nav button.active{background:#d9c18e;color:#17130d}
+.birthday-strip{position:relative;overflow:hidden;margin:0 0 22px;border:1px solid #8b7957;border-radius:17px;background:linear-gradient(115deg,#211d17,#3b3020 58%,#191612);color:#fff;padding:19px 20px;box-shadow:0 16px 40px #6b54231c}
+.birthday-strip:after{content:"";position:absolute;width:180px;height:180px;border:1px solid #cdb98755;border-radius:50%;right:-60px;top:-105px;box-shadow:0 0 0 22px #cdb98712,0 0 0 48px #cdb9870b;pointer-events:none}
+.bday-kicker{font-size:9px;letter-spacing:2px;color:#d9c18e;font-weight:800}
+.bday-row{display:flex;align-items:center;gap:13px;margin:12px 0}
+.bday-cake{width:44px;height:44px;flex:0 0 44px;border:1px solid #bba675;border-radius:13px;display:grid;place-items:center;background:#ffffff0b}
+.bday-cake svg{width:27px;height:27px}
+.bday-title{font-size:20px;font-weight:800}
+.bday-desc{font-size:12px;color:#d0c7b6;line-height:1.6;max-width:560px}
+.bday-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.bday-btn{border:1px solid #bba675;background:#e0cca0;color:#17130d;padding:10px 14px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer}
+.bday-btn.ghost{background:transparent;color:#eadbb9}
+.bday-mini{margin:0 auto 25px;max-width:680px;max-height:245px;overflow:auto;overscroll-behavior:contain;border:1px solid #8b7957;border-radius:16px;background:linear-gradient(145deg,#1b1a18,#28231b);color:#fff;padding:20px 22px;box-shadow:0 12px 35px #0002;scrollbar-width:thin;scrollbar-color:#8b7957 transparent}
+.bday-mini-head{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#cdb987;font-size:9px;letter-spacing:1.8px;font-weight:800}
+.bday-mini h2{text-align:center;font-size:25px;margin:14px 0 8px}
+.bday-mini p{text-align:center;color:#d4cdbf;font-size:12px;line-height:1.8;max-width:500px;margin:0 auto 12px}
+.bday-mini-foot{text-align:center;border-top:1px solid #ffffff20;padding-top:12px;color:#cdb987;font-size:9px;letter-spacing:1.4px}
+.cake-badge{display:inline-flex;vertical-align:middle;align-items:center;justify-content:center;width:23px;height:23px;margin-left:7px;border-radius:7px;background:linear-gradient(145deg,#f5e4b8,#b99b61);color:#20190e;box-shadow:0 2px 10px #9e7e3b44}
+.cake-badge svg{width:16px;height:16px}
+.birthday-modal{position:fixed;inset:0;z-index:1000;background:#000a;display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(8px)}
+.birthday-modal.show{display:flex}
+.birthday-dialog{width:min(430px,100%);max-height:82vh;overflow:auto;border:1px solid #927d54;border-radius:20px;background:linear-gradient(145deg,#28231a,#111);color:#fff;padding:26px;text-align:center;box-shadow:0 25px 90px #0009}
+.birthday-dialog .big-cake{font-size:42px;margin-bottom:8px}
+.birthday-dialog h2{font-size:24px;margin:6px 0 12px}
+.birthday-dialog p{font-size:13px;line-height:1.8;color:#d4cdbf}
+.birthday-dialog button{margin-top:18px}
+.ennie-note{margin-top:18px;padding:14px;border:1px solid #62543a;border-radius:12px;background:#ffffff08;text-align:left}
+.ennie-note b{display:block;color:#e0cca0;font-size:10px;letter-spacing:1.4px;margin-bottom:6px}
+.ennie-note span{font-size:12px;line-height:1.7;color:#d6d0c4}
+.bday-toast{position:fixed;z-index:1200;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#e0cca0;color:#17130d;padding:11px 17px;border-radius:30px;font-size:12px;font-weight:800;transition:.25s}
+.bday-toast.show{opacity:1;transform:translate(-50%,0)}
+.bday-confetti{position:fixed;z-index:1100;top:-10px;width:6px;height:10px;background:#e0cca0;animation:bdayfall 3.8s linear forwards;pointer-events:none}
+@keyframes bdayfall{to{transform:translate(var(--dx),110vh) rotate(700deg);opacity:0}}
+@media(max-width:650px){.birthday-strip{padding:16px}.bday-title{font-size:18px}.bday-mini{max-height:220px;padding:17px}.bday-mini h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.bday-confetti{display:none!important}*{scroll-behavior:auto!important}}
+
+
+/* ENNIE birthday mini */
+.ennie-mini{position:fixed;z-index:3000;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:#050505b8;backdrop-filter:blur(8px)}
+.ennie-mini.show{display:flex;animation:ennieFade .35s ease}
+.ennie-window{width:min(420px,100%);max-height:88vh;overflow:auto;background:linear-gradient(150deg,#24211c,#101010 68%);color:#fff;border:1px solid #a58b5a;border-radius:23px;padding:22px;box-shadow:0 24px 90px #000b;position:relative}
+.ennie-top{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.ennie-orb{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff 0,#e8e5dc 22%,#8d887e 48%,#252525 72%);box-shadow:0 0 22px #e4d4ad55;animation:orbPulse 2.4s ease-in-out infinite}
+.ennie-label{font-size:10px;letter-spacing:2px;color:#d9c79f}
+.ennie-close{margin-left:auto;border:1px solid #ffffff35;background:#ffffff0c;color:#fff;border-radius:50%;width:34px;height:34px;font-size:19px}
+.ennie-window h2{font-size:23px;margin:8px 0 12px}
+.ennie-window p{font-size:14px;line-height:1.75;color:#e0dbd0}
+.ennie-cake-stage{height:180px;display:grid;place-items:center;margin:4px 0 14px;position:relative;overflow:hidden;border-radius:16px;background:radial-gradient(ellipse at 50% 80%,#a78a5030,transparent 65%)}
+.ennie-cake-svg{width:160px;height:160px;overflow:visible;animation:cakeFloat 2.6s ease-in-out infinite;filter:drop-shadow(0 12px 12px #0008)}
+.cake-flame{transform-origin:center bottom;animation:flame 650ms ease-in-out infinite alternate}
+.cake-spark{animation:spark 1.8s ease-in-out infinite}
+.ennie-controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.ennie-controls button{flex:1;min-width:120px;border-radius:11px;padding:12px 14px;border:1px solid #b59a65;background:#d8c397;color:#17130d;font-weight:700}
+.ennie-controls button.secondary{background:transparent;color:#eee;border-color:#ffffff40}
+.ennie-status{font-size:11px;color:#bcb4a4;margin-top:10px;min-height:16px}
+@keyframes ennieFade{from{opacity:0}to{opacity:1}}
+@keyframes orbPulse{50%{transform:scale(1.08);filter:brightness(1.25)}}
+@keyframes cakeFloat{0%,100%{transform:translateY(4px) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
+@keyframes flame{from{transform:scale(.82) rotate(-5deg)}to{transform:scale(1.13) rotate(5deg)}}
+@keyframes spark{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+@media(prefers-reduced-motion:reduce){.ennie-orb,.ennie-cake-svg,.cake-flame,.cake-spark{animation:none!important}}
+</style></head>
+<body><header class="header"><div class="logo">
+    TEHNOCELL <span>ID</span>
+</div>
+
+<div class="header-actions">
+
+    <a href="index.html" class="home-button">
+        ← На главную
+    </a>
+
+    <nav class="nav">
+        <button class="active" data-page="home">
+            Обзор
+        </button>
+
+        <button data-page="settings">
+            Настройки
+        </button>
+
+        <button class="logout" id="logoutButton">
+            Выйти ↗
+        </button>
+    </nav>
+
+</div>
+
+</header><main class="main"><div class="heading">
+    <div>
+        <h1 id="pageTitle">Обзор аккаунта</h1>
+        <p>Центр управления TEHNOCELL INDOSTRI</p>
+    </div>
+</div>
+
+
+<!-- ОБЗОР АККАУНТА -->
+
+<section id="home" class="page active">
+
+    <div class="profile-card">
+
+        <div class="profile-photo" id="profilePhoto">
+
+            <span id="profileInitial">T</span>
+
+            <img id="profileImage" alt="Аватар">
+
+            <span class="presence-dot" id="profilePresence"></span>
+
+        </div>
+
+        <div class="profile-info">
+
+            <h2 class="verified-name">
+
+                <span id="profileDisplayName">
+                    Пользователь
+                </span>
+
+                <span class="verified-badge" id="profileBadge">
+                    ✓
+                </span>
+
+            </h2>
+
+            <p class="profile-bio" id="profileBio">
+                Добро пожаловать в TEHNOCELL.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <section class="birthday-strip">
+      <div class="bday-kicker">TEHNOCELL ID · BIRTHDAY EDITION</div>
+      <div class="bday-row"><div class="bday-cake" aria-label="Праздничный значок"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15h22l-2 12H7L5 15Z"/><path d="M5 15c0-2 3-2 3-4 0 2 3 2 3 4 0-2 3-2 3-4 0 2 3 2 3 4 0-2 3-2 3-4 0 2 3 2 3 4"/><path d="M11 9V6m5 3V4m5 5V6"/></svg></div><div><div class="bday-title">Сегодня праздник, Влад!</div><div class="bday-desc">Твой профиль получил временный значок-тортик. Он отмечает этот день и исчезнет после праздничных суток.</div></div></div>
+      <div class="bday-actions"><button class="bday-btn" id="openEnnie">Открыть поздравление ENNIE</button><button class="bday-btn ghost" id="miniConfetti">Запустить конфетти</button></div>
+    </section>
+    <section class="bday-mini" aria-label="Мини-открытка с прокруткой">
+      <div class="bday-mini-head"><span>TEHNOCELL INDOSTRI</span><span>№ TC · BIRTHDAY</span></div>
+      <h2>С днём рождения, Влад!</h2>
+      <p>Спасибо за твои идеи, старание и вклад в развитие TEHNOCELL. Пусть впереди будут смелые проекты, новые открытия, верные друзья и много поводов гордиться собой. Сегодня можно отложить дела и просто наслаждаться своим днём!</p>
+      <p>Пусть каждый новый год приносит не только цели, но и силы, чтобы воплощать их в жизнь.</p>
+      <div class="bday-mini-foot">С УВАЖЕНИЕМ · КОМАНДА TEHNOCELL INDOSTRI</div>
+    </section>
+    <!-- ПРИВЕТСТВИЕ ПРИ ПЕРВОМ ПОСЕЩЕНИИ -->
+
+    <div class="welcome" id="welcomeBlock">
+
+        <div class="welcome-content">
+
+            <small>TEHNOCELL ID / PERSONAL ACCOUNT</small>
+
+            <h2 class="verified-name">
+
+                Добро пожаловать,
+                <span id="welcomeName">Пользователь</span>
+
+                <span class="verified-badge" id="welcomeBadge">
+                    ✓
+                </span>
+
+            </h2>
+
+            <p>
+                Ваш единый аккаунт в экосистеме TEHNOCELL.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <h2 class="section-title">
+        Информация об аккаунте
+    </h2>
+
+
+    <div class="grid">
+
+        <div class="card">
+
+            <div class="card-label">
+                Идентификатор аккаунта
+            </div>
+
+            <div class="card-value" id="userId">
+                Загрузка...
+            </div>
+
+            <div class="card-description">
+                Ваш уникальный TEHNOCELL ID
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-label">
+                Электронная почта
+            </div>
+
+            <div class="card-value" id="userEmail">
+                Загрузка...
+            </div>
+
+            <div class="card-description">
+                Почта вашего аккаунта
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-label">
+                Дата регистрации
+            </div>
+
+            <div class="card-value" id="createdAt">
+                Загрузка...
+            </div>
+
+            <div class="card-description">
+                Дата создания TEHNOCELL ID
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- НАСТРОЙКИ -->
+
+<section id="settings" class="page">
+
+
+    <!-- ПРОФИЛЬ -->
+
+    <div class="settings-category">
+
+        <h2 class="settings-category-title">
+            Профиль
+        </h2>
+
+
+        <div class="profile-card">
+
+            <div class="profile-photo" id="settingsPhoto">
+
+                <span id="settingsInitial">T</span>
+
+                <img id="settingsImage" alt="Аватар">
+
+            </div>
+
+
+            <div class="profile-info">
+
+                <h2 class="verified-name">
+
+                    <span id="settingsDisplayName">
+                        Пользователь
+                    </span>
+
+                    <span class="verified-badge" id="settingsBadge">
+                        ✓
+                    </span>
+
+                </h2>
+
+                <p class="profile-bio">
+                    Ваша фотография профиля TEHNOCELL ID.
+                </p>
+
+
+                <div class="photo-actions">
+
+                    <button class="action" id="choosePhoto">
+                        Изменить фото
+                    </button>
+
+                    <button class="action secondary" id="removePhoto">
+                        Удалить фото
+                    </button>
+
+                </div>
+
+                <p class="photo-note">
+                    Поддерживаются JPG, PNG и WEBP.
+                    Максимальный размер — 5 МБ.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <input
+            type="file"
+            id="photoInput"
+            class="photo-input"
+            accept="image/jpeg,image/png,image/webp"
+        >
+
+
+        <div class="panel">
+
+            <h3>Личные данные</h3>
+
+            <label for="nameInput">
+                Отображаемое имя
+            </label>
+
+            <input
+                type="text"
+                id="nameInput"
+                placeholder="Введите имя"
+                maxlength="40"
+            >
+
+
+            <label for="bioInput">
+                О себе
+            </label>
+
+            <textarea
+                id="bioInput"
+                placeholder="Расскажите немного о себе..."
+                maxlength="160"
+            ></textarea>
+
+
+            <button class="action" id="saveProfile">
+                Сохранить изменения
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ВНЕШНИЙ ВИД -->
+
+    <div class="settings-category">
+
+        <h2 class="settings-category-title">
+            Внешний вид
+        </h2>
+
+        <div class="panel">
+
+            <h3>Тема оформления</h3>
+
+            <p class="photo-note" style="margin-bottom:15px;">
+                Выберите оформление личного кабинета.
+            </p>
+
+            <div class="theme-options">
+
+                <button
+                    class="theme-option active"
+                    id="lightTheme"
+                    data-theme="light"
+                >
+                    ☀ Дневная
+                </button>
+
+                <button
+                    class="theme-option"
+                    id="darkTheme"
+                    data-theme="dark"
+                >
+                    ☾ Ночная
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- УВЕДОМЛЕНИЯ -->
+
+    <div class="settings-category">
+
+        <h2 class="settings-category-title">
+            Уведомления
+        </h2>
+
+        <div class="panel">
+
+            <h3>Управление уведомлениями</h3>
+
+            <p class="photo-note" style="margin-bottom:15px;">
+                Управляйте настройками уведомлений.
+            </p>
+
+            <div class="notification-options">
+
+                <button id="notificationsOn">
+                    Включить
+                </button>
+
+                <button id="notificationsOff">
+                    Выключить
+                </button>
+
+                <button id="pause1">
+                    Пауза 1 час
+                </button>
+
+                <button id="pause8">
+                    Пауза 8 часов
+                </button>
+
+                <button id="pause24">
+                    Пауза 24 часа
+                </button>
+
+            </div>
+
+            <p class="message" id="notificationMessage">
+                Уведомления включены.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- БЕЗОПАСНОСТЬ -->
+
+    <div class="settings-category">
+
+        <h2 class="settings-category-title">
+            Безопасность
+        </h2>
+
+        <div class="panel">
+
+            <h3>Изменение пароля</h3>
+
+            <label for="passwordInput">
+                Новый пароль
+            </label>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Введите новый пароль"
+            >
+
+            <button class="action" id="changePassword">
+                Изменить пароль
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- АККАУНТ -->
+
+    <div class="settings-category">
+
+        <h2 class="settings-category-title">
+            Аккаунт
+        </h2>
+
+        <div class="panel">
+
+            <h3>Информация об аккаунте</h3>
+
+            <label>
+                Электронная почта
+            </label>
+
+            <input
+                type="text"
+                id="settingsEmail"
+                readonly
+            >
+
+            <label>
+                TEHNOCELL ID
+            </label>
+
+            <input
+                type="text"
+                id="settingsUserId"
+                readonly
+            >
+
+            <div class="divider"></div>
+
+            <button class="action danger" id="settingsLogout">
+                Выйти из аккаунта
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="message" id="settingsMessage"></div>
+
+</section>
+
+</main>
+
+<div class="ennie-mini" id="birthdayModal" role="dialog" aria-modal="true" aria-labelledby="birthdayModalTitle">
+ <div class="ennie-window">
+  <div class="ennie-top"><div class="ennie-orb"></div><div class="ennie-label">ENNIE · TEHNOCELL AI</div><button class="ennie-close" id="closeEnnie" aria-label="Закрыть">×</button></div>
+  <div class="ennie-cake-stage" aria-label="Анимация праздничного торта">
+   <svg class="ennie-cake-svg" viewBox="0 0 180 180" role="img" aria-label="Двухъярусный праздничный торт со свечами">
+    <defs><linearGradient id="cakeCream" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff4dc"/><stop offset="1" stop-color="#cbb58e"/></linearGradient><linearGradient id="cakeGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5dfa9"/><stop offset="1" stop-color="#9c7740"/></linearGradient></defs>
+    <ellipse cx="90" cy="151" rx="63" ry="10" fill="#c7a96b" opacity=".2"/>
+    <path d="M29 112h122v29c0 8-7 13-15 13H44c-8 0-15-5-15-13z" fill="url(#cakeCream)" stroke="#9c835b" stroke-width="2"/>
+    <path d="M29 113c10 0 10 9 20 9s10-9 20-9 10 9 21 9 10-9 20-9 10 9 20 9 10-9 21-9" fill="none" stroke="#fff8e9" stroke-width="8" stroke-linecap="round"/>
+    <path d="M48 75h84v37H48z" fill="url(#cakeCream)" stroke="#9c835b" stroke-width="2"/>
+    <path d="M48 76c8 0 8 8 16 8s8-8 16-8 8 8 16 8 8-8 16-8 8 8 16 8" fill="none" stroke="#fff8e9" stroke-width="7" stroke-linecap="round"/>
+    <path d="M58 75V51h12v24m20 0V45h12v30m20 0V51h12v24" fill="#f1d9a6" stroke="#9c835b" stroke-width="1.5"/>
+    <g class="cake-flame" fill="#f8d47b"><path d="M64 48c-9-9 3-14 1-22 11 9 9 16 3 22z"/><path d="M94 42c-9-9 3-14 1-22 11 9 9 16 3 22z"/><path d="M124 48c-9-9 3-14 1-22 11 9 9 16 3 22z"/></g>
+    <path d="M31 143h118" stroke="url(#cakeGold)" stroke-width="4" stroke-linecap="round"/>
+    <g fill="#b18d52"><circle cx="58" cy="96" r="2.5"/><circle cx="90" cy="96" r="2.5"/><circle cx="122" cy="96" r="2.5"/><circle cx="48" cy="130" r="2.5"/><circle cx="90" cy="132" r="2.5"/><circle cx="132" cy="130" r="2.5"/></g>
+    <g class="cake-spark" fill="#f4dfad"><path d="M25 49l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path d="M151 63l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g>
+   </svg>
+  </div>
+  <div class="ennie-label">ЛИЧНОЕ СООБЩЕНИЕ</div>
+  <h2 id="birthdayModalTitle">С днём рождения, Влад!</h2>
+  <p id="ennieGreeting">Ой, Влад, с днём рождения! Я тут приготовила маленький сюрприз. Желаю тебе побольше классных идей, смелости воплощать их и людей рядом, с которыми легко и весело. И пусть TEHNOCELL растёт вместе с твоими мечтами. А сегодня — никаких обязательных задач: праздник всё-таки! И да, не забудь отдохнуть. Даже тем, кто строит будущее, иногда нужна пауза. С праздником!</p>
+  <div class="ennie-controls"><button id="speakEnnie">▶ Послушать Энни</button><button class="secondary" id="closeEnnieBottom">Спасибо, Энни!</button></div>
+  <div class="ennie-status" id="ennieStatus">Поздравление открывается автоматически. Если звук не включился, нажми «Послушать Энни».</div>
+ </div>
+</div><div class="bday-toast" id="bdayToast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const cake='<span class="cake-badge" title="Именинник · временный значок на 24 часа"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 25.5h22l-2-3H7l-2 3Z"/><path d="M7 22.5v-5.2c0-1.7 1.8-2.8 4.5-3.3 2.8-.5 6.2-.5 9 0 2.7.5 4.5 1.6 4.5 3.3v5.2H7Z"/><path d="M7 18.2c1.7 0 1.7 1.5 3.4 1.5s1.7-1.5 3.4-1.5 1.7 1.5 3.4 1.5 1.7-1.5 3.4-1.5 1.7 1.5 3.4 1.5"/><path d="M10 14V9.5c0-1.6 1.3-2.8 3-2.8s3 1.2 3 2.8V14"/><path d="M13 6.5V3.8m0 0c-1.1.7-1.1 1.4 0 2.1 1.1-.7 1.1-1.4 0-2.1Z"/><path d="M19 14v-2.8m0 0c-.9.6-.9 1.2 0 1.8.9-.6.9-1.2 0-1.8Z"/></svg></span>';
+["profileDisplayName","settingsDisplayName","welcomeName"].forEach(id=>{const el=$(id);if(el){el.textContent="Влад";el.insertAdjacentHTML("afterend",cake)}});
+$("profilePhoto").closest(".profile-card").classList.add("birthday-profile-frame");
+$("profileBio").textContent="Разработчик TEHNOCELL INDOSTRI · Сегодня именинник!";
+$("userId").textContent="TC-BIRTHDAY-PREVIEW";
+$("userEmail").textContent="Демонстрационный аккаунт";
+$("createdAt").textContent="Предпросмотр";
+$("settingsEmail").value="Демонстрационный аккаунт";
+$("settingsUserId").value="TC-BIRTHDAY-PREVIEW";
+$("profileInitial").textContent="В";$("settingsInitial").textContent="В";
+$("welcomeBlock").style.display="none";
+document.querySelectorAll(".nav button[data-page]").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));$(btn.dataset.page).classList.add("active");$("pageTitle").textContent=btn.dataset.page==="home"?"Праздничный обзор":"Настройки аккаунта"}));
+function toast(t){const el=$("bdayToast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2200)}
+function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;for(let i=0;i<65;i++){const p=document.createElement("i");p.className="bday-confetti";p.style.left=Math.random()*100+"vw";p.style.setProperty("--dx",(Math.random()*180-90)+"px");p.style.animationDelay=Math.random()+ "s";p.style.opacity=.4+Math.random()*.6;document.body.appendChild(p);setTimeout(()=>p.remove(),5000)}}
+
+function speakEnnie(){
+ if(!("speechSynthesis" in window)){ $("ennieStatus").textContent="Озвучивание не поддерживается этим браузером.";return; }
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance($("ennieGreeting").textContent);
+ u.lang="ru-RU";u.rate=.96;u.pitch=1.08;u.volume=1;
+ const voices=speechSynthesis.getVoices();
+ const ru=voices.find(v=>v.lang&&v.lang.toLowerCase().startsWith("ru"));
+ if(ru)u.voice=ru;
+ u.onstart=()=> $("ennieStatus").textContent="Энни поздравляет тебя…";
+ u.onend=()=> $("ennieStatus").textContent="Вот и всё! Ещё раз с праздником!";
+ u.onerror=()=> $("ennieStatus").textContent="Браузер не разрешил автоматический звук. Нажми «Послушать Энни».";
+ speechSynthesis.speak(u);
+}
+function openEnnie(){ $("birthdayModal").classList.add("show");confetti();setTimeout(speakEnnie,450); }
+function closeEnnie(){ $("birthdayModal").classList.remove("show");if("speechSynthesis" in window)speechSynthesis.cancel();}
+$("openEnnie").addEventListener("click",openEnnie);$("closeEnnie").addEventListener("click",closeEnnie);$("closeEnnieBottom").addEventListener("click",closeEnnie);$("speakEnnie").addEventListener("click",speakEnnie);
+$("birthdayModal").addEventListener("click",e=>{if(e.target===$("birthdayModal"))closeEnnie()});
+$("miniConfetti").addEventListener("click",()=>{confetti();toast("Праздник начинается!")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEnnie()});
+
+setTimeout(openEnnie,900);
+$("lightTheme").addEventListener("click",()=>document.body.classList.remove("dark-theme"));
+$("darkTheme").addEventListener("click",()=>document.body.classList.add("dark-theme"));
+$("choosePhoto").addEventListener("click",()=>toast("В демо-копии загрузка фото отключена"));
+$("removePhoto").addEventListener("click",()=>toast("Это демонстрационная копия профиля"));
+$("saveProfile").addEventListener("click",()=>toast("Изменения в демо-копии не сохраняются"));
+$("changePassword").addEventListener("click",()=>toast("Безопасность оригинального аккаунта не затрагивается"));
+$("logoutButton").addEventListener("click",()=>toast("Выход отключён в режиме просмотра"));
+$("settingsLogout").addEventListener("click",()=>toast("Выход отключён в режиме просмотра"));
+["notificationsOn","notificationsOff","pause1","pause8","pause24"].forEach(id=>$(id).addEventListener("click",()=>toast("Настройка показана только в демо-режиме")));
+</script>
+</body>
+</html>
