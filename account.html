@@ -105,6 +105,9 @@ body {
     color: var(--muted);
 }
 
+.nav-support-link{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border-radius:8px;border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:14px;white-space:nowrap}
+.nav-support-link:active{background:var(--background)}
+@media(max-width:650px){.nav-support-link{padding:9px 11px;font-size:13px}}
 /* MAIN */
 
 .main {
@@ -608,6 +611,8 @@ body {
         <button class="active" data-page="home">
             Обзор
         </button>
+
+        <a class="nav-support-link" href="support-admin.html">Поддержка</a>
 
         <button data-page="settings">
             Настройки
