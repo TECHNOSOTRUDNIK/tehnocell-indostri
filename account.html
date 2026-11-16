@@ -1446,7 +1446,7 @@ function renderPublicProfilePreview(profile,user){
  const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const facts=[];
  if(profile?.profile_game)facts.push('<div class="tc-preview-fact"><small>Сейчас играет</small><strong>'+esc(profile.profile_game)+'</strong></div>');
- if(profile?.profile_music_url&&/^https:\/\//i.test(profile.profile_music_url))facts.push('<div class="tc-preview-fact"><small>Музыка</small><a href="'+esc(profile.profile_music_url)+'" target="_blank" rel="noopener">Открыть ссылку ↗</a></div>');
+ 
  $("tcPreviewFacts").innerHTML=facts.join("");
  $("tcPreviewDate").textContent="В TEHNOCELL с "+new Date(user.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
 }
@@ -1685,7 +1685,7 @@ $("saveProfile").addEventListener("click", async () => {
 });
 
 
-$("removeProfileSound").addEventListener("click",()=>{removeSoundRequested=true;currentSoundPath=null;currentSoundCoverPath=null;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCurrent").textContent="Музыка будет удалена после сохранения оформления.";showTcToast("Музыка отмечена для удаления");});
+$("removeProfileSound").addEventListener("click",()=>{removeSoundRequested=true;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCurrent").textContent="Музыка будет удалена после сохранения оформления.";showTcToast("Музыка отмечена для удаления");});
 $("profileSoundInput").addEventListener("change",()=>{removeSoundRequested=false;const f=$("profileSoundInput").files[0];if(f)$("profileSoundCurrent").textContent="Выбран файл: "+f.name+" · "+(f.size/1024/1024).toFixed(1)+" МБ";});
 $("chooseProfileBanner").addEventListener("click",()=>$("profileBannerInput").click());
 $("profileBannerInput").addEventListener("change",()=>{const file=$("profileBannerInput").files[0];if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){$("customizationMessage").textContent="Выберите JPG, PNG или WEBP до 5 МБ."; $("profileBannerInput").value="";return;}if(bannerPreviewObjectUrl)URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=URL.createObjectURL(file);setBannerPreview(bannerPreviewObjectUrl);$("customizationMessage").textContent="Предпросмотр готов. Нажмите «Сохранить оформление».";});
