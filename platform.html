@@ -192,7 +192,7 @@ async function openPersonProfile(id){
    db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").eq("sender_id",id).eq("receiver_id",currentUser.id).in("status",["pending","accepted"]).maybeSingle()
   ]);
   const relation=sent.data||received.data;
-  if(relation?.status==="accepted") action='<button class="secondary-btn" data-remove-friend="'+relation.id+'">Удалить из друзей</button><span class="tiny">Вы друзья</span>';
+  if(relation?.status==="accepted") action='<button class="primary-btn" data-open-chat="'+id+'">Написать</button><button class="secondary-btn" data-remove-friend="'+relation.id+'">Удалить из друзей</button><span class="tiny">Вы друзья</span>';
   else if(relation?.status==="pending"&&relation.sender_id===currentUser.id) action='<button class="secondary-btn" disabled>Заявка отправлена</button><button class="secondary-btn" data-cancel-request="'+relation.id+'">Отменить</button>';
   else if(relation?.status==="pending") action='<button class="primary-btn" data-accept-request="'+relation.id+'">Принять заявку</button><button class="secondary-btn" data-decline-request="'+relation.id+'">Отклонить</button>';
   else action='<button class="primary-btn" data-send-friend="'+id+'">＋ Добавить в друзья</button>';
@@ -203,6 +203,7 @@ async function openPersonProfile(id){
  $("personProfileContent").querySelectorAll("[data-decline-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.declineRequest,"declined",id)));
  $("personProfileContent").querySelectorAll("[data-cancel-request]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.cancelRequest,id)));
  $("personProfileContent").querySelectorAll("[data-remove-friend]").forEach(b=>b.addEventListener("click",()=>removeFriend(b.dataset.removeFriend,id)));
+ $("personProfileContent").querySelectorAll("[data-open-chat]").forEach(b=>b.addEventListener("click",()=>{closeModal("personProfileModal");switchPage("messages");openChat(id,name);}));
 }
 function openModal(id){$(id).classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(id){$(id).classList.remove("open");document.body.style.overflow="";}
@@ -409,6 +410,8 @@ async function loadChatThread(){
  const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at);
  if(unread.length){
   await db.from("tc_direct_messages").update({read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));
+  await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);
+  loadHomeCounts();
  }
 }
 $("chatForm").addEventListener("submit",async e=>{
