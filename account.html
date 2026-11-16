@@ -1357,6 +1357,10 @@ function setAvatar(initial, url = null) {
 
         if (url) {
 
+            item.image.onerror = () => {
+                item.image.style.display = "none";
+                item.initial.style.display = "block";
+            };
             item.image.src = url;
             item.image.style.display = "block";
             item.initial.style.display = "none";
@@ -1405,14 +1409,28 @@ async function loadAccount() {
 
     const metadata = currentUser.user_metadata || {};
 
+    // Профильная таблица — основной источник актуальных имени и аватара.
+    // Метаданные Auth остаются резервным вариантом для старых аккаунтов.
+    const { data: savedProfile } = await db
+        .from("profiles")
+        .select("display_name,bio,avatar_path")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
     const displayName =
-        metadata.display_name || "Пользователь";
+        savedProfile?.display_name ||
+        metadata.display_name ||
+        "Пользователь";
 
     const bio =
-        metadata.bio || "";
+        savedProfile?.bio ??
+        metadata.bio ??
+        "";
 
     const avatarPath =
-        metadata.avatar_path || null;
+        savedProfile?.avatar_path ||
+        metadata.avatar_path ||
+        null;
 
 
     /* ИМЯ И BIO */
