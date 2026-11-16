@@ -1146,7 +1146,7 @@ body {
     <h3>Новое обращение</h3>
     <form id="newSupportForm">
       <label for="supportCategory">Тема обращения</label>
-      <select id="supportCategory"><option value="general">Общий вопрос</option><option value="account">Аккаунт и профиль</option><option value="birthday_correction">Исправление даты рождения</option><option value="bug">Ошибка или неисправность</option><option value="idea">Предложение</option></select>
+      <select id="supportCategory"><option value="general">Общий вопрос</option><option value="account">Аккаунт и профиль</option><option value="birthday_correction">Изменение даты рождения</option><option value="bug">Ошибка или неисправность</option><option value="idea">Идея или предложение</option><option value="services">Продукты TEHNOCELL</option><option value="security">Безопасность и конфиденциальность</option><option value="other">Другая тема</option></select>
       <label for="supportSubject">Кратко опишите вопрос</label><input id="supportSubject" maxlength="100" minlength="3" placeholder="Например: не могу изменить фото" required>
       <label for="supportFirstMessage">Сообщение</label><textarea id="supportFirstMessage" maxlength="5000" placeholder="Расскажите подробнее…" required></textarea>
       <div class="support-form-actions"><button class="action" type="submit">Создать обращение</button><button class="action secondary" type="button" id="cancelNewSupport">Отмена</button></div>
@@ -2092,7 +2092,7 @@ startAccount();
 let activeSupportConversation = null;
 let activeSupportStatus = "waiting";
 const supportStatusLabels = {waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"};
-const supportCategoryLabels = {general:"Общий вопрос",account:"Аккаунт и профиль",birthday_correction:"Исправление даты рождения",bug:"Ошибка",idea:"Предложение"};
+const supportCategoryLabels = {general:"Общий вопрос",account:"Аккаунт и профиль",birthday_correction:"Изменение даты рождения",bug:"Ошибка или неисправность",idea:"Идея или предложение",services:"Продукты TEHNOCELL",security:"Безопасность и конфиденциальность",other:"Другая тема"};
 $("openNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=false;$("supportSubject").focus();});
 $("cancelNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=true;});
 $("refreshSupport").addEventListener("click",loadSupportConversations);
