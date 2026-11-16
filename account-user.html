@@ -651,7 +651,7 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 .support-guide-step>b{font-size:11px;color:#9a8154;letter-spacing:1px}.support-guide-step strong,.support-guide-step span{display:block}.support-guide-step strong{font-size:12px;margin-bottom:4px}.support-guide-step span{font-size:11px;line-height:1.45;color:var(--muted)}
 .support-guide-foot{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.support-guide-foot span{font-size:10px;border:1px solid var(--border);border-radius:99px;padding:5px 9px;color:var(--muted)}
 @media(max-width:600px){.support-guide{padding:15px}.support-guide-steps{grid-template-columns:1fr;gap:7px}.support-guide-step{padding:10px}}
-.support-intro{position:relative;overflow:hidden;border-radius:17px;background:linear-gradient(120deg,#111 0%,#222 70%,#30291e 100%);border-color:#39352c}
+.support-attach-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:9px}.support-attach-btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:11px;padding:10px 13px;background:var(--surface);color:var(--text);font-size:13px;font-weight:600;cursor:pointer}.support-attach-hint{font-size:11px;color:var(--muted)}.support-file-list{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.support-file-chip{font-size:11px;padding:6px 9px;border-radius:9px;background:var(--background);border:1px solid var(--border);color:var(--muted)}.support-attachment{display:block;margin-top:9px;max-width:min(100%,260px);border-radius:11px;overflow:hidden;border:1px solid var(--border)}.support-attachment img{display:block;width:100%;height:auto;max-height:260px;object-fit:contain;background:#111}.support-intro{position:relative;overflow:hidden;border-radius:17px;background:linear-gradient(120deg,#111 0%,#222 70%,#30291e 100%);border-color:#39352c}
 .support-intro:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(223,201,155,.22);border-radius:50%;right:-75px;top:-110px;pointer-events:none}
 .support-intro>*{position:relative;z-index:1}
 .support-kicker{color:#dfc99b}
@@ -1164,20 +1164,13 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
       <div id="supportChat" hidden>
         <div class="support-chat-head"><div><h3 id="supportChatTitle">Обращение</h3><span id="supportChatStatus" class="support-status"></span></div></div>
         <div id="supportMessages" class="support-messages"></div>
-        <form id="supportReplyForm" class="support-reply-form"><textarea id="supportReplyText" maxlength="5000" placeholder="Напишите сообщение…" required></textarea><button class="action" type="submit">Отправить</button></form>
+        <form id="supportReplyForm" class="support-reply-form"><textarea id="supportReplyText" maxlength="5000" placeholder="Напишите сообщение…"></textarea><div class="support-attach-row"><label class="support-attach-btn" for="supportReplyFiles">＋ Фото</label><input id="supportReplyFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden><span class="support-attach-hint">До 4 фото, каждое до 5 МБ</span></div><div id="supportReplyFileList" class="support-file-list"></div><button class="action" type="submit">Отправить</button></form>
       </div>
     </div>
   </div>
   <div class="panel support-new-panel" id="newSupportPanel" hidden>
     <h3>Новое обращение</h3>
-    <form id="newSupportForm">
-      <label for="supportCategory">Тема обращения</label>
-      <select id="supportCategory"><option value="general">Общий вопрос</option><option value="account">Аккаунт и профиль</option><option value="birthday_correction">Изменение даты рождения</option><option value="bug">Ошибка или неисправность</option><option value="idea">Идея или предложение</option><option value="services">Продукты TEHNOCELL</option><option value="security">Безопасность и конфиденциальность</option><option value="other">Другая тема</option></select>
-      <label for="supportSubject">Кратко опишите вопрос</label><input id="supportSubject" maxlength="100" minlength="3" placeholder="Например: не могу изменить фото" required>
-      <label for="supportFirstMessage">Сообщение</label><textarea id="supportFirstMessage" maxlength="5000" placeholder="Расскажите подробнее…" required></textarea>
-      <div class="support-form-actions"><button class="action" type="submit">Создать обращение</button><button class="action secondary" type="button" id="cancelNewSupport">Отмена</button></div>
-      <p class="message" id="newSupportMessage"></p>
-    </form>
+    <form id="newSupportForm"><label for="supportCategory">Тема обращения</label><select id="supportCategory"><option value="general">Общий вопрос</option><option value="account">Аккаунт и профиль</option><option value="birthday_correction">Изменение даты рождения</option><option value="bug">Ошибка или неисправность</option><option value="idea">Идея или предложение</option><option value="services">Продукты TEHNOCELL</option><option value="security">Безопасность и конфиденциальность</option><option value="other">Другая тема</option></select><label for="supportSubject">Кратко опишите вопрос</label><input id="supportSubject" maxlength="100" minlength="3" placeholder="Например: не могу изменить фото" required><label for="supportFirstMessage">Сообщение</label><textarea id="supportFirstMessage" maxlength="5000" placeholder="Расскажите подробнее…" required></textarea><div class="support-attach-row"><label class="support-attach-btn" for="supportFirstFiles">＋ Прикрепить фото</label><input id="supportFirstFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden><span class="support-attach-hint">До 4 изображений · JPG, PNG, WEBP · до 5 МБ каждое</span></div><div id="supportFirstFileList" class="support-file-list"></div><div class="support-form-actions"><button class="action" type="submit">Создать обращение</button><button class="action secondary" type="button" id="cancelNewSupport">Отмена</button></div><p class="message" id="newSupportMessage"></p></form>
   </div>
 </section>
 </main>
@@ -2161,6 +2154,12 @@ function startSupportRealtime() {
 }
 const supportStatusLabels = {waiting:"Ожидает ответа",in_progress:"В работе",resolved:"Решено"};
 const supportCategoryLabels = {general:"Общий вопрос",account:"Аккаунт и профиль",birthday_correction:"Изменение даты рождения",bug:"Ошибка или неисправность",idea:"Идея или предложение",services:"Продукты TEHNOCELL",security:"Безопасность и конфиденциальность",other:"Другая тема"};
+const SUPPORT_ATTACH_BUCKET="support-attachments";
+function validSupportFiles(fs){const x=Array.from(fs||[]);if(x.length>4)throw Error("Можно прикрепить не больше 4 изображений.");for(const f of x){if(!["image/jpeg","image/png","image/webp"].includes(f.type))throw Error("Поддерживаются только JPG, PNG и WEBP.");if(f.size>5*1024*1024)throw Error("Каждое изображение должно быть не больше 5 МБ.");}return x;}
+function listSupportFiles(i,l){const box=$(l);box.replaceChildren();try{validSupportFiles($(i).files).forEach(f=>{const n=document.createElement("span");n.className="support-file-chip";n.textContent=f.name+" · "+(f.size/1048576).toFixed(1)+" МБ";box.append(n);});}catch(e){box.textContent=e.message;}}
+async function uploadSupportFiles(cid,mid,files){for(const f of validSupportFiles(files)){const ext=f.type==="image/png"?"png":f.type==="image/webp"?"webp":"jpg",path=currentUser.id+"/"+cid+"/"+crypto.randomUUID()+"."+ext,{error}=await db.storage.from(SUPPORT_ATTACH_BUCKET).upload(path,f,{contentType:f.type,upsert:false});if(error)throw error;const r=await db.from("support_attachments").insert({conversation_id:cid,message_id:mid,uploaded_by:currentUser.id,object_path:path,file_name:f.name,mime_type:f.type,file_size:f.size});if(r.error){await db.storage.from(SUPPORT_ATTACH_BUCKET).remove([path]);throw r.error;}}}
+async function renderSupportFiles(box,mid){const {data,error}=await db.from("support_attachments").select("object_path,file_name").eq("message_id",mid);if(error||!data)return;for(const f of data){const {data:s}=await db.storage.from(SUPPORT_ATTACH_BUCKET).createSignedUrl(f.object_path,600);if(!s?.signedUrl)continue;const link=document.createElement("a");link.className="support-attachment";link.href=s.signedUrl;link.target="_blank";link.rel="noopener";const img=document.createElement("img");img.src=s.signedUrl;img.alt=f.file_name;img.loading="lazy";link.append(img);box.append(link);}}
+$("supportFirstFiles").addEventListener("change",()=>listSupportFiles("supportFirstFiles","supportFirstFileList"));$("supportReplyFiles").addEventListener("change",()=>listSupportFiles("supportReplyFiles","supportReplyFileList"));
 $("openNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=false;$("supportSubject").focus();});
 $("cancelNewSupport").addEventListener("click",()=>{$("newSupportPanel").hidden=true;});
 $("refreshSupport").addEventListener("click",loadSupportConversations);
@@ -2193,7 +2192,7 @@ async function openSupportConversation(id,subject,status){
   const label=document.createElement("span");label.textContent=isSystem?"TEHNOCELL · АВТООТВЕТ":isChief?"Главный специалист":isStaff?"TEHNOCELL SUPPORT":"Вы";
   const time=document.createElement("span");time.textContent="· "+new Date(m.created_at).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"short"});
   meta.append(mark,label,time);
-  const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);$("supportMessages").appendChild(el);
+  const body=document.createElement("div");body.textContent=m.body;el.append(meta,body);renderSupportFiles(el,m.id);$("supportMessages").appendChild(el);
  });
  $("supportMessages").scrollTop=$("supportMessages").scrollHeight;
  await loadSupportConversations();
@@ -2205,16 +2204,16 @@ $("newSupportForm").addEventListener("submit",async e=>{
  const submit=e.submitter;submit.disabled=true;$("newSupportMessage").textContent="Создаём обращение…";
  const {data,error}=await db.from("support_conversations").insert({user_id:currentUser.id,subject,category}).select("id").single();
  if(error){submit.disabled=false;$("newSupportMessage").textContent="Ошибка: "+error.message;return;}
- const {error:messageError}=await db.from("support_messages").insert({conversation_id:data.id,sender_id:currentUser.id,sender_type:"user",body});
- if(messageError){$("newSupportMessage").textContent="Обращение создано, но сообщение не отправилось. Попробуйте отправить его из чата.";submit.disabled=false;await loadSupportConversations();return;}
- $("newSupportForm").reset();$("newSupportPanel").hidden=true;submit.disabled=false;$("newSupportMessage").textContent="";
+ const {data:sentMessage,error:messageError}=await db.from("support_messages").insert({conversation_id:data.id,sender_id:currentUser.id,sender_type:"user",body}).select("id").single();
+ if(messageError){$("newSupportMessage").textContent="Обращение создано, но сообщение не отправилось: "+messageError.message;submit.disabled=false;await loadSupportConversations();return;} try{await uploadSupportFiles(data.id,sentMessage.id,$("supportFirstFiles").files);}catch(fileError){$("newSupportMessage").textContent="Текст отправлен, но фото не загрузилось: "+fileError.message;submit.disabled=false;await loadSupportConversations();await openSupportConversation(data.id,subject,"waiting");return;}
+ $("newSupportForm").reset();$("supportFirstFileList").replaceChildren();$("newSupportPanel").hidden=true;submit.disabled=false;$("newSupportMessage").textContent="";
  await loadSupportConversations();await openSupportConversation(data.id,subject,"waiting");
 });
 $("supportReplyForm").addEventListener("submit",async e=>{
  e.preventDefault();if(!currentUser||!activeSupportConversation)return;
- const body=$("supportReplyText").value.trim();if(!body)return;
+ const body=$("supportReplyText").value.trim(),files=$("supportReplyFiles").files;if(!body&&!files.length)return;
  const button=e.submitter;button.disabled=true;
- const {error}=await db.from("support_messages").insert({conversation_id:activeSupportConversation,sender_id:currentUser.id,sender_type:"user",body});
+ const {data:sent,error}=await db.from("support_messages").insert({conversation_id:activeSupportConversation,sender_id:currentUser.id,sender_type:"user",body:body||"Отправлено изображение."}).select("id").single();
  button.disabled=false;
  if(error){$("supportMessages").insertAdjacentText("beforeend","Не удалось отправить сообщение: "+error.message);return;}
  $("supportReplyText").value="";
