@@ -310,17 +310,18 @@ async function loadFeed(){
  if(!posts?.length){$("feedList").innerHTML='<div class="empty">Публикаций пока нет. Создайте сообщество и поделитесь первой записью.</div>';return;}
  const ids=[...new Set(posts.map(p=>p.author_id))],cids=[...new Set(posts.map(p=>p.community_id))],pids=posts.map(p=>p.id);
  const [{data:profiles},{data:cs},{data:reactions},{data:comments}] = await Promise.all([
-  db.from("profiles").select("id,display_name").in("id",ids),
+  db.from("profiles").select("id,display_name,avatar_path").in("id",ids),
   db.from("tc_communities").select("id,name").in("id",cids),
   db.from("tc_post_reactions").select("post_id,user_id").in("post_id",pids),
   db.from("tc_comments").select("post_id").in("post_id",pids)
  ]);
- const pm=new Map((profiles||[]).map(p=>[p.id,p.display_name])),cm=new Map((cs||[]).map(c=>[c.id,c.name]));
+ const pm=new Map((profiles||[]).map(p=>[p.id,p])),cm=new Map((cs||[]).map(c=>[c.id,c.name]));
  const rc=new Map(),cc=new Map();(reactions||[]).forEach(r=>rc.set(r.post_id,(rc.get(r.post_id)||0)+1));(comments||[]).forEach(c=>cc.set(c.post_id,(cc.get(c.post_id)||0)+1));
  const liked=new Set((reactions||[]).filter(r=>r.user_id===currentUser.id).map(r=>r.post_id));
  $("feedList").innerHTML=posts.map(p=>{
-  const author=pm.get(p.author_id)||"Участник";
-  return '<article class="post-card" data-post="'+p.id+'"><div class="post-head"><div class="avatar">'+escapeHtml(author.charAt(0).toUpperCase())+'</div><div style="min-width:0"><div class="post-author">'+escapeHtml(author)+verifiedBadge(p.author_id)+'</div><div class="post-detail"><span class="post-community">'+escapeHtml(cm.get(p.community_id)||"Сообщество")+'</span> · '+new Date(p.created_at).toLocaleString("ru-RU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+'</div></div></div><div class="post-body">'+escapeHtml(p.body)+'</div><div class="post-actions"><button class="post-action '+(liked.has(p.id)?"active":"")+'" data-like="'+p.id+'">♡ Нравится · '+(rc.get(p.id)||0)+'</button><button class="post-action" data-comments="'+p.id+'">Комментарии · '+(cc.get(p.id)||0)+'</button>'+(p.author_id===currentUser.id?'<button class="post-action" data-delete-post="'+p.id+'">Удалить</button>':'')+'</div></article>';
+  const authorProfile=pm.get(p.author_id)||{},author=authorProfile.display_name||"Участник";
+  const photos=Array.isArray(p.photo_paths)?p.photo_paths:[];const gallery=photos.length?'<div class="post-gallery '+(photos.length===1?"one":"")+'">'+photos.slice(0,4).map(path=>'<img loading="lazy" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl)+'" alt="Фотография публикации">').join("")+'</div>':"";
+  return '<article class="post-card" data-post="'+p.id+'"><div class="post-head"><button class="post-person" type="button" data-profile="'+p.author_id+'"><div class="avatar">'+avatarMarkup(author,authorProfile.avatar_path)+'</div><div style="min-width:0"><div class="post-author">'+escapeHtml(author)+verifiedBadge(p.author_id)+'</div><div class="post-detail"><span class="post-community">'+escapeHtml(cm.get(p.community_id)||"Сообщество")+'</span> · '+new Date(p.created_at).toLocaleString("ru-RU",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})+'</div></div></button></div><div class="post-body">'+escapeHtml(p.body)+'</div>'+gallery+'<div class="post-actions"><button class="post-action '+(liked.has(p.id)?"active":"")+'" data-like="'+p.id+'">♡ Нравится · '+(rc.get(p.id)||0)+'</button><button class="post-action" data-comments="'+p.id+'">Комментарии · '+(cc.get(p.id)||0)+'</button>'+(p.author_id===currentUser.id?'<button class="post-action" data-delete-post="'+p.id+'">Удалить</button>':'')+'</div></article>';
  }).join("");
  document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
  document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
