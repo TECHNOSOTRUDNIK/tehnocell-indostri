@@ -119,7 +119,7 @@
 </section>
 <section class="page" id="page-notifications">
 <div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения.</p>
-<div id="notificationList"><div class="loading">Загружаем уведомления…</div></div>
+<div class="toolbar"><button class="secondary-btn" id="markAllNotifications">Отметить всё просмотренным</button></div><div id="notificationList"><div class="loading">Загружаем уведомления…</div></div>
 </section>
 <section class="page" id="page-profile">
 <div class="eyebrow">ВАШ TEHNOCELL ID</div><h1 class="page-title">Профиль</h1><p class="page-subtitle">Единый аккаунт для сервисов и общения внутри экосистемы.</p>
@@ -137,7 +137,7 @@
 <a class="active" href="#home" data-page="home"><b>⌂</b>Главная</a><a href="#feed" data-page="feed"><b>▤</b>Лента</a><a href="#communities" data-page="communities"><b>◫</b>Группы</a><a href="#messages" data-page="messages"><b>✉</b>Чаты</a><a href="#notifications" data-page="notifications"><b>♧</b>События</a><a href="#profile" data-page="profile"><b>◎</b>Профиль</a>
 </nav>
 <div class="modal-backdrop" id="personProfileModal"><div class="modal"><div class="modal-head"><h2>Профиль участника</h2><button class="close-btn" data-close="personProfileModal">×</button></div><div id="personProfileContent"><div class="loading">Загрузка…</div></div></div></div>
-<div class="modal-backdrop" id="communityModal"><div class="modal"><div class="modal-head"><h2>Новое сообщество</h2><button class="close-btn" data-close="communityModal">×</button></div><form id="communityForm"><label class="field-label" for="communityName">Название</label><input class="field" id="communityName" maxlength="48" minlength="3" placeholder="Например, Мир технологий" required><label class="field-label" for="communityCategory">Категория</label><select class="select" id="communityCategory"><option>Общее</option><option>Технологии</option><option>Игры</option><option>Музыка</option><option>Творчество</option><option>Образование</option><option>Общение</option></select><label class="field-label" for="communityDescription">Описание</label><textarea class="textarea" id="communityDescription" maxlength="500" placeholder="Расскажите, о чём это сообщество"></textarea><div class="modal-status" id="communityStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="communityModal">Отмена</button><button class="primary-btn" id="communitySubmit">Создать сообщество</button></div></form></div></div>
+<div class="modal-backdrop" id="communityDetailsModal"><div class="modal"><div class="modal-head"><h2 id="communityDetailsTitle">Сообщество</h2><button class="close-btn" data-close="communityDetailsModal">×</button></div><div id="communityDetailsContent"></div></div></div><div class="modal-backdrop" id="communityModal"><div class="modal"><div class="modal-head"><h2>Новое сообщество</h2><button class="close-btn" data-close="communityModal">×</button></div><form id="communityForm"><label class="field-label" for="communityName">Название</label><input class="field" id="communityName" maxlength="48" minlength="3" placeholder="Например, Мир технологий" required><label class="field-label" for="communityCategory">Категория</label><select class="select" id="communityCategory"><option>Общее</option><option>Технологии</option><option>Игры</option><option>Музыка</option><option>Творчество</option><option>Образование</option><option>Общение</option></select><label class="field-label" for="communityDescription">Описание</label><textarea class="textarea" id="communityDescription" maxlength="500" placeholder="Расскажите, о чём это сообщество"></textarea><div class="modal-status" id="communityStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="communityModal">Отмена</button><button class="primary-btn" id="communitySubmit">Создать сообщество</button></div></form></div></div>
 <div class="modal-backdrop" id="postModal"><div class="modal"><div class="modal-head"><h2>Новая публикация</h2><button class="close-btn" data-close="postModal">×</button></div><form id="postForm"><label class="field-label" for="postCommunity">Сообщество</label><select class="select" id="postCommunity" required></select><label class="field-label" for="postBody">Текст публикации</label><textarea class="textarea" id="postBody" maxlength="5000" placeholder="О чём хотите рассказать?" required></textarea><div class="modal-status" id="postStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="postModal">Отмена</button><button class="primary-btn" id="postSubmit">Опубликовать</button></div></form></div></div>
 <div class="modal-backdrop" id="commentsModal"><div class="modal"><div class="modal-head"><h2>Обсуждение</h2><button class="close-btn" data-close="commentsModal">×</button></div><div id="modalComments"></div><form id="modalCommentForm"><label class="field-label" for="modalCommentText">Ваш комментарий</label><textarea class="textarea" id="modalCommentText" maxlength="2000" placeholder="Напишите комментарий…" required style="min-height:80px"></textarea><div class="modal-status" id="commentStatus"></div><div class="modal-actions"><button class="primary-btn" id="commentSubmit">Отправить</button></div></form></div></div>
 <script>
@@ -150,7 +150,7 @@ function isVerified(id){return VERIFIED_TEAM.includes(id);}
 function verifiedBadge(id){return isVerified(id)?'<span class="verified-badge" title="Подтверждённая команда TEHNOCELL" aria-label="Подтверждённая команда TEHNOCELL">✓</span>':"";}
 const $=id=>document.getElementById(id);
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function showNotice(message){$("notice").textContent=message;$("notice").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}
+let noticeTimer=null;function showNotice(message){const el=$("notice");el.textContent=message;el.style.display="block";clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>{el.style.display="none";},4200);}
 function avatarMarkup(name,path){if(path){const {data}=db.storage.from("profile-avatars").getPublicUrl(path);return '<img src="'+escapeHtml(data.publicUrl)+'" alt="">';}return escapeHtml((name||"T").charAt(0).toUpperCase());}
 function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
@@ -247,6 +247,7 @@ function renderCommunities(){
   const owner=c.owner_id===currentUser.id,joined=memberships.has(c.id);
   return '<article class="community-card"><div class="community-top"><div class="community-mark">'+escapeHtml(c.name.charAt(0).toUpperCase())+'</div><div style="min-width:0"><h3>'+escapeHtml(c.name)+'</h3><div class="community-meta">'+escapeHtml(c.category)+' · '+(memberCounts.get(c.id)||0)+' участн. · '+new Date(c.created_at).toLocaleDateString("ru-RU")+'</div></div></div><p class="community-desc">'+escapeHtml(c.description||"У этого сообщества пока нет описания.")+'</p><div class="community-actions"><span class="tiny">'+(owner?"ВАШЕ СООБЩЕСТВО":joined?"ВЫ УЧАСТНИК":"ОТКРЫТОЕ СООБЩЕСТВО")+'</span>'+(owner?'<button class="secondary-btn" disabled>Владелец</button>':joined?'<button class="secondary-btn" data-leave="'+c.id+'">Выйти</button>':'<button class="primary-btn" data-join="'+c.id+'">Вступить</button>')+'</div></article>';
  }).join("")+'</div>';
+ $("communityList").querySelectorAll(".community-card").forEach(card=>{card.style.cursor="pointer";card.addEventListener("click",e=>{if(e.target.closest("button"))return;const id=card.querySelector("[data-join],[data-leave]")?.dataset.join||card.querySelector("[data-leave]")?.dataset.leave||communities.find(c=>card.textContent.includes(c.name))?.id;if(id)openCommunityDetails(id);});});
  document.querySelectorAll("[data-join]").forEach(b=>b.addEventListener("click",()=>joinCommunity(b.dataset.join,b)));
  document.querySelectorAll("[data-leave]").forEach(b=>b.addEventListener("click",()=>leaveCommunity(b.dataset.leave,b)));
 }
@@ -271,6 +272,17 @@ async function leaveCommunity(id,button){
  button.disabled=true;const {error}=await db.from("tc_community_members").delete().eq("community_id",id).eq("user_id",currentUser.id);
  if(error){button.disabled=false;showNotice("Не удалось выйти: "+error.message);return;}
  memberships.delete(id);memberCounts.set(id,Math.max(0,(memberCounts.get(id)||0)-1));renderCommunities();fillPostCommunity();loadHomeCounts();
+}
+async function openCommunityDetails(id){
+ const c=communities.find(x=>x.id===id);if(!c)return;
+ $("communityDetailsTitle").textContent=c.name;$("communityDetailsContent").innerHTML='<div class="loading">Загрузка публикаций…</div>';openModal("communityDetailsModal");
+ const {data:posts,error}=await db.from("tc_posts").select("id,body,created_at").eq("community_id",id).order("created_at",{ascending:false}).limit(20);
+ if(error){$("communityDetailsContent").textContent="Не удалось открыть сообщество: "+error.message;return;}
+ const joined=memberships.has(id),owner=c.owner_id===currentUser.id;
+ const cards=(posts||[]).map(x=>'<article class="post-card"><div class="post-body">'+escapeHtml(x.body)+'</div><div class="post-detail">'+new Date(x.created_at).toLocaleString("ru-RU")+'</div></article>').join("");
+ $("communityDetailsContent").innerHTML='<p class="person-profile-bio">'+escapeHtml(c.description||"У этого сообщества пока нет описания.")+'</p><div class="person-profile-date">'+escapeHtml(c.category)+' · '+(memberCounts.get(id)||0)+' участников</div>'+(owner?'<div class="tiny">Вы создатель сообщества</div>':joined?'<button class="secondary-btn" id="detailLeave">Выйти из сообщества</button>':'<button class="primary-btn" id="detailJoin">Вступить</button>')+'<div class="section-head"><h2>Публикации</h2></div>'+(cards||'<div class="empty">Публикаций пока нет.</div>');
+ $("detailJoin")?.addEventListener("click",async()=>{await joinCommunity(id,$("detailJoin"));await openCommunityDetails(id);});
+ $("detailLeave")?.addEventListener("click",async()=>{await leaveCommunity(id,$("detailLeave"));await openCommunityDetails(id);});
 }
 function fillPostCommunity(){
  const available=communities.filter(c=>c.owner_id===currentUser.id||memberships.has(c.id));
@@ -424,6 +436,7 @@ $("chatForm").addEventListener("submit",async e=>{
  $("chatInput").value="";await loadChatThread();await loadConversations();
 });
 
+document.getElementById("markAllNotifications").addEventListener("click",async()=>{const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).is("read_at",null);if(error){showNotice("Не удалось отметить уведомления: "+error.message);return;}await loadNotifications();await loadHomeCounts();});
 async function loadNotifications(){
  $("notificationList").innerHTML='<div class="loading">Загружаем уведомления…</div>';
  const {data:rows,error}=await db.from("tc_notifications").select("*").eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(50);
