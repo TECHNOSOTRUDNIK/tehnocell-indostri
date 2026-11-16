@@ -13,7 +13,7 @@
 .nav-label{padding:10px 11px;color:#656565;font-size:9px;font-weight:800;letter-spacing:1.8px}.nav{display:grid;gap:5px}.nav a,.nav button{width:100%;border:0;background:transparent;color:#999;text-align:left;padding:12px 13px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:12px}.nav a.active,.nav button.active{background:#f2f2f2;color:#111;font-weight:750}.nav .ico{width:19px;text-align:center;font-size:15px}
 .sidebar-bottom{margin-top:auto}.mini-profile{display:flex;align-items:center;gap:10px;padding:12px 9px;border-top:1px solid var(--line);margin-top:14px}.avatar{width:37px;height:37px;border-radius:50%;background:#292929;display:grid;place-items:center;overflow:hidden;flex:0 0 37px;font-size:13px;font-weight:800}.avatar img{width:100%;height:100%;object-fit:cover}.mini-name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mini-sub{font-size:10px;color:#777;margin-top:4px}
 .main{min-width:0;max-width:1150px;width:100%;margin:0 auto;padding:28px clamp(16px,4vw,50px) 70px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:30px}.crumb{color:#777;font-size:10px;letter-spacing:1px}.top-actions{display:flex;gap:8px}.top-btn,.secondary-btn{border:1px solid var(--line);background:#121212;color:#ddd;padding:9px 13px;border-radius:9px;font-size:11px}.primary-btn{border:1px solid #eee;background:#f2f2f2;color:#111;padding:11px 15px;border-radius:10px;font-size:11px;font-weight:800}.primary-btn:disabled,.secondary-btn:disabled{opacity:.5;cursor:wait}
-.notice{display:none;margin:0 0 17px;padding:12px 14px;border:1px solid #574646;border-radius:10px;color:#e2caca;background:#211616;font-size:12px;line-height:1.6}
+.global-search-wrap{position:relative;width:min( min(42vw,420px),100%)}.global-search{width:100%;min-width:180px;border:1px solid #303030;border-radius:10px;background:#111;color:#f5f5f5;padding:10px 13px;font-size:11px;outline:none}.global-search:focus{border-color:#777}.global-search-results{position:absolute;z-index:80;top:calc(100% + 8px);right:0;width:min( min(88vw,460px),calc(100vw - 28px));max-height:min(65vh,520px);overflow:auto;padding:10px;border:1px solid #353535;border-radius:13px;background:#111;box-shadow:0 18px 55px #000c}.search-group-title{padding:8px 7px 5px;color:#777;font-size:9px;font-weight:800;letter-spacing:1.3px}.search-result{display:flex;align-items:flex-start;gap:10px;padding:10px 8px;border-radius:9px;border-bottom:1px solid #242424}.search-result:last-child{border-bottom:0}.search-result-copy{min-width:0;flex:1}.search-result-name{font-size:11px;font-weight:750;color:#eee;overflow-wrap:anywhere}.search-result-meta{font-size:9px;color:#888;margin-top:4px;line-height:1.5;overflow-wrap:anywhere}.search-empty{padding:14px 8px;color:#888;font-size:11px;line-height:1.6}.search-result .avatar{width:34px;height:34px;flex:0 0 34px;font-size:11px}@media(max-width:650px){.topbar{display:block}.top-actions{display:flex;flex-wrap:wrap;align-items:center}.global-search-wrap{order:-1;width:100%;flex:1 0 100%;margin-bottom:9px}.global-search{min-width:0;padding:12px}.global-search-results{left:0;right:auto;width:100%}.top-actions .top-btn{flex:1;text-align:center}}.notice{display:none;margin:0 0 17px;padding:12px 14px;border:1px solid #574646;border-radius:10px;color:#e2caca;background:#211616;font-size:12px;line-height:1.6}
 .page{display:none}.page.active{display:block}.eyebrow{font-size:9px;letter-spacing:2px;color:#777;font-weight:800}.page-title{font-size:clamp(26px,4vw,38px);letter-spacing:-1.4px;margin:10px 0 7px}.page-subtitle{color:#888;font-size:12px;line-height:1.65;margin:0 0 24px}
 .welcome{border:1px solid #333;border-radius:17px;background:radial-gradient(ellipse at 90% 0%,#292929 0,transparent 48%),linear-gradient(125deg,#1b1b1b,#101010 65%);padding:23px 24px;margin-bottom:25px;position:relative;overflow:hidden}.welcome:after{content:"T";position:absolute;right:25px;top:-30px;font-size:145px;font-weight:900;color:#ffffff08;pointer-events:none}.welcome-tag{font-size:9px;letter-spacing:2px;color:#aaa}.welcome h2{font-size:20px;margin:12px 0 7px;letter-spacing:-.5px}.welcome p{max-width:570px;color:#aaa;font-size:12px;line-height:1.7;margin:0}
 .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:25px 0 13px}.section-head h2{font-size:15px;margin:0}.section-head span{font-size:9px;color:#777;letter-spacing:1px}
@@ -50,7 +50,7 @@
 <div class="sidebar-bottom"><div class="mini-profile"><div class="avatar" id="sideAvatar">T</div><div style="min-width:0"><div class="mini-name" id="sideName">Загрузка…</div><div class="mini-sub">TEHNOCELL ID</div></div></div></div>
 </aside>
 <main class="main">
-<div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="account.html" id="accountLink">TEHNOCELL ID</a></div></div>
+<div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><div class="global-search-wrap"><input id="globalSearch" class="global-search" type="search" placeholder="Найти людей, сообщества, записи…" autocomplete="off" aria-label="Поиск по платформе"><div id="globalSearchResults" class="global-search-results" hidden></div></div><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="account.html" id="accountLink">TEHNOCELL ID</a></div></div>
 <div class="notice" id="notice" role="status"></div>
 <section class="page active" id="page-home">
 <div class="eyebrow">ЕДИНОЕ ЦИФРОВОЕ ПРОСТРАНСТВО</div><h1 class="page-title">Добро пожаловать, <span id="greetingName">...</span></h1><p class="page-subtitle">Общение, сообщества и сервисы TEHNOCELL — в одном пространстве.</p>
@@ -106,6 +106,42 @@ function showNotice(message){$("notice").textContent=message;$("notice").style.d
 function avatarMarkup(name,path){if(path){const {data}=db.storage.from("profile-avatars").getPublicUrl(path);return '<img src="'+escapeHtml(data.publicUrl)+'" alt="">';}return escapeHtml((name||"T").charAt(0).toUpperCase());}
 function switchPage(name){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
+
+let globalSearchTimer=null, globalSearchToken=0;
+function searchText(value){return String(value||"").replace(/[\\%_]/g," ").replace(/[(),]/g," ").trim().slice(0,70);}
+function renderSearchGroup(title,items,renderer){if(!items.length)return "";return '<div class="search-group-title">'+title+'</div>'+items.map(renderer).join("");}
+async function runGlobalSearch(){
+ const input=$("globalSearch"),box=$("globalSearchResults"),term=searchText(input.value),token=++globalSearchToken;
+ if(term.length<2){box.hidden=true;box.innerHTML="";return;}
+ box.hidden=false;box.innerHTML='<div class="search-empty">Ищем по платформе…</div>';
+ const pattern="%"+term+"%";
+ const [byName,byUsername,byBio,groups,posts]=await Promise.all([
+  db.from("profiles").select("id,username,display_name,bio,status_text").ilike("display_name",pattern).limit(8),
+  db.from("profiles").select("id,username,display_name,bio,status_text").ilike("username",pattern).limit(8),
+  db.from("profiles").select("id,username,display_name,bio,status_text").ilike("bio",pattern).limit(8),
+  db.from("tc_communities").select("id,name,description,category").ilike("name",pattern).limit(6),
+  db.from("tc_posts").select("id,body,author_id,community_id,created_at").ilike("body",pattern).order("created_at",{ascending:false}).limit(6)
+ ]);
+ if(token!==globalSearchToken)return;
+ const peopleMap=new Map();[byName.data||[],byUsername.data||[],byBio.data||[]].flat().forEach(p=>{if(p.id!==currentUser.id)peopleMap.set(p.id,p);});
+ const people=[...peopleMap.values()].slice(0,10);
+ const groupItems=groups.data||[],postItems=posts.data||[];
+ const authorIds=[...new Set(postItems.map(p=>p.author_id))],communityIds=[...new Set(postItems.map(p=>p.community_id))];
+ const [{data:authors},{data:postCommunities}]=await Promise.all([
+  authorIds.length?db.from("profiles").select("id,display_name,username").in("id",authorIds):Promise.resolve({data:[]}),
+  communityIds.length?db.from("tc_communities").select("id,name").in("id",communityIds):Promise.resolve({data:[]})
+ ]);
+ if(token!==globalSearchToken)return;
+ const authorMap=new Map((authors||[]).map(p=>[p.id,p])),communityMap=new Map((postCommunities||[]).map(p=>[p.id,p.name]));
+ const peopleHtml=renderSearchGroup("ЛЮДИ",people,p=>'<div class="search-result"><div class="avatar">'+escapeHtml((p.display_name||p.username||"У").charAt(0).toUpperCase())+'</div><div class="search-result-copy"><div class="search-result-name">'+escapeHtml(p.display_name||"Пользователь")+'</div><div class="search-result-meta">'+(p.username?"@"+escapeHtml(p.username):"Участник TEHNOCELL")+(p.bio?" · "+escapeHtml(p.bio.slice(0,100)):"")+(p.status_text?"<br>"+escapeHtml(p.status_text.slice(0,100)):"")+'</div></div></div>');
+ const groupsHtml=renderSearchGroup("СООБЩЕСТВА",groupItems,g=>'<div class="search-result"><div class="avatar">◫</div><div class="search-result-copy"><div class="search-result-name">'+escapeHtml(g.name)+'</div><div class="search-result-meta">'+escapeHtml(g.category||"Сообщество")+(g.description?" · "+escapeHtml(g.description.slice(0,110)):"")+'</div></div></div>');
+ const postsHtml=renderSearchGroup("ПУБЛИКАЦИИ",postItems,p=>{const a=authorMap.get(p.author_id);return '<div class="search-result"><div class="avatar">▤</div><div class="search-result-copy"><div class="search-result-name">'+escapeHtml((a?.display_name||"Участник")+" · "+(communityMap.get(p.community_id)||"Сообщество"))+'</div><div class="search-result-meta">'+escapeHtml(p.body.slice(0,180))+'</div></div></div>';});
+ const any=peopleHtml+groupsHtml+postsHtml;
+ box.innerHTML=any||'<div class="search-empty">Ничего не найдено. Попробуйте другое имя или запрос.</div>';
+}
+$("globalSearch").addEventListener("input",()=>{clearTimeout(globalSearchTimer);globalSearchTimer=setTimeout(runGlobalSearch,260);});
+$("globalSearch").addEventListener("keydown",e=>{if(e.key==="Escape"){$("globalSearchResults").hidden=true;$("globalSearch").blur();}});
+document.addEventListener("click",e=>{if(!e.target.closest(".global-search-wrap"))$("globalSearchResults").hidden=true;});
 function openModal(id){$(id).classList.add("open");document.body.style.overflow="hidden";}
 function closeModal(id){$(id).classList.remove("open");document.body.style.overflow="";}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
