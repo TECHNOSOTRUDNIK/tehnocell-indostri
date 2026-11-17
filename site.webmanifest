@@ -1,0 +1,19 @@
+{
+  "id": "/tehnocell-indostri/",
+  "name": "TEHNOCELL INDOSTRI",
+  "short_name": "TEHNOCELL INDOSTRI",
+  "description": "Официальная платформа TEHNOCELL INDOSTRI",
+  "start_url": "/tehnocell-indostri/",
+  "scope": "/tehnocell-indostri/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "tehnocell-icon.svg?v=1",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
