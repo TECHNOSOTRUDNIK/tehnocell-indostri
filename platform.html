@@ -229,6 +229,27 @@
 @media(min-width:901px){#page-messages.chat-open .chat-window-head{padding-left:24px!important;padding-right:24px!important}#page-messages.chat-open #chatThread{padding-left:clamp(24px,8vw,140px)!important;padding-right:clamp(24px,8vw,140px)!important}}
 
 </style>
+
+<style id="tc-chat-list-layout-fix">
+/* Переписки: полноценная боковая колонка на больших экранах и список на всю ширину на телефонах */
+#page-messages .tc-messenger-layout{display:grid!important;grid-template-columns:minmax(280px,340px) minmax(0,1fr)!important;align-items:stretch;min-width:0}
+#page-messages .chat-list{width:auto!important;min-width:0!important;max-width:none!important;align-self:stretch}
+#page-messages .chat-list-items{display:block!important;width:100%;max-height:620px;min-height:420px;overflow-x:hidden!important;overflow-y:auto!important}
+#page-messages .chat-contact{width:100%!important;min-width:0!important;max-width:none!important;box-sizing:border-box}
+#page-messages .chat-window{min-width:0!important;width:100%;max-width:none}
+@media(max-width:900px){
+ #page-messages:not(.chat-open) .tc-messenger-layout{display:block!important;width:100%!important;min-height:0!important}
+ #page-messages:not(.chat-open) .chat-list{display:block!important;width:100%!important;max-width:none!important;border:1px solid #303030!important;border-radius:16px!important}
+ #page-messages:not(.chat-open) .chat-list-items{display:block!important;width:100%!important;max-height:calc(100dvh - 245px)!important;min-height:180px!important;overflow-x:hidden!important;overflow-y:auto!important;padding:8px!important}
+ #page-messages:not(.chat-open) .chat-contact{display:flex!important;width:100%!important;min-width:0!important;max-width:none!important;min-height:72px!important;padding:12px!important}
+ #page-messages:not(.chat-open) .chat-contact .search-person-avatar{width:44px!important;height:44px!important;flex:0 0 44px!important}
+ #page-messages:not(.chat-open) .chat-window{display:none!important}
+}
+@media(min-width:901px){
+ #page-messages:not(.chat-open) .tc-messenger-layout{grid-template-columns:minmax(290px,340px) minmax(0,1fr)!important}
+ #page-messages:not(.chat-open) .chat-list-items{max-height:620px!important;min-height:420px!important}
+}
+</style>
 </head>
 <body>
 <div class="layout">
