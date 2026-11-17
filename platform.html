@@ -529,7 +529,7 @@ async function loadConversations(){
 function filterChatContacts(){const term=String(chatSearchValue||"").trim().toLocaleLowerCase("ru");$("chatContacts").querySelectorAll("[data-chat]").forEach(b=>{b.hidden=!!term&&!b.textContent.toLocaleLowerCase("ru").includes(term);});}
 async function openChat(id,name,avatarPath=null){
  activeChatId=id;activeChatName=name;$("chatTitle").textContent=name;$("chatHeaderAvatar").innerHTML=avatarPath?avatarMarkup(name,avatarPath):escapeHtml((name||"T").charAt(0).toUpperCase());
- $("chatPresence").textContent=isOnline(id)?"В сети":"Личная переписка";$("chatInput").disabled=false;$("chatSend").disabled=false;$("chatReplyPreview").hidden=true;chatReplyingTo=null;
+ $("chatPresence").textContent=isOnline(id)?"В сети":"Личная переписка";$("chatInput").disabled=false;$("chatSend").disabled=false;$("chatAttachButton").disabled=false;$("chatRecordButton").disabled=false;$("chatReplyPreview").hidden=true;chatReplyingTo=null;
  await loadChatThread();document.querySelectorAll("[data-chat]").forEach(b=>b.classList.toggle("active",b.dataset.chat===id));$("page-messages").classList.add("chat-open");
 }
 function renderChatMessage(m,reactions,replyMap,attachmentUrls){
