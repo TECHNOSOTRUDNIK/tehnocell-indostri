@@ -132,7 +132,7 @@
 .chat-edit-box{width:100%;min-width:220px;min-height:70px;resize:vertical;background:#080808;color:#fff;border:1px solid #555;border-radius:8px;padding:8px;font:inherit}
 .chat-edit-actions{display:flex;gap:6px;margin-top:6px}.chat-edit-actions button{border:1px solid #444;border-radius:7px;background:#222;color:#eee;padding:5px 9px;font-size:9px}
 @media(max-width:900px){.tc-messenger-layout{grid-template-columns:1fr;min-height:0}#page-messages .chat-list{border:0;border-bottom:1px solid #292929}#page-messages .chat-list-items{display:flex;overflow-x:auto;max-height:none}#page-messages .chat-contact{min-width:190px}#page-messages .chat-thread{height:48vh;min-height:280px}}
-@media(max-width:650px){#page-messages .chat-list-items{display:flex;max-height:95px;overflow-x:auto;overflow-y:hidden}#page-messages .chat-contact{min-width:175px;max-width:210px;padding:9px}#page-messages .chat-contact .search-person-avatar{width:32px;height:32px;flex-basis:32px}#page-messages .chat-window-head{padding:11px 13px}.tc-chat-back{display:inline-flex}#page-messages .chat-thread{height:calc(100dvh - 365px);min-height:230px;max-height:520px;padding:14px}.chat-message-row{max-width:90%}.chat-message-actions{opacity:1}.tc-chat-footnote{display:none}.tc-chat-compose{padding:9px}.tc-chat-compose textarea{font-size:16px}}
+@media(max-width:900px){#page-messages.chat-open .chat-list{display:none}#page-messages.chat-open .chat-window{display:flex;flex-direction:column}#page-messages.chat-open .chat-thread{flex:1;min-height:280px}}\n@media(max-width:650px){#page-messages .chat-list-items{display:flex;max-height:95px;overflow-x:auto;overflow-y:hidden}#page-messages .chat-contact{min-width:175px;max-width:210px;padding:9px}#page-messages .chat-contact .search-person-avatar{width:32px;height:32px;flex-basis:32px}#page-messages .chat-window-head{padding:11px 13px}.tc-chat-back{display:inline-flex}#page-messages .chat-thread{height:calc(100dvh - 365px);min-height:230px;max-height:520px;padding:14px}.chat-message-row{max-width:90%}.chat-message-actions{opacity:1}.tc-chat-footnote{display:none}.tc-chat-compose{padding:9px}.tc-chat-compose textarea{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.chat-message-row,.chat-bubble{transition:none!important}}
 </style>
 </head>
@@ -496,16 +496,26 @@ async function removeFriend(id,profileId){
 let messengerRealtimeChannel=null,chatMessagesCache=[],chatReplyingTo=null,chatSearchValue="",chatRefreshTimer=null;
 async function loadConversations(){
  const box=$("chatContacts");box.innerHTML='<div class="chat-empty">Загружаем переписки…</div>';
- const {data:messages,error}=await db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,edited_at,deleted_at,reply_to_id").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).order("created_at",{ascending:false}).limit(500);
- if(error){box.innerHTML='<div class="chat-empty">Не удалось загрузить переписки. '+escapeHtml(error.message)+'</div>';return;}
- const latest=new Map(),unread=new Map();(messages||[]).forEach(m=>{const other=m.sender_id===currentUser.id?m.receiver_id:m.sender_id;if(!latest.has(other))latest.set(other,m);if(m.receiver_id===currentUser.id&&!m.read_at)unread.set(other,(unread.get(other)||0)+1);});
- const ids=[...latest.keys()],{data:profiles,error:profileError}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[],error:null};
+ const [messageResult,friendResult]=await Promise.all([
+  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).order("created_at",{ascending:false}).limit(500),
+  db.from("tc_friend_requests").select("sender_id,receiver_id").eq("status","accepted").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id)
+ ]);
+ if(messageResult.error){box.innerHTML='<div class="chat-empty">Не удалось загрузить переписки. '+escapeHtml(messageResult.error.message)+'</div>';return;}
+ const messages=messageResult.data||[],latest=new Map(),unread=new Map();
+ messages.forEach(m=>{const other=m.sender_id===currentUser.id?m.receiver_id:m.sender_id;if(!latest.has(other))latest.set(other,m);if(m.receiver_id===currentUser.id&&!m.read_at)unread.set(other,(unread.get(other)||0)+1);});
+ const friendIds=(friendResult.data||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id);
+ const ids=[...new Set([...latest.keys(),...friendIds])];
+ const {data:profiles,error:profileError}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[],error:null};
  if(profileError){box.innerHTML='<div class="chat-empty">Не удалось загрузить участников переписок.</div>';return;}
- const pm=new Map((profiles||[]).map(p=>[p.id,p])),sorted=ids.sort((a,b)=>new Date(latest.get(b).created_at)-new Date(latest.get(a).created_at));
+ const pm=new Map((profiles||[]).map(p=>[p.id,p]));
+ const sorted=ids.sort((x,y)=>{const mx=latest.get(x),my=latest.get(y);if(mx&&my)return new Date(my.created_at)-new Date(mx.created_at);if(mx)return -1;if(my)return 1;return String(pm.get(x)?.display_name||"").localeCompare(String(pm.get(y)?.display_name||""),"ru");});
  const total=[...unread.values()].reduce((x,y)=>x+y,0);$("chatUnreadTotal").textContent=total?total+" новых":"";
- box.innerHTML=sorted.length?sorted.map(id=>{const p=pm.get(id)||{},m=latest.get(id),count=unread.get(id)||0,body=m.deleted_at?"Сообщение удалено":m.body;return '<button class="chat-contact '+(activeChatId===id?"active":"")+'" data-chat="'+id+'"><div class="search-person-avatar">'+avatarMarkup(p.display_name||"Пользователь",p.avatar_path)+'</div><div class="chat-contact-copy"><div class="chat-contact-name">'+escapeHtml(p.display_name||"Участник")+verifiedBadge(id)+onlineBadge(id)+(count?'<span class="chat-contact-unread">'+count+'</span>':"")+'</div><div class="chat-contact-preview">'+(m.sender_id===currentUser.id?"Вы: ":"")+escapeHtml((body||"").slice(0,58))+'</div><time class="chat-contact-time">'+new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+'</time></div></button>';}).join(""):'<div class="chat-empty">Переписок пока нет. Добавьте человека в друзья и откройте его профиль, чтобы начать общение.</div>';
+ box.innerHTML=sorted.length?sorted.map(id=>{const p=pm.get(id)||{},m=latest.get(id),count=unread.get(id)||0,body=!m?"Начните переписку":m.deleted_at?"Сообщение удалено":m.body;return '<button class="chat-contact '+(activeChatId===id?"active":"")+'" data-chat="'+id+'"><div class="search-person-avatar">'+avatarMarkup(p.display_name||"Пользователь",p.avatar_path)+'</div><div class="chat-contact-copy"><div class="chat-contact-name">'+escapeHtml(p.display_name||"Участник")+verifiedBadge(id)+onlineBadge(id)+(count?'<span class="chat-contact-unread">'+count+'</span>':"")+'</div><div class="chat-contact-preview">'+(m?(m.sender_id===currentUser.id?"Вы: ":""):"")+escapeHtml((body||"").slice(0,58))+'</div>'+(m?'<time class="chat-contact-time">'+new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+'</time>':"")+'</div></button>';}).join(""):'<div class="chat-empty">Пока нет друзей для переписки. Найдите человека и добавьте его в друзья.</div>';
  box.querySelectorAll("[data-chat]").forEach(btn=>btn.addEventListener("click",()=>openChat(btn.dataset.chat,pm.get(btn.dataset.chat)?.display_name||"Участник",pm.get(btn.dataset.chat)?.avatar_path)));
- filterChatContacts();if(activeChatId&&pm.has(activeChatId))await loadChatThread();
+ filterChatContacts();
+ const notDelivered=messages.filter(m=>m.receiver_id===currentUser.id&&!m.delivered_at&&!m.read_at);
+ if(notDelivered.length)await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString()}).in("id",notDelivered.map(m=>m.id));
+ if(activeChatId&&pm.has(activeChatId))await loadChatThread();
 }
 function filterChatContacts(){const term=String(chatSearchValue||"").trim().toLocaleLowerCase("ru");$("chatContacts").querySelectorAll("[data-chat]").forEach(b=>{b.hidden=!!term&&!b.textContent.toLocaleLowerCase("ru").includes(term);});}
 async function openChat(id,name,avatarPath=null){
@@ -516,7 +526,7 @@ async function openChat(id,name,avatarPath=null){
 function renderChatMessage(m,reactions,replyMap){
  const mine=m.sender_id===currentUser.id,deleted=!!m.deleted_at,body=deleted?"Сообщение удалено":m.body,time=new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}),reply=m.reply_to_id?replyMap.get(m.reply_to_id):null;
  const quote=reply?'<div class="chat-reply-quote">'+escapeHtml(reply.deleted_at?"Сообщение удалено":reply.body.slice(0,140))+'</div>':"";
- const status=mine?(m.read_at?"Прочитано":"Отправлено"):"",react=reactions.filter(r=>r.message_id===m.id),grouped=new Map();
+ const status=mine?(m.read_at?"Прочитано":m.delivered_at?"Доставлено":"Отправлено"):"",react=reactions.filter(r=>r.message_id===m.id),grouped=new Map();
  react.forEach(r=>{const x=grouped.get(r.emoji)||{count:0,mine:false};x.count++;if(r.user_id===currentUser.id)x.mine=true;grouped.set(r.emoji,x);});
  const reactionHtml=[...grouped.entries()].map(([emoji,x])=>'<button type="button" class="chat-reaction '+(x.mine?"mine":"")+'" data-reaction="'+m.id+'" data-emoji="'+escapeHtml(emoji)+'">'+escapeHtml(emoji)+' '+x.count+'</button>').join("");
  const actions=deleted?"":'<div class="chat-message-actions"><button type="button" data-reply="'+m.id+'">Ответить</button><button type="button" data-react="'+m.id+'" data-emoji="❤️">❤️</button><button type="button" data-react="'+m.id+'" data-emoji="👍">👍</button><button type="button" data-react="'+m.id+'" data-emoji="😂">😂</button>'+(mine?'<button type="button" data-edit="'+m.id+'">Изменить</button><button type="button" data-delete-message="'+m.id+'">Удалить</button>':"")+'</div>';
@@ -525,8 +535,8 @@ function renderChatMessage(m,reactions,replyMap){
 async function loadChatThread(){
  if(!activeChatId)return;const other=activeChatId,box=$("chatThread");
  const [sent,received]=await Promise.all([
-  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,edited_at,deleted_at,reply_to_id").eq("sender_id",currentUser.id).eq("receiver_id",other).order("created_at",{ascending:true}).limit(250),
-  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,edited_at,deleted_at,reply_to_id").eq("sender_id",other).eq("receiver_id",currentUser.id).order("created_at",{ascending:true}).limit(250)
+  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id").eq("sender_id",currentUser.id).eq("receiver_id",other).order("created_at",{ascending:true}).limit(250),
+  db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id").eq("sender_id",other).eq("receiver_id",currentUser.id).order("created_at",{ascending:true}).limit(250)
  ]);
  if(sent.error||received.error){box.innerHTML='<div class="chat-empty">Не удалось загрузить переписку. Проверьте подключение.</div>';return;}
  const all=[...(sent.data||[]),...(received.data||[])].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));chatMessagesCache=all;
@@ -536,7 +546,7 @@ async function loadChatThread(){
  box.innerHTML=all.map(m=>{const day=new Date(m.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
  box.scrollTop=box.scrollHeight;
  const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at&&!m.deleted_at);
- if(unread.length){const {error}=await db.from("tc_direct_messages").update({read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
+ if(unread.length){const {error}=await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
 }
 function setChatReply(id){const m=chatMessagesCache.find(x=>x.id===id);if(!m)return;chatReplyingTo=id;$("chatReplyText").textContent=m.deleted_at?"Сообщение удалено":m.body.slice(0,160);$("chatReplyPreview").hidden=false;$("chatInput").focus();}
 $("chatReplyCancel").addEventListener("click",()=>{chatReplyingTo=null;$("chatReplyPreview").hidden=true;});
