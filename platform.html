@@ -194,6 +194,19 @@
 #publicProfileContent .tc-public-banner.is-unavailable:after{content:"Баннер временно недоступен";position:absolute;inset:0;display:grid;place-items:center;color:#777;font-size:11px;letter-spacing:.5px;background:linear-gradient(135deg,#242424,#111)}
 @media(max-width:560px){#publicProfileContent .tc-public-banner{height:clamp(145px,34vw,205px);border-radius:13px}}
 
+
+/* Mobile chat: fixed flex viewport with a dedicated native scroll area. */
+@media(max-width:900px){
+ #page-messages.chat-open .chat-window{height:calc(100dvh - 245px);min-height:360px;max-height:calc(100dvh - 160px);overflow:hidden;display:flex;flex-direction:column}
+ #page-messages.chat-open .chat-window-head,#page-messages.chat-open .chat-compose,#page-messages.chat-open .tc-chat-footnote,#page-messages.chat-open .chat-media-status,#page-messages.chat-open .chat-reply-preview{flex:0 0 auto}
+ #page-messages.chat-open #chatThread{flex:1 1 0;height:0!important;min-height:0!important;max-height:none!important;overflow-x:hidden!important;overflow-y:scroll!important;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y}
+}
+@media(max-width:650px){#page-messages.chat-open .chat-window{height:calc(100dvh - 220px);min-height:340px}#page-messages.chat-open #chatThread{padding:12px}}
+#chatThread .chat-message-row,#chatThread .chat-bubble,#chatThread .chat-bubble *{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}
+#chatThread .chat-edit-box{-webkit-user-select:text!important;user-select:text!important}
+#chatHoldMenu{z-index:100000;pointer-events:auto}
+#chatHoldMenu button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
 </style>
 </head>
 <body>
@@ -625,17 +638,24 @@ $("chatBackToList").addEventListener("click",()=>{$("page-messages").classList.r
 $("chatSearch").addEventListener("input",e=>{chatSearchValue=e.target.value;filterChatContacts();});
 $("chatInput").addEventListener("input",e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,120)+"px";});
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit();}});
-let heldMessageId=null,holdTimer=null,holdStart=null;
+let heldMessageId=null,holdTimer=null,holdTriggered=false;
 function closeChatHoldMenu(){const menu=$("chatHoldMenu");if(menu)menu.classList.remove("open");heldMessageId=null;}
-function showChatHoldMenu(id,x,y){const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;const menu=$("chatHoldMenu");heldMessageId=id;menu.classList.add("open");const w=menu.offsetWidth,h=menu.offsetHeight;menu.style.left=Math.max(8,Math.min(x,innerWidth-w-8))+"px";menu.style.top=Math.max(8,Math.min(y,innerHeight-h-8))+"px";}
-const chatThreadEl=$("chatThread");
-let holdCandidate=null,holdTriggered=false;
-function cancelMessageHold(){clearTimeout(holdTimer);holdCandidate=null;}
-chatThreadEl.addEventListener("pointerdown",e=>{const row=e.target.closest("[data-message-row]");if(!row||e.target.closest("button,a,input,textarea,video,audio"))return;cancelMessageHold();holdTriggered=false;holdCandidate={id:row.dataset.messageRow,x:e.clientX,y:e.clientY,pointerId:e.pointerId};holdTimer=setTimeout(()=>{if(!holdCandidate)return;holdTriggered=true;const p=holdCandidate;holdCandidate=null;showChatHoldMenu(p.id,p.x,p.y);},520);});
-chatThreadEl.addEventListener("pointermove",e=>{if(!holdCandidate||holdCandidate.pointerId!==e.pointerId)return;if(Math.hypot(e.clientX-holdCandidate.x,e.clientY-holdCandidate.y)>10)cancelMessageHold();});
-["pointerup","pointercancel","pointerleave"].forEach(ev=>chatThreadEl.addEventListener(ev,()=>{cancelMessageHold();}));
-chatThreadEl.addEventListener("contextmenu",e=>{const row=e.target.closest("[data-message-row]");if(!row)return;e.preventDefault();if(!holdTriggered)showChatHoldMenu(row.dataset.messageRow,e.clientX||innerWidth/2,e.clientY||innerHeight/2);holdTriggered=false;});
-$("chatHoldMenu").addEventListener("click",async e=>{const react=e.target.closest("[data-hold-react]");if(react&&heldMessageId){const id=heldMessageId,emoji=react.dataset.holdReact;const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(old.data)await db.from("tc_message_reactions").delete().eq("id",old.data.id);else await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});closeChatHoldMenu();await loadChatThread();return;}const action=e.target.closest("[data-hold-action]");if(!action||!heldMessageId)return;const id=heldMessageId;closeChatHoldMenu();if(action.dataset.holdAction==="reply"){setChatReply(id);$("chatInput").focus();}else if(action.dataset.holdAction==="copy"){const m=chatMessagesCache.find(x=>x.id===id);if(m)await navigator.clipboard?.writeText(m.body||m.attachment_name||"");}else if(action.dataset.holdAction==="edit"){const btn=$("chatThread").querySelector('[data-edit="'+id+'"]');btn?.click();}else if(action.dataset.holdAction==="delete"){const btn=$("chatThread").querySelector('[data-delete-message="'+id+'"]');btn?.click();}});
+function showChatHoldMenu(id,x,y){const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;heldMessageId=id;const menu=$("chatHoldMenu");menu.classList.add("open");const w=menu.offsetWidth,h=menu.offsetHeight;menu.style.left=Math.max(8,Math.min(x-w/2,innerWidth-w-8))+"px";menu.style.top=Math.max(8,Math.min(y-h-12,innerHeight-h-8))+"px";}
+const chatThreadEl=$("chatThread");let touchHold=null;
+chatThreadEl.addEventListener("touchstart",e=>{const row=e.target.closest("[data-message-row]");if(!row||e.target.closest("button,a,input,textarea,video,audio"))return;const t=e.touches[0];touchHold={id:row.dataset.messageRow,x:t.clientX,y:t.clientY};clearTimeout(holdTimer);holdTimer=setTimeout(()=>{if(!touchHold)return;holdTriggered=true;showChatHoldMenu(touchHold.id,touchHold.x,touchHold.y);touchHold=null;},560);},{passive:true});
+chatThreadEl.addEventListener("touchmove",e=>{if(!touchHold)return;const t=e.touches[0];if(Math.abs(t.clientY-touchHold.y)>9||Math.abs(t.clientX-touchHold.x)>14){clearTimeout(holdTimer);touchHold=null;}},{passive:true});
+["touchend","touchcancel"].forEach(ev=>chatThreadEl.addEventListener(ev,()=>{clearTimeout(holdTimer);touchHold=null;},{passive:true}));
+chatThreadEl.addEventListener("contextmenu",e=>{const row=e.target.closest("[data-message-row]");if(!row)return;e.preventDefault();if(holdTriggered){holdTriggered=false;return;}showChatHoldMenu(row.dataset.messageRow,e.clientX||innerWidth/2,e.clientY||innerHeight/2);});
+$("chatHoldMenu").addEventListener("click",async e=>{
+ const react=e.target.closest("[data-hold-react]");
+ if(react&&heldMessageId){const id=heldMessageId,emoji=react.dataset.holdReact;const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(old.data)await db.from("tc_message_reactions").delete().eq("id",old.data.id);else await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});closeChatHoldMenu();await loadChatThread();return;}
+ const action=e.target.closest("[data-hold-action]");if(!action||!heldMessageId)return;
+ const id=heldMessageId,kind=action.dataset.holdAction,m=chatMessagesCache.find(x=>x.id===id);
+ if(kind==="reply"){closeChatHoldMenu();setChatReply(id);$("chatInput").focus();return;}
+ if(kind==="copy"){const value=m?.body||m?.attachment_name||"";try{await navigator.clipboard.writeText(value);}catch(_){const t=document.createElement("textarea");t.value=value;document.body.append(t);t.select();document.execCommand("copy");t.remove();}showNotice("Текст скопирован.");closeChatHoldMenu();return;}
+ if(kind==="edit"){if(!m||m.sender_id!==currentUser.id||m.deleted_at){showNotice("Можно изменять только свои сообщения.");closeChatHoldMenu();return;}closeChatHoldMenu();const row=$("chatThread").querySelector('[data-message-row="'+id+'"]'),body=row?.querySelector("[data-message-body]");if(!body)return;body.innerHTML='<textarea class="chat-edit-box" maxlength="4000">'+escapeHtml(m.body||"")+'</textarea><div class="chat-edit-actions"><button type="button" data-save-edit="'+id+'">Сохранить</button><button type="button" data-cancel-edit="'+id+'">Отмена</button></div>';body.querySelector("textarea")?.focus();return;}
+ if(kind==="delete"){if(!m||m.sender_id!==currentUser.id||m.deleted_at){showNotice("Можно удалять только свои сообщения.");closeChatHoldMenu();return;}if(!confirm("Удалить это сообщение?"))return;const {error}=await db.from("tc_direct_messages").update({body:"Сообщение удалено",deleted_at:new Date().toISOString(),edited_at:null}).eq("id",id).eq("sender_id",currentUser.id).is("deleted_at",null);if(error){showNotice("Не удалось удалить сообщение: "+error.message);return;}if(m.attachment_path)await db.storage.from("tc-chat-media").remove([m.attachment_path]);closeChatHoldMenu();await loadChatThread();await loadConversations();return;}
+});
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
 $("chatThread").addEventListener("click",async e=>{
  const reply=e.target.closest("[data-reply]");if(reply){setChatReply(reply.dataset.reply);return;}
