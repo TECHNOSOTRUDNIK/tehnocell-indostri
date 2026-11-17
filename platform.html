@@ -167,10 +167,13 @@
 #page-messages .chat-compose{padding:15px 18px}
 #page-messages .tc-chat-compose textarea{font-size:13px;min-height:48px;padding:13px 15px}
 #page-messages .chat-tool-btn,#page-messages #chatSend{width:46px;height:46px;flex-basis:46px;border-radius:14px}
-.chat-message-actions{display:none!important}
-.chat-message-row.context-open .chat-message-actions{display:flex!important;opacity:1;flex-wrap:wrap;gap:6px;padding:8px;background:#101010;border:1px solid #383838;border-radius:13px;box-shadow:0 12px 32px #0009;z-index:5}
-.chat-message-row.context-open .chat-message-actions button{font-size:11px;padding:8px 10px;border-radius:9px;color:#eee}
-.chat-message-row{position:relative}
+/* Message action buttons stay completely outside the scroll/touch layer. */
+.chat-message-actions{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.chat-message-row{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.chat-message-row *{-webkit-user-select:none;user-select:none}
+.chat-message-row input,.chat-message-row textarea{user-select:text;-webkit-user-select:text}
+#chatThread{touch-action:pan-y;overscroll-behavior:contain}
+.chat-hold-menu{pointer-events:auto;touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .chat-hold-menu{position:fixed;z-index:99999;display:none;min-width:220px;max-width:min(92vw,330px);padding:10px;background:#111;border:1px solid #444;border-radius:16px;box-shadow:0 20px 65px #000b;touch-action:pan-y}
 .chat-hold-menu.open{display:block;animation:chatMenuIn .14s ease-out}
 @keyframes chatMenuIn{from{opacity:0;transform:translateY(5px) scale(.98)}to{opacity:1;transform:none}}
@@ -623,13 +626,15 @@ $("chatSearch").addEventListener("input",e=>{chatSearchValue=e.target.value;filt
 $("chatInput").addEventListener("input",e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,120)+"px";});
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit();}});
 let heldMessageId=null,holdTimer=null,holdStart=null;
-function closeChatHoldMenu(){const menu=$("chatHoldMenu");if(menu)menu.classList.remove("open");$("chatThread").querySelectorAll(".chat-message-row.context-open").forEach(x=>x.classList.remove("context-open"));heldMessageId=null;}
-function showChatHoldMenu(id,x,y){const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;closeChatHoldMenu();heldMessageId=id;row.classList.add("context-open");const menu=$("chatHoldMenu");menu.classList.add("open");const w=menu.offsetWidth,h=menu.offsetHeight;menu.style.left=Math.max(8,Math.min(x,innerWidth-w-8))+"px";menu.style.top=Math.max(8,Math.min(y,innerHeight-h-8))+"px";}
+function closeChatHoldMenu(){const menu=$("chatHoldMenu");if(menu)menu.classList.remove("open");heldMessageId=null;}
+function showChatHoldMenu(id,x,y){const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;const menu=$("chatHoldMenu");heldMessageId=id;menu.classList.add("open");const w=menu.offsetWidth,h=menu.offsetHeight;menu.style.left=Math.max(8,Math.min(x,innerWidth-w-8))+"px";menu.style.top=Math.max(8,Math.min(y,innerHeight-h-8))+"px";}
 const chatThreadEl=$("chatThread");
-chatThreadEl.addEventListener("pointerdown",e=>{const row=e.target.closest("[data-message-row]");if(!row||e.target.closest("button,a,input,textarea,video,audio"))return;heldMessageId=row.dataset.messageRow;holdStart={x:e.clientX,y:e.clientY};holdTimer=setTimeout(()=>showChatHoldMenu(heldMessageId,holdStart.x,holdStart.y),480);});
-["pointerup","pointercancel","pointerleave"].forEach(ev=>chatThreadEl.addEventListener(ev,()=>{clearTimeout(holdTimer);}));
-chatThreadEl.addEventListener("pointermove",e=>{if(holdStart&&Math.hypot(e.clientX-holdStart.x,e.clientY-holdStart.y)>12){clearTimeout(holdTimer);holdStart=null;}});
-chatThreadEl.addEventListener("contextmenu",e=>{const row=e.target.closest("[data-message-row]");if(!row)return;e.preventDefault();showChatHoldMenu(row.dataset.messageRow,e.clientX,e.clientY);});
+let holdCandidate=null,holdTriggered=false;
+function cancelMessageHold(){clearTimeout(holdTimer);holdCandidate=null;}
+chatThreadEl.addEventListener("pointerdown",e=>{const row=e.target.closest("[data-message-row]");if(!row||e.target.closest("button,a,input,textarea,video,audio"))return;cancelMessageHold();holdTriggered=false;holdCandidate={id:row.dataset.messageRow,x:e.clientX,y:e.clientY,pointerId:e.pointerId};holdTimer=setTimeout(()=>{if(!holdCandidate)return;holdTriggered=true;const p=holdCandidate;holdCandidate=null;showChatHoldMenu(p.id,p.x,p.y);},520);});
+chatThreadEl.addEventListener("pointermove",e=>{if(!holdCandidate||holdCandidate.pointerId!==e.pointerId)return;if(Math.hypot(e.clientX-holdCandidate.x,e.clientY-holdCandidate.y)>10)cancelMessageHold();});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>chatThreadEl.addEventListener(ev,()=>{cancelMessageHold();}));
+chatThreadEl.addEventListener("contextmenu",e=>{const row=e.target.closest("[data-message-row]");if(!row)return;e.preventDefault();if(!holdTriggered)showChatHoldMenu(row.dataset.messageRow,e.clientX||innerWidth/2,e.clientY||innerHeight/2);holdTriggered=false;});
 $("chatHoldMenu").addEventListener("click",async e=>{const react=e.target.closest("[data-hold-react]");if(react&&heldMessageId){const id=heldMessageId,emoji=react.dataset.holdReact;const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(old.data)await db.from("tc_message_reactions").delete().eq("id",old.data.id);else await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});closeChatHoldMenu();await loadChatThread();return;}const action=e.target.closest("[data-hold-action]");if(!action||!heldMessageId)return;const id=heldMessageId;closeChatHoldMenu();if(action.dataset.holdAction==="reply"){setChatReply(id);$("chatInput").focus();}else if(action.dataset.holdAction==="copy"){const m=chatMessagesCache.find(x=>x.id===id);if(m)await navigator.clipboard?.writeText(m.body||m.attachment_name||"");}else if(action.dataset.holdAction==="edit"){const btn=$("chatThread").querySelector('[data-edit="'+id+'"]');btn?.click();}else if(action.dataset.holdAction==="delete"){const btn=$("chatThread").querySelector('[data-delete-message="'+id+'"]');btn?.click();}});
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
 $("chatThread").addEventListener("click",async e=>{
