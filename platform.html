@@ -207,6 +207,27 @@
 #chatHoldMenu{z-index:100000;pointer-events:auto}
 #chatHoldMenu button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 
+
+/* Full-screen conversation view */
+#page-messages.chat-open{position:fixed!important;inset:0!important;z-index:5000!important;width:100vw!important;height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;margin:0!important;padding:0!important;background:#080808!important}
+#page-messages.chat-open>.eyebrow,#page-messages.chat-open>.page-title,#page-messages.chat-open>.page-subtitle{display:none!important}
+#page-messages.chat-open .messages-layout{position:absolute!important;inset:0!important;height:100%!important;min-height:0!important;border:0!important;border-radius:0!important;display:block!important;overflow:hidden!important;background:#090909!important}
+#page-messages.chat-open .chat-list{display:none!important}
+#page-messages.chat-open .chat-window{display:flex!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:none!important;min-height:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;padding:0!important}
+#page-messages.chat-open .chat-window-head{position:relative!important;flex:0 0 auto!important;min-height:66px;padding:10px 14px!important;padding-top:max(10px,env(safe-area-inset-top))!important;display:flex!important;align-items:center!important}
+#page-messages.chat-open #chatThread{flex:1 1 0!important;height:0!important;min-height:0!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;padding:16px!important}
+#page-messages.chat-open .chat-compose{flex:0 0 auto!important;padding-bottom:max(10px,env(safe-area-inset-bottom))!important}
+#page-messages.chat-open .tc-chat-footnote{display:none!important}
+#page-messages.chat-open .tc-chat-back{display:inline-flex!important;order:-1!important;margin-right:8px!important}
+.tc-chat-more{margin-left:auto;width:42px;height:42px;border:1px solid #333;border-radius:13px;background:#1a1a1a;color:#fff;font-size:25px;line-height:1;cursor:pointer}
+.tc-chat-more-menu{position:absolute;right:12px;top:calc(100% - 2px);z-index:8000;min-width:235px;padding:7px;border:1px solid #343434;border-radius:14px;background:#151515;box-shadow:0 16px 48px #000b}
+.tc-chat-more-menu[hidden]{display:none!important}
+.tc-chat-more-menu button{display:block;width:100%;padding:13px 12px;border:0;border-radius:9px;background:transparent;color:#eee;text-align:left;font-size:13px}
+.tc-chat-more-menu button:active{background:#292929}
+#page-messages.chat-open #chatSearchInThread{display:block!important;flex:0 0 auto;margin:10px 14px 0}
+#page-messages.chat-open #chatSearchInThread[hidden]{display:none!important}
+@media(min-width:901px){#page-messages.chat-open .chat-window-head{padding-left:24px!important;padding-right:24px!important}#page-messages.chat-open #chatThread{padding-left:clamp(24px,8vw,140px)!important;padding-right:clamp(24px,8vw,140px)!important}}
+
 </style>
 </head>
 <body>
@@ -256,8 +277,8 @@
 <div class="eyebrow">TEHNOCELL COMMUNICATION</div><h1 class="page-title">Чаты</h1><p class="page-subtitle">Личные переписки с друзьями и участниками TEHNOCELL. Всё общение — внутри вашей платформы.</p>
 <div class="messages-layout tc-messenger-layout">
  <aside class="chat-list"><div class="chat-list-head"><span>Переписки</span><span id="chatUnreadTotal" class="chat-unread-total"></span></div><div class="chat-search-wrap"><input id="chatSearch" class="field chat-search" type="search" placeholder="Поиск переписки…" autocomplete="off"></div><div class="chat-list-items" id="chatContacts"><div class="chat-empty">Загружаем…</div></div></aside>
- <div class="chat-window"><div class="chat-window-head tc-chat-head"><div class="tc-chat-heading"><div id="chatHeaderAvatar" class="tc-chat-avatar">T</div><div class="tc-chat-heading-copy"><strong id="chatTitle">Выберите переписку</strong><span id="chatPresence">Ваши личные сообщения</span></div></div><button type="button" id="chatBackToList" class="secondary-btn tc-chat-back" aria-label="К списку переписок">←</button></div>
- <div class="chat-thread" id="chatThread" aria-live="polite"><div class="chat-empty">Выберите переписку слева или откройте профиль друга и нажмите «Написать».</div></div>
+ <div class="chat-window"><div class="chat-window-head tc-chat-head"><div class="tc-chat-heading"><div id="chatHeaderAvatar" class="tc-chat-avatar">T</div><div class="tc-chat-heading-copy"><strong id="chatTitle">Выберите переписку</strong><span id="chatPresence">Ваши личные сообщения</span></div></div><button type="button" id="chatBackToList" class="secondary-btn tc-chat-back" aria-label="К списку переписок">←</button><button type="button" id="chatMoreButton" class="tc-chat-more" aria-label="Действия с перепиской" aria-expanded="false">⋮</button><div id="chatMoreMenu" class="tc-chat-more-menu" hidden><button type="button" data-chat-action="search">⌕ Поиск по переписке</button><button type="button" data-chat-action="clear">⌫ Очистить мои сообщения</button></div></div>
+ <input id="chatSearchInThread" class="field" type="search" placeholder="Поиск по этой переписке…" hidden autocomplete="off"><div class="chat-thread" id="chatThread" aria-live="polite"><div class="chat-empty">Выберите переписку слева или откройте профиль друга и нажмите «Написать».</div></div>
  <div id="chatReplyPreview" class="chat-reply-preview" hidden><div><strong>Ответ на сообщение</strong><span id="chatReplyText"></span></div><button type="button" id="chatReplyCancel" aria-label="Отменить ответ">×</button></div>
  <div id="chatMediaStatus" class="chat-media-status" aria-live="polite"></div><form class="chat-compose tc-chat-compose" id="chatForm"><input id="chatFileInput" type="file" accept="image/*,video/mp4,audio/*,.pdf,.txt,.doc,.docx" hidden><button type="button" class="secondary-btn chat-tool-btn" id="chatAttachButton" disabled aria-label="Прикрепить файл"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 12.5 7.8-7.8a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg></button><button type="button" class="secondary-btn chat-tool-btn" id="chatRecordButton" disabled aria-label="Записать голосовое сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M9 21.5h6"/></svg></button><textarea class="field" id="chatInput" maxlength="4000" rows="1" placeholder="Напишите сообщение…" autocomplete="off" disabled></textarea><button class="primary-btn" id="chatSend" disabled aria-label="Отправить сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></form><div class="tc-chat-footnote">Enter — отправить · Shift + Enter — новая строка</div></div>
 </div><div class="chat-hold-menu" id="chatHoldMenu" role="menu" aria-label="Действия с сообщением"><div class="chat-hold-reactions"><button type="button" data-hold-react="❤️" aria-label="Нравится">❤️</button><button type="button" data-hold-react="👍" aria-label="Класс">👍</button><button type="button" data-hold-react="😂" aria-label="Смешно">😂</button><button type="button" data-hold-react="🔥" aria-label="Огонь">🔥</button><button type="button" data-hold-react="😮" aria-label="Удивлён">😮</button><button type="button" data-hold-react="😢" aria-label="Грустно">😢</button></div><div class="chat-hold-actions"><button type="button" data-hold-action="reply">↩ Ответить</button><button type="button" data-hold-action="copy">▢ Копировать</button><button type="button" data-hold-action="edit">✎ Изменить</button><button type="button" data-hold-action="delete">⌫ Удалить</button></div></div></section>
@@ -634,7 +655,30 @@ async function loadChatThread(){
 }
 function setChatReply(id){const m=chatMessagesCache.find(x=>x.id===id);if(!m)return;chatReplyingTo=id;$("chatReplyText").textContent=m.deleted_at?"Сообщение удалено":m.body.slice(0,160);$("chatReplyPreview").hidden=false;$("chatInput").focus();}
 $("chatReplyCancel").addEventListener("click",()=>{chatReplyingTo=null;$("chatReplyPreview").hidden=true;});
-$("chatBackToList").addEventListener("click",()=>{$("page-messages").classList.remove("chat-open");});
+$("chatBackToList").addEventListener("click",()=>{$("page-messages").classList.remove("chat-open");$("chatMoreMenu").hidden=true;$("chatMoreButton").setAttribute("aria-expanded","false");});
+$("chatMoreButton").addEventListener("click",()=>{const menu=$("chatMoreMenu");menu.hidden=!menu.hidden;$("chatMoreButton").setAttribute("aria-expanded",String(!menu.hidden));});
+$("chatMoreMenu").addEventListener("click",async e=>{
+ const action=e.target.closest("[data-chat-action]")?.dataset.chatAction;if(!action)return;
+ $("chatMoreMenu").hidden=true;$("chatMoreButton").setAttribute("aria-expanded","false");
+ if(action==="search"){const input=$("chatSearchInThread");input.hidden=false;input.focus();return;}
+ if(action==="clear"){
+  if(!activeChatId)return;
+  if(!confirm("Удалить все ваши отправленные сообщения в этой переписке? Сообщения собеседника останутся."))return;
+  const {data:mine,error:readError}=await db.from("tc_direct_messages").select("id,attachment_path").eq("sender_id",currentUser.id).eq("receiver_id",activeChatId).is("deleted_at",null);
+  if(readError){showNotice("Не удалось получить сообщения: "+readError.message);return;}
+  if(!mine?.length){showNotice("Ваших сообщений для очистки нет.");return;}
+  const ids=mine.map(x=>x.id);
+  const {error}=await db.from("tc_direct_messages").update({body:"Сообщение удалено",deleted_at:new Date().toISOString(),edited_at:null}).in("id",ids).eq("sender_id",currentUser.id).is("deleted_at",null);
+  if(error){showNotice("Не удалось очистить переписку: "+error.message);return;}
+  const paths=mine.map(x=>x.attachment_path).filter(Boolean);if(paths.length){const {error:storageError}=await db.storage.from("tc-chat-media").remove(paths);if(storageError)console.warn("Storage cleanup failed:",storageError.message);}
+  await loadChatThread();await loadConversations();showNotice("Ваши отправленные сообщения очищены.");return;
+ }
+});
+$("chatSearchInThread").addEventListener("input",e=>{
+ const q=e.target.value.trim().toLocaleLowerCase("ru");
+ $("chatThread").querySelectorAll("[data-message-row]").forEach(row=>{row.hidden=!!q&&!row.textContent.toLocaleLowerCase("ru").includes(q);});
+});
+
 $("chatSearch").addEventListener("input",e=>{chatSearchValue=e.target.value;filterChatContacts();});
 $("chatInput").addEventListener("input",e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,120)+"px";});
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit();}});
