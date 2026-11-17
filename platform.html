@@ -150,6 +150,40 @@
 .chat-attachment audio{display:block;width:min(100%,300px);height:38px}
 .chat-file-link{display:flex;align-items:center;gap:9px;max-width:300px;padding:10px;border:1px solid #444;border-radius:9px;color:#eee;text-decoration:none;background:#151515;font-size:10px;overflow-wrap:anywhere}
 @media(max-width:650px){.chat-tool-btn{width:36px;flex-basis:36px}.tc-chat-compose{gap:6px}}
+
+/* Chat workspace refinement */
+#page-messages{max-width:1500px;margin:0 auto;padding:28px clamp(14px,2.8vw,42px) 44px}
+#page-messages .page-title{font-size:clamp(34px,5vw,54px);letter-spacing:-2.4px}
+#page-messages .page-subtitle{font-size:13px;max-width:680px;line-height:1.7;margin-bottom:24px}
+#page-messages .messages-layout{min-height:clamp(620px,76vh,900px);grid-template-columns:minmax(250px,330px) minmax(0,1fr);gap:0;border-radius:20px;box-shadow:0 24px 70px #0006}
+#page-messages .chat-list-items{max-height:calc(76vh - 100px);min-height:420px}
+#page-messages .chat-thread{height:calc(76vh - 180px);min-height:420px;padding:clamp(18px,3vw,34px);gap:14px}
+#page-messages .chat-bubble{font-size:13px;padding:12px 15px;line-height:1.65}
+#page-messages .chat-message-row{max-width:min(78%,620px)}
+#page-messages .chat-window-head{min-height:72px;padding:18px 22px}
+#page-messages .tc-chat-avatar{width:44px;height:44px;flex-basis:44px}
+#page-messages .tc-chat-heading-copy strong{font-size:14px}
+#page-messages .tc-chat-heading-copy span{font-size:10px}
+#page-messages .chat-compose{padding:15px 18px}
+#page-messages .tc-chat-compose textarea{font-size:13px;min-height:48px;padding:13px 15px}
+#page-messages .chat-tool-btn,#page-messages #chatSend{width:46px;height:46px;flex-basis:46px;border-radius:14px}
+.chat-message-actions{display:none!important}
+.chat-message-row.context-open .chat-message-actions{display:flex!important;opacity:1;flex-wrap:wrap;gap:6px;padding:8px;background:#101010;border:1px solid #383838;border-radius:13px;box-shadow:0 12px 32px #0009;z-index:5}
+.chat-message-row.context-open .chat-message-actions button{font-size:11px;padding:8px 10px;border-radius:9px;color:#eee}
+.chat-message-row{position:relative}
+.chat-hold-menu{position:fixed;z-index:99999;display:none;min-width:220px;max-width:min(92vw,330px);padding:10px;background:#111;border:1px solid #444;border-radius:16px;box-shadow:0 20px 65px #000b;touch-action:pan-y}
+.chat-hold-menu.open{display:block;animation:chatMenuIn .14s ease-out}
+@keyframes chatMenuIn{from{opacity:0;transform:translateY(5px) scale(.98)}to{opacity:1;transform:none}}
+.chat-hold-reactions{display:flex;justify-content:space-between;gap:5px;padding:3px 2px 10px;border-bottom:1px solid #303030;margin-bottom:7px}
+.chat-hold-reactions button{width:36px;height:36px;border:0;border-radius:50%;background:#222;font-size:20px}
+.chat-hold-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.chat-hold-actions button{display:flex;align-items:center;gap:8px;border:0;border-radius:9px;background:transparent;color:#eee;text-align:left;padding:10px 8px;font-size:11px}
+.chat-hold-actions button:active,.chat-hold-actions button:hover{background:#292929}
+.chat-hold-actions svg{width:17px;height:17px;stroke:#ddd;fill:none;stroke-width:1.8}
+.chat-file-kind{width:35px;height:35px;display:grid;place-items:center;flex:0 0 35px;border-radius:10px;background:#292929;color:#fff}
+@media(max-width:900px){#page-messages{padding:18px 10px 32px}#page-messages .messages-layout{min-height:0}#page-messages .chat-thread{height:62dvh;min-height:340px}#page-messages .chat-list-items{min-height:0}}
+@media(max-width:650px){#page-messages .chat-thread{height:58dvh;min-height:300px;padding:14px}#page-messages .chat-message-row{max-width:90%}#page-messages .chat-compose{padding:10px}#page-messages .chat-tool-btn,#page-messages #chatSend{width:42px;height:42px;flex-basis:42px}}
+
 </style>
 </head>
 <body>
@@ -202,8 +236,8 @@
  <div class="chat-window"><div class="chat-window-head tc-chat-head"><div class="tc-chat-heading"><div id="chatHeaderAvatar" class="tc-chat-avatar">T</div><div class="tc-chat-heading-copy"><strong id="chatTitle">Выберите переписку</strong><span id="chatPresence">Ваши личные сообщения</span></div></div><button type="button" id="chatBackToList" class="secondary-btn tc-chat-back" aria-label="К списку переписок">←</button></div>
  <div class="chat-thread" id="chatThread" aria-live="polite"><div class="chat-empty">Выберите переписку слева или откройте профиль друга и нажмите «Написать».</div></div>
  <div id="chatReplyPreview" class="chat-reply-preview" hidden><div><strong>Ответ на сообщение</strong><span id="chatReplyText"></span></div><button type="button" id="chatReplyCancel" aria-label="Отменить ответ">×</button></div>
- <div id="chatMediaStatus" class="chat-media-status" aria-live="polite"></div><form class="chat-compose tc-chat-compose" id="chatForm"><input id="chatFileInput" type="file" accept="image/*,video/mp4,audio/*,.pdf,.txt,.doc,.docx" hidden><button type="button" class="secondary-btn chat-tool-btn" id="chatAttachButton" disabled aria-label="Прикрепить файл">＋</button><button type="button" class="secondary-btn chat-tool-btn" id="chatRecordButton" disabled aria-label="Записать голосовое сообщение">●</button><textarea class="field" id="chatInput" maxlength="4000" rows="1" placeholder="Напишите сообщение…" autocomplete="off" disabled></textarea><button class="primary-btn" id="chatSend" disabled aria-label="Отправить сообщение">↑</button></form><div class="tc-chat-footnote">Enter — отправить · Shift + Enter — новая строка</div></div>
-</div></section>
+ <div id="chatMediaStatus" class="chat-media-status" aria-live="polite"></div><form class="chat-compose tc-chat-compose" id="chatForm"><input id="chatFileInput" type="file" accept="image/*,video/mp4,audio/*,.pdf,.txt,.doc,.docx" hidden><button type="button" class="secondary-btn chat-tool-btn" id="chatAttachButton" disabled aria-label="Прикрепить файл"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 12.5 7.8-7.8a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg></button><button type="button" class="secondary-btn chat-tool-btn" id="chatRecordButton" disabled aria-label="Записать голосовое сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M9 21.5h6"/></svg></button><textarea class="field" id="chatInput" maxlength="4000" rows="1" placeholder="Напишите сообщение…" autocomplete="off" disabled></textarea><button class="primary-btn" id="chatSend" disabled aria-label="Отправить сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></form><div class="tc-chat-footnote">Enter — отправить · Shift + Enter — новая строка</div></div>
+</div><div class="chat-hold-menu" id="chatHoldMenu" role="menu" aria-label="Действия с сообщением"><div class="chat-hold-reactions"><button type="button" data-hold-react="❤️" aria-label="Нравится">❤️</button><button type="button" data-hold-react="👍" aria-label="Класс">👍</button><button type="button" data-hold-react="😂" aria-label="Смешно">😂</button><button type="button" data-hold-react="🔥" aria-label="Огонь">🔥</button><button type="button" data-hold-react="😮" aria-label="Удивлён">😮</button><button type="button" data-hold-react="😢" aria-label="Грустно">😢</button></div><div class="chat-hold-actions"><button type="button" data-hold-action="reply">↩ Ответить</button><button type="button" data-hold-action="copy">▢ Копировать</button><button type="button" data-hold-action="forward">➤ Переслать</button><button type="button" data-hold-action="edit">✎ Изменить</button><button type="button" data-hold-action="delete">⌫ Удалить</button></div></div></section>
 <section class="page" id="page-notifications">
 <div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения.</p>
 <div class="toolbar"><button class="secondary-btn" id="markAllNotifications">Отметить всё просмотренным</button></div><div id="notificationList"><div class="loading">Загружаем уведомления…</div></div>
@@ -545,7 +579,7 @@ function renderChatMessage(m,reactions,replyMap,attachmentUrls){
  const status=mine?(m.read_at?"Прочитано":m.delivered_at?"Доставлено":"Отправлено"):"",react=reactions.filter(x=>x.message_id===m.id),grouped=new Map();
  react.forEach(x=>{const v=grouped.get(x.emoji)||{count:0,mine:false};v.count++;if(x.user_id===currentUser.id)v.mine=true;grouped.set(x.emoji,v);});
  const reactionHtml=[...grouped.entries()].map(([emoji,x])=>'<button type="button" class="chat-reaction '+(x.mine?"mine":"")+'" data-reaction="'+m.id+'" data-emoji="'+escapeHtml(emoji)+'">'+escapeHtml(emoji)+' '+x.count+'</button>').join("");
- const actions=deleted?"":'<div class="chat-message-actions"><button type="button" data-reply="'+m.id+'">Ответить</button><button type="button" data-react="'+m.id+'" data-emoji="❤️">❤️</button><button type="button" data-react="'+m.id+'" data-emoji="👍">👍</button><button type="button" data-react="'+m.id+'" data-emoji="😂">😂</button>'+(mine?'<button type="button" data-edit="'+m.id+'">Изменить</button><button type="button" data-delete-message="'+m.id+'">Удалить</button>':"")+'</div>';
+ const actions=deleted?"":'<div class="chat-message-actions"><button type="button" data-reply="'+m.id+'">↩ Ответить</button><button type="button" data-copy="'+m.id+'">▢ Копировать</button><button type="button" data-forward="'+m.id+'">➤ Переслать</button>'+(mine?'<button type="button" data-edit="'+m.id+'">✎ Изменить</button><button type="button" data-delete-message="'+m.id+'">⌫ Удалить</button>':"")+'</div>';
  const url=attachmentUrls.get(m.id);let attachment="";
  if(!deleted&&url){
   if(m.message_type==="image")attachment='<a class="chat-attachment" href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+escapeHtml(url)+'" alt="Изображение"></a>';
@@ -577,6 +611,16 @@ $("chatBackToList").addEventListener("click",()=>{$("page-messages").classList.r
 $("chatSearch").addEventListener("input",e=>{chatSearchValue=e.target.value;filterChatContacts();});
 $("chatInput").addEventListener("input",e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,120)+"px";});
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit();}});
+let heldMessageId=null,holdTimer=null,holdStart=null;
+function closeChatHoldMenu(){const menu=$("chatHoldMenu");if(menu)menu.classList.remove("open");$("chatThread").querySelectorAll(".chat-message-row.context-open").forEach(x=>x.classList.remove("context-open"));heldMessageId=null;}
+function showChatHoldMenu(id,x,y){const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;closeChatHoldMenu();heldMessageId=id;row.classList.add("context-open");const menu=$("chatHoldMenu");menu.classList.add("open");const w=menu.offsetWidth,h=menu.offsetHeight;menu.style.left=Math.max(8,Math.min(x,innerWidth-w-8))+"px";menu.style.top=Math.max(8,Math.min(y,innerHeight-h-8))+"px";}
+const chatThreadEl=$("chatThread");
+chatThreadEl.addEventListener("pointerdown",e=>{const row=e.target.closest("[data-message-row]");if(!row||e.target.closest("button,a,input,textarea,video,audio"))return;heldMessageId=row.dataset.messageRow;holdStart={x:e.clientX,y:e.clientY};holdTimer=setTimeout(()=>showChatHoldMenu(heldMessageId,holdStart.x,holdStart.y),480);});
+["pointerup","pointercancel","pointerleave"].forEach(ev=>chatThreadEl.addEventListener(ev,()=>{clearTimeout(holdTimer);}));
+chatThreadEl.addEventListener("pointermove",e=>{if(holdStart&&Math.hypot(e.clientX-holdStart.x,e.clientY-holdStart.y)>12){clearTimeout(holdTimer);holdStart=null;}});
+chatThreadEl.addEventListener("contextmenu",e=>{const row=e.target.closest("[data-message-row]");if(!row)return;e.preventDefault();showChatHoldMenu(row.dataset.messageRow,e.clientX,e.clientY);});
+$("chatHoldMenu").addEventListener("click",async e=>{const react=e.target.closest("[data-hold-react]");if(react&&heldMessageId){const id=heldMessageId,emoji=react.dataset.holdReact;const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(old.data)await db.from("tc_message_reactions").delete().eq("id",old.data.id);else await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});closeChatHoldMenu();await loadChatThread();return;}const action=e.target.closest("[data-hold-action]");if(!action||!heldMessageId)return;const id=heldMessageId;closeChatHoldMenu();if(action.dataset.holdAction==="reply"){setChatReply(id);$("chatInput").focus();}else if(action.dataset.holdAction==="copy"){const m=chatMessagesCache.find(x=>x.id===id);if(m)await navigator.clipboard?.writeText(m.body||m.attachment_name||"");}else if(action.dataset.holdAction==="edit"){const btn=$("chatThread").querySelector('[data-edit="'+id+'"]');btn?.click();}else if(action.dataset.holdAction==="delete"){const btn=$("chatThread").querySelector('[data-delete-message="'+id+'"]');btn?.click();}});
+document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
 $("chatThread").addEventListener("click",async e=>{
  const reply=e.target.closest("[data-reply]");if(reply){setChatReply(reply.dataset.reply);return;}
  const react=e.target.closest("[data-react], [data-reaction]");
