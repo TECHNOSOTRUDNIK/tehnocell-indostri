@@ -1659,47 +1659,20 @@ document.querySelectorAll("[data-page]").forEach(button => {
    СОХРАНЕНИЕ ПРОФИЛЯ
 ===================================== */
 
-$("saveProfile").addEventListener("click", async () => {
-
-    if (!currentUser) return;
-
-    const name = $("nameInput").value.trim();
-
-    const bio = $("bioInput").value.trim();
-
-    if (name.length < 2) {
-
-        showMessage("Имя должно содержать минимум 2 символа.");
-        return;
-
-    }
-
-    $("saveProfile").disabled = true;
-
-    showMessage("Сохранение...");
-
-    const { error } = await db.auth.updateUser({
-
-        data: {
-            display_name: name,
-            bio: bio
-        }
-
-    });
-
-    $("saveProfile").disabled = false;
-
-    if (error) {
-
-        showMessage("Ошибка: " + error.message);
-        return;
-
-    }
-
-    showMessage("Изменения сохранены.", "#22a06b");
-
-    await loadAccount();
-
+$("saveProfile").addEventListener("click",async()=>{
+ if(!currentUser)return;const name=$("nameInput").value.trim(),bio=$("bioInput").value.trim();
+ if(name.length<2){showMessage("Имя должно содержать минимум 2 символа.");return;}
+ const button=$("saveProfile");button.disabled=true;showMessage("Сохраняем профиль…");
+ try{
+  const {data:updated,error:profileError}=await db.from("profiles").update({display_name:name,bio}).eq("id",currentUser.id).select("id,display_name,bio").maybeSingle();
+  if(profileError)throw profileError;if(!updated)throw new Error("Профиль не обновлён. Проверьте доступ к своей записи.");
+  const {data:authData,error:authError}=await db.auth.updateUser({data:{display_name:name,bio}});
+  if(authError)console.warn("Auth metadata sync warning:",authError.message);currentUser=authData?.user||currentUser;
+  $("profileDisplayName").textContent=name;$("settingsDisplayName").textContent=name;$("welcomeName").textContent=name;$("profileBio").textContent=bio||"Добро пожаловать в TEHNOCELL.";
+  $("tcPreviewName").textContent=name;$("tcPreviewBio").textContent=bio||"Пользователь пока ничего не рассказал о себе.";
+  showMessage(authError?"Профиль сохранён; дополнительные данные аккаунта не синхронизированы.":"Изменения сохранены.","#22a06b");await loadAccount();
+ }catch(error){console.error("Profile save failed:",error);showMessage("Не удалось сохранить изменения: "+(error.message||"ошибка базы данных"));}
+ finally{button.disabled=false;}
 });
 
 
@@ -2193,19 +2166,7 @@ startAccount();
 <script src="ennie-everywhere.js?v=mini-handsfree1-20261111" defer></script>
 <script src="account-access.js?v=3"></script>
 <script>
-(function(){
- const back=document.getElementById("tcBackButton");
- if(!back)return;
- back.addEventListener("click",function(event){
-  const ref=document.referrer;
-  let safe=false;
-  try{
-   const url=new URL(ref);
-   safe=url.origin===location.origin&&!/\/(login|register|account|account-user)\.html$/.test(url.pathname);
-  }catch(_){}
-  if(safe&&history.length>1){event.preventDefault();history.back();}
- });
-})();
+(function(){const back=document.getElementById("tcBackButton");if(!back)return;back.setAttribute("href","platform.html");back.addEventListener("click",function(event){event.preventDefault();window.location.assign(new URL("platform.html",window.location.href).href);});})();
 </script>
 </body>
 </html>
