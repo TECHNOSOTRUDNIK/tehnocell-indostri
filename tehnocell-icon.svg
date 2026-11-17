@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="92" fill="#fff"/>
+<g fill="none" stroke="#080808" stroke-width="25" stroke-linecap="square" stroke-linejoin="miter">
+<path d="M91 190V151L256 55 421 151V190"/>
+<path d="M91 322V361L256 457 421 361V322"/>
+</g>
+<text x="256" y="249" text-anchor="middle" font-family="Arial,sans-serif" font-size="66" font-weight="600" letter-spacing="7" fill="#080808">TC</text>
+<path d="M178 285H334" stroke="#080808" stroke-width="9"/>
+</svg>
