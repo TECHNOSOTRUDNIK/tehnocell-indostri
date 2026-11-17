@@ -195,6 +195,10 @@
 @media(max-width:560px){#publicProfileContent .tc-public-banner{height:clamp(145px,34vw,205px);border-radius:13px}}
 
 
+/* Reply preview: respect hidden state and keep the cancel control tappable on mobile. */
+#page-messages .chat-reply-preview[hidden]{display:none!important}
+#page-messages .chat-reply-preview:not([hidden]){position:relative;z-index:20;pointer-events:auto}
+#page-messages .chat-reply-preview button#chatReplyCancel{position:relative;z-index:21;flex:0 0 36px;min-width:36px;min-height:36px;display:grid;place-items:center;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;cursor:pointer}
 /* Mobile chat: fixed flex viewport with a dedicated native scroll area. */
 @media(max-width:900px){
  #page-messages.chat-open .chat-window{height:calc(100dvh - 245px);min-height:360px;max-height:calc(100dvh - 160px);overflow:hidden;display:flex;flex-direction:column}
@@ -675,7 +679,9 @@ async function loadChatThread(){
  if(unread.length){const {error}=await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
 }
 function setChatReply(id){const m=chatMessagesCache.find(x=>x.id===id);if(!m)return;chatReplyingTo=id;$("chatReplyText").textContent=m.deleted_at?"Сообщение удалено":m.body.slice(0,160);$("chatReplyPreview").hidden=false;$("chatInput").focus();}
-$("chatReplyCancel").addEventListener("click",()=>{chatReplyingTo=null;$("chatReplyPreview").hidden=true;});
+function clearChatReply(){chatReplyingTo=null;$("chatReplyPreview").hidden=true;$("chatReplyText").textContent="";}
+$("chatReplyCancel").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();clearChatReply();});
+$("chatReplyPreview").addEventListener("click",e=>{if(e.target.closest("#chatReplyCancel")){e.preventDefault();e.stopPropagation();clearChatReply();}});
 $("chatBackToList").addEventListener("click",()=>{$("page-messages").classList.remove("chat-open");$("chatMoreMenu").hidden=true;$("chatMoreButton").setAttribute("aria-expanded","false");});
 $("chatMoreButton").addEventListener("click",()=>{const menu=$("chatMoreMenu");menu.hidden=!menu.hidden;$("chatMoreButton").setAttribute("aria-expanded",String(!menu.hidden));});
 $("chatMoreMenu").addEventListener("click",async e=>{
