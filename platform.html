@@ -640,20 +640,61 @@ $("chatInput").addEventListener("input",e=>{e.target.style.height="auto";e.targe
 $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit();}});
 let heldMessageId=null,holdTimer=null,holdTriggered=false;
 function closeChatHoldMenu(){const menu=$("chatHoldMenu");if(menu)menu.classList.remove("open");heldMessageId=null;}
-function showChatHoldMenu(id,x,y){const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;heldMessageId=id;const menu=$("chatHoldMenu");menu.classList.add("open");const w=menu.offsetWidth,h=menu.offsetHeight;menu.style.left=Math.max(8,Math.min(x-w/2,innerWidth-w-8))+"px";menu.style.top=Math.max(8,Math.min(y-h-12,innerHeight-h-8))+"px";}
+function showChatHoldMenu(id,x,y){
+ const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!row)return;
+ heldMessageId=id;const menu=$("chatHoldMenu");
+ menu.querySelectorAll("[data-hold-action]").forEach(b=>{b.dataset.messageId=id;b.dataset.confirm="";b.disabled=false;});
+ menu.classList.add("open");
+ const w=menu.offsetWidth,h=menu.offsetHeight;
+ menu.style.left=Math.max(8,Math.min(x-w/2,innerWidth-w-8))+"px";
+ menu.style.top=Math.max(8,Math.min(y-h-12,innerHeight-h-8))+"px";
+}
 const chatThreadEl=$("chatThread");let touchHold=null;
 chatThreadEl.addEventListener("touchstart",e=>{const row=e.target.closest("[data-message-row]");if(!row||e.target.closest("button,a,input,textarea,video,audio"))return;const t=e.touches[0];touchHold={id:row.dataset.messageRow,x:t.clientX,y:t.clientY};clearTimeout(holdTimer);holdTimer=setTimeout(()=>{if(!touchHold)return;holdTriggered=true;showChatHoldMenu(touchHold.id,touchHold.x,touchHold.y);touchHold=null;},560);},{passive:true});
 chatThreadEl.addEventListener("touchmove",e=>{if(!touchHold)return;const t=e.touches[0];if(Math.abs(t.clientY-touchHold.y)>9||Math.abs(t.clientX-touchHold.x)>14){clearTimeout(holdTimer);touchHold=null;}},{passive:true});
 ["touchend","touchcancel"].forEach(ev=>chatThreadEl.addEventListener(ev,()=>{clearTimeout(holdTimer);touchHold=null;},{passive:true}));
 chatThreadEl.addEventListener("contextmenu",e=>{const row=e.target.closest("[data-message-row]");if(!row)return;e.preventDefault();if(holdTriggered){holdTriggered=false;return;}showChatHoldMenu(row.dataset.messageRow,e.clientX||innerWidth/2,e.clientY||innerHeight/2);});
 $("chatHoldMenu").addEventListener("click",async e=>{
- const react=e.target.closest("[data-hold-react]");
- if(react&&heldMessageId){const id=heldMessageId,emoji=react.dataset.holdReact;const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(old.data)await db.from("tc_message_reactions").delete().eq("id",old.data.id);else await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});closeChatHoldMenu();await loadChatThread();return;}
- const action=e.target.closest("[data-hold-action]");if(!action||!heldMessageId)return;
- const id=heldMessageId,kind=action.dataset.holdAction,m=chatMessagesCache.find(x=>x.id===id);
+ const button=e.target.closest("button");if(!button)return;
+ const react=button.closest("[data-hold-react]");
+ const id=heldMessageId||button.dataset.messageId;
+ if(react&&id){
+  const emoji=react.dataset.holdReact;
+  const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();
+  const result=old.data?await db.from("tc_message_reactions").delete().eq("id",old.data.id):await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});
+  if(result.error)showNotice("Не удалось изменить реакцию: "+result.error.message);
+  closeChatHoldMenu();await loadChatThread();return;
+ }
+ const kind=button.dataset.holdAction;if(!kind||!id)return;
+ const m=chatMessagesCache.find(x=>x.id===id);
  if(kind==="reply"){closeChatHoldMenu();setChatReply(id);$("chatInput").focus();return;}
- if(kind==="copy"){const value=m?.body||m?.attachment_name||"";try{await navigator.clipboard.writeText(value);}catch(_){const t=document.createElement("textarea");t.value=value;document.body.append(t);t.select();document.execCommand("copy");t.remove();}showNotice("Текст скопирован.");closeChatHoldMenu();return;}
- if(kind==="edit"){if(!m||m.sender_id!==currentUser.id||m.deleted_at||m.message_type!=="text"){showNotice("Изменять можно только свои текстовые сообщения.");closeChatHoldMenu();return;}closeChatHoldMenu();const row=$("chatThread").querySelector('[data-message-row="'+id+'"]'),body=row?.querySelector(".chat-bubble");if(!body)return;body.innerHTML='<textarea class="chat-edit-box" maxlength="4000">'+escapeHtml(m.body||"")+'</textarea><div class="chat-edit-actions"><button type="button" data-save-edit="'+id+'">Сохранить</button><button type="button" data-cancel-edit="'+id+'">Отмена</button></div>';body.querySelector("textarea")?.focus();return;}if(kind==="delete"){if(!m||m.sender_id!==currentUser.id||m.deleted_at){showNotice("Можно удалять только свои сообщения.");closeChatHoldMenu();return;}if(!confirm("Удалить это сообщение?"))return;const {error}=await db.from("tc_direct_messages").update({body:"Сообщение удалено",deleted_at:new Date().toISOString(),edited_at:null}).eq("id",id).eq("sender_id",currentUser.id).is("deleted_at",null);if(error){showNotice("Не удалось удалить сообщение: "+error.message);return;}if(m.attachment_path)await db.storage.from("tc-chat-media").remove([m.attachment_path]);closeChatHoldMenu();await loadChatThread();await loadConversations();return;}
+ if(kind==="copy"){
+  const value=m?.body||m?.attachment_name||"";
+  try{if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(value);else throw new Error("clipboard unavailable");}
+  catch(_){const t=document.createElement("textarea");t.value=value;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();}
+  showNotice("Текст скопирован.");closeChatHoldMenu();return;
+ }
+ if(kind==="edit"){
+  if(!m||m.sender_id!==currentUser.id||m.deleted_at||(m.message_type&&m.message_type!=="text")){
+   showNotice("Изменять можно только свои текстовые сообщения.");closeChatHoldMenu();return;
+  }
+  const row=$("chatThread").querySelector('[data-message-row="'+id+'"]');
+  const body=row?.querySelector("[data-message-body]");
+  if(!body){showNotice("Не удалось открыть редактор сообщения.");closeChatHoldMenu();return;}
+  body.innerHTML='<textarea class="chat-edit-box" maxlength="4000">'+escapeHtml(m.body||"")+'</textarea><div class="chat-edit-actions"><button type="button" data-save-edit="'+id+'">Сохранить</button><button type="button" data-cancel-edit="'+id+'">Отмена</button></div>';
+  closeChatHoldMenu();body.querySelector("textarea")?.focus();return;
+ }
+ if(kind==="delete"){
+  if(!m||m.sender_id!==currentUser.id||m.deleted_at){showNotice("Удалять можно только свои сообщения.");closeChatHoldMenu();return;}
+  if(button.dataset.confirm!=="yes"){
+   button.dataset.confirm="yes";button.textContent="Подтвердить удаление";button.classList.add("danger-confirm");return;
+  }
+  button.disabled=true;button.textContent="Удаляем…";
+  const {error}=await db.from("tc_direct_messages").update({body:"Сообщение удалено",deleted_at:new Date().toISOString(),edited_at:null}).eq("id",id).eq("sender_id",currentUser.id).is("deleted_at",null);
+  if(error){button.disabled=false;button.dataset.confirm="";button.textContent="⌫ Удалить";showNotice("Не удалось удалить сообщение: "+error.message);return;}
+  if(m.attachment_path){const {error:storageError}=await db.storage.from("tc-chat-media").remove([m.attachment_path]);if(storageError)console.warn("Attachment cleanup:",storageError.message);}
+  closeChatHoldMenu();await loadChatThread();await loadConversations();showNotice("Сообщение удалено.");return;
+ }
 });
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
 $("chatThread").addEventListener("click",async e=>{
