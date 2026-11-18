@@ -517,7 +517,7 @@ async function loadStories(){
  const pm=new Map((profiles||[]).map(x=>[x.id,x]));
  storyGroups=[...new Set([currentUser.id,...ids])].map(id=>({userId:id,profile:pm.get(id)||{id,display_name:id===currentUser.id?"Вы":"Участник"},stories:storyRows.filter(s=>s.user_id===id)})).filter(g=>g.stories.length||g.userId===currentUser.id);
  strip.innerHTML="";
- const own=document.createElement("button");own.type="button";own.className="tc-story-bubble add";own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">＋</span></span><span class="tc-story-name">Ваша история</span>';own.addEventListener("click",()=>$("openStoryModal").click());strip.appendChild(own);
+ const ownGroup=storyGroups.find(g=>g.userId===currentUser.id);const own=document.createElement("button");own.type="button";own.className="tc-story-bubble"+(ownGroup?.stories.length?"":" add");const ownName=ownGroup?.profile?.display_name||"Ваша история";own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(ownGroup?.stories.length?escapeHtml((ownName||"Я").charAt(0).toUpperCase()):"＋")+'</span></span><span class="tc-story-name">'+(ownGroup?.stories.length?"Моя история":"Ваша история")+'</span>';own.addEventListener("click",()=>ownGroup?.stories.length?openStoryGroup(currentUser.id):$("openStoryModal").click());strip.appendChild(own);
  storyGroups.filter(g=>g.userId!==currentUser.id).forEach(g=>{
   const b=document.createElement("button");b.type="button";b.className="tc-story-bubble";
   const name=g.profile.display_name||"Участник",path=g.profile.avatar_path,avatar=path?db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl:null;
