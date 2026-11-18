@@ -54,3 +54,5 @@ jobs:
           if-no-files-found: error
 
 # Trigger signed build after repository signing secrets were configured.
+
+# Retry with corrected signing secrets.
