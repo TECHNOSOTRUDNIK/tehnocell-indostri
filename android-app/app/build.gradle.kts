@@ -3,6 +3,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val ciVersionCode = providers.gradleProperty("ciVersionCode").orNull?.toIntOrNull() ?: 1
+
 android {
     namespace = "com.tehnocell.platform"
     compileSdk = 35
@@ -11,8 +13,29 @@ android {
         applicationId = "com.tehnocell.platform"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = ciVersionCode
+        versionName = "1.0.$ciVersionCode"
+    }
+
+    signingConfigs {
+        create("persistent") {
+            val keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+                ?: error("ANDROID_KEYSTORE_PATH is not configured")
+            storeFile = file(keystorePath)
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                ?: error("ANDROID_KEYSTORE_PASSWORD secret is missing")
+            keyAlias = System.getenv("ANDROID_KEY_ALIAS")
+                ?: error("ANDROID_KEY_ALIAS secret is missing")
+            keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+                ?: error("ANDROID_KEY_PASSWORD secret is missing")
+        }
+    }
+
+    buildTypes {
+        getByName("debug") {
+            // Keep the same signing identity for every installable CI build.
+            signingConfig = signingConfigs.getByName("persistent")
+        }
     }
 
     compileOptions {
