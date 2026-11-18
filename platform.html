@@ -242,6 +242,10 @@
 
 
 /* TEHNOCELL MOMENTS — immersive story viewer */
+@keyframes tcStoryMediaEnter{from{opacity:.35;transform:translateX(18px) scale(.985);filter:blur(3px)}to{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}}
+.tc-story-viewer-media{animation:tcStoryMediaEnter .34s cubic-bezier(.2,.75,.25,1) both}
+.tc-story-viewer-gradient{animation:tcStoryMediaEnter .34s ease-out both}
+
 .tc-story-viewer-backdrop{padding:0;background:rgba(0,0,0,.96);backdrop-filter:blur(10px)}
 .tc-story-viewer{width:min(100%,480px);height:100dvh;max-height:100dvh;min-height:0;border:0;border-radius:0;background:#000;box-shadow:none;overflow:hidden;animation:tcStoryOpen .38s cubic-bezier(.2,.8,.2,1) both}
 @keyframes tcStoryOpen{from{opacity:0;transform:scale(.88) translateY(24px);border-radius:28px}to{opacity:1;transform:scale(1) translateY(0);border-radius:0}}
