@@ -65,7 +65,15 @@
 .mobile-nav{display:none}
 @media(max-width:900px){.layout{grid-template-columns:205px minmax(0,1fr)}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.feed-layout{grid-template-columns:1fr}.feed-aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 @media(max-width:650px){.layout{display:block}.sidebar{display:none}.main{padding:19px 14px calc(90px + env(safe-area-inset-bottom))}.topbar{margin-bottom:25px}.top-actions .top-btn:first-child{display:none}.page-title{font-size:28px}.welcome{padding:19px;margin-bottom:20px}.welcome:after{right:3px;font-size:110px}.service-grid{gap:8px}.service{min-height:140px;padding:13px}.community-grid{grid-template-columns:1fr}.feed-aside{grid-template-columns:1fr}.mobile-nav{position:fixed;z-index:30;display:grid;grid-template-columns:repeat(6,1fr);left:9px;right:9px;bottom:calc(8px + env(safe-area-inset-bottom));padding:6px;background:rgba(20,20,20,.97);border:1px solid #333;border-radius:16px;backdrop-filter:blur(18px);box-shadow:0 8px 35px #0009}.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 2px;color:#888;font-size:8px}.mobile-nav a.active{color:#fff}.mobile-nav b{font-size:16px;font-weight:500}.toolbar{gap:7px}.search{flex-basis:100%}.topbar{align-items:center}.crumb{font-size:9px}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Мягкая анимация лайка без перезагрузки ленты */
+.post-action[data-like]{position:relative;transition:color .18s,background .18s,transform .18s}
+.post-action[data-like].active{color:#fff;background:#292929}
+.post-action[data-like].like-flash{animation:tcLikeTap .34s ease-out}
+.post-action[data-like].like-flash::after{content:"";position:absolute;inset:-5px;border:1px solid #ffffff70;border-radius:10px;pointer-events:none;animation:tcLikeHalo .48s ease-out forwards}
+@keyframes tcLikeTap{0%{transform:scale(1)}38%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes tcLikeHalo{0%{opacity:.55;transform:scale(.94)}100%{opacity:0;transform:scale(1.16)}}
+\n@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* Социальные функции */
 .verified-badge{display:inline-grid;place-items:center;width:15px;height:15px;margin-left:5px;border-radius:50%;background:#2588ff;color:#fff;font-size:10px;font-weight:900;vertical-align:middle;box-shadow:0 0 0 2px #111}
@@ -546,9 +554,31 @@ async function loadFeed(){
  
 }
 async function toggleLike(id,button){
- button.disabled=true;const active=button.classList.contains("active");
- const result=active?await db.from("tc_post_reactions").delete().eq("post_id",id).eq("user_id",currentUser.id):await db.from("tc_post_reactions").insert({post_id:id,user_id:currentUser.id,reaction:"like"});
- button.disabled=false;if(result.error){showNotice("Не удалось изменить реакцию: "+result.error.message);return;}if(currentPage==="feed")loadFeed();if(currentProfileId)loadProfilePosts(currentProfileId);
+ if(!currentUser||button.dataset.busy==="1")return;
+ const wasLiked=button.classList.contains("active");
+ const match=button.textContent.match(/·\\s*(\\d+)/);
+ const oldCount=match?Number(match[1]):0;
+ const nextCount=Math.max(0,oldCount+(wasLiked?-1:1));
+ const paint=(liked,count)=>{
+  button.classList.toggle("active",liked);
+  button.textContent=(liked?"♥":"♡")+" Нравится · "+count;
+  button.setAttribute("aria-pressed",String(liked));
+ };
+ button.dataset.busy="1";button.disabled=true;
+ paint(!wasLiked,nextCount);
+ if(!wasLiked){
+  button.classList.remove("like-flash");void button.offsetWidth;button.classList.add("like-flash");
+  button.addEventListener("animationend",()=>button.classList.remove("like-flash"),{once:true});
+ }
+ const result=wasLiked
+  ?await db.from("tc_post_reactions").delete().eq("post_id",id).eq("user_id",currentUser.id)
+  :await db.from("tc_post_reactions").insert({post_id:id,user_id:currentUser.id,reaction:"like"});
+ button.dataset.busy="0";button.disabled=false;
+ if(result.error){
+  paint(wasLiked,oldCount);
+  console.error("TEHNOCELL post reaction failed",result.error);
+  showNotice("Не удалось поставить лайк: "+result.error.message);
+ }
 }
 async function deletePost(id){
  const {error}=await db.from("tc_posts").delete().eq("id",id).eq("author_id",currentUser.id);
