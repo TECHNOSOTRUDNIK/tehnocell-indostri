@@ -56,3 +56,5 @@ jobs:
 # Trigger signed build after repository signing secrets were configured.
 
 # Retry with corrected signing secrets.
+
+# Trigger build with official dependency repositories.
