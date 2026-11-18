@@ -4416,26 +4416,31 @@ async function waitForVoiceResume(token) {
   return token === voiceRunToken;
 }
 
-function splitVoiceText(text, maxLength = 560) {
-  const sentences = text.match(/[^.!?…]+[.!?…]*/gu) || [text];
+function splitVoiceText(text, maxLength = 240) {
+  const source = String(text || "").replace(/\\s+/g, " ").trim();
+  if (!source) return [];
+  const sentences = source.match(/[^.!?…]+[.!?…]*/gu) || [source];
   const chunks = [];
   let current = "";
-  for (const sentence of sentences) {
-    const candidate = (current + " " + sentence).trim();
-    if (candidate.length <= maxLength) {
-      current = candidate;
-      continue;
-    }
-    if (current) chunks.push(current);
-    current = "";
-    let rest = sentence.trim();
-    while (rest.length > maxLength) {
-      let cut = rest.lastIndexOf(" ", maxLength);
+  for (const sentenceRaw of sentences) {
+    let sentence = sentenceRaw.trim();
+    while (sentence.length) {
+      const room = maxLength - current.length - (current ? 1 : 0);
+      if (sentence.length <= room) {
+        current = (current + " " + sentence).trim();
+        sentence = "";
+        continue;
+      }
+      if (current) {
+        chunks.push(current);
+        current = "";
+        continue;
+      }
+      let cut = sentence.lastIndexOf(" ", maxLength);
       if (cut < Math.floor(maxLength * 0.55)) cut = maxLength;
-      chunks.push(rest.slice(0, cut).trim());
-      rest = rest.slice(cut).trim();
+      chunks.push(sentence.slice(0, cut).trim());
+      sentence = sentence.slice(cut).trim();
     }
-    current = rest;
   }
   if (current) chunks.push(current);
   return chunks.filter(Boolean);
@@ -4482,21 +4487,27 @@ function speakWithBrowser(text, token) {
       reject(new Error("На устройстве недоступно системное озвучивание."));
       return;
     }
-    const chunks = splitVoiceText(text, 420);
-    const voices = window.speechSynthesis.getVoices();
+    const chunks = splitVoiceText(text, 180);
+    const synthesis = window.speechSynthesis;
+    const voices = synthesis.getVoices();
     const russianVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith("ru"));
     const femaleVoice = russianVoices.find(voice => /female|жен|milena|alena|irina|anna/i.test(voice.name));
     let index = 0;
-    const next = () => {
-      if (token !== voiceRunToken || index >= chunks.length) {
-        document.body.classList.remove("speaking");
-        resolve();
-        return;
-      }
+    let settled = false;
+    const finish = error => {
+      if (settled) return;
+      settled = true;
+      document.body.classList.remove("speaking");
+      if (error) reject(error); else resolve();
+    };
+    const next = async () => {
+      if (token !== voiceRunToken) return finish();
+      if (!(await waitForVoiceResume(token))) return finish();
+      if (index >= chunks.length) return finish();
       const utterance = new SpeechSynthesisUtterance(chunks[index++]);
       utterance.lang = "ru-RU";
-      utterance.rate = 1;
-      utterance.pitch = 1.08;
+      utterance.rate = 0.96;
+      utterance.pitch = 1.06;
       utterance.volume = 1;
       if (femaleVoice) utterance.voice = femaleVoice;
       else if (russianVoices.length) utterance.voice = russianVoices[0];
@@ -4505,15 +4516,20 @@ function speakWithBrowser(text, token) {
       };
       utterance.onend = () => {
         document.body.classList.remove("speaking");
-        next();
+        window.setTimeout(next, 140);
       };
-      utterance.onerror = (event) => {
+      utterance.onerror = event => {
         document.body.classList.remove("speaking");
-        if (event.error === "canceled" || token !== voiceRunToken) resolve();
-        else reject(new Error("Системный голос не смог дочитать сообщение."));
+        if (event.error === "canceled" && token !== voiceRunToken) finish();
+        else if (event.error === "interrupted" && token === voiceRunToken) window.setTimeout(next, 180);
+        else finish(new Error("Системный голос не смог дочитать фрагмент."));
       };
-      window.speechSynthesis.speak(utterance);
-      if (voicePaused) window.speechSynthesis.pause();
+      try {
+        synthesis.speak(utterance);
+        if (voicePaused) synthesis.pause();
+      } catch (error) {
+        finish(error);
+      }
     };
     next();
   });
@@ -4522,10 +4538,10 @@ function speakWithBrowser(text, token) {
 async function speakText(text, messageElement = null, force = false) {
   if (!force && !voiceEnabled) return;
   const cleanText = String(text || "")
-    .replace(/\`\`\`[\s\S]*?\`\`\`/g, " ")
-    .replace(/https?:\/\/\S+/g, "ссылка")
+    .replace(/\`\`\`[\\s\\S]*?\`\`\`/g, " ")
+    .replace(/https?:\\/\\/\\S+/g, "ссылка")
     .replace(/[*_#\`]/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/\\s+/g, " ")
     .trim();
   if (!cleanText) return;
 
@@ -4541,40 +4557,66 @@ async function speakText(text, messageElement = null, force = false) {
     const accessToken = sessionData.session?.access_token;
     if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
 
-    const chunks = splitVoiceText(cleanText);
+    // Короткие фрагменты надёжнее генерируются и воспроизводятся на Android WebView.
+    const chunks = splitVoiceText(cleanText, 240);
     for (let index = 0; index < chunks.length; index++) {
       if (token !== voiceRunToken) return;
       if (!(await waitForVoiceResume(token))) return;
+      let played = false;
+      let lastError = null;
 
-      voiceAbortController = new AbortController();
-      const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": "Bearer " + accessToken
-        },
-        body: JSON.stringify({ text: chunks[index] }),
-        signal: voiceAbortController.signal
-      });
-      voiceAbortController = null;
-      if (token !== voiceRunToken) return;
-      if (!response.ok) {
-        let message = "Голосовой сервер вернул ошибку " + response.status;
+      for (let attempt = 0; attempt < 2 && !played; attempt++) {
+        if (token !== voiceRunToken) return;
         try {
-          const details = await response.json();
-          if (details.error) message = details.error;
-        } catch (_) {}
-        throw new Error(message);
+          voiceAbortController = new AbortController();
+          const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_ANON_KEY,
+              "Authorization": "Bearer " + accessToken
+            },
+            body: JSON.stringify({ text: chunks[index] }),
+            signal: voiceAbortController.signal
+          });
+          voiceAbortController = null;
+          if (token !== voiceRunToken) return;
+          if (!response.ok) {
+            let message = "Голосовой сервер вернул ошибку " + response.status;
+            try {
+              const details = await response.json();
+              if (details.error) message = details.error;
+            } catch (_) {}
+            throw new Error(message);
+          }
+          const audioBlob = await response.blob();
+          if (!audioBlob.size) throw new Error("Голосовой сервер вернул пустое аудио.");
+          if (!(await waitForVoiceResume(token))) return;
+          await playEnnieAudio(audioBlob, token);
+          played = true;
+        } catch (error) {
+          voiceAbortController = null;
+          if (token !== voiceRunToken || error?.name === "AbortError") return;
+          lastError = error;
+          if (attempt === 0) await new Promise(resolve => setTimeout(resolve, 350));
+        }
       }
-      const audioBlob = await response.blob();
-      if (!audioBlob.size) throw new Error("Голосовой сервер вернул пустое аудио.");
-      if (!(await waitForVoiceResume(token))) return;
-      await playEnnieAudio(audioBlob, token);
+
+      // Если один фрагмент не сгенерировался, озвучиваем только его системным голосом
+      // и продолжаем очередь, а не теряем оставшуюся часть сообщения.
+      if (!played) {
+        console.warn("ENNIE voice chunk fallback:", lastError);
+        try {
+          await speakWithBrowser(chunks[index], token);
+        } catch (fallbackError) {
+          console.error("ENNIE voice chunk failed:", fallbackError);
+          if (token === voiceRunToken) showToast("Не удалось озвучить один фрагмент. Остальная очередь продолжится.", "error");
+        }
+      }
     }
   } catch (error) {
     if (token !== voiceRunToken || error?.name === "AbortError") return;
-    console.warn("ENNIE natural voice unavailable; switching to device voice:", error);
+    console.error("ENNIE voice pipeline error:", error);
     try {
       await speakWithBrowser(cleanText, token);
     } catch (fallbackError) {
