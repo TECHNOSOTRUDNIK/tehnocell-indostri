@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                           var id="tehnocell-android-app-overrides";
                           var style=document.getElementById(id);
                           if(!style){style=document.createElement("style");style.id=id;(document.head||document.documentElement).appendChild(style);}
-                          style.textContent="a.top-btn[href=\\\"index.html\\\"]{display:none!important}#ennie-everywhere-root{display:none!important}.ee-launch,.ee-panel,.ee-cinematic{display:none!important}";
+                          style.textContent="a.top-btn[href$='index.html']{display:none!important}#ennie-everywhere-root{display:none!important}.ee-launch,.ee-panel,.ee-cinematic{display:none!important}";
                           if(!window.__tcAndroidOverrideObserver){
                             window.__tcAndroidOverrideObserver=new MutationObserver(function(){
                               var root=document.getElementById("ennie-everywhere-root");
