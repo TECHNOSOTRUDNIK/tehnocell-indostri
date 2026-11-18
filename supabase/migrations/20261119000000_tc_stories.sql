@@ -18,17 +18,19 @@ alter table public.tc_stories enable row level security;
 drop policy if exists tc_stories_read_active on public.tc_stories;
 create policy tc_stories_read_active on public.tc_stories for select to authenticated
 using (
-  expires_at > now()
-  and (
-    user_id = (select auth.uid())
-    or privacy = 'everyone'
-    or (
-      privacy = 'friends'
-      and exists (
-        select 1 from public.tc_friend_requests f
-        where f.status = 'accepted'
-          and ((f.sender_id = user_id and f.receiver_id = (select auth.uid()))
-            or (f.receiver_id = user_id and f.sender_id = (select auth.uid())))
+  user_id = (select auth.uid())
+  or (
+    expires_at > now()
+    and (
+      privacy = 'everyone'
+      or (
+        privacy = 'friends'
+        and exists (
+          select 1 from public.tc_friend_requests f
+          where f.status = 'accepted'
+            and ((f.sender_id = user_id and f.receiver_id = (select auth.uid()))
+              or (f.receiver_id = user_id and f.sender_id = (select auth.uid())))
+        )
       )
     )
   )
