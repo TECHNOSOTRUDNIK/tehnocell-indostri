@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.view.View
 import android.webkit.CookieManager
 import android.webkit.DownloadListener
 import android.webkit.URLUtil
@@ -25,8 +24,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
+// Открываем только саму платформу, а не главную страницу сайта компании.
 private const val PLATFORM_URL =
-    "https://technosotrudnik.github.io/tehnocell-indostri/"
+    "https://technosotrudnik.github.io/tehnocell-indostri/platform.html"
 
 class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
@@ -174,6 +174,7 @@ class MainActivity : ComponentActivity() {
         }
         setContentView(root)
 
+        // Не очищаем cookies, авторизацию и DOM-хранилище между запусками.
         CookieManager.getInstance().apply {
             setAcceptCookie(true)
             setAcceptThirdPartyCookies(webView, true)
@@ -193,7 +194,7 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        webView.saveState(outState)
+        if (::webView.isInitialized) webView.saveState(outState)
         super.onSaveInstanceState(outState)
     }
 
@@ -203,7 +204,10 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onPause() {
-        if (::webView.isInitialized) webView.onPause()
+        if (::webView.isInitialized) {
+            webView.onPause()
+            CookieManager.getInstance().flush()
+        }
         super.onPause()
     }
 
