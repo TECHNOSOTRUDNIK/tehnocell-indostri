@@ -1452,7 +1452,9 @@ function renderPublicProfilePreview(profile,user){
  $("tcPublicPreview").dataset.theme=theme;
  $("tcPreviewName").textContent=name;
  $("tcPreviewName").innerHTML=name.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))+(VERIFIED_USERS.includes(user.id)?'<span class="tc-preview-badge" aria-label="Подтверждённый аккаунт">✓</span>':'');
- $("tcPreviewHandle").textContent=profile?.username?"@"+profile.username:"Участник TEHNOCELL";
+ const username=String(profile?.username??"").trim();
+ const hasUsername=username!==""&&username.toLowerCase()!=="null"&&username.toLowerCase()!=="undefined";
+ $("tcPreviewHandle").textContent=hasUsername?"@"+username:"Участник TEHNOCELL";
  $("tcPreviewBio").textContent=bio||"Пользователь пока ничего не рассказал о себе.";
  const status=profile?.profile_status||profile?.status_text||"";
  $("tcPreviewStatus").textContent=status;$("tcPreviewStatus").hidden=!status;
