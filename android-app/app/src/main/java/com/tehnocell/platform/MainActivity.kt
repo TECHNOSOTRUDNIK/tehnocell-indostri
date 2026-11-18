@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                 allowContentAccess = true
                 useWideViewPort = true
                 loadWithOverviewMode = false
-                mediaPlaybackRequiresUserGesture = true
+                mediaPlaybackRequiresUserGesture = false
                 mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
                 setSupportZoom(false)
                 builtInZoomControls = false
