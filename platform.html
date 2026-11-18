@@ -1072,5 +1072,76 @@ async function loadHomeCounts(){
 db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session)location.replace("login.html?next=platform");});
 boot();
 </script>
+
+<style id="tc-glass-selection-style">
+html,body,body *{-webkit-touch-callout:none}
+input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-callout:default}
+::selection{background:rgba(255,255,255,.38)!important;color:#fff!important;text-shadow:none}
+::-moz-selection{background:rgba(255,255,255,.38)!important;color:#fff!important}
+.tc-selection-bubble{position:fixed;z-index:2147483000;display:flex;align-items:center;gap:5px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(25,25,27,.78);color:#fff;-webkit-backdrop-filter:blur(22px) saturate(135%);backdrop-filter:blur(22px) saturate(135%);box-shadow:0 8px 32px rgba(0,0,0,.48),0 0 22px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.13);opacity:0;pointer-events:none;transition:opacity .12s ease}
+.tc-selection-bubble.visible{opacity:1;pointer-events:auto}
+.tc-selection-action{min-height:39px;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 12px;border:1px solid rgba(255,255,255,.10);border-radius:15px;color:rgba(255,255,255,.94);background:rgba(255,255,255,.055);font:500 12px/1.1 Inter,Arial,sans-serif;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.tc-selection-action.primary{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.25);box-shadow:0 0 14px rgba(255,255,255,.08)}
+.tc-selection-action svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+@media(prefers-reduced-motion:reduce){.tc-selection-bubble{transition:none}}
+</style>
+<script id="tc-glass-selection">
+(()=>{
+ if(window.__tcGlassSelectionReady)return;
+ window.__tcGlassSelectionReady=true;
+ const bubble=document.createElement("div");
+ bubble.className="tc-selection-bubble";
+ bubble.setAttribute("role","toolbar");
+ bubble.setAttribute("aria-label","Действия с выделенным текстом");
+ bubble.innerHTML=`
+ <button class="tc-selection-action primary" data-action="ask" type="button"><svg viewBox="0 0 24 24"><path d="M12 3a8 8 0 0 0-6.8 12.2L4 21l5.8-1.5A8 8 0 1 0 12 3Z"/><path d="M8.5 12h7M12 8.5v7"/></svg><span>Спросить у Энни</span></button>
+ <button class="tc-selection-action" data-action="copy" type="button"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg><span>Копировать</span></button>
+ <button class="tc-selection-action" data-action="all" type="button" aria-label="Выделить всё"><svg viewBox="0 0 24 24"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3M8 8h8v8H8z"/></svg></button>`;
+ document.body.appendChild(bubble);
+ let selectedText="",hideTimer=0;
+ const getText=()=>String(window.getSelection()?.toString()||"").trim();
+ const hide=()=>bubble.classList.remove("visible");
+ const show=()=>{
+  const sel=window.getSelection();selectedText=getText();
+  if(!sel||!selectedText||!sel.rangeCount){hide();return;}
+  const rect=sel.getRangeAt(0).getBoundingClientRect();
+  if(!rect||(!rect.width&&!rect.height)){hide();return;}
+  bubble.style.visibility="hidden";bubble.classList.add("visible");
+  const w=bubble.offsetWidth,h=bubble.offsetHeight,m=12;
+  const left=Math.max(m,Math.min(innerWidth-w-m,rect.left+rect.width/2-w/2));
+  let top=rect.top-h-13;if(top<m)top=Math.min(innerHeight-h-m,rect.bottom+13);
+  bubble.style.left=left+"px";bubble.style.top=top+"px";bubble.style.visibility="visible";
+ };
+ const editable=t=>t?.closest?.('input,textarea,select,[contenteditable="true"],[role="textbox"]');
+ document.addEventListener("contextmenu",e=>{
+  const t=e.target instanceof Element?e.target:e.target?.parentElement;
+  if(!editable(t)){e.preventDefault();e.stopPropagation();if(getText()){clearTimeout(hideTimer);show();}}
+ },true);
+ document.addEventListener("selectionchange",()=>{clearTimeout(hideTimer);hideTimer=setTimeout(show,90);});
+ document.addEventListener("scroll",()=>{if(bubble.classList.contains("visible"))show();},true);
+ document.addEventListener("pointerdown",e=>{if(!bubble.contains(e.target)&&!getText())hide();});
+ bubble.addEventListener("pointerdown",e=>e.stopPropagation());
+ bubble.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-action]");if(!b)return;
+  const action=b.dataset.action,text=selectedText||getText();if(!text)return;
+  if(action==="copy"){
+   try{if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);else{const a=document.createElement("textarea");a.value=text;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();}
+    const label=b.querySelector("span");if(label){label.textContent="Скопировано";setTimeout(()=>{if(label.isConnected)label.textContent="Копировать";},1200);}
+   }catch(_){}
+  }else if(action==="ask"){
+   const prompt="Помоги разобраться с выделенным текстом:\n\n"+text;
+   window.getSelection()?.removeAllRanges();hide();
+   location.href="ennie.html?ask_text="+encodeURIComponent(prompt);
+  }else if(action==="all"){
+   const sel=window.getSelection();if(!sel)return;
+   const root=sel.anchorNode?.parentElement?.closest("p,article,.post-card,.comment-row,.page");
+   if(root){const range=document.createRange();range.selectNodeContents(root);sel.removeAllRanges();sel.addRange(range);}
+   setTimeout(show,60);
+  }
+ });
+ document.addEventListener("touchend",()=>setTimeout(show,80),{passive:true});
+})();
+</script>
+
 <script src="account-access.js?v=3"></script>
 </body></html>
