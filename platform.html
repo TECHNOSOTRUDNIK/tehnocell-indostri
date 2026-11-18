@@ -261,6 +261,51 @@
  #page-messages:not(.chat-open) .tc-messenger-layout{grid-template-columns:minmax(290px,340px) minmax(0,1fr)!important}
  #page-messages:not(.chat-open) .chat-list-items{max-height:620px!important;min-height:420px!important}
 }
+
+/* TEHNOCELL MOMENTS — stories */
+.tc-stories-section{margin:20px 0 22px;padding:16px;border:1px solid #292929;border-radius:17px;background:linear-gradient(135deg,#151515,#0c0c0c)}
+.tc-stories-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.tc-stories-heading span,.tc-story-kicker{font-size:8px;letter-spacing:2px;color:#888;font-weight:800}
+.tc-stories-heading h2{font-size:17px;margin:5px 0 0}
+.tc-story-add{border:1px solid #eee;background:#f2f2f2;color:#111;border-radius:9px;padding:9px 12px;font-size:10px;font-weight:800}
+.tc-stories-strip{display:flex;gap:13px;overflow-x:auto;padding:2px 1px 8px;scrollbar-width:thin;scrollbar-color:#444 transparent}
+.tc-stories-loading{font-size:11px;color:#777;padding:13px 0}
+.tc-story-bubble{flex:0 0 72px;width:72px;border:0;background:transparent;color:#ddd;padding:0;text-align:center}
+.tc-story-ring{width:66px;height:66px;margin:0 auto 7px;padding:3px;border-radius:50%;border:1px solid #777;background:linear-gradient(145deg,#fff,#555);display:block}
+.tc-story-ring.seen{border-color:#444;background:#333}
+.tc-story-avatar{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#242424;display:grid;place-items:center;font-size:20px;font-weight:800;color:#fff}
+.tc-story-avatar img{width:100%;height:100%;object-fit:cover}
+.tc-story-name{display:block;max-width:72px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;color:#bbb}
+.tc-story-bubble.add .tc-story-ring{border:1px dashed #777;background:#171717}
+.tc-story-bubble.add .tc-story-avatar{font-size:26px;color:#fff}
+.tc-story-modal{max-width:510px}
+.tc-story-file-hint,.tc-story-music-note{font-size:9px;color:#777;line-height:1.6;margin-top:7px}
+.tc-story-music-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding:12px;border:1px solid #303030;border-radius:11px;background:#171717}
+.tc-story-music-head strong,.tc-story-music-head small{display:block}
+.tc-story-music-head strong{font-size:11px}.tc-story-music-head small{font-size:9px;color:#888;margin-top:4px}
+.tc-story-music-picker{margin-top:9px;padding:9px;border:1px solid #303030;border-radius:11px;background:#0d0d0d}
+.tc-story-music-results{max-height:230px;overflow:auto;margin-top:8px}
+.tc-story-track{display:flex;align-items:center;gap:9px;padding:8px 5px;border-bottom:1px solid #242424}
+.tc-story-track img{width:42px;height:42px;border-radius:7px;object-fit:cover;background:#222}
+.tc-story-track-copy{min-width:0;flex:1}.tc-story-track-copy strong,.tc-story-track-copy small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-story-track-copy strong{font-size:10px}.tc-story-track-copy small{font-size:9px;color:#888;margin-top:4px}
+.tc-story-track button{border:1px solid #555;background:#eee;color:#111;border-radius:8px;padding:7px 9px;font-size:9px;font-weight:800}
+.tc-story-viewer-backdrop{z-index:1100}
+.tc-story-viewer{position:relative;width:min(100%,430px);height:min(88dvh,760px);min-height:420px;border:1px solid #444;border-radius:19px;overflow:hidden;background:#080808;box-shadow:0 25px 90px #000}
+.tc-story-viewer-close{position:absolute;z-index:5;right:12px;top:12px;width:34px;height:34px;border:1px solid #ffffff55;border-radius:50%;background:#0008;color:#fff;font-size:22px}
+.tc-story-viewer-nav{position:absolute;z-index:5;top:50%;transform:translateY(-50%);width:34px;height:48px;border:0;border-radius:9px;background:#0007;color:#fff;font-size:30px}
+.tc-story-viewer-nav.prev{left:8px}.tc-story-viewer-nav.next{right:8px}
+.tc-story-viewer-media{width:100%;height:100%;object-fit:contain;background:#050505}
+.tc-story-viewer-gradient{position:absolute;left:0;right:0;bottom:0;padding:70px 20px 20px;background:linear-gradient(transparent,#000d 65%);pointer-events:none}
+.tc-story-viewer-gradient>*{pointer-events:auto}
+.tc-story-viewer-user{font-size:12px;font-weight:800;margin-bottom:7px}
+.tc-story-viewer-caption{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.tc-story-viewer-music{display:flex;align-items:center;gap:9px;margin-top:12px;padding:9px;border:1px solid #ffffff38;border-radius:10px;background:#111b;backdrop-filter:blur(12px)}
+.tc-story-viewer-music img{width:37px;height:37px;border-radius:6px;object-fit:cover}
+.tc-story-viewer-music span{min-width:0;flex:1;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-story-viewer-music button{border:1px solid #777;background:#fff;color:#111;border-radius:50%;width:31px;height:31px}
+.tc-story-viewer-delete{display:block;margin-top:10px;border:0;background:transparent;color:#bbb;font-size:9px;text-decoration:underline}
+@media(max-width:650px){.tc-stories-section{margin-left:-2px;margin-right:-2px;padding:13px}.tc-story-viewer{height:calc(100dvh - 30px);min-height:0;border-radius:15px}}
 </style>
 </head>
 <body>
@@ -281,7 +326,7 @@
 <div class="sidebar-bottom"><div class="mini-profile"><div class="avatar" id="sideAvatar">T</div><div style="min-width:0"><div class="mini-name" id="sideName">Загрузка…</div><div class="mini-sub">TEHNOCELL ID</div></div></div></div>
 </aside>
 <main class="main">
-<div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><div class="global-search-wrap"><input id="globalSearch" class="global-search" type="search" placeholder="Поиск людей" autocomplete="off" aria-label="Поиск по платформе"><div id="globalSearchResults" class="global-search-results" hidden></div></div><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="account.html" id="accountLink">TEHNOCELL ID</a></div></div>
+<div class="topbar"><div class="crumb">TEHNOCELL <span style="color:#444">/</span> ПЛАТФОРМА</div><div class="top-actions"><div class="global-search-wrap"><input id="globalSearch" class="global-search" type="search" placeholder="Поиск людей" autocomplete="off" aria-label="Поиск по платформе"><div id="globalSearchResults" class="global-search-results" hidden></div></div><a class="top-btn" href="index.html">Сайт компании ↗</a><a class="top-btn" href="#feed" id="storiesTopButton" data-page="feed">Истории</a><a class="top-btn" href="account.html" id="accountLink">TEHNOCELL ID</a></div></div>
 <div class="notice" id="notice" role="status"></div>
 <section class="page active" id="page-home">
 <div class="home-heading"><div><div class="eyebrow">TEHNOCELL / PERSONAL SPACE</div><h1 class="page-title">Добро пожаловать, <span id="greetingName">...</span></h1><p class="page-subtitle">Ваше пространство для общения, музыки, идей и сервисов компании.</p></div><div class="home-live-pill"><i></i><span>ВЫ В СЕТИ</span></div></div>
@@ -298,7 +343,7 @@
 <a class="service" href="soft.html"><div class="service-icon">S</div><h3>TEHNOCELLSOFT</h3><p>Программные продукты и инструменты.</p><span class="service-state">ОТКРЫТЬ ↗</span></a>
 <a class="service" href="game.html"><div class="service-icon">G</div><h3>TEHNOCELLGAME</h3><p>Игры и интерактивные проекты.</p><span class="service-state">ОТКРЫТЬ ↗</span></a>
 </div></section><section class="page" id="page-feed">
-<div class="eyebrow">ПУБЛИКАЦИИ УЧАСТНИКОВ</div><h1 class="page-title">Лента</h1><p class="page-subtitle">Последние публикации из открытых сообществ.</p>
+<div class="eyebrow">ПУБЛИКАЦИИ УЧАСТНИКОВ</div><h1 class="page-title">Лента</h1><p class="page-subtitle">Последние публикации из открытых сообществ.</p><section class="tc-stories-section"><div class="tc-stories-heading"><div><span>TEHNOCELL MOMENTS</span><h2>Истории</h2></div><button type="button" class="tc-story-add" id="openStoryModal">＋ Добавить</button></div><div class="tc-stories-strip" id="storiesStrip"><div class="tc-stories-loading">Загружаем истории…</div></div></section>
 <div class="feed-layout"><div class="feed-column"><div class="composer"><div class="composer-avatar" id="composerAvatar">T</div><button class="composer-prompt" id="openPostModal">Поделитесь тем, что у вас нового…</button></div><div id="feedList"><div class="loading">Загружаем публикации…</div></div></div><aside class="feed-aside"><div class="panel"><h3>Создать публикацию</h3><p>Выберите сообщество, участником которого вы являетесь, и поделитесь своей мыслью.</p><button class="primary-btn" style="margin-top:13px" id="openPostModalSide">Написать запись</button></div><div class="panel"><h3>Правила общения</h3><p>Уважайте других участников. Не публикуйте личные данные, оскорбления и опасный контент.</p></div></aside></div>
 </section>
 <section class="page" id="page-communities">
@@ -338,7 +383,7 @@
 <div class="modal-backdrop" id="personProfileModal"><div class="modal"><div class="modal-head"><h2>Профиль участника</h2><button class="close-btn" data-close="personProfileModal">×</button></div><div id="personProfileContent"><div class="loading">Загрузка…</div></div></div></div>
 <div class="modal-backdrop" id="communityDetailsModal"><div class="modal"><div class="modal-head"><h2 id="communityDetailsTitle">Сообщество</h2><button class="close-btn" data-close="communityDetailsModal">×</button></div><div id="communityDetailsContent"></div></div></div><div class="modal-backdrop" id="communityModal"><div class="modal"><div class="modal-head"><h2>Новое сообщество</h2><button class="close-btn" data-close="communityModal">×</button></div><form id="communityForm"><label class="field-label" for="communityName">Название</label><input class="field" id="communityName" maxlength="48" minlength="3" placeholder="Например, Мир технологий" required><label class="field-label" for="communityCategory">Категория</label><select class="select" id="communityCategory"><option>Общее</option><option>Технологии</option><option>Игры</option><option>Музыка</option><option>Творчество</option><option>Образование</option><option>Общение</option></select><label class="field-label" for="communityDescription">Описание</label><textarea class="textarea" id="communityDescription" maxlength="500" placeholder="Расскажите, о чём это сообщество"></textarea><div class="modal-status" id="communityStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="communityModal">Отмена</button><button class="primary-btn" id="communitySubmit">Создать сообщество</button></div></form></div></div>
 <div class="modal-backdrop" id="postModal"><div class="modal"><div class="modal-head"><h2>Новая публикация</h2><button class="close-btn" data-close="postModal">×</button></div><form id="postForm"><label class="field-label" for="postCommunity">Сообщество</label><select class="select" id="postCommunity" required></select><label class="field-label" for="postBody">Текст публикации</label><textarea class="textarea" id="postBody" maxlength="5000" placeholder="О чём хотите рассказать?"></textarea><label class="field-label" for="postPhotos">Фотографии · до 4 файлов, JPG / PNG / WEBP</label><input id="postPhotos" type="file" accept="image/jpeg,image/png,image/webp" multiple class="field"><div id="postPhotoPreview" class="post-gallery" hidden></div><div class="tiny">Каждая фотография — до 5 МБ. Можно опубликовать и без текста.</div><div class="modal-status" id="postStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="postModal">Отмена</button><button class="primary-btn" id="postSubmit">Опубликовать</button></div></form></div></div>
-<div class="modal-backdrop" id="commentsModal"><div class="modal"><div class="modal-head"><h2>Обсуждение</h2><button class="close-btn" data-close="commentsModal">×</button></div><div id="modalComments"></div><form id="modalCommentForm"><label class="field-label" for="modalCommentText">Ваш комментарий</label><textarea class="textarea" id="modalCommentText" maxlength="2000" placeholder="Напишите комментарий…" required style="min-height:80px"></textarea><div class="modal-status" id="commentStatus"></div><div class="modal-actions"><button class="primary-btn" id="commentSubmit">Отправить</button></div></form></div></div>
+<div class="modal-backdrop" id="storyCreateModal"><div class="modal tc-story-modal"><div class="modal-head"><div><div class="tc-story-kicker">TEHNOCELL MOMENTS</div><h2>Новая история</h2></div><button class="close-btn" data-close="storyCreateModal">×</button></div><form id="storyForm"><label class="field-label" for="storyMedia">Фото или видео · до 50 МБ</label><input class="field" id="storyMedia" type="file" accept="image/jpeg,image/png,image/webp,video/mp4" required><div class="tc-story-file-hint" id="storyFileHint">Фото будет показано 7 секунд. Видео — до 60 секунд.</div><label class="field-label" for="storyCaption">Подпись</label><textarea class="textarea" id="storyCaption" maxlength="500" placeholder="Добавьте подпись…" style="min-height:76px"></textarea><label class="field-label" for="storyPrivacy">Кто увидит историю</label><select class="select" id="storyPrivacy"><option value="everyone">Все участники</option><option value="friends">Только друзья</option></select><div class="tc-story-music-head"><div><strong>Музыка из MIVO</strong><small id="storyMusicLabel">Не выбрана</small></div><button type="button" class="secondary-btn" id="openStoryMusic">Выбрать трек</button></div><div class="tc-story-music-picker" id="storyMusicPicker" hidden><input class="field" id="storyMusicSearch" placeholder="Найти композицию MIVO…" autocomplete="off"><div id="storyMusicResults" class="tc-story-music-results"></div></div><div class="tc-story-music-note">Для историй доступны музыкальные фрагменты из каталога MIVO. Полные версии открываются в MIVO, если они доступны.</div><div class="modal-status" id="storyStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="storyCreateModal">Отмена</button><button class="primary-btn" id="storySubmit">Опубликовать историю</button></div></form></div></div><div class="modal-backdrop tc-story-viewer-backdrop" id="storyViewerModal"><div class="tc-story-viewer"><button class="tc-story-viewer-close" id="closeStoryViewer" aria-label="Закрыть">×</button><button class="tc-story-viewer-nav prev" id="storyPrev" aria-label="Предыдущая история">‹</button><div id="storyViewerContent"></div><button class="tc-story-viewer-nav next" id="storyNext" aria-label="Следующая история">›</button></div></div><audio id="storyMusicAudio" preload="none"></audio><div class="modal-backdrop" id="commentsModal"><div class="modal"><div class="modal-head"><h2>Обсуждение</h2><button class="close-btn" data-close="commentsModal">×</button></div><div id="modalComments"></div><form id="modalCommentForm"><label class="field-label" for="modalCommentText">Ваш комментарий</label><textarea class="textarea" id="modalCommentText" maxlength="2000" placeholder="Напишите комментарий…" required style="min-height:80px"></textarea><div class="modal-status" id="commentStatus"></div><div class="modal-actions"><button class="primary-btn" id="commentSubmit">Отправить</button></div></form></div></div>
 <script>
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
@@ -358,7 +403,7 @@ function onlineBadge(id){return isOnline(id)?'<span class="online-dot" title="С
 function renderHomeOnline(){const people=[...onlineUsers.values()].filter(p=>p.userId!==currentUser?.id);$("homeOnlineCount").textContent=people.length+" В СЕТИ";$("homeOnlinePeople").innerHTML=people.length?people.slice(0,12).map(p=>'<button class="home-online-person" data-profile="'+escapeHtml(p.userId)+'"><span class="home-online-avatar">'+avatarMarkup(p.displayName||"Участник",p.avatarPath)+'</span><span>'+escapeHtml(p.displayName||"Участник")+'</span></button>').join(""):'<div class="home-online-placeholder">Пока вы здесь одни. Когда другие участники откроют TEHNOCELL, они появятся здесь.</div>';}
 async function startPresence(profile){if(onlineChannel||!currentUser)return;onlineChannel=db.channel("tehnocell-online-v1");onlineChannel.on("presence",{event:"sync"},()=>{const state=onlineChannel.presenceState();onlineUsers.clear();Object.values(state).flat().forEach(p=>{if(p.userId)onlineUsers.set(p.userId,p);});renderHomeOnline();clearTimeout(presenceRefreshTimer);presenceRefreshTimer=setTimeout(()=>{loadSocial();if(currentPage==="messages"){loadConversations();if(activeChatId)$("chatPresence").textContent=isOnline(activeChatId)?"В сети":"Личная переписка";}if($("globalSearchResults")&&!$("globalSearchResults").hidden)loadPeopleSearch();},180);}).subscribe(async status=>{if(status==="SUBSCRIBED"){await onlineChannel.track({userId:currentUser.id,displayName:profile?.display_name||"Участник",avatarPath:profile?.avatar_path||null,onlineAt:new Date().toISOString()});}});}
 function renderHomeSound(profile){const box=$("homeSoundCard");if(!profile?.profile_sound_path){box.innerHTML='<div class="home-card-kicker">TEHNOCELL IDENTITY SOUND</div><div class="home-sound-empty"><div class="home-sound-note">♫</div><div><strong>Ваша музыка — часть профиля</strong><p>Добавьте композицию в TEHNOCELL ID, и она появится здесь.</p><a href="account.html" id="homeSoundLink" class="panel-link">Настроить музыку ↗</a></div></div>';return;}const audio=db.storage.from("profile-avatars").getPublicUrl(profile.profile_sound_path).data.publicUrl;const cover=profile.profile_sound_cover_path?db.storage.from("profile-avatars").getPublicUrl(profile.profile_sound_cover_path).data.publicUrl:null;box.innerHTML='<div class="home-card-kicker">TEHNOCELL IDENTITY SOUND</div><div class="home-sound-playing">'+(cover?'<img src="'+escapeHtml(cover)+'" alt="Обложка композиции">':'<div class="home-sound-cover-fallback">♫</div>')+'<div class="home-sound-track"><strong>'+escapeHtml(profile.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(profile.profile_sound_artist||"Неизвестный исполнитель")+'</span></div><audio controls preload="metadata" src="'+escapeHtml(audio)+'">Ваш браузер не поддерживает аудио.</audio></div><div class="home-sound-tagline">ВАША КОМПОЗИЦИЯ · ВОСПРОИЗВЕДЕНИЕ ПО НАЖАТИЮ</div>';}
-function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed")loadFeed();if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
+function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed"){loadFeed();loadStories();}if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
 $("personBack").addEventListener("click",()=>switchPage("feed"));
 document.addEventListener("click",e=>{const profileButton=e.target.closest("[data-profile]");if(profileButton){e.preventDefault();openPersonProfile(profileButton.dataset.profile);}});
@@ -442,6 +487,82 @@ function openModal(id){$(id).classList.add("open");document.body.style.overflow=
 function closeModal(id){$(id).classList.remove("open");document.body.style.overflow="";}
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.close)));
 document.querySelectorAll(".modal-backdrop").forEach(b=>b.addEventListener("click",e=>{if(e.target===b)closeModal(b.id)}));
+
+/* TEHNOCELL MOMENTS — stories and MIVO music */
+let storyRows=[],storyGroups=[],storyViewerItems=[],storyViewerIndex=0,selectedStoryMusic=null;
+const storyAudio=$("storyMusicAudio");
+function storyMivoTracks(){
+ const out=[],add=t=>{if(!t||!t.title||!t.artist)return;const id=String(t.id||t.title+"::"+t.artist);if(out.some(x=>String(x.id||x.title+"::"+x.artist)===id))return;const preview=t.previewUrl||t.url||"";if(!preview)return;out.push({id,title:t.title,artist:t.artist,cover:t.artworkUrl100||t.cover||"",previewUrl:preview,trackViewUrl:t.trackViewUrl||""});};
+ try{JSON.parse(localStorage.getItem("mivo_catalog_cache_v1")||"[]").forEach(add)}catch(e){}
+ try{const cache=JSON.parse(localStorage.getItem("mivo_cis_chart_nov2026_v2")||"null");(cache?.tracks||[]).forEach(add)}catch(e){}
+ return out.slice(0,100);
+}
+function renderStoryMusicResults(){
+ const box=$("storyMusicResults"),term=($("storyMusicSearch").value||"").trim().toLowerCase(),tracks=storyMivoTracks().filter(t=>(t.title+" "+t.artist).toLowerCase().includes(term)).slice(0,35);
+ box.innerHTML=tracks.length?tracks.map((t,i)=>'<div class="tc-story-track">'+(t.cover?'<img src="'+escapeHtml(t.cover)+'" alt="">':'<div class="tc-story-ring" style="width:42px;height:42px;flex-basis:42px"><span class="tc-story-avatar">♫</span></div>')+'<div class="tc-story-track-copy"><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+' · фрагмент MIVO</small></div><button type="button" data-story-track="'+i+'">Выбрать</button></div>').join(""):'<div class="empty">Открой MIVO и дождись загрузки каталога, затем вернись сюда. Сейчас доступных музыкальных фрагментов нет.</div>';
+ box.querySelectorAll("[data-story-track]").forEach(b=>b.addEventListener("click",()=>{selectedStoryMusic=tracks[Number(b.dataset.storyTrack)];$("storyMusicLabel").textContent=selectedStoryMusic.title+" — "+selectedStoryMusic.artist;$("storyMusicPicker").hidden=true;}));
+}
+$("openStoryMusic").addEventListener("click",()=>{$("storyMusicPicker").hidden=!$("storyMusicPicker").hidden;if(!$("storyMusicPicker").hidden)renderStoryMusicResults();});
+$("storyMusicSearch").addEventListener("input",renderStoryMusicResults);
+$("openStoryModal").addEventListener("click",()=>{if(!currentUser){showNotice("Войдите в TEHNOCELL ID, чтобы публиковать истории.");return;}selectedStoryMusic=null;$("storyMusicLabel").textContent="Не выбрана";$("storyForm").reset();$("storyStatus").textContent="";$("storyMusicPicker").hidden=true;openModal("storyCreateModal");});
+$("storyMedia").addEventListener("change",()=>{const f=$("storyMedia").files?.[0];$("storyFileHint").textContent=f?f.name+" · "+(f.size/1024/1024).toFixed(1)+" МБ": "Фото будет показано 7 секунд. Видео — до 60 секунд.";});
+async function loadStories(){
+ const strip=$("storiesStrip");if(!strip||!currentUser)return;
+ strip.innerHTML='<div class="tc-stories-loading">Загружаем истории…</div>';
+ const {data,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:true}).limit(120);
+ if(error){strip.innerHTML='<div class="tc-stories-loading">Не удалось загрузить истории: '+escapeHtml(error.message)+'</div>';return;}
+ storyRows=data||[];
+ const ids=[...new Set(storyRows.map(x=>x.user_id))];
+ const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[]};
+ const pm=new Map((profiles||[]).map(x=>[x.id,x]));
+ storyGroups=[...new Set([currentUser.id,...ids])].map(id=>({userId:id,profile:pm.get(id)||{id,display_name:id===currentUser.id?"Вы":"Участник"},stories:storyRows.filter(s=>s.user_id===id)})).filter(g=>g.stories.length||g.userId===currentUser.id);
+ strip.innerHTML="";
+ const own=document.createElement("button");own.type="button";own.className="tc-story-bubble add";own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">＋</span></span><span class="tc-story-name">Ваша история</span>';own.addEventListener("click",()=>$("openStoryModal").click());strip.appendChild(own);
+ storyGroups.filter(g=>g.userId!==currentUser.id).forEach(g=>{
+  const b=document.createElement("button");b.type="button";b.className="tc-story-bubble";
+  const name=g.profile.display_name||"Участник",path=g.profile.avatar_path,avatar=path?db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl:null;
+  b.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':escapeHtml(name.charAt(0).toUpperCase()))+'</span></span><span class="tc-story-name">'+escapeHtml(name)+'</span>';
+  b.addEventListener("click",()=>openStoryGroup(g.userId));strip.appendChild(b);
+ });
+}
+async function openStoryGroup(userId){
+ const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
+ const items=[];
+ for(const story of group.stories){const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);if(!error&&data?.signedUrl)items.push({...story,url:data.signedUrl,profile:group.profile});}
+ if(!items.length){showNotice("История уже недоступна.");return;}
+ storyViewerItems=items;storyViewerIndex=0;renderStoryViewer();openModal("storyViewerModal");
+}
+function renderStoryViewer(){
+ const s=storyViewerItems[storyViewerIndex];if(!s)return;
+ const root=$("storyViewerContent"),name=s.profile?.display_name||"Участник",media=s.media_type==="video"?'<video class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" autoplay playsinline controls></video>':'<img class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" alt="История">';
+ const music=s.music?'<div class="tc-story-viewer-music">'+(s.music.cover?'<img src="'+escapeHtml(s.music.cover)+'" alt="">':'<div>♫</div>')+'<span>'+escapeHtml(s.music.title)+' · '+escapeHtml(s.music.artist)+'</span><button type="button" id="storyPlayMusic" aria-label="Слушать фрагмент">▶</button></div>':"";
+ root.innerHTML=media+'<div class="tc-story-viewer-gradient"><div class="tc-story-viewer-user">'+escapeHtml(name)+' · '+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+'</div><div class="tc-story-viewer-caption">'+escapeHtml(s.caption||"")+'</div>'+music+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div>';
+ $("storyPrev").disabled=storyViewerIndex===0;$("storyNext").disabled=storyViewerIndex===storyViewerItems.length-1;
+ $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;storyAudio.src=s.music.previewUrl;try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Не удалось запустить музыкальный фрагмент.");}});
+ $("deleteCurrentStory")?.addEventListener("click",async e=>{const b=e.currentTarget;if(b.dataset.confirm!=="yes"){b.dataset.confirm="yes";b.textContent="Нажмите ещё раз для удаления";return;}const {error}=await db.from("tc_stories").delete().eq("id",s.id);if(error){showNotice("Не удалось удалить историю: "+error.message);return;}await db.storage.from("tc-stories").remove([s.media_path]);closeModal("storyViewerModal");storyAudio.pause();await loadStories();showNotice("История удалена.");});
+}
+$("storyPrev").addEventListener("click",()=>{if(storyViewerIndex>0){storyViewerIndex--;renderStoryViewer();}});
+$("storyNext").addEventListener("click",()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}});
+$("closeStoryViewer").addEventListener("click",()=>{storyAudio.pause();storyAudio.removeAttribute("src");closeModal("storyViewerModal");});
+$("storyViewerModal").addEventListener("click",e=>{if(e.target.id==="storyViewerModal")$("closeStoryViewer").click();});
+$("storyForm").addEventListener("submit",async e=>{
+ e.preventDefault();const file=$("storyMedia").files?.[0],status=$("storyStatus"),btn=$("storySubmit");
+ if(!file){status.textContent="Выберите фото или видео.";return;}
+ const isImage=["image/jpeg","image/png","image/webp"].includes(file.type),isVideo=file.type==="video/mp4";
+ if(!isImage&&!isVideo){status.textContent="Поддерживаются JPG, PNG, WEBP и MP4.";return;}
+ if(file.size>50*1024*1024){status.textContent="Файл больше 50 МБ.";return;}
+ if(isImage&&file.size>15*1024*1024){status.textContent="Изображение должно быть не больше 15 МБ.";return;}
+ if(isVideo){const duration=await new Promise(resolve=>{const v=document.createElement("video");v.preload="metadata";v.onloadedmetadata=()=>{URL.revokeObjectURL(v.src);resolve(v.duration)};v.onerror=()=>resolve(999);v.src=URL.createObjectURL(file);});if(duration>60){status.textContent="Видео для одной истории должно длиться не больше 60 секунд.";return;}}
+ btn.disabled=true;status.textContent="Загружаем историю…";
+ const ext=(file.name.split(".").pop()||(isImage?"jpg":"mp4")).toLowerCase().replace(/[^a-z0-9]/g,""),path=currentUser.id+"/"+Date.now()+"_"+crypto.randomUUID()+"."+ext;
+ const {error:uploadError}=await db.storage.from("tc-stories").upload(path,file,{contentType:file.type,upsert:false});
+ if(uploadError){status.textContent="Не удалось загрузить файл: "+uploadError.message;btn.disabled=false;return;}
+ const music=selectedStoryMusic?{id:selectedStoryMusic.id,title:selectedStoryMusic.title,artist:selectedStoryMusic.artist,cover:selectedStoryMusic.cover,previewUrl:selectedStoryMusic.previewUrl,trackViewUrl:selectedStoryMusic.trackViewUrl}:null;
+ const {error:insertError}=await db.from("tc_stories").insert({user_id:currentUser.id,media_path:path,media_type:isVideo?"video":"image",caption:$("storyCaption").value.trim(),privacy:$("storyPrivacy").value,music,expires_at:new Date(Date.now()+24*60*60*1000).toISOString()});
+ if(insertError){await db.storage.from("tc-stories").remove([path]);status.textContent="Не удалось опубликовать историю: "+insertError.message;btn.disabled=false;return;}
+ btn.disabled=false;closeModal("storyCreateModal");$("storyForm").reset();await loadStories();showNotice("История опубликована на 24 часа.");switchPage("feed");
+});
+
 async function boot(){
  const {data,error}=await db.auth.getSession();
  if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
@@ -455,7 +576,7 @@ async function boot(){
  const staff=VERIFIED_TEAM;
  const account=staff.includes(currentUser.id)?"account.html":"account-user.html";
  $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
- await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial()]);startPresence(profile);startMessengerRealtime();
+ await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial(),loadStories()]);startPresence(profile);startMessengerRealtime();
  const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile","person"].includes(hash))switchPage(hash);
 }
 async function loadCommunities(){
