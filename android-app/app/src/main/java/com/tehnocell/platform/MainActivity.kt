@@ -23,6 +23,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 // Открываем только саму платформу, а не главную страницу сайта компании.
 private const val PLATFORM_URL =
@@ -55,9 +57,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.statusBarColor = android.graphics.Color.rgb(8, 8, 8)
-        window.navigationBarColor = android.graphics.Color.rgb(8, 8, 8)
-        WindowCompat.setDecorFitsSystemWindows(window, true)
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).apply {
             isAppearanceLightStatusBars = false
             isAppearanceLightNavigationBars = false
@@ -86,6 +88,28 @@ class MainActivity : ComponentActivity() {
             }
 
             webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView, url: String) {
+                    super.onPageFinished(view, url)
+                    // App-only presentation: hide the company-site shortcut and ENNIE mini launcher.
+                    // The website files and their behavior remain untouched.
+                    val appOnlyCss = """
+                        (function(){
+                          var id="tehnocell-android-app-overrides";
+                          var style=document.getElementById(id);
+                          if(!style){style=document.createElement("style");style.id=id;(document.head||document.documentElement).appendChild(style);}
+                          style.textContent="a.top-btn[href=\\\"index.html\\\"]{display:none!important}#ennie-everywhere-root{display:none!important}.ee-launch,.ee-panel,.ee-cinematic{display:none!important}";
+                          if(!window.__tcAndroidOverrideObserver){
+                            window.__tcAndroidOverrideObserver=new MutationObserver(function(){
+                              var root=document.getElementById("ennie-everywhere-root");
+                              if(root)root.style.setProperty("display","none","important");
+                            });
+                            window.__tcAndroidOverrideObserver.observe(document.documentElement,{childList:true,subtree:true});
+                          }
+                        })();
+                    """.trimIndent()
+                    view.evaluateJavascript(appOnlyCss, null)
+                }
+
                 override fun shouldOverrideUrlLoading(
                     view: WebView,
                     request: WebResourceRequest
@@ -164,6 +188,11 @@ class MainActivity : ComponentActivity() {
 
         val root = FrameLayout(this).apply {
             setBackgroundColor(android.graphics.Color.rgb(8, 8, 8))
+            ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+                val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+                view.setPadding(0, bars.top, 0, bars.bottom)
+                insets
+            }
             addView(
                 webView,
                 FrameLayout.LayoutParams(
