@@ -576,6 +576,7 @@ async function openStoryGroup(userId){
 function renderStoryViewer(){
  clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
  const s=storyViewerItems[storyViewerIndex];if(!s)return;
+ if(s.music?.previewUrl){if(storyAudio.src!==s.music.previewUrl){storyAudio.pause();storyAudio.src=s.music.previewUrl;storyAudio.currentTime=0;}storyAudio.play().catch(()=>{});}else{storyAudio.pause();storyAudio.removeAttribute("src");}
  const root=$("storyViewerContent"),name=s.profile?.display_name||"Участник";
  const media=s.media_type==="video"
   ?'<video class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" autoplay playsinline preload="auto"></video><button type="button" class="tc-story-play-toggle" id="storyPlayToggle" hidden aria-label="Воспроизвести">▶</button>'
