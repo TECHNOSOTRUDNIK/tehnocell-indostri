@@ -2247,7 +2247,23 @@ async function initializeEnnie() {
     $("#settingsProfileId").textContent =
       "TC-ID: данные аккаунта";
 
+
     await loadChats();
+
+    // Если пользователь пришёл из выделения на платформе, сразу отправляем вопрос в ENNIE.
+    const handoffParams = new URLSearchParams(location.search);
+    const handoffQuestion = handoffParams.get("ask_text");
+    if (handoffQuestion && !window.__ennieSelectionQuestionSent) {
+      window.__ennieSelectionQuestionSent = true;
+      handoffParams.delete("ask_text");
+      const cleanUrl = location.pathname + (handoffParams.toString() ? "?" + handoffParams.toString() : "") + location.hash;
+      history.replaceState({}, "", cleanUrl);
+      startNewChat();
+      messageInput.value = handoffQuestion;
+      messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+      await sendMessage();
+    }
+
 
   } catch (error) {
     console.error("ENNIE initialization error:", error);
