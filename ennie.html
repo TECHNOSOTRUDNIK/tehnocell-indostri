@@ -4417,7 +4417,7 @@ async function waitForVoiceResume(token) {
 }
 
 function splitVoiceText(text, maxLength = 240) {
-  const source = String(text || "").replace(/\\s+/g, " ").trim();
+  const source = String(text || "").replace(/\s+/g, " ").trim();
   if (!source) return [];
   const sentences = source.match(/[^.!?…]+[.!?…]*/gu) || [source];
   const chunks = [];
@@ -4538,10 +4538,10 @@ function speakWithBrowser(text, token) {
 async function speakText(text, messageElement = null, force = false) {
   if (!force && !voiceEnabled) return;
   const cleanText = String(text || "")
-    .replace(/\`\`\`[\\s\\S]*?\`\`\`/g, " ")
-    .replace(/https?:\\/\\/\\S+/g, "ссылка")
-    .replace(/[*_#\`]/g, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/\x60{3}[\s\S]*?\x60{3}/g, " ")
+    .replace(/https?:\/\/\S+/g, "ссылка")
+    .replace(/[*_#\x60]/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
   if (!cleanText) return;
 
