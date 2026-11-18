@@ -516,13 +516,30 @@ function storyMivoTracks(){
  try{const cache=JSON.parse(localStorage.getItem("mivo_cis_chart_nov2026_v2")||"null");(cache?.tracks||[]).forEach(add)}catch(e){}
  return out.slice(0,100);
 }
+let storyMusicSearchTimer=null,storyMusicSearchSeq=0;
+async function searchStoryMusicOnline(term){
+ const seq=++storyMusicSearchSeq,box=$("storyMusicResults");
+ if(!term||term.length<2)return;
+ box.innerHTML='<div class="empty">Ищем композиции…</div>';
+ try{
+  const url="https://itunes.apple.com/search?term="+encodeURIComponent(term)+"&entity=song&limit=20&country=ru";
+  const response=await fetch(url);if(!response.ok)throw new Error("search");
+  const data=await response.json();if(seq!==storyMusicSearchSeq)return;
+  const remote=(data.results||[]).filter(t=>t.previewUrl).map(t=>({id:"apple:"+t.trackId,title:t.trackName,artist:t.artistName,cover:(t.artworkUrl100||"").replace("100x100","300x300"),previewUrl:t.previewUrl,trackViewUrl:t.trackViewUrl||""}));
+  const local=storyMivoTracks().filter(t=>(t.title+" "+t.artist).toLowerCase().includes(term.toLowerCase()));
+  const merged=[...local,...remote].filter((t,i,a)=>a.findIndex(x=>x.id===t.id||((x.title+"::"+x.artist).toLowerCase()===(t.title+"::"+t.artist).toLowerCase()))===i).slice(0,30);
+  if(!merged.length){box.innerHTML='<div class="empty">Не удалось найти композиции с доступным фрагментом. Попробуйте другое название.</div>';return;}
+  box.innerHTML=merged.map((t,i)=>'<div class="tc-story-track">'+(t.cover?'<img src="'+escapeHtml(t.cover)+'" alt="">':'<div class="tc-story-ring" style="width:42px;height:42px;flex-basis:42px"><span class="tc-story-avatar">♫</span></div>')+'<div class="tc-story-track-copy"><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+' · фрагмент</small></div><button type="button" data-story-track-online="'+i+'">Выбрать</button></div>').join("");
+  box.querySelectorAll("[data-story-track-online]").forEach(b=>b.addEventListener("click",()=>{selectedStoryMusic=merged[Number(b.dataset.storyTrackOnline)];$("storyMusicLabel").textContent=selectedStoryMusic.title+" — "+selectedStoryMusic.artist;$("storyMusicPicker").hidden=true;}));
+ }catch(e){if(seq===storyMusicSearchSeq)box.innerHTML='<div class="empty">Не удалось выполнить поиск. Проверьте подключение к интернету.</div>';}
+}
 function renderStoryMusicResults(){
  const box=$("storyMusicResults"),term=($("storyMusicSearch").value||"").trim().toLowerCase(),tracks=storyMivoTracks().filter(t=>(t.title+" "+t.artist).toLowerCase().includes(term)).slice(0,35);
  box.innerHTML=tracks.length?tracks.map((t,i)=>'<div class="tc-story-track">'+(t.cover?'<img src="'+escapeHtml(t.cover)+'" alt="">':'<div class="tc-story-ring" style="width:42px;height:42px;flex-basis:42px"><span class="tc-story-avatar">♫</span></div>')+'<div class="tc-story-track-copy"><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+' · фрагмент MIVO</small></div><button type="button" data-story-track="'+i+'">Выбрать</button></div>').join(""):'<div class="empty">Открой MIVO и дождись загрузки каталога, затем вернись сюда. Сейчас доступных музыкальных фрагментов нет.</div>';
  box.querySelectorAll("[data-story-track]").forEach(b=>b.addEventListener("click",()=>{selectedStoryMusic=tracks[Number(b.dataset.storyTrack)];$("storyMusicLabel").textContent=selectedStoryMusic.title+" — "+selectedStoryMusic.artist;$("storyMusicPicker").hidden=true;}));
 }
 $("openStoryMusic").addEventListener("click",()=>{$("storyMusicPicker").hidden=!$("storyMusicPicker").hidden;if(!$("storyMusicPicker").hidden)renderStoryMusicResults();});
-$("storyMusicSearch").addEventListener("input",renderStoryMusicResults);
+$("storyMusicSearch").addEventListener("input",()=>{renderStoryMusicResults();clearTimeout(storyMusicSearchTimer);const term=$("storyMusicSearch").value.trim();if(term.length>=2)storyMusicSearchTimer=setTimeout(()=>searchStoryMusicOnline(term),350);});
 $("openStoryModal").addEventListener("click",()=>{if(!currentUser){showNotice("Войдите в TEHNOCELL ID, чтобы публиковать истории.");return;}selectedStoryMusic=null;$("storyMusicLabel").textContent="Не выбрана";$("storyForm").reset();$("storyStatus").textContent="";$("storyMusicPicker").hidden=true;openModal("storyCreateModal");});
 $("storyMedia").addEventListener("change",()=>{const f=$("storyMedia").files?.[0];$("storyFileHint").textContent=f?f.name+" · "+(f.size/1024/1024).toFixed(1)+" МБ": "Фото будет показано 7 секунд. Видео — до 60 секунд.";});
 async function loadStories(){
@@ -538,7 +555,7 @@ async function loadStories(){
  const pm=new Map((profiles||[]).map(x=>[x.id,x]));
  storyGroups=[...new Set([currentUser.id,...ids])].map(id=>({userId:id,profile:pm.get(id)||{id,display_name:id===currentUser.id?"Вы":"Участник"},stories:storyRows.filter(s=>s.user_id===id)})).filter(g=>g.stories.length||g.userId===currentUser.id);
  strip.innerHTML="";
- const ownGroup=storyGroups.find(g=>g.userId===currentUser.id);const own=document.createElement("button");own.type="button";own.className="tc-story-bubble"+(ownGroup?.stories.length?"":" add");const ownName=ownGroup?.profile?.display_name||"Ваша история";own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(ownGroup?.stories.length?escapeHtml((ownName||"Я").charAt(0).toUpperCase()):"＋")+'</span></span><span class="tc-story-name">'+(ownGroup?.stories.length?"Моя история":"Ваша история")+'</span>';own.addEventListener("click",()=>ownGroup?.stories.length?openStoryGroup(currentUser.id):$("openStoryModal").click());strip.appendChild(own);
+ const ownGroup=storyGroups.find(g=>g.userId===currentUser.id);const own=document.createElement("button");own.type="button";own.className="tc-story-bubble"+(ownGroup?.stories.length?"":" add");const ownName=ownGroup?.profile?.display_name||"Ваша история";const ownAvatarPath=ownGroup?.profile?.avatar_path;const ownAvatarUrl=ownAvatarPath?db.storage.from("profile-avatars").getPublicUrl(ownAvatarPath).data.publicUrl:null;own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(ownAvatarUrl?'<img src="'+escapeHtml(ownAvatarUrl)+'" alt="">':(ownGroup?.stories.length?escapeHtml((ownName||"Я").charAt(0).toUpperCase()):"＋"))+'</span></span><span class="tc-story-name">'+(ownGroup?.stories.length?"Моя история":"Ваша история")+'</span>';own.addEventListener("click",()=>ownGroup?.stories.length?openStoryGroup(currentUser.id):$("openStoryModal").click());strip.appendChild(own);
  storyGroups.filter(g=>g.userId!==currentUser.id).forEach(g=>{
   const b=document.createElement("button");b.type="button";b.className="tc-story-bubble";
   const name=g.profile.display_name||"Участник",path=g.profile.avatar_path,avatar=path?db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl:null;
@@ -548,6 +565,9 @@ async function loadStories(){
 }
 async function openStoryGroup(userId){
  const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
+ // Start the selected story's music directly inside the user's tap gesture.
+ const firstMusic=group.stories[0]?.music;
+ if(firstMusic?.previewUrl){storyAudio.pause();storyAudio.src=firstMusic.previewUrl;storyAudio.currentTime=0;storyAudio.play().catch(()=>{});}
  const items=[];
  for(const story of group.stories){const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);if(!error&&data?.signedUrl)items.push({...story,url:data.signedUrl,profile:group.profile});}
  if(!items.length){showNotice("История уже недоступна.");return;}
@@ -581,7 +601,7 @@ function renderStoryViewer(){
   storyAutoTimer=setTimeout(()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},7000);
  }
  $("storyOpenMivo")?.addEventListener("click",()=>{try{localStorage.setItem("mivo_story_track_to_open_v1",JSON.stringify(s.music));}catch(e){}});
- $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;storyAudio.src=s.music.previewUrl;try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Не удалось запустить музыкальный фрагмент.");}});
+ $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;if(!storyAudio.paused&&storyAudio.src===s.music.previewUrl){storyAudio.pause();$("storyPlayMusic").textContent="▶";return;}storyAudio.src=s.music.previewUrl;try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Браузер не разрешил автоматическое воспроизведение. Нажмите ▶.");}});
  $("deleteCurrentStory")?.addEventListener("click",async e=>{const b=e.currentTarget;if(b.dataset.confirm!=="yes"){b.dataset.confirm="yes";b.textContent="Нажмите ещё раз для удаления";return;}const {error}=await db.from("tc_stories").delete().eq("id",s.id);if(error){showNotice("Не удалось удалить историю: "+error.message);return;}await db.storage.from("tc-stories").remove([s.media_path]);$("closeStoryViewer").click();await loadStories();showNotice("История удалена.");});
 }
 $("storyPrev").addEventListener("click",()=>{if(storyViewerIndex>0){storyViewerIndex--;renderStoryViewer();}});
