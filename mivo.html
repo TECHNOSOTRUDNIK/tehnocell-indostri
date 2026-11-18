@@ -1371,6 +1371,7 @@ document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
  $(target).scrollIntoView({behavior:"smooth",block:"start"});
 });
 render(allTracks());renderLocal();renderMixes();renderPlaylists();
+(async()=>{let jump=null;try{jump=JSON.parse(localStorage.getItem("mivo_story_track_to_open_v1")||"null");localStorage.removeItem("mivo_story_track_to_open_v1")}catch(e){}if(!jump?.title)return;const input=$("searchInput");if(!input)return;input.value=jump.title+" "+(jump.artist||"");await searchWorldwideSongs(input.value);$("mivo-music").scrollIntoView({behavior:"smooth",block:"start"});toast("Трек из истории найден. Нажми на его карточку, чтобы слушать.");})();
 
 /* MIVO polish interactions */
 (function(){
