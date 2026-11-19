@@ -48,11 +48,14 @@
 
   async function run() {
     if (busy || !window.supabase) return;
+    // On the platform page, wait for its primary auth bootstrap and reuse its client.
+    // A second Supabase client can contend for the same persisted session lock.
+    const isPlatform = /\/platform\.html$/.test(location.pathname);
+    if (isPlatform && window.__tcPlatformAuthReady !== true) return;
     busy = true;
     try {
-      if (!db) db = window.supabase.createClient(URL, KEY);
-      const { data } = await db.auth.getSession();
-      const user = data?.session?.user;
+      if (!db) db = window.__tcPlatformDb || window.supabase.createClient(URL, KEY);
+      const user = isPlatform ? window.__tcPlatformUser : (await db.auth.getSession()).data?.session?.user;
       const old = document.getElementById("tcAccountSuspension");
       if (!user) {
         old?.remove();
