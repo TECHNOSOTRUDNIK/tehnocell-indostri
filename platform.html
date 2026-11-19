@@ -827,7 +827,7 @@ async function loadFeed(){
  document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
  document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
  document.querySelectorAll("[data-delete-post]").forEach(b=>b.addEventListener("click",()=>deletePost(b.dataset.deletePost)));
- 
+ saveOfflinePlatform();
 }
 async function toggleLike(id,button){
  if(!currentUser||button.dataset.busy==="1")return;
