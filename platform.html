@@ -330,6 +330,51 @@
 .tc-story-viewer-delete{display:block;margin-top:10px;border:0;background:transparent;color:#bbb;font-size:9px;text-decoration:underline}
 @media(max-width:650px){.tc-stories-section{margin-left:-2px;margin-right:-2px;padding:13px}.tc-story-viewer{height:calc(100dvh - 30px);min-height:0;border-radius:15px}}
 </style>
+
+<style id="tc-moments-tech-redesign">
+#storyViewerModal.tc-story-viewer-backdrop{padding:0;background:#020202}
+#storyViewerModal .tc-story-viewer{width:100%;max-width:560px;height:100dvh;max-height:100dvh;min-height:0;border:1px solid #252525;border-radius:0;background:#050505;isolation:isolate}
+#storyViewerContent{background:radial-gradient(ellipse at 50% 48%,#191919 0,#070707 62%,#020202 100%)}
+#storyViewerContent:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,#0009 0%,transparent 23%,transparent 63%,#000b 100%)}
+#storyViewerContent>.tc-story-viewer-media{position:relative;z-index:0;width:100%;height:100%;object-fit:contain;background:transparent}
+.tc-story-progress{z-index:12;left:18px;right:70px;top:calc(17px + env(safe-area-inset-top));height:3px;gap:5px}
+.tc-story-progress-segment{height:3px;background:#ffffff42}
+.tc-story-progress-fill{background:#fff;box-shadow:0 0 8px #fff8}
+.tc-story-viewer-close{z-index:15;top:calc(9px + env(safe-area-inset-top));right:15px;width:42px;height:42px;border-color:#ffffff50;background:#1119;backdrop-filter:blur(14px)}
+.tc-story-viewer-nav{z-index:13;width:38px;height:58px;background:#08080855;border:1px solid #ffffff22;backdrop-filter:blur(10px)}
+.tc-story-viewer-nav.prev{left:10px}.tc-story-viewer-nav.next{right:10px}
+.tc-story-topline{position:absolute;z-index:8;top:calc(34px + env(safe-area-inset-top));left:19px;right:19px;display:flex;justify-content:space-between;color:#ffffffa8;font-size:8px;font-weight:800;letter-spacing:2px;pointer-events:none}
+.tc-story-topline i{font-style:normal;color:#666;padding:0 3px}
+.tc-story-viewer-gradient{z-index:7;padding:100px 19px calc(62px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent 0%,#0003 28%,#000c 100%)}
+.tc-story-meta{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.tc-story-user-avatar{width:39px;height:39px;border:1px solid #ffffff55;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#333,#090909);font-size:14px;font-weight:850}
+.tc-story-meta>span:nth-child(2){display:grid;gap:4px;min-width:0}
+.tc-story-meta strong{font-size:12px}.tc-story-meta small{font-size:8px;color:#999;letter-spacing:1px}
+.tc-story-live-mark{margin-left:auto;padding:6px 8px;border:1px solid #ffffff35;border-radius:5px;color:#ddd;font-size:7px;letter-spacing:1.4px}
+.tc-story-viewer-caption{max-width:90%;font-size:14px;line-height:1.55;color:#f5f5f5;text-shadow:0 1px 8px #000}
+.tc-story-caption-empty{font-size:10px;color:#aaa;letter-spacing:.3px}
+.tc-story-viewer-music{display:flex;align-items:center;gap:11px;margin-top:16px;padding:10px 12px;border:1px solid #ffffff35;border-radius:13px;background:linear-gradient(110deg,#242424b8,#090909b8);backdrop-filter:blur(20px);box-shadow:0 8px 30px #0007}
+.tc-story-music-disc{width:43px;height:43px;flex:0 0 43px;border-radius:9px;overflow:hidden;display:grid;place-items:center;background:#252525;font-size:18px}
+.tc-story-music-disc img{width:100%;height:100%;object-fit:cover}
+.tc-story-viewer-music>span{flex:1;min-width:0;display:grid;gap:3px}
+.tc-story-viewer-music small{font-size:7px;letter-spacing:1.5px;color:#aaa}
+.tc-story-viewer-music strong{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-story-viewer-music em{font-size:9px;color:#aaa;font-style:normal;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-story-viewer-music button,.tc-story-viewer-music a{width:31px;height:31px;flex:0 0 31px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:50%;background:#ffffff12;color:#fff;font-size:12px}
+.tc-story-viewer-delete{margin-top:12px;color:#aaa}
+.tc-story-bottom-mark{position:absolute;z-index:8;bottom:calc(17px + env(safe-area-inset-bottom));left:19px;color:#ffffff65;font-size:7px;letter-spacing:2px;pointer-events:none}
+.tc-story-bottom-mark span{color:#fff;padding:0 4px}
+.tc-story-video-shell{position:absolute;inset:0;z-index:2;background:#000;overflow:hidden}
+.tc-story-video-shell video{opacity:0;transition:opacity .18s ease}
+.tc-story-video-shell.ready video{opacity:1}
+.tc-story-video-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(circle,#171717,#030303 70%);color:#ffffff80;font-size:8px;letter-spacing:2px;transition:opacity .2s}
+.tc-story-video-loading span{width:27px;height:27px;border:2px solid #ffffff25;border-top-color:#fff;border-radius:50%;animation:tcStorySpin .75s linear infinite}
+.tc-story-video-shell.ready .tc-story-video-loading,.tc-story-video-loading.failed{opacity:0;pointer-events:none}
+@keyframes tcStorySpin{to{transform:rotate(360deg)}}
+.tc-story-play-toggle{z-index:10}
+@media(max-width:650px){#storyViewerModal .tc-story-viewer{width:100%;border:0}.tc-story-viewer-gradient{padding-bottom:calc(62px + env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.tc-story-video-shell video{transition:none}.tc-story-video-loading span{animation:none}}
+</style>
 </head>
 <body>
 <div class="layout">
@@ -569,13 +614,24 @@ async function loadStories(){
 }
 async function openStoryGroup(userId){
  const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
- // Start the selected story's music directly inside the user's tap gesture.
- const firstMusic=group.stories[0]?.music;
- if(firstMusic?.previewUrl){storyAudio.pause();storyAudio.src=firstMusic.previewUrl;storyAudio.currentTime=0;storyAudio.play().catch(()=>{});}
  const items=[];
- for(const story of group.stories){const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);if(!error&&data?.signedUrl)items.push({...story,url:data.signedUrl,profile:group.profile});}
+ const {data:sessionData}=await db.auth.getSession();
+ for(const story of group.stories){
+  const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));
+  const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);
+  if(!error&&data?.signedUrl)items.push({...story,url:data.signedUrl,profile:group.profile});
+ }
  if(!items.length){showNotice("История уже недоступна.");return;}
- storyViewerItems=items;storyViewerIndex=0;renderStoryViewer();openModal("storyViewerModal");
+ // Decode the first image before opening the viewer; warm the next item in the background.
+ const first=items[0];
+ if(first.media_type!=="video"){
+  const image=new Image();image.decoding="async";image.src=first.url;
+  try{if(image.decode)await image.decode();else await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;});}catch(e){}
+ }
+ const next=items[1];if(next&&next.media_type!=="video"){const warm=new Image();warm.decoding="async";warm.src=next.url;warm.decode?.().catch(()=>{});}
+ storyViewerItems=items;storyViewerIndex=0;
+ const firstMusic=first.music;if(firstMusic?.previewUrl){storyAudio.pause();storyAudio.src=firstMusic.previewUrl;storyAudio.currentTime=0;storyAudio.play().catch(()=>{});}
+ renderStoryViewer();openModal("storyViewerModal");
 }
 function renderStoryViewer(){
  clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
@@ -583,30 +639,33 @@ function renderStoryViewer(){
  if(s.music?.previewUrl){if(storyAudio.src!==s.music.previewUrl){storyAudio.pause();storyAudio.src=s.music.previewUrl;storyAudio.currentTime=0;}storyAudio.play().catch(()=>{});}else{storyAudio.pause();storyAudio.removeAttribute("src");}
  const root=$("storyViewerContent"),name=s.profile?.display_name||"Участник";
  const media=s.media_type==="video"
-  ?'<video class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" autoplay playsinline preload="auto"></video><button type="button" class="tc-story-play-toggle" id="storyPlayToggle" hidden aria-label="Воспроизвести">▶</button>'
-  :'<img class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" alt="История">';
+  ?'<div class="tc-story-video-shell"><video class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" autoplay playsinline webkit-playsinline preload="auto"></video><div class="tc-story-video-loading"><span></span><b>ЗАГРУЗКА ВИДЕО</b></div><button type="button" class="tc-story-play-toggle" id="storyPlayToggle" hidden aria-label="Воспроизвести">▶</button></div>'
+  :'<img class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" alt="История" fetchpriority="high" decoding="async">';
  const progress='<div class="tc-story-progress">'+storyViewerItems.map((_,i)=>'<span class="tc-story-progress-segment"><i class="tc-story-progress-fill" data-story-progress="'+i+'"></i></span>').join("")+'</div>';
- const music=s.music?'<div class="tc-story-viewer-music">'+(s.music.cover?'<img src="'+escapeHtml(s.music.cover)+'" alt="">':'<div>♫</div>')+'<span>'+escapeHtml(s.music.title)+' · '+escapeHtml(s.music.artist)+'</span><button type="button" id="storyPlayMusic" aria-label="Слушать фрагмент">▶</button><a href="mivo.html" id="storyOpenMivo" aria-label="Открыть трек в MIVO">↗</a></div>':"";
- root.innerHTML=media+progress+'<div class="tc-story-viewer-gradient"><div class="tc-story-viewer-user">'+escapeHtml(name)+' · '+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+'</div><div class="tc-story-viewer-caption">'+escapeHtml(s.caption||"")+'</div>'+music+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div>';
+ const music=s.music?'<div class="tc-story-viewer-music"><div class="tc-story-music-disc">'+(s.music.cover?'<img src="'+escapeHtml(s.music.cover)+'" alt="">':'♫')+'</div><span><small>СЕЙЧАС ЗВУЧИТ</small><strong>'+escapeHtml(s.music.title)+'</strong><em>'+escapeHtml(s.music.artist)+'</em></span><button type="button" id="storyPlayMusic" aria-label="Слушать фрагмент">Ⅱ</button><a href="mivo.html" id="storyOpenMivo" aria-label="Открыть трек в MIVO">↗</a></div>':"";
+ root.innerHTML=media+progress+'<div class="tc-story-topline"><span>TEHNOCELL <i>/</i> MOMENTS</span><b>'+String(storyViewerIndex+1).padStart(2,"0")+' <i>/</i> '+String(storyViewerItems.length).padStart(2,"0")+'</b></div><div class="tc-story-viewer-gradient"><div class="tc-story-meta"><span class="tc-story-user-avatar">'+escapeHtml((name||"У").charAt(0).toUpperCase())+'</span><span><strong>'+escapeHtml(name)+'</strong><small>'+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+' · ИСТОРИЯ</small></span><span class="tc-story-live-mark">MOMENTS</span></div>'+(s.caption?'<div class="tc-story-viewer-caption">'+escapeHtml(s.caption)+'</div>':'<div class="tc-story-caption-empty">Момент, которым хочется поделиться.</div>')+music+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div><div class="tc-story-bottom-mark">TEHNOCELL INDOSTRI <span>·</span> DIGITAL MOMENTS</div>';
  $("storyPrev").disabled=storyViewerIndex===0;$("storyNext").disabled=storyViewerIndex===storyViewerItems.length-1;
  const fill=root.querySelector('[data-story-progress="'+storyViewerIndex+'"]');
  storyViewerItems.forEach((_,i)=>{const f=root.querySelector('[data-story-progress="'+i+'"]');if(f&&i<storyViewerIndex)f.style.transform="scaleX(1)";});
  const video=root.querySelector("video"),playToggle=$("storyPlayToggle");
  if(video){
-  const sync=()=>{if(fill&&video.duration>0)fill.style.transform="scaleX("+Math.min(1,video.currentTime/video.duration)+")";};
-  video.addEventListener("timeupdate",sync);
-  video.addEventListener("play",()=>{playToggle.hidden=true;});
-  video.addEventListener("pause",()=>{if(!video.ended)playToggle.hidden=false;});
+  const shell=video.closest(".tc-story-video-shell"),loading=shell?.querySelector(".tc-story-video-loading");
+  const reveal=()=>{shell?.classList.add("ready");if(playToggle)playToggle.hidden=true;};
+  video.addEventListener("loadeddata",()=>{if(video.paused)loading?.classList.add("failed");});
+  video.addEventListener("playing",reveal);
+  video.addEventListener("canplay",()=>{if(!video.paused)reveal();});
+  video.addEventListener("timeupdate",()=>{if(fill&&video.duration>0)fill.style.transform="scaleX("+Math.min(1,video.currentTime/video.duration)+")";});
+  video.addEventListener("pause",()=>{if(!video.ended){playToggle.hidden=false;loading?.classList.add("failed");}});
   video.addEventListener("ended",()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();});
   video.addEventListener("click",()=>{if(video.paused)video.play().catch(()=>{});else video.pause();});
   playToggle?.addEventListener("click",()=>video.play().catch(()=>{}));
-  video.play().then(()=>{if(playToggle)playToggle.hidden=true;}).catch(()=>{if(playToggle)playToggle.hidden=false;});
+  video.play().then(reveal).catch(()=>{loading?.classList.add("failed");if(playToggle)playToggle.hidden=false;});
  }else{
   let elapsed=0;storyProgressTimer=setInterval(()=>{elapsed+=50;if(fill)fill.style.transform="scaleX("+Math.min(1,elapsed/7000)+")";},50);
   storyAutoTimer=setTimeout(()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},7000);
  }
  $("storyOpenMivo")?.addEventListener("click",()=>{try{localStorage.setItem("mivo_story_track_to_open_v1",JSON.stringify(s.music));}catch(e){}});
- $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;if(!storyAudio.paused&&storyAudio.src===s.music.previewUrl){storyAudio.pause();$("storyPlayMusic").textContent="▶";return;}storyAudio.src=s.music.previewUrl;try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Браузер не разрешил автоматическое воспроизведение. Нажмите ▶.");}});
+ $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;if(!storyAudio.paused&&storyAudio.src===s.music.previewUrl){storyAudio.pause();$("storyPlayMusic").textContent="▶";return;}storyAudio.src=s.music.previewUrl;try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Браузер не разрешил воспроизведение. Нажмите ▶.");}});
  $("deleteCurrentStory")?.addEventListener("click",async e=>{const b=e.currentTarget;if(b.dataset.confirm!=="yes"){b.dataset.confirm="yes";b.textContent="Нажмите ещё раз для удаления";return;}const {error}=await db.from("tc_stories").delete().eq("id",s.id);if(error){showNotice("Не удалось удалить историю: "+error.message);return;}await db.storage.from("tc-stories").remove([s.media_path]);$("closeStoryViewer").click();await loadStories();showNotice("История удалена.");});
 }
 $("storyPrev").addEventListener("click",()=>{if(storyViewerIndex>0){storyViewerIndex--;renderStoryViewer();}});
