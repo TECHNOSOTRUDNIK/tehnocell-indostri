@@ -375,6 +375,22 @@
 @media(max-width:650px){#storyViewerModal .tc-story-viewer{width:100%;border:0}.tc-story-viewer-gradient{padding-bottom:calc(62px + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){.tc-story-video-shell video{transition:none}.tc-story-video-loading span{animation:none}}
 </style>
+
+<style id="tc-moments-performance-polish">
+/* Лёгкое открытие без тяжёлого масштабирования всей сцены */
+#storyViewerModal .tc-story-viewer{animation:tcStoryFastOpen .16s ease-out both;will-change:opacity}
+@keyframes tcStoryFastOpen{from{opacity:0}to{opacity:1}}
+#storyViewerContent>.tc-story-viewer-media{animation:tcStoryMediaFast .16s ease-out both}
+@keyframes tcStoryMediaFast{from{opacity:.7}to{opacity:1}}
+.tc-story-user-avatar{overflow:hidden;flex:0 0 39px}
+.tc-story-user-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.tc-story-meta strong .verified-badge{width:14px;height:14px;margin-left:5px;font-size:9px;box-shadow:0 0 0 1px #111}
+.tc-story-instant-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:radial-gradient(circle,#191919,#030303 70%);color:#fff}
+.tc-story-instant-loader span{width:25px;height:25px;border:2px solid #ffffff25;border-top-color:#fff;border-radius:50%;animation:tcStorySpin .7s linear infinite}
+.tc-story-instant-loader b{font-size:9px;letter-spacing:2px}
+.tc-story-instant-loader small{font-size:7px;letter-spacing:1.5px;color:#888}
+@media(prefers-reduced-motion:reduce){#storyViewerModal .tc-story-viewer,#storyViewerContent>.tc-story-viewer-media{animation:none}.tc-story-instant-loader span{animation:none}}
+</style>
 </head>
 <body>
 <div class="layout">
@@ -614,24 +630,24 @@ async function loadStories(){
 }
 async function openStoryGroup(userId){
  const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
- const items=[];
- const {data:sessionData}=await db.auth.getSession();
- for(const story of group.stories){
+ // Показываем viewer сразу, а подписанные ссылки получаем параллельно.
+ storyViewerItems=[];storyViewerIndex=0;
+ $("storyViewerContent").innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ПОДГОТАВЛИВАЕМ ИСТОРИЮ</small></div>';
+ openModal("storyViewerModal");
+ const results=await Promise.all(group.stories.map(async story=>{
   const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));
   const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);
-  if(!error&&data?.signedUrl)items.push({...story,url:data.signedUrl,profile:group.profile});
- }
- if(!items.length){showNotice("История уже недоступна.");return;}
- // Decode the first image before opening the viewer; warm the next item in the background.
- const first=items[0];
- if(first.media_type!=="video"){
-  const image=new Image();image.decoding="async";image.src=first.url;
-  try{if(image.decode)await image.decode();else await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;});}catch(e){}
- }
- const next=items[1];if(next&&next.media_type!=="video"){const warm=new Image();warm.decoding="async";warm.src=next.url;warm.decode?.().catch(()=>{});}
+  return !error&&data?.signedUrl?{...story,url:data.signedUrl,profile:group.profile}:null;
+ }));
+ const items=results.filter(Boolean);
+ if(!items.length){$("closeStoryViewer").click();showNotice("История уже недоступна.");return;}
  storyViewerItems=items;storyViewerIndex=0;
- const firstMusic=first.music;if(firstMusic?.previewUrl){storyAudio.pause();storyAudio.src=firstMusic.previewUrl;storyAudio.currentTime=0;storyAudio.play().catch(()=>{});}
- renderStoryViewer();openModal("storyViewerModal");
+ // Декодируем фото уже после открытия viewer, чтобы не задерживать реакцию на касание.
+ const first=items[0];
+ if(first.media_type!=="video"){const img=new Image();img.decoding="async";img.src=first.url;img.decode?.().catch(()=>{});}
+ const next=items[1];if(next&&next.media_type!=="video"){const img=new Image();img.decoding="async";img.src=next.url;img.decode?.().catch(()=>{});}
+ if(first.music?.previewUrl){storyAudio.pause();storyAudio.src=first.music.previewUrl;storyAudio.currentTime=0;storyAudio.play().catch(()=>{});}
+ renderStoryViewer();
 }
 function renderStoryViewer(){
  clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
@@ -643,7 +659,7 @@ function renderStoryViewer(){
   :'<img class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" alt="История" fetchpriority="high" decoding="async">';
  const progress='<div class="tc-story-progress">'+storyViewerItems.map((_,i)=>'<span class="tc-story-progress-segment"><i class="tc-story-progress-fill" data-story-progress="'+i+'"></i></span>').join("")+'</div>';
  const music=s.music?'<div class="tc-story-viewer-music"><div class="tc-story-music-disc">'+(s.music.cover?'<img src="'+escapeHtml(s.music.cover)+'" alt="">':'♫')+'</div><span><small>СЕЙЧАС ЗВУЧИТ</small><strong>'+escapeHtml(s.music.title)+'</strong><em>'+escapeHtml(s.music.artist)+'</em></span><button type="button" id="storyPlayMusic" aria-label="Слушать фрагмент">Ⅱ</button><a href="mivo.html" id="storyOpenMivo" aria-label="Открыть трек в MIVO">↗</a></div>':"";
- root.innerHTML=media+progress+'<div class="tc-story-topline"><span>TEHNOCELL <i>/</i> MOMENTS</span><b>'+String(storyViewerIndex+1).padStart(2,"0")+' <i>/</i> '+String(storyViewerItems.length).padStart(2,"0")+'</b></div><div class="tc-story-viewer-gradient"><div class="tc-story-meta"><span class="tc-story-user-avatar">'+escapeHtml((name||"У").charAt(0).toUpperCase())+'</span><span><strong>'+escapeHtml(name)+'</strong><small>'+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+' · ИСТОРИЯ</small></span><span class="tc-story-live-mark">MOMENTS</span></div>'+(s.caption?'<div class="tc-story-viewer-caption">'+escapeHtml(s.caption)+'</div>':'<div class="tc-story-caption-empty">Момент, которым хочется поделиться.</div>')+music+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div><div class="tc-story-bottom-mark">TEHNOCELL INDOSTRI <span>·</span> DIGITAL MOMENTS</div>';
+ const avatarPath=s.profile?.avatar_path;const avatarUrl=avatarPath?db.storage.from("profile-avatars").getPublicUrl(avatarPath).data.publicUrl:null;\n root.innerHTML=media+progress+'<div class="tc-story-topline"><span>TEHNOCELL <i>/</i> MOMENTS</span><b>'+String(storyViewerIndex+1).padStart(2,"0")+' <i>/</i> '+String(storyViewerItems.length).padStart(2,"0")+'</b></div><div class="tc-story-viewer-gradient"><div class="tc-story-meta"><span class="tc-story-user-avatar">'+(avatarUrl?'<img src="'+escapeHtml(avatarUrl)+'" alt="">':escapeHtml((name||"У").charAt(0).toUpperCase()))+'</span><span><strong>'+escapeHtml(name)+verifiedBadge(s.user_id)+'</strong><small>'+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+' · ИСТОРИЯ</small></span><span class="tc-story-live-mark">MOMENTS</span></div>'+(s.caption?'<div class="tc-story-viewer-caption">'+escapeHtml(s.caption)+'</div>':'<div class="tc-story-caption-empty">Момент, которым хочется поделиться.</div>')+music+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div><div class="tc-story-bottom-mark">TEHNOCELL INDOSTRI <span>·</span> DIGITAL MOMENTS</div>';
  $("storyPrev").disabled=storyViewerIndex===0;$("storyNext").disabled=storyViewerIndex===storyViewerItems.length-1;
  const fill=root.querySelector('[data-story-progress="'+storyViewerIndex+'"]');
  storyViewerItems.forEach((_,i)=>{const f=root.querySelector('[data-story-progress="'+i+'"]');if(f&&i<storyViewerIndex)f.style.transform="scaleX(1)";});
