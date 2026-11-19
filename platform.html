@@ -717,11 +717,21 @@ window.addEventListener("offline",()=>{tcOfflineMode=true;tcOfflineBanner("СО�
 window.addEventListener("online",()=>{tcOfflineMode=false;tcOfflineBanner("СОЕДИНЕНИЕ ВОССТАНОВЛЕНО · ОБНОВЛЯЕМ ПЛАТФОРМУ");clearTimeout(tcOnlineReloadTimer);tcOnlineReloadTimer=setTimeout(()=>location.reload(),900);});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 async function boot(){
- if(!navigator.onLine){await restoreOfflinePlatform();return;}
  const {data,error}=await db.auth.getSession();
- if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
- currentUser=data.session?.user;
- if(!currentUser){location.replace("login.html?next=platform");return;}
+ if(error&&!navigator.onLine){await restoreOfflinePlatform();return;}
+ if(error){showNotice("Не удалось проверить авторизацию. "+error.message);return;}
+ currentUser=data.session?.user||null;
+ if(!currentUser){if(navigator.onLine)location.replace("login.html?next=platform");else await restoreOfflinePlatform();return;}
+ if(!navigator.onLine){
+  await restoreOfflinePlatform();
+  const cachedName=$("profileName")?.textContent||currentUser.user_metadata?.display_name||"Пользователь";
+  $("greetingName").textContent=cachedName;
+  $("profileName").textContent=cachedName;
+  $("profileEmail").textContent=currentUser.email||"";
+  $("sideName").textContent=cachedName;
+  $("homeAccountLink").href=VERIFIED_TEAM.includes(currentUser.id)?"account.html":"account-user.html";
+  return;
+ }
  const {data:profile}=await db.from("profiles").select("display_name,avatar_path,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path").eq("id",currentUser.id).maybeSingle();
  const name=profile?.display_name||currentUser.user_metadata?.display_name||"Пользователь";
  const path=profile?.avatar_path||currentUser.user_metadata?.avatar_path||null;
