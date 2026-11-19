@@ -707,19 +707,43 @@ $("storyForm").addEventListener("submit",async e=>{
 });
 
 async function boot(){
- const {data,error}=await db.auth.getSession();
- if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
- currentUser=data.session?.user;
+ const authResult=await Promise.race([
+  db.auth.getSession(),
+  new Promise(resolve=>setTimeout(()=>resolve({data:{session:null},error:{message:"Время ожидания авторизации истекло."},timedOut:true}),12000))
+ ]);
+ if(authResult.timedOut||authResult.error){showNotice("Не удалось связаться с авторизацией. Проверьте подключение и обновите страницу.");return;}
+ currentUser=authResult.data.session?.user;
  if(!currentUser){location.replace("login.html?next=platform");return;}
- const {data:profile}=await db.from("profiles").select("display_name,avatar_path,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path").eq("id",currentUser.id).maybeSingle();
- const name=profile?.display_name||currentUser.user_metadata?.display_name||"Пользователь";
- const path=profile?.avatar_path||currentUser.user_metadata?.avatar_path||null;
- $("greetingName").textContent=name;renderHomeSound(profile);$("homeAccountLink").href=VERIFIED_TEAM.includes(currentUser.id)?"account.html":"account-user.html";$("sideName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileEmail").textContent=currentUser.email||"";
+ const account=VERIFIED_TEAM.includes(currentUser.id)?"account.html":"account-user.html";
+ const fallbackName=currentUser.user_metadata?.display_name||"Пользователь";
+ const fallbackAvatar=currentUser.user_metadata?.avatar_path||null;
+ $("greetingName").textContent=fallbackName;
+ $("sideName").innerHTML=escapeHtml(fallbackName)+verifiedBadge(currentUser.id);
+ $("profileName").innerHTML=escapeHtml(fallbackName)+verifiedBadge(currentUser.id);
+ $("profileEmail").textContent=currentUser.email||"";
+ $("sideAvatar").innerHTML=avatarMarkup(fallbackName,fallbackAvatar);
+ $("mainAvatar").innerHTML=avatarMarkup(fallbackName,fallbackAvatar);
+ $("composerAvatar").innerHTML=avatarMarkup(fallbackName,fallbackAvatar);
+ $("homeAccountLink").href=account;$("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
+ let profile=null;
+ try{
+  const result=await Promise.race([
+   db.from("profiles").select("display_name,avatar_path,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path").eq("id",currentUser.id).maybeSingle(),
+   new Promise(resolve=>setTimeout(()=>resolve({data:null,error:{message:"Профиль загружается слишком долго."},timedOut:true}),10000))
+  ]);
+  if(!result.timedOut&&!result.error)profile=result.data;
+  else showNotice("Аккаунт открыт, но профиль пока не загрузился. Остальные разделы продолжают загружаться.");
+ }catch(error){showNotice("Не удалось загрузить профиль: "+(error?.message||"ошибка сети"));}
+ const name=profile?.display_name||fallbackName,path=profile?.avatar_path||fallbackAvatar;
+ $("greetingName").textContent=name;$("sideName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);
  $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);
- const staff=VERIFIED_TEAM;
- const account=staff.includes(currentUser.id)?"account.html":"account-user.html";
- $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
- await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial(),loadStories()]);startPresence(profile);startMessengerRealtime();
+ renderHomeSound(profile);
+ const jobs=[["сообщества",loadCommunities],["счётчики",loadHomeCounts],["друзья",loadSocial],["истории",loadStories]];
+ const results=await Promise.allSettled(jobs.map(async([label,fn])=>{
+  await Promise.race([fn(),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Тайм-аут загрузки: "+label)),12000))]);
+ }));
+ results.forEach((result,i)=>{if(result.status==="rejected")showNotice("Не удалось загрузить раздел «"+jobs[i][0]+"». Проверьте соединение.");});
+ startPresence(profile);startMessengerRealtime();
  const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile","person"].includes(hash))switchPage(hash);
 }
 async function loadCommunities(){
