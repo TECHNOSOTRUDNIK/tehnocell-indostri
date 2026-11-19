@@ -717,7 +717,16 @@ window.addEventListener("offline",()=>{tcOfflineMode=true;tcOfflineBanner("СО�
 window.addEventListener("online",()=>{tcOfflineMode=false;tcOfflineBanner("СОЕДИНЕНИЕ ВОССТАНОВЛЕНО · ОБНОВЛЯЕМ ПЛАТФОРМУ");clearTimeout(tcOnlineReloadTimer);tcOnlineReloadTimer=setTimeout(()=>location.reload(),900);});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 async function boot(){
- const {data,error}=await db.auth.getSession();
+ const sessionResult=await Promise.race([
+  db.auth.getSession(),
+  new Promise(resolve=>setTimeout(()=>resolve({data:{session:null},error:{message:"Сервер авторизации не ответил за 12 секунд."},timedOut:true}),12000))
+ ]);
+ if(sessionResult.timedOut){
+  await restoreOfflinePlatform();
+  showNotice("Не удалось связаться с сервером TEHNOCELL. Проверьте интернет и попробуйте обновить страницу.");
+  return;
+ }
+ const {data,error}=sessionResult;
  if(error&&!navigator.onLine){await restoreOfflinePlatform();return;}
  if(error){showNotice("Не удалось проверить авторизацию. "+error.message);return;}
  currentUser=data.session?.user||null;
@@ -1167,7 +1176,7 @@ async function loadHomeCounts(){
  $("unreadBadge").textContent=notificationCount?String(notificationCount):"";
 }
 db.auth.onAuthStateChange((event,session)=>{if((event==="SIGNED_OUT"||!session)&&navigator.onLine)location.replace("login.html?next=platform");});
-boot();
+boot().catch(error=>{console.error('TEHNOCELL boot failed:',error);showNotice('Ошибка загрузки платформы: '+(error?.message||'неизвестная ошибка'));});
 </script>
 
 <style id="tc-glass-selection-style">
