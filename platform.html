@@ -391,7 +391,7 @@
 .tc-story-instant-loader small{font-size:7px;letter-spacing:1.5px;color:#888}
 @media(prefers-reduced-motion:reduce){#storyViewerModal .tc-story-viewer,#storyViewerContent>.tc-story-viewer-media{animation:none}.tc-story-instant-loader span{animation:none}}
 </style>
-</head>
+<style id="tc-offline-style">.tc-offline-banner{position:fixed;z-index:99999;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:11px;border:1px solid #555;border-radius:10px;background:#151515ed;color:#eee;text-align:center;font-size:9px;font-weight:800;letter-spacing:1px;box-shadow:0 8px 30px #0009}</style></head>
 <body>
 <div class="layout">
 <aside class="sidebar">
@@ -706,7 +706,12 @@ $("storyForm").addEventListener("submit",async e=>{
  btn.disabled=false;closeModal("storyCreateModal");$("storyForm").reset();await loadStories();showNotice("История опубликована на 24 часа.");switchPage("feed");
 });
 
+function saveOfflinePlatform(){try{if(!navigator.onLine)return;const d={savedAt:Date.now(),home:$("page-home")?.innerHTML||"",feed:$("page-feed")?.innerHTML||""};if(d.home&&d.feed)localStorage.setItem("tc_platform_offline_snapshot_v1",JSON.stringify(d));}catch(e){}}
+function restoreOfflinePlatform(){let d;try{d=JSON.parse(localStorage.getItem("tc_platform_offline_snapshot_v1")||"null");}catch(e){}if(!d){showNotice("Нет сохранённой версии. Откройте платформу с интернетом хотя бы один раз.");return;} $("page-home").innerHTML=d.home;$("page-feed").innerHTML=d.feed;document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));const id=location.hash==="#feed"?"page-feed":"page-home";$(id).classList.add("active");let b=$("tcOfflineBanner");if(!b){b=document.createElement("div");b.id="tcOfflineBanner";b.className="tc-offline-banner";document.body.appendChild(b);}b.textContent="ОФФЛАЙН-РЕЖИМ · ПОСЛЕДНЯЯ СОХРАНЁННАЯ ВЕРСИЯ";document.querySelectorAll("#page-home button,#page-feed button").forEach(x=>{x.disabled=true;});}
+window.addEventListener("online",()=>location.reload());
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 async function boot(){
+ if(!navigator.onLine){restoreOfflinePlatform();return;}
  const {data,error}=await db.auth.getSession();
  if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
  currentUser=data.session?.user;
@@ -721,6 +726,7 @@ async function boot(){
  $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
  await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial(),loadStories()]);startPresence(profile);startMessengerRealtime();
  const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile","person"].includes(hash))switchPage(hash);
+ saveOfflinePlatform();
 }
 async function loadCommunities(){
  const [{data:cs,error:cErr},{data:ms,error:mErr},{data:allMembers,error:membersErr}]=await Promise.all([
