@@ -391,7 +391,7 @@
 .tc-story-instant-loader small{font-size:7px;letter-spacing:1.5px;color:#888}
 @media(prefers-reduced-motion:reduce){#storyViewerModal .tc-story-viewer,#storyViewerContent>.tc-story-viewer-media{animation:none}.tc-story-instant-loader span{animation:none}}
 </style>
-<style id="tc-offline-style">.tc-offline-banner{position:fixed;z-index:99999;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));padding:11px;border:1px solid #555;border-radius:10px;background:#151515ed;color:#eee;text-align:center;font-size:9px;font-weight:800;letter-spacing:1px;box-shadow:0 8px 30px #0009}</style></head>
+</head>
 <body>
 <div class="layout">
 <aside class="sidebar">
@@ -472,7 +472,6 @@
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-window.__tcPlatformDb=db;window.__tcPlatformUser=null;window.__tcPlatformAuthReady=false;
 let currentUser=null, communities=[], memberships=new Set(), memberCounts=new Map(), currentCommentPost=null, communityFilter="all", activeChatId=null, activeChatName="", currentPage="home", currentProfileId=null;
 const VERIFIED_TEAM=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
 function isVerified(id){return VERIFIED_TEAM.includes(id);}
@@ -488,7 +487,7 @@ function onlineBadge(id){return isOnline(id)?'<span class="online-dot" title="С
 function renderHomeOnline(){const people=[...onlineUsers.values()].filter(p=>p.userId!==currentUser?.id);$("homeOnlineCount").textContent=people.length+" В СЕТИ";$("homeOnlinePeople").innerHTML=people.length?people.slice(0,12).map(p=>'<button class="home-online-person" data-profile="'+escapeHtml(p.userId)+'"><span class="home-online-avatar">'+avatarMarkup(p.displayName||"Участник",p.avatarPath)+'</span><span>'+escapeHtml(p.displayName||"Участник")+'</span></button>').join(""):'<div class="home-online-placeholder">Пока вы здесь одни. Когда другие участники откроют TEHNOCELL, они появятся здесь.</div>';}
 async function startPresence(profile){if(onlineChannel||!currentUser)return;onlineChannel=db.channel("tehnocell-online-v1");onlineChannel.on("presence",{event:"sync"},()=>{const state=onlineChannel.presenceState();onlineUsers.clear();Object.values(state).flat().forEach(p=>{if(p.userId)onlineUsers.set(p.userId,p);});renderHomeOnline();clearTimeout(presenceRefreshTimer);presenceRefreshTimer=setTimeout(()=>{loadSocial();if(currentPage==="messages"){loadConversations();if(activeChatId)$("chatPresence").textContent=isOnline(activeChatId)?"В сети":"Личная переписка";}if($("globalSearchResults")&&!$("globalSearchResults").hidden)loadPeopleSearch();},180);}).subscribe(async status=>{if(status==="SUBSCRIBED"){await onlineChannel.track({userId:currentUser.id,displayName:profile?.display_name||"Участник",avatarPath:profile?.avatar_path||null,onlineAt:new Date().toISOString()});}});}
 function renderHomeSound(profile){const box=$("homeSoundCard");if(!profile?.profile_sound_path){box.innerHTML='<div class="home-card-kicker">TEHNOCELL IDENTITY SOUND</div><div class="home-sound-empty"><div class="home-sound-note">♫</div><div><strong>Ваша музыка — часть профиля</strong><p>Добавьте композицию в TEHNOCELL ID, и она появится здесь.</p><a href="account.html" id="homeSoundLink" class="panel-link">Настроить музыку ↗</a></div></div>';return;}const audio=db.storage.from("profile-avatars").getPublicUrl(profile.profile_sound_path).data.publicUrl;const cover=profile.profile_sound_cover_path?db.storage.from("profile-avatars").getPublicUrl(profile.profile_sound_cover_path).data.publicUrl:null;box.innerHTML='<div class="home-card-kicker">TEHNOCELL IDENTITY SOUND</div><div class="home-sound-playing">'+(cover?'<img src="'+escapeHtml(cover)+'" alt="Обложка композиции">':'<div class="home-sound-cover-fallback">♫</div>')+'<div class="home-sound-track"><strong>'+escapeHtml(profile.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(profile.profile_sound_artist||"Неизвестный исполнитель")+'</span></div><audio controls preload="metadata" src="'+escapeHtml(audio)+'">Ваш браузер не поддерживает аудио.</audio></div><div class="home-sound-tagline">ВАША КОМПОЗИЦИЯ · ВОСПРОИЗВЕДЕНИЕ ПО НАЖАТИЮ</div>';}
-function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(!tcOfflineMode){if(name==="feed"){loadFeed();loadStories();}if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();}history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});if(navigator.onLine)setTimeout(saveOfflinePlatform,1800);}
+function switchPage(name){currentPage=name;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id==="page-"+name));document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===name));if(name==="feed"){loadFeed();loadStories();}if(name==="communities")renderCommunities();if(name==="notifications")loadNotifications();if(name==="profile")loadSocial();if(name==="messages")loadConversations();history.replaceState(null,"","#"+name);window.scrollTo({top:0,behavior:"smooth"});}
 document.querySelectorAll("[data-page]").forEach(el=>el.addEventListener("click",e=>{e.preventDefault();switchPage(el.dataset.page);}));
 $("personBack").addEventListener("click",()=>switchPage("feed"));
 document.addEventListener("click",e=>{const profileButton=e.target.closest("[data-profile]");if(profileButton){e.preventDefault();openPersonProfile(profileButton.dataset.profile);}});
@@ -707,42 +706,11 @@ $("storyForm").addEventListener("submit",async e=>{
  btn.disabled=false;closeModal("storyCreateModal");$("storyForm").reset();await loadStories();showNotice("История опубликована на 24 часа.");switchPage("feed");
 });
 
-let tcOfflineMode=!navigator.onLine,tcOnlineReloadTimer=null;
-function tcOfflineDB(){return new Promise((resolve,reject)=>{const q=indexedDB.open("tc-platform-offline-v2",1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains("snapshots"))q.result.createObjectStore("snapshots");};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);});}
-async function tcOfflinePut(value){const d=await tcOfflineDB();await new Promise((resolve,reject)=>{const tx=d.transaction("snapshots","readwrite");tx.objectStore("snapshots").put(value,"platform");tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});d.close();}
-async function tcOfflineGet(){const d=await tcOfflineDB();const value=await new Promise((resolve,reject)=>{const q=d.transaction("snapshots").objectStore("snapshots").get("platform");q.onsuccess=()=>resolve(q.result||null);q.onerror=()=>reject(q.error);});d.close();return value;}
-function tcOfflineBanner(text){let b=$("tcOfflineBanner");if(!b){b=document.createElement("div");b.id="tcOfflineBanner";b.className="tc-offline-banner";document.body.appendChild(b);}b.textContent=text||"ОФФЛАЙН-РЕЖИМ · СОХРАНЁННЫЕ ДАННЫЕ";}
-async function saveOfflinePlatform(){if(!navigator.onLine)return;try{const pages={};document.querySelectorAll(".page").forEach(p=>pages[p.id]=p.innerHTML);const d={version:2,savedAt:Date.now(),hash:location.hash||"#home",pages,profile:{sideName:$("sideName")?.innerHTML||"",sideAvatar:$("sideAvatar")?.innerHTML||"",greetingName:$("greetingName")?.textContent||"",profileName:$("profileName")?.innerHTML||"",profileEmail:$("profileEmail")?.textContent||"",mainAvatar:$("mainAvatar")?.innerHTML||"",composerAvatar:$("composerAvatar")?.innerHTML||""}};await tcOfflinePut(d);try{localStorage.setItem("tc_platform_offline_snapshot_v2_meta",JSON.stringify({savedAt:d.savedAt,hash:d.hash}));}catch(e){}}catch(e){console.warn("Offline snapshot:",e);}}
-async function restoreOfflinePlatform(){let d;try{d=await tcOfflineGet();}catch(e){}if(!d?.pages){try{const old=JSON.parse(localStorage.getItem("tc_platform_offline_snapshot_v1")||"null");if(old?.home&&old?.feed)d={pages:{"page-home":old.home,"page-feed":old.feed},hash:location.hash||"#home"};}catch(e){}}if(!d?.pages){tcOfflineBanner("ОФФЛАЙН · НЕТ СОХРАНЁННОЙ ВЕРСИИ");return;}tcOfflineMode=true;for(const [id,html] of Object.entries(d.pages)){const el=$(id);if(el)el.innerHTML=html;}if(d.profile){for(const [id,value] of Object.entries(d.profile)){const el=$(id);if(el){if(id==="greetingName"||id==="profileEmail")el.textContent=value;else el.innerHTML=value;}}}document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));const wanted=(location.hash||d.hash||"#home").slice(1);const target=$("page-"+wanted)?wanted:"home";$("page-"+target).classList.add("active");document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===target));tcOfflineBanner("ОФФЛАЙН-РЕЖИМ · ПОСЛЕДНЯЯ СОХРАНЁННАЯ ВЕРСИЯ");document.querySelectorAll(".page button:not([data-page]),.page input,.page textarea,.page select").forEach(x=>{x.disabled=true;});}
-window.addEventListener("offline",()=>{tcOfflineMode=true;tcOfflineBanner("СОЕДИНЕНИЕ ПОТЕРЯНО · РАБОТАЕМ С СОХРАНЁННЫМИ ДАННЫМИ");});
-window.addEventListener("online",()=>{tcOfflineMode=false;tcOfflineBanner("СОЕДИНЕНИЕ ВОССТАНОВЛЕНО · ОБНОВЛЯЕМ ПЛАТФОРМУ");clearTimeout(tcOnlineReloadTimer);tcOnlineReloadTimer=setTimeout(()=>location.reload(),900);});
-if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 async function boot(){
- const sessionResult=await Promise.race([
-  db.auth.getSession(),
-  new Promise(resolve=>setTimeout(()=>resolve({data:{session:null},error:{message:"Сервер авторизации не ответил за 12 секунд."},timedOut:true}),12000))
- ]);
- if(sessionResult.timedOut){
-  await restoreOfflinePlatform();
-  showNotice("Не удалось связаться с сервером TEHNOCELL. Проверьте интернет и попробуйте обновить страницу.");
-  return;
- }
- const {data,error}=sessionResult;
- if(error&&!navigator.onLine){await restoreOfflinePlatform();return;}
- if(error){showNotice("Не удалось проверить авторизацию. "+error.message);return;}
- currentUser=data.session?.user||null;
- window.__tcPlatformUser=currentUser;window.__tcPlatformAuthReady=true;
- if(!currentUser){if(navigator.onLine)location.replace("login.html?next=platform");else await restoreOfflinePlatform();return;}
- if(!navigator.onLine){
-  await restoreOfflinePlatform();
-  const cachedName=$("profileName")?.textContent||currentUser.user_metadata?.display_name||"Пользователь";
-  $("greetingName").textContent=cachedName;
-  $("profileName").textContent=cachedName;
-  $("profileEmail").textContent=currentUser.email||"";
-  $("sideName").textContent=cachedName;
-  $("homeAccountLink").href=VERIFIED_TEAM.includes(currentUser.id)?"account.html":"account-user.html";
-  return;
- }
+ const {data,error}=await db.auth.getSession();
+ if(error){showNotice("Не удалось проверить авторизацию. Обновите страницу.");return;}
+ currentUser=data.session?.user;
+ if(!currentUser){location.replace("login.html?next=platform");return;}
  const {data:profile}=await db.from("profiles").select("display_name,avatar_path,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path").eq("id",currentUser.id).maybeSingle();
  const name=profile?.display_name||currentUser.user_metadata?.display_name||"Пользователь";
  const path=profile?.avatar_path||currentUser.user_metadata?.avatar_path||null;
@@ -753,7 +721,6 @@ async function boot(){
  $("accountLink").href=account;$("profileManage").href=account;$("profileManage2").href=account;
  await Promise.all([loadCommunities(),loadHomeCounts(),loadSocial(),loadStories()]);startPresence(profile);startMessengerRealtime();
  const hash=location.hash.replace("#","");if(["home","feed","communities","messages","notifications","profile","person"].includes(hash))switchPage(hash);
- saveOfflinePlatform();
 }
 async function loadCommunities(){
  const [{data:cs,error:cErr},{data:ms,error:mErr},{data:allMembers,error:membersErr}]=await Promise.all([
@@ -848,7 +815,7 @@ async function loadFeed(){
  document.querySelectorAll("[data-like]").forEach(b=>b.addEventListener("click",()=>toggleLike(b.dataset.like,b)));
  document.querySelectorAll("[data-comments]").forEach(b=>b.addEventListener("click",()=>openComments(b.dataset.comments)));
  document.querySelectorAll("[data-delete-post]").forEach(b=>b.addEventListener("click",()=>deletePost(b.dataset.deletePost)));
- saveOfflinePlatform();
+ 
 }
 async function toggleLike(id,button){
  if(!currentUser||button.dataset.busy==="1")return;
@@ -1177,8 +1144,8 @@ async function loadHomeCounts(){
  $("homeNotificationCount").textContent=(notificationCount||0)+" непрочитанных событий.";
  $("unreadBadge").textContent=notificationCount?String(notificationCount):"";
 }
-db.auth.onAuthStateChange((event,session)=>{if((event==="SIGNED_OUT"||!session)&&navigator.onLine)location.replace("login.html?next=platform");});
-boot().catch(error=>{console.error('TEHNOCELL boot failed:',error);showNotice('Ошибка загрузки платформы: '+(error?.message||'неизвестная ошибка'));});
+db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session)location.replace("login.html?next=platform");});
+boot();
 </script>
 
 <style id="tc-glass-selection-style">
@@ -1252,4 +1219,21 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 </script>
 
 <script src="account-access.js?v=3"></script>
+
+<script>
+(async()=>{
+ try{
+  if('serviceWorker' in navigator){
+   const registrations=await navigator.serviceWorker.getRegistrations();
+   for(const registration of registrations){
+    const workerUrl=registration.active?.scriptURL||registration.waiting?.scriptURL||registration.installing?.scriptURL||'';
+    if(workerUrl.endsWith('/sw.js')) await registration.unregister();
+   }
+  }
+  if('caches' in window){
+   for(const key of await caches.keys()) if(key.startsWith('tc-platform-')) await caches.delete(key);
+  }
+ }catch(error){console.warn('Platform offline cache cleanup:',error);}
+})();
+</script>
 </body></html>
