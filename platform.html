@@ -518,6 +518,10 @@ button,a,[role="button"],input,select,textarea,label,[tabindex]{-webkit-tap-high
  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='18' cy='5' r='3'/%3E%3Ccircle cx='6' cy='12' r='3'/%3E%3Ccircle cx='18' cy='19' r='3'/%3E%3Cpath d='m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4'/%3E%3C/svg%3E") center/contain no-repeat;
  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='18' cy='5' r='3'/%3E%3Ccircle cx='6' cy='12' r='3'/%3E%3Ccircle cx='18' cy='19' r='3'/%3E%3Cpath d='m8.7 10.7 6.6-4.4M8.7 13.3l6.6 4.4'/%3E%3C/svg%3E") center/contain no-repeat;
 }
+</style><style id="tc-moment-share-light-overlay">
+/* Лёгкое затемнение: фотография и ход истории остаются видимыми */
+.tc-moment-share{background:rgba(0,0,0,.48)!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+.tc-moment-share-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 </style></head>
 <body>
 <div class="layout">
@@ -838,7 +842,7 @@ async function toggleStoryLike(story,button){
 let tcMomentShareStory=null,tcMomentShareFriends=[];
 function tcMomentShareUrl(story){const url=new URL(location.href);url.searchParams.set("moment",story.id);url.hash="feed";return url.toString();}
 async function shareMoment(story){
- tcMomentShareStory=story;pauseMomentForShare();
+ tcMomentShareStory=story;
  const modal=$("tcMomentShareModal"),list=$("tcMomentFriends");
  modal.classList.add("open");modal.setAttribute("aria-hidden","false");$("tcMomentFriendSearch").value="";
  list.innerHTML='<div class="tc-story-stats-empty">Загружаем друзей…</div>';tcMomentShareFriends=[];
@@ -863,7 +867,7 @@ function updateMomentShareSelection(){
  $("tcMomentShareCounter").textContent=count?("Выбрано получателей: "+count):"Выберите одного или нескольких друзей";
  $("tcMomentSendCount").textContent=count;$("tcMomentSend").disabled=count===0;
 }
-function closeMomentShare(){const m=$("tcMomentShareModal");m.classList.remove("open");m.setAttribute("aria-hidden","true");resumeMomentAfterShare();}
+function closeMomentShare(){const m=$("tcMomentShareModal");m.classList.remove("open");m.setAttribute("aria-hidden","true");}
 $("tcMomentShareClose").addEventListener("click",closeMomentShare);
 $("tcMomentShareModal").addEventListener("click",e=>{if(e.target.id==="tcMomentShareModal")closeMomentShare();});
 $("tcMomentFriendSearch").addEventListener("input",renderMomentShareFriends);
