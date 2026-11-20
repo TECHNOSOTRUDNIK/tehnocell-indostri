@@ -707,7 +707,7 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 .tc-banner-preview{height:132px;width:100%;border:1px dashed var(--border);border-radius:14px;background:linear-gradient(135deg,#292929,#090909);background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:13px;margin:10px 0;overflow:hidden}
 .tc-banner-preview.has-image{border-style:solid}.tc-banner-actions{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 14px}.tc-secondary{padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit}
 .tc-toast{position:fixed;z-index:100001;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,18px);width:min( calc(100% - 32px),420px);padding:13px 16px;border:1px solid #444;border-radius:13px;background:#111;color:#fff;box-shadow:0 12px 38px #0005;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.tc-toast.show{opacity:1;transform:translate(-50%,0)}
-</style></head>
+.tc-frame-item{display:flex;align-items:center;gap:13px;padding:12px 0;border-top:1px solid var(--border)}.tc-frame-preview{width:54px;height:54px;flex:0 0 54px;border-radius:50%;display:grid;place-items:center;background:var(--background);font-weight:900;font-size:18px}.tc-frame-preview.vc{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 18px #ff55bd55}.tc-frame-copy{min-width:0;flex:1}.tc-frame-copy strong,.tc-frame-copy small{display:block}.tc-frame-copy strong{font-size:12px}.tc-frame-copy small{font-size:10px;color:var(--muted);margin-top:4px}.tc-frame-item button{border:1px solid var(--border);border-radius:9px;padding:9px 11px;background:var(--surface);color:var(--text);font-size:11px}</style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
 </div>
@@ -1014,6 +1014,11 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
  <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка пока будет показана ссылкой — встроенное воспроизведение подключим после выбора легального музыкального каталога.</p>
  <button class="action" id="saveCustomization" type="button">Сохранить оформление</button><p class="message" id="customizationMessage"></p>
  </div>
+<div class="panel" id="tcFrameInventoryPanel" style="margin:16px 0">
+ <h3>Коллекция рамок</h3>
+ <p class="photo-note">Эксклюзивные рамки открываются за специальные события и достижения TEHNOCELL.</p>
+ <div id="tcFrameInventory"><p class="photo-note">Загружаем коллекцию…</p></div>
+</div>
 <!-- ВНЕШНИЙ ВИД -->
 
     <div class="settings-category">
@@ -1557,7 +1562,7 @@ async function loadAccount() {
     // Метаданные Auth остаются резервным вариантом для старых аккаунтов.
     const { data: savedProfile } = await db
         .from("profiles")
-        .select("display_name,bio,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_game,profile_status")
+        .select("display_name,bio,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_game,profile_status,selected_avatar_frame_id")
         .eq("id", currentUser.id)
         .maybeSingle();
 
@@ -2349,6 +2354,38 @@ $("supportReplyForm").addEventListener("submit",async e=>{
   }catch(_){}
   if(safe&&history.length>1){event.preventDefault();history.back();}
  });
+})();
+</script>
+<script>
+(function(){
+ const box=document.getElementById("tcFrameInventory");
+ if(!box)return;
+ async function loadFrames(){
+  if(typeof db==="undefined"||typeof currentUser==="undefined"||!currentUser){box.textContent="Войдите в TEHNOCELL ID, чтобы открыть коллекцию.";return;}
+  const [ownedResult,profileResult]=await Promise.all([
+   db.from("tc_user_frames").select("frame_id,acquired_at,tc_avatar_frames(id,code,name,description)").eq("user_id",currentUser.id).order("acquired_at",{ascending:false}),
+   db.from("profiles").select("selected_avatar_frame_id").eq("id",currentUser.id).maybeSingle()
+  ]);
+  if(ownedResult.error){box.textContent="Не удалось загрузить рамки: "+ownedResult.error.message;return;}
+  const equipped=profileResult.data?.selected_avatar_frame_id||null;
+  if(!ownedResult.data?.length){box.innerHTML='<p class="photo-note">Коллекция пока пуста. Первую эксклюзивную рамку можно получить в событии VICE CITY.</p>';return;}
+  box.innerHTML=ownedResult.data.map(row=>{
+   const f=row.tc_avatar_frames||{},active=f.id===equipped;
+   const name=String(f.name||"Рамка").replace(/[&<>"]/g,"");
+   return '<div class="tc-frame-item"><div class="tc-frame-preview '+(f.code==="vice-city-limited"?"vc":"")+'">T</div><div class="tc-frame-copy"><strong>'+name+'</strong><small>'+(active?"Сейчас используется":"В коллекции")+' · '+new Date(row.acquired_at).toLocaleDateString("ru-RU")+'</small></div><button type="button" data-frame-toggle="'+f.id+'" data-active="'+(active?"1":"0")+'">'+(active?"Снять":"Применить")+'</button></div>';
+  }).join("");
+  box.querySelectorAll("[data-frame-toggle]").forEach(btn=>btn.addEventListener("click",async()=>{
+   btn.disabled=true;
+   const id=btn.dataset.active==="1"?null:btn.dataset.frameToggle;
+   const {error}=await db.from("profiles").update({selected_avatar_frame_id:id}).eq("id",currentUser.id);
+   btn.disabled=false;
+   if(error){showTcToast("Не удалось изменить рамку: "+error.message);return;}
+   showTcToast(id?"Рамка применена":"Рамка снята");
+   loadFrames();
+  }));
+ }
+ function wait(){if(typeof currentUser!=="undefined"&&currentUser){loadFrames();return;}setTimeout(wait,450);}
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wait,{once:true});else wait();
 })();
 </script>
 </body>
