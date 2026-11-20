@@ -11,7 +11,10 @@ const reply = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: cors });
 
 const norm = (v: unknown) => String(v ?? "").trim().toLowerCase()
-  .replace(/ё/g, "е").replace(/\s+/g, " ").replace(/[—–]/g, "-");
+  .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
+  .replace(/ё/g, "е").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim().replace(/\\s+/g, " ");
+const oneOf = (value: unknown, variants: string[]) => variants.includes(norm(value));
+const hasAll = (value: string, groups: string[][]) => groups.every(group => group.some(term => value.includes(norm(term))));
 
 function officialRockstarUrl(value: unknown) {
   try {
@@ -24,24 +27,31 @@ function officialRockstarUrl(value: unknown) {
 
 function validStage(stage: number, a: Record<string, unknown>) {
   if (stage === 1) {
-    return norm(a.jason) === "jason"
-      && norm(a.lucia) === "lucia"
-      && norm(a.state) === "leonida"
-      && norm(a.city) === "vice city";
+    return oneOf(a.jason, ["Jason", "Джейсон", "Джэйсон"])
+      && oneOf(a.lucia, ["Lucia", "Лусия", "Люсия", "Люсиа"])
+      && oneOf(a.state, ["Leonida", "Леонида"])
+      && oneOf(a.city, ["Vice City", "Вайс Сити", "Вайс-Сити", "Вайссити"]);
   }
   if (stage === 2) {
-    const date = norm(a.date).replace(/[.\/]/g, "-");
-    const dateOk = ["2026-11-19", "19-11-2026", "19 ноября 2026", "19 november 2026"].includes(date);
+    const date = norm(a.date);
+    const dateOk = [
+      "2026 11 19", "19 11 2026", "19 ноября 2026", "19 ноября 2026 года",
+      "19 november 2026", "november 19 2026", "nov 19 2026"
+    ].includes(date);
     const platforms = norm(a.platforms);
-    const platformOk = platforms.includes("ps5")
-      && (platforms.includes("xbox series x|s") || platforms.includes("xbox series x s") || platforms.includes("xbox series x and series s") || platforms.includes("xbox series x, series s"));
-    return dateOk && platformOk && officialRockstarUrl(a.official_link) && norm(a.yandex_link).startsWith("https://") &&
-      (() => { try { const u = new URL(String(a.yandex_link)); return /(^|\.)yandex\.(ru|com|by|kz|uz)$/.test(u.hostname); } catch { return false; } })();
+    const psOk = hasAll(platforms, [["ps5", "playstation 5", "плейстейшен 5", "пс5"]]);
+    const xboxOk = hasAll(platforms, [["xbox", "иксбокс"], ["series x", "series s", "серия x", "серия s", "x s", "иксбокс series"]]);
+    return dateOk && psOk && xboxOk && officialRockstarUrl(a.official_link) && (() => {
+      try {
+        const u = new URL(String(a.yandex_link ?? "").trim());
+        return u.protocol === "https:" && /(^|\\.)yandex\\.(ru|com|by|kz|uz)$/i.test(u.hostname);
+      } catch { return false; }
+    })();
   }
   if (stage === 3) {
-    return norm(a.real_city) === "miami"
-      && norm(a.real_state) === "florida"
-      && ["grand theft auto vi", "gta vi", "gta 6"].includes(norm(a.game_title));
+    return oneOf(a.real_city, ["Miami", "Майами"])
+      && oneOf(a.real_state, ["Florida", "Флорида"])
+      && oneOf(a.game_title, ["Grand Theft Auto VI", "Grand Theft Auto 6", "GTA VI", "GTA 6", "ГТА 6", "ГТА 6", "Гранд Тефт Авто 6", "Гранд Тефт Авто 6"]);
   }
   return false;
 }
