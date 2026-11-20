@@ -551,7 +551,13 @@ button,a,[role="button"],input,select,textarea,label,[tabindex]{-webkit-tap-high
 /* Лёгкое затемнение: фотография и ход истории остаются видимыми */
 .tc-moment-share{background:rgba(0,0,0,.48)!important;backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
 .tc-moment-share-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-</style></head>
+</style><style id="tc-shared-moment-top-layer">
+/* Окно истории из личной переписки всегда поверх экрана чата и его слоёв */
+#storyViewerModal{z-index:100001!important}
+#storyViewerModal.open{display:flex!important;position:fixed!important;inset:0!important}
+#storyViewerModal .tc-story-viewer{position:relative;z-index:1}
+</style>
+</head>
 <body>
 <div class="layout">
 <aside class="sidebar">
@@ -821,6 +827,7 @@ async function openSharedMoment(storyId){
  storyAudio.pause();storyAudio.removeAttribute("src");storyAudio.ontimeupdate=null;
  storyViewerItems=[];storyViewerIndex=0;
  root.innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ЗАГРУЖАЕМ МЕДИА ИСТОРИИ</small></div>';
+ document.body.appendChild($("storyViewerModal"));
  openModal("storyViewerModal");
  try{
   const {data:row,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").eq("id",storyId).gt("expires_at",new Date().toISOString()).maybeSingle();
