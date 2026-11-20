@@ -433,7 +433,33 @@
 .tc-story-stats-empty{font-size:11px;color:#888;padding:10px 0}
 @media(min-width:700px){#tcStoryStatsModal{align-items:center}.tc-story-stats-card{border-radius:20px}}
 </style>
-</head>
+<style id="tc-moments-compact-controls">
+/* MOMENTS: меньше интерфейса поверх самого кадра */
+#storyViewerModal .tc-story-viewer-gradient{padding:76px 18px calc(42px + env(safe-area-inset-bottom))}
+#storyViewerModal .tc-story-meta{margin-bottom:8px;gap:8px}
+#storyViewerModal .tc-story-viewer-caption{margin-top:5px;font-size:12px;line-height:1.3}
+#storyViewerModal .tc-story-caption-empty{margin-top:4px;font-size:10px}
+#storyViewerModal .tc-story-viewer-music{margin-top:8px;padding:7px 9px;gap:8px;border-radius:12px}
+#storyViewerModal .tc-story-viewer-music img,#storyViewerModal .tc-story-music-disc{width:34px;height:34px;flex:0 0 34px}
+#storyViewerModal .tc-story-viewer-music small{font-size:8px}
+#storyViewerModal .tc-story-viewer-music strong{font-size:9px}
+#storyViewerModal .tc-story-viewer-music em{font-size:8px}
+#storyViewerModal .tc-story-viewer-music button,#storyViewerModal .tc-story-viewer-music a{width:29px;height:29px;flex:0 0 29px}
+#storyViewerModal .tc-story-engagement{display:flex;align-items:center;gap:7px;margin-top:8px}
+#storyViewerModal .tc-story-engagement button{min-height:30px;height:30px;padding:0 10px;font-size:9px;letter-spacing:.02em;border-radius:18px;backdrop-filter:blur(8px)}
+#storyViewerModal .tc-story-engagement .tc-story-like-btn{gap:5px}
+#storyViewerModal .tc-story-like-heart{font-size:16px}
+#storyViewerModal #tcStoryShareBtn{width:30px;min-width:30px;padding:0;font-size:0;display:grid;place-items:center}
+#storyViewerModal #tcStoryShareBtn:after{content:"↗";font-size:14px}
+#storyViewerModal .tc-story-viewer-delete{margin-top:6px;font-size:8px}
+#storyViewerModal .tc-story-bottom-mark{font-size:6px;letter-spacing:1.5px;bottom:calc(10px + env(safe-area-inset-bottom))}
+@media(max-height:760px){
+ #storyViewerModal .tc-story-viewer-gradient{padding-bottom:calc(35px + env(safe-area-inset-bottom))}
+ #storyViewerModal .tc-story-viewer-music{margin-top:6px}
+ #storyViewerModal .tc-story-engagement{margin-top:6px}
+ #storyViewerModal .tc-story-viewer-delete{margin-top:4px}
+}
+</style></head>
 <body>
 <div class="layout">
 <aside class="sidebar">
