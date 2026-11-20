@@ -700,7 +700,7 @@ document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",
 document.querySelectorAll(".modal-backdrop").forEach(b=>b.addEventListener("click",e=>{if(e.target===b)closeModal(b.id)}));
 
 /* TEHNOCELL MOMENTS — stories and MIVO music */
-let storyRows=[],storyGroups=[],storyViewerItems=[],storyViewerIndex=0,selectedStoryMusic=null,storyAutoTimer=null,storyProgressTimer=null;const storyLikedIds=new Set(),storyViewedIds=new Set();
+let storyRows=[],storyGroups=[],storyViewerItems=[],storyViewerIndex=0,selectedStoryMusic=null,storyAutoTimer=null,storyProgressTimer=null;let storyImageElapsed=0,storyImageStartedAt=0,storyImageDuration=7000,storySharePaused=false;const storyLikedIds=new Set(),storyViewedIds=new Set();
 const storyAudio=$("storyMusicAudio");
 function storyMivoTracks(){
  const out=[],add=t=>{if(!t||!t.title||!t.artist)return;const id=String(t.id||t.title+"::"+t.artist);if(out.some(x=>String(x.id||x.title+"::"+x.artist)===id))return;const preview=t.previewUrl||t.url||"";if(!preview)return;out.push({id,title:t.title,artist:t.artist,cover:t.artworkUrl100||t.cover||"",previewUrl:preview,trackViewUrl:t.trackViewUrl||""});};
@@ -838,7 +838,7 @@ async function toggleStoryLike(story,button){
 let tcMomentShareStory=null,tcMomentShareFriends=[];
 function tcMomentShareUrl(story){const url=new URL(location.href);url.searchParams.set("moment",story.id);url.hash="feed";return url.toString();}
 async function shareMoment(story){
- tcMomentShareStory=story;clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
+ tcMomentShareStory=story;pauseMomentForShare();
  const modal=$("tcMomentShareModal"),list=$("tcMomentFriends");
  modal.classList.add("open");modal.setAttribute("aria-hidden","false");$("tcMomentFriendSearch").value="";
  list.innerHTML='<div class="tc-story-stats-empty">Загружаем друзей…</div>';tcMomentShareFriends=[];
@@ -863,7 +863,7 @@ function updateMomentShareSelection(){
  $("tcMomentShareCounter").textContent=count?("Выбрано получателей: "+count):"Выберите одного или нескольких друзей";
  $("tcMomentSendCount").textContent=count;$("tcMomentSend").disabled=count===0;
 }
-function closeMomentShare(){const m=$("tcMomentShareModal");m.classList.remove("open");m.setAttribute("aria-hidden","true");if($("storyViewerModal").classList.contains("open"))renderStoryViewer();}
+function closeMomentShare(){const m=$("tcMomentShareModal");m.classList.remove("open");m.setAttribute("aria-hidden","true");resumeMomentAfterShare();}
 $("tcMomentShareClose").addEventListener("click",closeMomentShare);
 $("tcMomentShareModal").addEventListener("click",e=>{if(e.target.id==="tcMomentShareModal")closeMomentShare();});
 $("tcMomentFriendSearch").addEventListener("input",renderMomentShareFriends);
@@ -895,6 +895,22 @@ async function openStoryStats(story){
 }
 $("tcStoryStatsClose").addEventListener("click",()=>{$("tcStoryStatsModal").classList.remove("open");$("tcStoryStatsModal").setAttribute("aria-hidden","true");if($("storyViewerModal").classList.contains("open"))renderStoryViewer();});
 $("tcStoryStatsModal").addEventListener("click",e=>{if(e.target.id==="tcStoryStatsModal")$("tcStoryStatsClose").click();});
+function pauseMomentForShare(){
+ if(storySharePaused)return;storySharePaused=true;
+ if(storyImageStartedAt)storyImageElapsed=Math.min(storyImageDuration,storyImageElapsed+(Date.now()-storyImageStartedAt));
+ storyImageStartedAt=0;clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
+ const video=$("storyViewerContent")?.querySelector("video");if(video&&!video.paused){video.dataset.tcShareWasPlaying="1";video.pause();}
+}
+function resumeMomentAfterShare(){
+ if(!storySharePaused)return;storySharePaused=false;
+ const video=$("storyViewerContent")?.querySelector("video");
+ if(video?.dataset.tcShareWasPlaying==="1"){delete video.dataset.tcShareWasPlaying;video.play().catch(()=>{});return;}
+ const s=storyViewerItems[storyViewerIndex];if(!s||s.media_type==="video")return;
+ const fill=$("storyViewerContent")?.querySelector('[data-story-progress="'+storyViewerIndex+'"]');
+ storyImageStartedAt=Date.now();
+ storyProgressTimer=setInterval(()=>{const elapsed=storyImageElapsed+(Date.now()-storyImageStartedAt);if(fill)fill.style.transform="scaleX("+Math.min(1,elapsed/storyImageDuration)+")";},50);
+ storyAutoTimer=setTimeout(()=>{storyImageElapsed=0;storyImageStartedAt=0;if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},Math.max(0,storyImageDuration-storyImageElapsed));
+}
 function renderStoryViewer(){
  clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
  const s=storyViewerItems[storyViewerIndex];if(!s)return;
@@ -924,8 +940,8 @@ function renderStoryViewer(){
   playToggle?.addEventListener("click",()=>video.play().catch(()=>{}));
   video.play().then(reveal).catch(()=>{loading?.classList.add("failed");if(playToggle)playToggle.hidden=false;});
  }else{
-  const imageDuration=s.music?.previewUrl?15000:7000;let elapsed=0;storyProgressTimer=setInterval(()=>{elapsed+=50;if(fill)fill.style.transform="scaleX("+Math.min(1,elapsed/imageDuration)+")";},50);
-  storyAutoTimer=setTimeout(()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},imageDuration);
+  storyImageDuration=s.music?.previewUrl?15000:7000;storyImageElapsed=0;storyImageStartedAt=Date.now();storyProgressTimer=setInterval(()=>{const elapsed=storyImageElapsed+(Date.now()-storyImageStartedAt);if(fill)fill.style.transform="scaleX("+Math.min(1,elapsed/storyImageDuration)+")";},50);
+  storyAutoTimer=setTimeout(()=>{storyImageElapsed=0;storyImageStartedAt=0;if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},storyImageDuration);
  }
  $("storyOpenMivo")?.addEventListener("click",()=>{try{localStorage.setItem("mivo_story_track_to_open_v1",JSON.stringify(s.music));}catch(e){}});
  if(s.user_id!==currentUser.id){$("tcStoryLikeBtn")?.addEventListener("click",e=>toggleStoryLike(s,e.currentTarget));}
