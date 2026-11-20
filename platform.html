@@ -311,6 +311,43 @@
 @media(max-width:520px){.vc-overlay{padding:0;align-items:flex-end}.vc-window{width:100%;max-height:96dvh;border-radius:20px 20px 0 0}.vc-content{padding:25px 20px 30px}.vc-teaser{padding:17px}.vc-teaser:before{right:-10px}}
 
  .avatar.tc-avatar-framed,.home-online-avatar.tc-avatar-framed,.composer-avatar.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd55}.profile-photo.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 18px #ff55bd66}.tc-story-ring.tc-avatar-framed{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd66}
+
+/* VICE CITY frame: keep the portrait perfectly circular inside the neon ring */
+.avatar.tc-avatar-framed,
+.profile-photo.tc-avatar-framed,
+.search-person-avatar.tc-avatar-framed,
+.home-online-avatar.tc-avatar-framed,
+.composer-avatar.tc-avatar-framed,
+.tc-preview-avatar.tc-avatar-framed{
+  position:relative!important;
+  isolation:isolate;
+  overflow:visible!important;
+  border-radius:50%!important;
+}
+.avatar.tc-avatar-framed > img,
+.profile-photo.tc-avatar-framed > img,
+.search-person-avatar.tc-avatar-framed > img,
+.home-online-avatar.tc-avatar-framed > img,
+.composer-avatar.tc-avatar-framed > img,
+.tc-preview-avatar.tc-avatar-framed > img{
+  width:100%!important;height:100%!important;
+  position:absolute!important;inset:0!important;
+  object-fit:cover!important;
+  border-radius:50%!important;
+  clip-path:circle(50%)!important;
+  z-index:1!important;
+}
+.avatar.tc-avatar-framed::after,
+.profile-photo.tc-avatar-framed::after,
+.search-person-avatar.tc-avatar-framed::after,
+.home-online-avatar.tc-avatar-framed::after,
+.composer-avatar.tc-avatar-framed::after,
+.tc-preview-avatar.tc-avatar-framed::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:2px solid #ff55bd;outline:2px solid #46e5f2;outline-offset:2px;
+  box-shadow:0 0 17px #ff55bd77;pointer-events:none;z-index:3;
+}
+
 </style>
 
 <style id="tc-chat-list-layout-fix">
