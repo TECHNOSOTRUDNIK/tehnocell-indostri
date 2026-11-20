@@ -807,6 +807,17 @@ async function loadStories(){
   b.addEventListener("click",()=>openStoryGroup(g.userId));strip.appendChild(b);
  });
 }
+async function openSharedMoment(storyId){
+ const root=$("storyViewerContent");
+ clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);storyAudio.pause();storyAudio.removeAttribute("src");storyAudio.ontimeupdate=null;
+ root.innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ОТКРЫВАЕМ ИСТОРИЮ</small></div>';openModal("storyViewerModal");
+ const {data:row,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").eq("id",storyId).gt("expires_at",new Date().toISOString()).maybeSingle();
+ if(error||!row){$("closeStoryViewer").click();showNotice("Эта история уже недоступна или у вас нет доступа.");return;}
+ const seconds=Math.max(60,Math.floor((new Date(row.expires_at).getTime()-Date.now())/1000));
+ const [{data:file,error:fileError},{data:profile}]=await Promise.all([db.storage.from("tc-stories").createSignedUrl(row.media_path,seconds),db.from("profiles").select("id,display_name,avatar_path").eq("id",row.user_id).maybeSingle()]);
+ if(fileError||!file?.signedUrl){$("closeStoryViewer").click();showNotice("Не удалось загрузить медиа истории.");return;}
+ storyViewerItems=[{...row,url:file.signedUrl,profile:profile||{id:row.user_id,display_name:"Участник"}}];storyViewerIndex=0;renderStoryViewer();
+}
 async function openStoryGroup(userId,storyId=null){
  const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
  // Показываем viewer сразу, а подписанные ссылки получаем параллельно.
@@ -1386,7 +1397,7 @@ $("chatHoldMenu").addEventListener("click",async e=>{
 });
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
 $("chatThread").addEventListener("click",async e=>{
- const momentButton=e.target.closest("[data-open-moment]");if(momentButton){const id=momentButton.dataset.openMoment;let group=storyGroups.find(g=>g.stories.some(x=>x.id===id));if(!group){await loadStories();group=storyGroups.find(g=>g.stories.some(x=>x.id===id));}if(group)await openStoryGroup(group.userId,id);else showNotice("История больше недоступна.");return;}
+ const momentButton=e.target.closest("[data-open-moment]");if(momentButton){const id=momentButton.dataset.openMoment;let group=storyGroups.find(g=>g.stories.some(x=>x.id===id));if(!group){await loadStories();group=storyGroups.find(g=>g.stories.some(x=>x.id===id));}await openSharedMoment(id);return;}
  const reply=e.target.closest("[data-reply]");if(reply){setChatReply(reply.dataset.reply);return;}
  const react=e.target.closest("[data-react], [data-reaction]");
  if(react){const id=react.dataset.react||react.dataset.reaction,emoji=react.dataset.emoji,existing=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(existing.data){const r=await db.from("tc_message_reactions").delete().eq("id",existing.data.id);if(r.error)showNotice("Не удалось убрать реакцию.");}else{const r=await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});if(r.error)showNotice("Не удалось добавить реакцию.");}await loadChatThread();return;}
