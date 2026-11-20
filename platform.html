@@ -810,8 +810,28 @@ async function loadStories(){
  const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[]};
  const pm=new Map((profiles||[]).map(x=>[x.id,x]));
  storyGroups=[...new Set([currentUser.id,...ids])].map(id=>({userId:id,profile:pm.get(id)||{id,display_name:id===currentUser.id?"Вы":"Участник"},stories:storyRows.filter(s=>s.user_id===id)})).filter(g=>g.stories.length||g.userId===currentUser.id);
- // Заранее загружаем и декодируем первые фото каждой истории, пока пользователь находится в ленте.
- storyGroups.forEach(g=>{const first=g.stories[0];if(!first?.url)return;if(first.media_type==="image"){const img=new Image();img.decoding="async";img.src=first.url;img.decode?.().catch(()=>{});}else{const video=document.createElement("video");video.preload="metadata";video.src=first.url;video.load();}});
+ // Заранее скачиваем первые фото групп в Blob и декодируем их. Viewer использует тот же Blob URL — повторной загрузки оригинала нет.
+ await Promise.all(storyGroups.map(async g=>{
+  const first=g.stories[0];if(!first?.url)return;
+  const item={...first,profile:g.profile,cacheUntil:Date.now()+3500000};
+  if(first.media_type==="image"){
+   item.ready=(async()=>{
+    try{
+     const response=await fetch(first.url,{cache:"force-cache"});
+     if(!response.ok)throw new Error("image fetch "+response.status);
+     const blob=await response.blob(),blobUrl=URL.createObjectURL(blob),img=new Image();
+     img.decoding="async";img.src=blobUrl;
+     if(img.decode)await img.decode();else await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;});
+     item.url=blobUrl;item.imageBlob=blob;
+    }catch(error){
+     const img=new Image();img.decoding="async";img.src=first.url;
+     item.readyFallback=img.decode?img.decode().catch(()=>{}):Promise.resolve();
+    }
+   })();
+  }
+  tcMomentOpenCache.set(first.id,item);
+  if(first.media_type==="video"){const video=document.createElement("video");video.preload="metadata";video.src=first.url;video.load();}
+ }));
  strip.innerHTML="";
  const ownGroup=storyGroups.find(g=>g.userId===currentUser.id);const own=document.createElement("button");own.type="button";own.className="tc-story-bubble"+(ownGroup?.stories.length?"":" add");const ownName=ownGroup?.profile?.display_name||"Ваша история";const ownAvatarPath=ownGroup?.profile?.avatar_path;const ownAvatarUrl=ownAvatarPath?db.storage.from("profile-avatars").getPublicUrl(ownAvatarPath).data.publicUrl:null;own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(ownAvatarUrl?'<img src="'+escapeHtml(ownAvatarUrl)+'" alt="">':(ownGroup?.stories.length?escapeHtml((ownName||"Я").charAt(0).toUpperCase()):"＋"))+'</span></span><span class="tc-story-name">'+(ownGroup?.stories.length?"Моя история":"Ваша история")+'</span>';own.addEventListener("click",()=>ownGroup?.stories.length?openStoryGroup(currentUser.id):$("openStoryModal").click());strip.appendChild(own);
  storyGroups.filter(g=>g.userId!==currentUser.id).forEach(g=>{
@@ -859,28 +879,31 @@ async function openSharedMoment(storyId){
 }
 async function openStoryGroup(userId,storyId=null){
  const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
- // Показываем viewer сразу, а подписанные ссылки получаем параллельно.
  storyViewerItems=[];storyViewerIndex=0;
  $("storyViewerContent").innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ПОДГОТАВЛИВАЕМ ИСТОРИЮ</small></div>';
  openModal("storyViewerModal");
- const results=await Promise.all(group.stories.map(async story=>{
-  if(story.url)return {...story,profile:group.profile};
-  const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));
-  const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);
-  return !error&&data?.signedUrl?{...story,url:data.signedUrl,profile:group.profile}:null;
- }));
- const items=results.filter(Boolean);
- if(!items.length){$("closeStoryViewer").click();showNotice("История уже недоступна.");return;}
- storyViewerItems=items;storyViewerIndex=storyId?Math.max(0,items.findIndex(x=>x.id===storyId)):0;
- // Первое фото уже прогревается при загрузке ленты; не блокируем открытие ожиданием decode().
- items.forEach(item=>{
-  if(item.url&&new Date(item.expires_at)>new Date()){
-   item.cacheUntil=Date.now()+3500000;
-   if(!item.profile)item.profile=group.profile;
-   tcMomentOpenCache.set(item.id,item);
-  }
- });
- renderStoryViewer();
+ try{
+  const items=await Promise.all(group.stories.map(async story=>{
+   const cached=tcMomentOpenCache.get(story.id);
+   if(cached&&cached.url&&cached.cacheUntil>Date.now())return cached;
+   if(story.url)return {...story,profile:group.profile};
+   const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));
+   const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);
+   return !error&&data?.signedUrl?{...story,url:data.signedUrl,profile:group.profile}:null;
+  }));
+  const valid=items.filter(Boolean);
+  if(!valid.length)throw new Error("История уже недоступна.");
+  storyViewerIndex=storyId?Math.max(0,valid.findIndex(x=>x.id===storyId)):0;
+  const first=valid[storyViewerIndex];
+  if(first.ready)await first.ready;
+  if(first.readyFallback)await first.readyFallback;
+  storyViewerItems=valid;
+  valid.forEach(item=>{item.profile=item.profile||group.profile;item.cacheUntil=item.cacheUntil||Date.now()+3500000;tcMomentOpenCache.set(item.id,item);});
+  renderStoryViewer();
+ }catch(error){
+  $("storyViewerContent").innerHTML='<div class="tc-story-instant-loader"><b>НЕ УДАЛОСЬ ЗАГРУЗИТЬ ФОТО</b><small>'+escapeHtml(error.message||"Проверьте подключение.")+'</small><button type="button" id="tcStoryRetryFeed">ПОВТОРИТЬ</button></div>';
+  $("tcStoryRetryFeed")?.addEventListener("click",()=>openStoryGroup(userId,storyId));
+ }
 }
 function storyFormatTime(value){return new Date(value).toLocaleString("ru-RU",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});}
 async function recordStoryView(story){
