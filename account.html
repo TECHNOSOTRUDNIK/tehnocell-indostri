@@ -661,6 +661,16 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
   box-shadow:0 0 17px #ff55bd77;pointer-events:none;z-index:3;
 }
 
+
+/* Compact VICE CITY collectible frame */
+.avatar.tc-avatar-framed,.profile-photo.tc-avatar-framed,.search-person-avatar.tc-avatar-framed,.home-online-avatar.tc-avatar-framed,.composer-avatar.tc-avatar-framed,.tc-preview-avatar.tc-avatar-framed{box-shadow:none!important}
+.avatar.tc-avatar-framed::after,.profile-photo.tc-avatar-framed::after,.search-person-avatar.tc-avatar-framed::after,.home-online-avatar.tc-avatar-framed::after,.composer-avatar.tc-avatar-framed::after,.tc-preview-avatar.tc-avatar-framed::after{inset:-2px!important;border:1.5px solid #ff62c7!important;outline:1px solid #51e9f5!important;outline-offset:1px!important;box-shadow:0 0 9px #ff55bd55!important}
+.vc-ennie-orb{position:relative;width:46px!important;height:46px!important;flex:0 0 46px!important;border-radius:50%;background:radial-gradient(circle at 32% 25%,#fff 0 8%,#fff 17%,#e9f8ff 29%,#9bb5c8 45%,#263547 66%,#080b12 83%)!important;box-shadow:0 0 12px #fff,0 0 26px #8feaffaa,0 0 34px #ff5cc866!important;isolation:isolate;animation:vc-ennie-pulse 3s ease-in-out infinite}
+.vc-ennie-orb:before,.vc-ennie-orb:after{content:"";position:absolute;inset:4px;border:1px solid #ffffffbb;border-radius:43% 57% 61% 39%/42% 39% 61% 58%;filter:drop-shadow(0 0 5px #fff);animation:vc-ennie-spin 7s linear infinite}
+.vc-ennie-orb:after{inset:9px;border-color:#ff8bdcaa;animation-direction:reverse;animation-duration:5s}
+@keyframes vc-ennie-pulse{50%{transform:scale(1.06);box-shadow:0 0 18px #fff,0 0 32px #8feaffcc,0 0 44px #ff5cc899}}
+@keyframes vc-ennie-spin{to{transform:rotate(360deg)}}
+
 </style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
