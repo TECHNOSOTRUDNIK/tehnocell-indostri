@@ -1713,7 +1713,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  teaser.addEventListener("click",e=>{if(e.target.closest("#vcTeaserDismiss"))return;open();});teaser.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});$vc("vcTeaserDismiss").addEventListener("click",e=>{e.stopPropagation();localStorage.setItem("tc_vc_teaser_collapsed_v1","1");teaser.classList.add("is-collapsed");});
  async function call(body){
   const {data,error}=await window.__tcPlatformDb.functions.invoke(endpoint,{body});
-  if(error)throw new Error(error.message||"Не удалось связаться с сервером события.");
+  if(error){let detail=error.message||"Не удалось связаться с сервером события.";try{const response=error.context;if(response&&typeof response.json==="function"){const payload=await response.clone().json();if(payload?.error)detail=payload.error;}}catch{}throw new Error(detail);}
   if(data?.error)throw new Error(data.error);
   return data;
  }
