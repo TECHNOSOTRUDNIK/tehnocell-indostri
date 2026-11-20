@@ -817,14 +817,34 @@ async function loadStories(){
 }
 async function openSharedMoment(storyId){
  const root=$("storyViewerContent");
- clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);storyAudio.pause();storyAudio.removeAttribute("src");storyAudio.ontimeupdate=null;
- root.innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ОТКРЫВАЕМ ИСТОРИЮ</small></div>';openModal("storyViewerModal");
- const {data:row,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").eq("id",storyId).gt("expires_at",new Date().toISOString()).maybeSingle();
- if(error||!row){$("closeStoryViewer").click();showNotice("Эта история уже недоступна или у вас нет доступа.");return;}
- const seconds=Math.max(60,Math.floor((new Date(row.expires_at).getTime()-Date.now())/1000));
- const [{data:file,error:fileError},{data:profile}]=await Promise.all([db.storage.from("tc-stories").createSignedUrl(row.media_path,seconds),db.from("profiles").select("id,display_name,avatar_path").eq("id",row.user_id).maybeSingle()]);
- if(fileError||!file?.signedUrl){$("closeStoryViewer").click();showNotice("Не удалось загрузить медиа истории.");return;}
- storyViewerItems=[{...row,url:file.signedUrl,profile:profile||{id:row.user_id,display_name:"Участник"}}];storyViewerIndex=0;renderStoryViewer();
+ clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
+ storyAudio.pause();storyAudio.removeAttribute("src");storyAudio.ontimeupdate=null;
+ storyViewerItems=[];storyViewerIndex=0;
+ root.innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ЗАГРУЖАЕМ МЕДИА ИСТОРИИ</small></div>';
+ openModal("storyViewerModal");
+ try{
+  const {data:row,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").eq("id",storyId).gt("expires_at",new Date().toISOString()).maybeSingle();
+  if(error)throw new Error("Не удалось получить историю: "+error.message);
+  if(!row)throw new Error("История истекла или автор ограничил доступ.");
+  const seconds=Math.max(60,Math.floor((new Date(row.expires_at).getTime()-Date.now())/1000));
+  const [{data:file,error:fileError},{data:profile,error:profileError}]=await Promise.all([
+   db.storage.from("tc-stories").createSignedUrl(row.media_path,seconds),
+   db.from("profiles").select("id,display_name,avatar_path").eq("id",row.user_id).maybeSingle()
+  ]);
+  if(fileError||!file?.signedUrl)throw new Error("Не удалось получить фотографию: "+(fileError?.message||"ссылка не создана"));
+  if(row.media_type==="image"){
+   const probe=new Image();probe.decoding="async";probe.src=file.signedUrl;
+   if(probe.decode)await probe.decode();
+   else await new Promise((resolve,reject)=>{probe.onload=resolve;probe.onerror=()=>reject(new Error("Фотография не загрузилась"));});
+   if(!probe.naturalWidth||!probe.naturalHeight)throw new Error("Фотография загрузилась без изображения.");
+  }
+  storyViewerItems=[{...row,url:file.signedUrl,profile:profile||{id:row.user_id,display_name:"Участник"}}];
+  storyViewerIndex=0;renderStoryViewer();
+ }catch(error){
+  storyAudio.pause();storyAudio.removeAttribute("src");
+  root.innerHTML='<div class="tc-story-instant-loader"><b>НЕ УДАЛОСЬ ОТКРЫТЬ ИСТОРИЮ</b><small>'+escapeHtml(error.message||"Проверьте подключение и доступ к истории.")+'</small><button type="button" id="tcMomentRetryOpen">ПОВТОРИТЬ</button></div>';
+  $("tcMomentRetryOpen")?.addEventListener("click",()=>openSharedMoment(storyId));
+ }
 }
 async function openStoryGroup(userId,storyId=null){
  const group=storyGroups.find(g=>g.userId===userId);if(!group)return;
