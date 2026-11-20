@@ -359,6 +359,13 @@
 .vc-trailer-scene:before{content:"";position:absolute;inset:0;background:#030304;opacity:1}
 #vcRevealCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
 .vc-scene-grain{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at center,transparent 35%,#0008 100%)}
+/* Purple neon ignition running up both sides of the ENNIE reveal stage */
+.vc-scene-grain:before,.vc-scene-grain:after{content:"";position:absolute;z-index:4;top:9%;bottom:9%;width:3px;border-radius:8px;opacity:0;transform:scaleY(.12);transform-origin:center;background:linear-gradient(180deg,transparent 0%,#9c5cff 18%,#e2c5ff 48%,#9c5cff 82%,transparent 100%);box-shadow:0 0 5px #a45cff,0 0 13px #8e4bff,0 0 27px #7135d6;animation:vcSideNeonIgnite 3.8s ease-in-out infinite}
+.vc-scene-grain:before{left:8px;animation-delay:.15s}
+.vc-scene-grain:after{right:8px;animation-delay:.65s}
+@keyframes vcSideNeonIgnite{0%,12%{opacity:0;transform:scaleY(.12);filter:brightness(.7)}28%{opacity:1;transform:scaleY(1);filter:brightness(1.5)}42%{opacity:.72;filter:brightness(1.1)}55%{opacity:1;filter:brightness(1.65)}72%,100%{opacity:.42;transform:scaleY(1);filter:brightness(1)}}
+@media(prefers-reduced-motion:reduce){.vc-scene-grain:before,.vc-scene-grain:after{animation:none;opacity:.75;transform:none}}
+
 .vc-reveal-stage:after{content:"";position:absolute;inset:auto 0 0;height:32%;z-index:2;background:linear-gradient(0deg,#08071199,transparent);pointer-events:none}
 .vc-reward-caption{display:grid;gap:3px;margin:0 auto 13px;text-align:center;letter-spacing:2px}
 .vc-reward-caption span{font-size:7px;color:#d8a6d0}.vc-reward-caption strong{font-size:19px;letter-spacing:5px}.vc-reward-caption small{font-size:7px;color:#8b8b98;letter-spacing:2.4px}
