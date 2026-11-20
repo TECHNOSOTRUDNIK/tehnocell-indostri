@@ -391,6 +391,24 @@
 .tc-story-instant-loader small{font-size:7px;letter-spacing:1.5px;color:#888}
 @media(prefers-reduced-motion:reduce){#storyViewerModal .tc-story-viewer,#storyViewerContent>.tc-story-viewer-media{animation:none}.tc-story-instant-loader span{animation:none}}
 </style>
+
+<style id="tc-moments-compact-editor">
+.tc-story-trim{display:none;margin-top:10px;padding:11px;border:1px solid #333;border-radius:12px;background:#111}
+.tc-story-trim.active{display:block}
+.tc-story-trim-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.tc-story-trim-head strong{font-size:11px;letter-spacing:.08em}
+.tc-story-trim-head span{font-size:10px;color:#aaa;font-variant-numeric:tabular-nums}
+.tc-story-trim-range{display:grid;grid-template-columns:34px minmax(0,1fr) 44px;gap:8px;align-items:center;margin:6px 0}
+.tc-story-trim-range label{font-size:9px;color:#999}
+.tc-story-trim-range input{width:100%;accent-color:#fff;height:20px}
+.tc-story-trim-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.tc-story-trim-actions small{font-size:9px;color:#888}
+.tc-story-trim-actions button{border:1px solid #666;border-radius:20px;background:#eee;color:#111;padding:8px 12px;font-size:10px;font-weight:800}
+.tc-story-selected-track{display:flex;align-items:center;gap:9px;margin-top:9px;padding:8px;border:1px solid #333;border-radius:10px}
+.tc-story-selected-track img{width:38px;height:38px;object-fit:cover;border-radius:7px}
+.tc-story-selected-track span{min-width:0;flex:1;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-story-selected-track button{border:0;background:transparent;color:#aaa;font-size:18px}
+</style>
 </head>
 <body>
 <div class="layout">
@@ -467,7 +485,7 @@
 <div class="modal-backdrop" id="personProfileModal"><div class="modal"><div class="modal-head"><h2>Профиль участника</h2><button class="close-btn" data-close="personProfileModal">×</button></div><div id="personProfileContent"><div class="loading">Загрузка…</div></div></div></div>
 <div class="modal-backdrop" id="communityDetailsModal"><div class="modal"><div class="modal-head"><h2 id="communityDetailsTitle">Сообщество</h2><button class="close-btn" data-close="communityDetailsModal">×</button></div><div id="communityDetailsContent"></div></div></div><div class="modal-backdrop" id="communityModal"><div class="modal"><div class="modal-head"><h2>Новое сообщество</h2><button class="close-btn" data-close="communityModal">×</button></div><form id="communityForm"><label class="field-label" for="communityName">Название</label><input class="field" id="communityName" maxlength="48" minlength="3" placeholder="Например, Мир технологий" required><label class="field-label" for="communityCategory">Категория</label><select class="select" id="communityCategory"><option>Общее</option><option>Технологии</option><option>Игры</option><option>Музыка</option><option>Творчество</option><option>Образование</option><option>Общение</option></select><label class="field-label" for="communityDescription">Описание</label><textarea class="textarea" id="communityDescription" maxlength="500" placeholder="Расскажите, о чём это сообщество"></textarea><div class="modal-status" id="communityStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="communityModal">Отмена</button><button class="primary-btn" id="communitySubmit">Создать сообщество</button></div></form></div></div>
 <div class="modal-backdrop" id="postModal"><div class="modal"><div class="modal-head"><h2>Новая публикация</h2><button class="close-btn" data-close="postModal">×</button></div><form id="postForm"><label class="field-label" for="postCommunity">Сообщество</label><select class="select" id="postCommunity" required></select><label class="field-label" for="postBody">Текст публикации</label><textarea class="textarea" id="postBody" maxlength="5000" placeholder="О чём хотите рассказать?"></textarea><label class="field-label" for="postPhotos">Фотографии · до 4 файлов, JPG / PNG / WEBP</label><input id="postPhotos" type="file" accept="image/jpeg,image/png,image/webp" multiple class="field"><div id="postPhotoPreview" class="post-gallery" hidden></div><div class="tiny">Каждая фотография — до 5 МБ. Можно опубликовать и без текста.</div><div class="modal-status" id="postStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="postModal">Отмена</button><button class="primary-btn" id="postSubmit">Опубликовать</button></div></form></div></div>
-<div class="modal-backdrop" id="storyCreateModal"><div class="modal tc-story-modal"><div class="modal-head"><div><div class="tc-story-kicker">TEHNOCELL MOMENTS</div><h2>Новая история</h2></div><button class="close-btn" data-close="storyCreateModal">×</button></div><form id="storyForm"><label class="field-label" for="storyMedia">Фото или видео · до 50 МБ</label><input class="field" id="storyMedia" type="file" accept="image/jpeg,image/png,image/webp,video/mp4" required><div class="tc-story-file-hint" id="storyFileHint">Фото будет показано 7 секунд. Видео — до 60 секунд.</div><label class="field-label" for="storyCaption">Подпись</label><textarea class="textarea" id="storyCaption" maxlength="500" placeholder="Добавьте подпись…" style="min-height:76px"></textarea><label class="field-label" for="storyPrivacy">Кто увидит историю</label><select class="select" id="storyPrivacy"><option value="everyone">Все участники</option><option value="friends">Только друзья</option></select><div class="tc-story-music-head"><div><strong>Музыка из MIVO</strong><small id="storyMusicLabel">Не выбрана</small></div><button type="button" class="secondary-btn" id="openStoryMusic">Выбрать трек</button></div><div class="tc-story-music-picker" id="storyMusicPicker" hidden><input class="field" id="storyMusicSearch" placeholder="Найти композицию MIVO…" autocomplete="off"><div id="storyMusicResults" class="tc-story-music-results"></div></div><div class="tc-story-music-note">Для историй доступны музыкальные фрагменты из каталога MIVO. Полные версии открываются в MIVO, если они доступны.</div><div class="modal-status" id="storyStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="storyCreateModal">Отмена</button><button class="primary-btn" id="storySubmit">Опубликовать историю</button></div></form></div></div><div class="modal-backdrop tc-story-viewer-backdrop" id="storyViewerModal"><div class="tc-story-viewer"><button class="tc-story-viewer-close" id="closeStoryViewer" aria-label="Закрыть">×</button><button class="tc-story-viewer-nav prev" id="storyPrev" aria-label="Предыдущая история">‹</button><div id="storyViewerContent"></div><button class="tc-story-viewer-nav next" id="storyNext" aria-label="Следующая история">›</button></div></div><audio id="storyMusicAudio" preload="none"></audio><div class="modal-backdrop" id="commentsModal"><div class="modal"><div class="modal-head"><h2>Обсуждение</h2><button class="close-btn" data-close="commentsModal">×</button></div><div id="modalComments"></div><form id="modalCommentForm"><label class="field-label" for="modalCommentText">Ваш комментарий</label><textarea class="textarea" id="modalCommentText" maxlength="2000" placeholder="Напишите комментарий…" required style="min-height:80px"></textarea><div class="modal-status" id="commentStatus"></div><div class="modal-actions"><button class="primary-btn" id="commentSubmit">Отправить</button></div></form></div></div>
+<div class="modal-backdrop" id="storyCreateModal"><div class="modal tc-story-modal"><div class="modal-head"><div><div class="tc-story-kicker">TEHNOCELL MOMENTS</div><h2>Новая история</h2></div><button class="close-btn" data-close="storyCreateModal">×</button></div><form id="storyForm"><label class="field-label" for="storyMedia">Фото или видео · до 50 МБ</label><input class="field" id="storyMedia" type="file" accept="image/jpeg,image/png,image/webp,video/mp4" required><div class="tc-story-file-hint" id="storyFileHint">Фото будет показано 7 секунд. Видео — до 60 секунд.</div><label class="field-label" for="storyCaption">Подпись</label><textarea class="textarea" id="storyCaption" maxlength="500" placeholder="Добавьте подпись…" style="min-height:76px"></textarea><label class="field-label" for="storyPrivacy">Кто увидит историю</label><select class="select" id="storyPrivacy"><option value="everyone">Все участники</option><option value="friends">Только друзья</option></select><div class="tc-story-music-head"><div><strong>Музыка из MIVO</strong><small id="storyMusicLabel">Не выбрана</small></div><button type="button" class="secondary-btn" id="openStoryMusic">Выбрать трек</button></div><div class="tc-story-music-picker" id="storyMusicPicker" hidden><input class="field" id="storyMusicSearch" placeholder="Найти композицию MIVO…" autocomplete="off"><div id="storyMusicResults" class="tc-story-music-results"></div></div><div class="tc-story-trim" id="storyTrimPanel"><div class="tc-story-trim-head"><strong>ФРАГМЕНТ КОМПОЗИЦИИ</strong><span id="storyTrimDuration">0:00 — 0:15</span></div><div class="tc-story-trim-range"><label for="storyTrimStart">ОТ</label><input id="storyTrimStart" type="range" min="0" max="15" step="0.1" value="0"><span id="storyTrimStartLabel">0:00</span></div><div class="tc-story-trim-range"><label for="storyTrimEnd">ДО</label><input id="storyTrimEnd" type="range" min="1" max="30" step="0.1" value="15"><span id="storyTrimEndLabel">0:15</span></div><div class="tc-story-trim-actions"><small>Выберите нужный момент песни · до 15 секунд</small><button type="button" id="storyTrimPreview">▶ Прослушать</button></div></div><div class="tc-story-music-note">Выберите композицию и настройте, какой именно 15-секундный отрывок услышат зрители.</div><div class="modal-status" id="storyStatus"></div><div class="modal-actions"><button type="button" class="secondary-btn" data-close="storyCreateModal">Отмена</button><button class="primary-btn" id="storySubmit">Опубликовать историю</button></div></form></div></div><div class="modal-backdrop tc-story-viewer-backdrop" id="storyViewerModal"><div class="tc-story-viewer"><button class="tc-story-viewer-close" id="closeStoryViewer" aria-label="Закрыть">×</button><button class="tc-story-viewer-nav prev" id="storyPrev" aria-label="Предыдущая история">‹</button><div id="storyViewerContent"></div><button class="tc-story-viewer-nav next" id="storyNext" aria-label="Следующая история">›</button></div></div><audio id="storyMusicAudio" preload="none"></audio><div class="modal-backdrop" id="commentsModal"><div class="modal"><div class="modal-head"><h2>Обсуждение</h2><button class="close-btn" data-close="commentsModal">×</button></div><div id="modalComments"></div><form id="modalCommentForm"><label class="field-label" for="modalCommentText">Ваш комментарий</label><textarea class="textarea" id="modalCommentText" maxlength="2000" placeholder="Напишите комментарий…" required style="min-height:80px"></textarea><div class="modal-status" id="commentStatus"></div><div class="modal-actions"><button class="primary-btn" id="commentSubmit">Отправить</button></div></form></div></div>
 <script>
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
@@ -582,6 +600,30 @@ function storyMivoTracks(){
  return out.slice(0,100);
 }
 let storyMusicSearchTimer=null,storyMusicSearchSeq=0;
+function storyTimeLabel(value){const n=Math.max(0,Math.floor(Number(value)||0));return Math.floor(n/60)+":"+String(n%60).padStart(2,"0");}
+let storyTrimPreviewing=false,storyTrimStopHandler=null;
+function updateStoryTrimUI(){
+ const panel=$("storyTrimPanel"),start=$("storyTrimStart"),end=$("storyTrimEnd");if(!panel||!selectedStoryMusic)return;
+ const max=Math.max(15,Number(selectedStoryMusic.duration)||30);
+ start.max=Math.max(0,max-1);end.max=max;
+ let a=Number(start.value)||0,b=Number(end.value)||15;
+ if(b<=a+0.5){b=Math.min(max,a+15);end.value=b;}
+ if(b-a>15){b=a+15;end.value=b;}
+ $("storyTrimStartLabel").textContent=storyTimeLabel(a);$("storyTrimEndLabel").textContent=storyTimeLabel(b);$("storyTrimDuration").textContent=storyTimeLabel(a)+" — "+storyTimeLabel(b);
+ selectedStoryMusic.startSeconds=a;selectedStoryMusic.endSeconds=b;
+}
+function chooseStoryMusic(track){
+ selectedStoryMusic={...track,startSeconds:0,endSeconds:15,duration:30};
+ $("storyMusicLabel").textContent=track.title+" — "+track.artist;$("storyMusicPicker").hidden=true;
+ const panel=$("storyTrimPanel");panel.classList.add("active");
+ $("storyTrimStart").value=0;$("storyTrimEnd").value=15;updateStoryTrimUI();
+ storyAudio.pause();storyAudio.src=track.previewUrl;storyAudio.preload="auto";storyAudio.load();
+ storyAudio.onloadedmetadata=()=>{if(!selectedStoryMusic||selectedStoryMusic.id!==track.id)return;selectedStoryMusic.duration=Math.max(1,storyAudio.duration||30);$("storyTrimStart").max=Math.max(0,selectedStoryMusic.duration-1);$("storyTrimEnd").max=selectedStoryMusic.duration;$("storyTrimEnd").value=Math.min(15,selectedStoryMusic.duration);updateStoryTrimUI();};
+}
+function stopStoryTrimPreview(){storyTrimPreviewing=false;storyAudio.pause();storyAudio.ontimeupdate=null;$("storyTrimPreview").textContent="▶ Прослушать";}
+$("storyTrimStart").addEventListener("input",()=>{if(Number($("storyTrimEnd").value)-Number($("storyTrimStart").value)>15)$("storyTrimEnd").value=Number($("storyTrimStart").value)+15;updateStoryTrimUI();});
+$("storyTrimEnd").addEventListener("input",()=>{if(Number($("storyTrimEnd").value)-Number($("storyTrimStart").value)>15)$("storyTrimStart").value=Number($("storyTrimEnd").value)-15;updateStoryTrimUI();});
+$("storyTrimPreview").addEventListener("click",async()=>{if(!selectedStoryMusic)return;if(storyTrimPreviewing){stopStoryTrimPreview();return;}updateStoryTrimUI();storyAudio.pause();storyAudio.src=selectedStoryMusic.previewUrl;storyAudio.currentTime=selectedStoryMusic.startSeconds;try{await storyAudio.play();storyTrimPreviewing=true;$("storyTrimPreview").textContent="Ⅱ Остановить";storyAudio.ontimeupdate=()=>{if(storyAudio.currentTime>=selectedStoryMusic.endSeconds)stopStoryTrimPreview();};}catch(e){showNotice("Не удалось воспроизвести фрагмент.");}});
 async function searchStoryMusicOnline(term){
  const seq=++storyMusicSearchSeq,box=$("storyMusicResults");
  if(!term||term.length<2)return;
@@ -595,17 +637,17 @@ async function searchStoryMusicOnline(term){
   const merged=[...local,...remote].filter((t,i,a)=>a.findIndex(x=>x.id===t.id||((x.title+"::"+x.artist).toLowerCase()===(t.title+"::"+t.artist).toLowerCase()))===i).slice(0,30);
   if(!merged.length){box.innerHTML='<div class="empty">Не удалось найти композиции с доступным фрагментом. Попробуйте другое название.</div>';return;}
   box.innerHTML=merged.map((t,i)=>'<div class="tc-story-track">'+(t.cover?'<img src="'+escapeHtml(t.cover)+'" alt="">':'<div class="tc-story-ring" style="width:42px;height:42px;flex-basis:42px"><span class="tc-story-avatar">♫</span></div>')+'<div class="tc-story-track-copy"><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+' · фрагмент</small></div><button type="button" data-story-track-online="'+i+'">Выбрать</button></div>').join("");
-  box.querySelectorAll("[data-story-track-online]").forEach(b=>b.addEventListener("click",()=>{selectedStoryMusic=merged[Number(b.dataset.storyTrackOnline)];$("storyMusicLabel").textContent=selectedStoryMusic.title+" — "+selectedStoryMusic.artist;$("storyMusicPicker").hidden=true;}));
+  box.querySelectorAll("[data-story-track-online]").forEach(b=>b.addEventListener("click",()=>{chooseStoryMusic(merged[Number(b.dataset.storyTrackOnline)]);}));
  }catch(e){if(seq===storyMusicSearchSeq)box.innerHTML='<div class="empty">Не удалось выполнить поиск. Проверьте подключение к интернету.</div>';}
 }
 function renderStoryMusicResults(){
  const box=$("storyMusicResults"),term=($("storyMusicSearch").value||"").trim().toLowerCase(),tracks=storyMivoTracks().filter(t=>(t.title+" "+t.artist).toLowerCase().includes(term)).slice(0,35);
  box.innerHTML=tracks.length?tracks.map((t,i)=>'<div class="tc-story-track">'+(t.cover?'<img src="'+escapeHtml(t.cover)+'" alt="">':'<div class="tc-story-ring" style="width:42px;height:42px;flex-basis:42px"><span class="tc-story-avatar">♫</span></div>')+'<div class="tc-story-track-copy"><strong>'+escapeHtml(t.title)+'</strong><small>'+escapeHtml(t.artist)+' · фрагмент MIVO</small></div><button type="button" data-story-track="'+i+'">Выбрать</button></div>').join(""):'<div class="empty">Открой MIVO и дождись загрузки каталога, затем вернись сюда. Сейчас доступных музыкальных фрагментов нет.</div>';
- box.querySelectorAll("[data-story-track]").forEach(b=>b.addEventListener("click",()=>{selectedStoryMusic=tracks[Number(b.dataset.storyTrack)];$("storyMusicLabel").textContent=selectedStoryMusic.title+" — "+selectedStoryMusic.artist;$("storyMusicPicker").hidden=true;}));
+ box.querySelectorAll("[data-story-track]").forEach(b=>b.addEventListener("click",()=>{chooseStoryMusic(tracks[Number(b.dataset.storyTrack)]);}));
 }
 $("openStoryMusic").addEventListener("click",()=>{$("storyMusicPicker").hidden=!$("storyMusicPicker").hidden;if(!$("storyMusicPicker").hidden)renderStoryMusicResults();});
 $("storyMusicSearch").addEventListener("input",()=>{renderStoryMusicResults();clearTimeout(storyMusicSearchTimer);const term=$("storyMusicSearch").value.trim();if(term.length>=2)storyMusicSearchTimer=setTimeout(()=>searchStoryMusicOnline(term),350);});
-$("openStoryModal").addEventListener("click",()=>{if(!currentUser){showNotice("Войдите в TEHNOCELL ID, чтобы публиковать истории.");return;}selectedStoryMusic=null;$("storyMusicLabel").textContent="Не выбрана";$("storyForm").reset();$("storyStatus").textContent="";$("storyMusicPicker").hidden=true;openModal("storyCreateModal");});
+$("openStoryModal").addEventListener("click",()=>{if(!currentUser){showNotice("Войдите в TEHNOCELL ID, чтобы публиковать истории.");return;}selectedStoryMusic=null;stopStoryTrimPreview();$("storyTrimPanel").classList.remove("active");$("storyMusicLabel").textContent="Не выбрана";$("storyForm").reset();$("storyStatus").textContent="";$("storyMusicPicker").hidden=true;openModal("storyCreateModal");});
 $("storyMedia").addEventListener("change",()=>{const f=$("storyMedia").files?.[0];$("storyFileHint").textContent=f?f.name+" · "+(f.size/1024/1024).toFixed(1)+" МБ": "Фото будет показано 7 секунд. Видео — до 60 секунд.";});
 async function loadStories(){
  const strip=$("storiesStrip");if(!strip||!currentUser)return;
@@ -613,6 +655,7 @@ async function loadStories(){
  const {data,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").gt("expires_at",new Date().toISOString()).order("created_at",{ascending:true}).limit(120);
  if(error){strip.innerHTML='<div class="tc-stories-loading">Не удалось загрузить истории: '+escapeHtml(error.message)+'</div>';return;}
  storyRows=data||[];
+ await Promise.all(storyRows.map(async story=>{const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);if(!error&&data?.signedUrl)story.url=data.signedUrl;}));
  const {data:expiredOwn}=await db.from("tc_stories").select("id,media_path").eq("user_id",currentUser.id).lte("expires_at",new Date().toISOString());
  if(expiredOwn?.length){await db.storage.from("tc-stories").remove(expiredOwn.map(x=>x.media_path));await db.from("tc_stories").delete().in("id",expiredOwn.map(x=>x.id));}
  const ids=[...new Set(storyRows.map(x=>x.user_id))];
@@ -635,6 +678,7 @@ async function openStoryGroup(userId){
  $("storyViewerContent").innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ПОДГОТАВЛИВАЕМ ИСТОРИЮ</small></div>';
  openModal("storyViewerModal");
  const results=await Promise.all(group.stories.map(async story=>{
+  if(story.url)return {...story,profile:group.profile};
   const seconds=Math.max(60,Math.floor((new Date(story.expires_at).getTime()-Date.now())/1000));
   const {data,error}=await db.storage.from("tc-stories").createSignedUrl(story.media_path,seconds);
   return !error&&data?.signedUrl?{...story,url:data.signedUrl,profile:group.profile}:null;
@@ -644,15 +688,15 @@ async function openStoryGroup(userId){
  storyViewerItems=items;storyViewerIndex=0;
  // Декодируем фото уже после открытия viewer, чтобы не задерживать реакцию на касание.
  const first=items[0];
- if(first.media_type!=="video"){const img=new Image();img.decoding="async";img.src=first.url;img.decode?.().catch(()=>{});}
+ if(first.media_type!=="video"){const img=new Image();img.decoding="async";img.src=first.url;await img.decode?.().catch(()=>{});}
  const next=items[1];if(next&&next.media_type!=="video"){const img=new Image();img.decoding="async";img.src=next.url;img.decode?.().catch(()=>{});}
- if(first.music?.previewUrl){storyAudio.pause();storyAudio.src=first.music.previewUrl;storyAudio.currentTime=0;storyAudio.play().catch(()=>{});}
+ if(first.music?.previewUrl){storyAudio.pause();storyAudio.src=first.music.previewUrl;storyAudio.currentTime=Number(first.music.startSeconds)||0;storyAudio.play().catch(()=>{});}
  renderStoryViewer();
 }
 function renderStoryViewer(){
  clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
  const s=storyViewerItems[storyViewerIndex];if(!s)return;
- if(s.music?.previewUrl){if(storyAudio.src!==s.music.previewUrl){storyAudio.pause();storyAudio.src=s.music.previewUrl;storyAudio.currentTime=0;}storyAudio.play().catch(()=>{});}else{storyAudio.pause();storyAudio.removeAttribute("src");}
+ if(s.music?.previewUrl){if(storyAudio.src!==s.music.previewUrl){storyAudio.pause();storyAudio.src=s.music.previewUrl;}storyAudio.currentTime=Number(s.music.startSeconds)||0;storyAudio.play().catch(()=>{});storyAudio.ontimeupdate=()=>{if(s.music?.endSeconds&&storyAudio.currentTime>=Number(s.music.endSeconds)){storyAudio.pause();storyAudio.ontimeupdate=null;}};}else{storyAudio.pause();storyAudio.removeAttribute("src");storyAudio.ontimeupdate=null;}
  const root=$("storyViewerContent"),name=s.profile?.display_name||"Участник";
  const media=s.media_type==="video"
   ?'<div class="tc-story-video-shell"><video class="tc-story-viewer-media" src="'+escapeHtml(s.url)+'" autoplay playsinline webkit-playsinline preload="auto"></video><div class="tc-story-video-loading"><span></span><b>ЗАГРУЗКА ВИДЕО</b></div><button type="button" class="tc-story-play-toggle" id="storyPlayToggle" hidden aria-label="Воспроизвести">▶</button></div>'
@@ -678,11 +722,11 @@ function renderStoryViewer(){
   playToggle?.addEventListener("click",()=>video.play().catch(()=>{}));
   video.play().then(reveal).catch(()=>{loading?.classList.add("failed");if(playToggle)playToggle.hidden=false;});
  }else{
-  let elapsed=0;storyProgressTimer=setInterval(()=>{elapsed+=50;if(fill)fill.style.transform="scaleX("+Math.min(1,elapsed/7000)+")";},50);
-  storyAutoTimer=setTimeout(()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},7000);
+  const imageDuration=s.music?.previewUrl?15000:7000;let elapsed=0;storyProgressTimer=setInterval(()=>{elapsed+=50;if(fill)fill.style.transform="scaleX("+Math.min(1,elapsed/imageDuration)+")";},50);
+  storyAutoTimer=setTimeout(()=>{if(storyViewerIndex<storyViewerItems.length-1){storyViewerIndex++;renderStoryViewer();}else $("closeStoryViewer").click();},imageDuration);
  }
  $("storyOpenMivo")?.addEventListener("click",()=>{try{localStorage.setItem("mivo_story_track_to_open_v1",JSON.stringify(s.music));}catch(e){}});
- $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;if(!storyAudio.paused&&storyAudio.src===s.music.previewUrl){storyAudio.pause();$("storyPlayMusic").textContent="▶";return;}storyAudio.src=s.music.previewUrl;try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Браузер не разрешил воспроизведение. Нажмите ▶.");}});
+ $("storyPlayMusic")?.addEventListener("click",async()=>{if(!s.music?.previewUrl)return;if(!storyAudio.paused&&storyAudio.src===s.music.previewUrl){storyAudio.pause();$("storyPlayMusic").textContent="▶";return;}storyAudio.src=s.music.previewUrl;storyAudio.currentTime=Number(s.music.startSeconds)||0;storyAudio.ontimeupdate=()=>{if(s.music?.endSeconds&&storyAudio.currentTime>=Number(s.music.endSeconds)){storyAudio.pause();storyAudio.ontimeupdate=null;}};try{await storyAudio.play();$("storyPlayMusic").textContent="Ⅱ";}catch(e){showNotice("Браузер не разрешил воспроизведение. Нажмите ▶.");}});
  $("deleteCurrentStory")?.addEventListener("click",async e=>{const b=e.currentTarget;if(b.dataset.confirm!=="yes"){b.dataset.confirm="yes";b.textContent="Нажмите ещё раз для удаления";return;}const {error}=await db.from("tc_stories").delete().eq("id",s.id);if(error){showNotice("Не удалось удалить историю: "+error.message);return;}await db.storage.from("tc-stories").remove([s.media_path]);$("closeStoryViewer").click();await loadStories();showNotice("История удалена.");});
 }
 $("storyPrev").addEventListener("click",()=>{if(storyViewerIndex>0){storyViewerIndex--;renderStoryViewer();}});
@@ -701,7 +745,7 @@ $("storyForm").addEventListener("submit",async e=>{
  const ext=(file.name.split(".").pop()||(isImage?"jpg":"mp4")).toLowerCase().replace(/[^a-z0-9]/g,""),path=currentUser.id+"/"+Date.now()+"_"+crypto.randomUUID()+"."+ext;
  const {error:uploadError}=await db.storage.from("tc-stories").upload(path,file,{contentType:file.type,upsert:false});
  if(uploadError){status.textContent="Не удалось загрузить файл: "+uploadError.message;btn.disabled=false;return;}
- const music=selectedStoryMusic?{id:selectedStoryMusic.id,title:selectedStoryMusic.title,artist:selectedStoryMusic.artist,cover:selectedStoryMusic.cover,previewUrl:selectedStoryMusic.previewUrl,trackViewUrl:selectedStoryMusic.trackViewUrl}:null;
+ const music=selectedStoryMusic?{id:selectedStoryMusic.id,title:selectedStoryMusic.title,artist:selectedStoryMusic.artist,cover:selectedStoryMusic.cover,previewUrl:selectedStoryMusic.previewUrl,trackViewUrl:selectedStoryMusic.trackViewUrl,startSeconds:selectedStoryMusic.startSeconds||0,endSeconds:selectedStoryMusic.endSeconds||15}:null;
  const {error:insertError}=await db.from("tc_stories").insert({user_id:currentUser.id,media_path:path,media_type:isVideo?"video":"image",caption:$("storyCaption").value.trim(),privacy:$("storyPrivacy").value,music,expires_at:new Date(Date.now()+24*60*60*1000).toISOString()});
  if(insertError){await db.storage.from("tc-stories").remove([path]);status.textContent="Не удалось опубликовать историю: "+insertError.message;btn.disabled=false;return;}
  btn.disabled=false;closeModal("storyCreateModal");$("storyForm").reset();await loadStories();showNotice("История опубликована на 24 часа.");switchPage("feed");
