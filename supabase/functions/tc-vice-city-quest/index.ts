@@ -11,8 +11,8 @@ const reply = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: cors });
 
 const norm = (v: unknown) => String(v ?? "").trim().toLowerCase()
-  .normalize("NFD").replace(/[\\u0300-\\u036f]/g, "")
-  .replace(/ё/g, "е").replace(/[^\\p{L}\\p{N}]+/gu, " ").trim().replace(/\\s+/g, " ");
+  .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .replace(/ё/g, "е").replace(/[^\p{L}\p{N}]+/gu, " ").trim().replace(/\s+/g, " ");
 const oneOf = (value: unknown, variants: string[]) => variants.includes(norm(value));
 const hasAll = (value: string, groups: string[][]) => groups.every(group => group.some(term => value.includes(norm(term))));
 
