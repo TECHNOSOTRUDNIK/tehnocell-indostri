@@ -708,6 +708,43 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 .tc-banner-preview.has-image{border-style:solid}.tc-banner-actions{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 14px}.tc-secondary{padding:11px 15px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font:inherit}
 .tc-toast{position:fixed;z-index:100001;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));transform:translate(-50%,18px);width:min( calc(100% - 32px),420px);padding:13px 16px;border:1px solid #444;border-radius:13px;background:#111;color:#fff;box-shadow:0 12px 38px #0005;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}.tc-toast.show{opacity:1;transform:translate(-50%,0)}
 .tc-frame-item{display:flex;align-items:center;gap:13px;padding:12px 0;border-top:1px solid var(--border)}.tc-frame-preview{width:54px;height:54px;flex:0 0 54px;border-radius:50%;display:grid;place-items:center;background:var(--background);font-weight:900;font-size:18px}.tc-frame-preview.vc{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 18px #ff55bd55}.tc-frame-copy{min-width:0;flex:1}.tc-frame-copy strong,.tc-frame-copy small{display:block}.tc-frame-copy strong{font-size:12px}.tc-frame-copy small{font-size:10px;color:var(--muted);margin-top:4px}.tc-frame-item button{border:1px solid var(--border);border-radius:9px;padding:9px 11px;background:var(--surface);color:var(--text);font-size:11px} .profile-photo.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 20px #ff55bd66}.tc-preview-avatar.tc-avatar-framed{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 16px #ff55bd66}
+
+/* VICE CITY frame: keep the portrait perfectly circular inside the neon ring */
+.avatar.tc-avatar-framed,
+.profile-photo.tc-avatar-framed,
+.search-person-avatar.tc-avatar-framed,
+.home-online-avatar.tc-avatar-framed,
+.composer-avatar.tc-avatar-framed,
+.tc-preview-avatar.tc-avatar-framed{
+  position:relative!important;
+  isolation:isolate;
+  overflow:visible!important;
+  border-radius:50%!important;
+}
+.avatar.tc-avatar-framed > img,
+.profile-photo.tc-avatar-framed > img,
+.search-person-avatar.tc-avatar-framed > img,
+.home-online-avatar.tc-avatar-framed > img,
+.composer-avatar.tc-avatar-framed > img,
+.tc-preview-avatar.tc-avatar-framed > img{
+  width:100%!important;height:100%!important;
+  position:absolute!important;inset:0!important;
+  object-fit:cover!important;
+  border-radius:50%!important;
+  clip-path:circle(50%)!important;
+  z-index:1!important;
+}
+.avatar.tc-avatar-framed::after,
+.profile-photo.tc-avatar-framed::after,
+.search-person-avatar.tc-avatar-framed::after,
+.home-online-avatar.tc-avatar-framed::after,
+.composer-avatar.tc-avatar-framed::after,
+.tc-preview-avatar.tc-avatar-framed::after{
+  content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:2px solid #ff55bd;outline:2px solid #46e5f2;outline-offset:2px;
+  box-shadow:0 0 17px #ff55bd77;pointer-events:none;z-index:3;
+}
+
 </style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
