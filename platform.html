@@ -739,7 +739,7 @@ document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",
 document.querySelectorAll(".modal-backdrop").forEach(b=>b.addEventListener("click",e=>{if(e.target===b)closeModal(b.id)}));
 
 /* TEHNOCELL MOMENTS — stories and MIVO music */
-let storyRows=[],storyGroups=[],storyViewerItems=[],storyViewerIndex=0,selectedStoryMusic=null,storyAutoTimer=null,storyProgressTimer=null;let storyImageElapsed=0,storyImageStartedAt=0,storyImageDuration=7000,storySharePaused=false;const storyLikedIds=new Set(),storyViewedIds=new Set();
+let storyRows=[],storyGroups=[],storyViewerItems=[],storyViewerIndex=0,selectedStoryMusic=null,storyAutoTimer=null,storyProgressTimer=null;const tcMomentOpenCache=new Map();let storyImageElapsed=0,storyImageStartedAt=0,storyImageDuration=7000,storySharePaused=false;const storyLikedIds=new Set(),storyViewedIds=new Set();
 const storyAudio=$("storyMusicAudio");
 function storyMivoTracks(){
  const out=[],add=t=>{if(!t||!t.title||!t.artist)return;const id=String(t.id||t.title+"::"+t.artist);if(out.some(x=>String(x.id||x.title+"::"+x.artist)===id))return;const preview=t.previewUrl||t.url||"";if(!preview)return;out.push({id,title:t.title,artist:t.artist,cover:t.artworkUrl100||t.cover||"",previewUrl:preview,trackViewUrl:t.trackViewUrl||""});};
@@ -822,31 +822,35 @@ async function loadStories(){
  });
 }
 async function openSharedMoment(storyId){
- const root=$("storyViewerContent");
+ const root=$("storyViewerContent"),cached=tcMomentOpenCache.get(storyId);
  clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
  storyAudio.pause();storyAudio.removeAttribute("src");storyAudio.ontimeupdate=null;
  storyViewerItems=[];storyViewerIndex=0;
- root.innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ЗАГРУЖАЕМ МЕДИА ИСТОРИИ</small></div>';
- document.body.appendChild($("storyViewerModal"));
- openModal("storyViewerModal");
+ root.innerHTML='<div class="tc-story-instant-loader"><span></span><b>TEHNOCELL MOMENTS</b><small>ОТКРЫВАЕМ ИСТОРИЮ</small></div>';
+ document.body.appendChild($("storyViewerModal"));openModal("storyViewerModal");
  try{
+  if(cached&&cached.url&&new Date(cached.expires_at)>new Date()&&cached.cacheUntil>Date.now()){
+   if(cached.ready)await cached.ready;
+   storyViewerItems=[cached];storyViewerIndex=0;renderStoryViewer();return;
+  }
   const {data:row,error}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,privacy,music,created_at,expires_at").eq("id",storyId).gt("expires_at",new Date().toISOString()).maybeSingle();
   if(error)throw new Error("Не удалось получить историю: "+error.message);
   if(!row)throw new Error("История истекла или автор ограничил доступ.");
   const seconds=Math.max(60,Math.floor((new Date(row.expires_at).getTime()-Date.now())/1000));
-  const [{data:file,error:fileError},{data:profile,error:profileError}]=await Promise.all([
+  const [{data:file,error:fileError},{data:profile}]=await Promise.all([
    db.storage.from("tc-stories").createSignedUrl(row.media_path,seconds),
    db.from("profiles").select("id,display_name,avatar_path").eq("id",row.user_id).maybeSingle()
   ]);
   if(fileError||!file?.signedUrl)throw new Error("Не удалось получить фотографию: "+(fileError?.message||"ссылка не создана"));
+  const item={...row,url:file.signedUrl,profile:profile||{id:row.user_id,display_name:"Участник"},cacheUntil:Date.now()+3500000};
   if(row.media_type==="image"){
    const probe=new Image();probe.decoding="async";probe.src=file.signedUrl;
-   if(probe.decode)await probe.decode();
-   else await new Promise((resolve,reject)=>{probe.onload=resolve;probe.onerror=()=>reject(new Error("Фотография не загрузилась"));});
+   item.ready=probe.decode?probe.decode():new Promise((resolve,reject)=>{probe.onload=resolve;probe.onerror=()=>reject(new Error("Фотография не загрузилась"));});
+   await item.ready;
    if(!probe.naturalWidth||!probe.naturalHeight)throw new Error("Фотография загрузилась без изображения.");
   }
-  storyViewerItems=[{...row,url:file.signedUrl,profile:profile||{id:row.user_id,display_name:"Участник"}}];
-  storyViewerIndex=0;renderStoryViewer();
+  tcMomentOpenCache.set(storyId,item);
+  storyViewerItems=[item];storyViewerIndex=0;renderStoryViewer();
  }catch(error){
   storyAudio.pause();storyAudio.removeAttribute("src");
   root.innerHTML='<div class="tc-story-instant-loader"><b>НЕ УДАЛОСЬ ОТКРЫТЬ ИСТОРИЮ</b><small>'+escapeHtml(error.message||"Проверьте подключение и доступ к истории.")+'</small><button type="button" id="tcMomentRetryOpen">ПОВТОРИТЬ</button></div>';
@@ -1334,7 +1338,23 @@ async function loadChatThread(){
  const [rr,qr]=await Promise.all([ids.length?db.from("tc_message_reactions").select("id,message_id,user_id,emoji").in("message_id",ids):Promise.resolve({data:[],error:null}),replyIds.length?db.from("tc_direct_messages").select("id,body,deleted_at").in("id",replyIds):Promise.resolve({data:[],error:null})]);
  const reactions=rr.data||[],replyMap=new Map((qr.data||[]).map(m=>[m.id,m]));const attachmentUrls=new Map();await Promise.all(all.filter(m=>m.attachment_path&&!m.deleted_at).map(async m=>{const {data,error}=await db.storage.from("tc-chat-media").createSignedUrl(m.attachment_path,3600);if(!error&&data?.signedUrl)attachmentUrls.set(m.id,data.signedUrl);}));
  const momentIds=[...new Set(all.map(m=>tcMomentMessageId(m.body)).filter(Boolean))],momentMap=new Map();
- if(momentIds.length){const {data:momentRows}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,created_at,expires_at").in("id",momentIds);const rows=momentRows||[];const userIds=[...new Set(rows.map(x=>x.user_id))];const {data:momentProfiles}=userIds.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",userIds):{data:[]};const profileMap=new Map((momentProfiles||[]).map(x=>[x.id,x]));await Promise.all(rows.map(async x=>{const seconds=Math.max(60,Math.floor((new Date(x.expires_at).getTime()-Date.now())/1000));const {data,error}=await db.storage.from("tc-stories").createSignedUrl(x.media_path,seconds);if(!error&&data?.signedUrl)momentMap.set(x.id,{...x,url:data.signedUrl,profile:profileMap.get(x.user_id)||{display_name:"Участник"}});}));}
+ if(momentIds.length){
+  const {data:momentRows}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,music,created_at,expires_at").in("id",momentIds);
+  const rows=(momentRows||[]).filter(x=>new Date(x.expires_at)>new Date()),userIds=[...new Set(rows.map(x=>x.user_id))];
+  const [profileResult]=await Promise.all([userIds.length?db.from("profiles").select("id,display_name,avatar_path").in("id",userIds):Promise.resolve({data:[]})]);
+  const profileMap=new Map((profileResult.data||[]).map(x=>[x.id,x]));
+  await Promise.all(rows.map(async x=>{
+   const seconds=Math.max(60,Math.floor((new Date(x.expires_at).getTime()-Date.now())/1000));
+   const {data,error}=await db.storage.from("tc-stories").createSignedUrl(x.media_path,seconds);
+   if(error||!data?.signedUrl)return;
+   const item={...x,url:data.signedUrl,profile:profileMap.get(x.user_id)||{id:x.user_id,display_name:"Участник"},cacheUntil:Date.now()+3500000};
+   if(x.media_type==="image"){
+    const img=new Image();img.decoding="async";img.src=data.signedUrl;
+    item.ready=img.decode?img.decode().catch(()=>{}):Promise.resolve();
+   }
+   tcMomentOpenCache.set(x.id,item);momentMap.set(x.id,item);
+  }));
+ }
  let previousDay="";
  box.innerHTML=all.map(m=>{const day=new Date(m.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
  box.scrollTop=box.scrollHeight;
