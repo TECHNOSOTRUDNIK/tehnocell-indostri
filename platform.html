@@ -310,7 +310,7 @@
 .person-profile-head .search-person-avatar.tc-avatar-framed{box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 20px #ff55bd55}
 @media(max-width:520px){.vc-overlay{padding:0;align-items:flex-end}.vc-window{width:100%;max-height:96dvh;border-radius:20px 20px 0 0}.vc-content{padding:25px 20px 30px}.vc-teaser{padding:17px}.vc-teaser:before{right:-10px}}
 
- .avatar.tc-avatar-framed,.home-online-avatar.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd55}.tc-story-ring.tc-avatar-framed{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd66}
+ .avatar.tc-avatar-framed,.home-online-avatar.tc-avatar-framed,.composer-avatar.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd55}.profile-photo.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 18px #ff55bd66}.tc-story-ring.tc-avatar-framed{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd66}
 </style>
 
 <style id="tc-chat-list-layout-fix">
@@ -1128,7 +1128,7 @@ async function boot(){
  }catch(error){showNotice("Не удалось загрузить профиль: "+(error?.message||"ошибка сети"));}
  const name=profile?.display_name||fallbackName,path=profile?.avatar_path||fallbackAvatar;
  $("greetingName").textContent=name;$("sideName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);$("profileName").innerHTML=escapeHtml(name)+verifiedBadge(currentUser.id);
- $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);
+ $("sideAvatar").innerHTML=avatarMarkup(name,path);$("mainAvatar").innerHTML=avatarMarkup(name,path);$("composerAvatar").innerHTML=avatarMarkup(name,path);["sideAvatar","mainAvatar","composerAvatar"].forEach(id=>$(id).classList.toggle("tc-avatar-framed",!!profile?.selected_avatar_frame_id));
  renderHomeSound(profile);
  const jobs=[["сообщества",loadCommunities],["счётчики",loadHomeCounts],["друзья",loadSocial],["истории",loadStories]];
  const results=await Promise.allSettled(jobs.map(async([label,fn])=>{
