@@ -827,7 +827,7 @@ async function loadStories(){
  const {data:expiredOwn}=await db.from("tc_stories").select("id,media_path").eq("user_id",currentUser.id).lte("expires_at",new Date().toISOString());
  if(expiredOwn?.length){await db.storage.from("tc-stories").remove(expiredOwn.map(x=>x.media_path));await db.from("tc_stories").delete().in("id",expiredOwn.map(x=>x.id));}
  const ids=[...new Set(storyRows.map(x=>x.user_id))];
- const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[]};
+ const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path,selected_avatar_frame_id").in("id",ids):{data:[]};
  const pm=new Map((profiles||[]).map(x=>[x.id,x]));
  storyGroups=[...new Set([currentUser.id,...ids])].map(id=>({userId:id,profile:pm.get(id)||{id,display_name:id===currentUser.id?"Вы":"Участник"},stories:storyRows.filter(s=>s.user_id===id)})).filter(g=>g.stories.length||g.userId===currentUser.id);
  // Заранее скачиваем первые фото групп в фоне. Лента не ждёт завершения загрузки; Viewer использует тот же Blob URL.
