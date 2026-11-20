@@ -284,6 +284,14 @@
 .chat-moment-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #ffffff18;color:#aaa;font-size:8px;letter-spacing:.5px}
 .chat-moment-open{color:#fff;font-weight:800;letter-spacing:1px}
 .chat-moment-expired{width:min(100%,280px);padding:13px;border:1px solid #333;border-radius:13px;background:#151515;color:#999;font-size:10px}
+
+/* Compact message treatment for shared Moments */
+.chat-bubble.moment-message{padding:5px;background:transparent!important;border-color:transparent!important;max-width:100%}
+.chat-message-row.mine .chat-bubble.moment-message{background:transparent!important;border-color:transparent!important}
+.chat-moment-card{width:min(100%,250px)}
+.chat-moment-visual{height:122px}
+.chat-moment-info{padding:9px 10px 10px;gap:6px}
+.chat-moment-caption{font-size:9px}
 </style>
 
 <style id="tc-chat-list-layout-fix">
@@ -1285,7 +1293,7 @@ function renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap=new Map
   else if(m.message_type==="audio")attachment='<div class="chat-attachment"><audio controls preload="metadata" src="'+escapeHtml(url)+'"></audio></div>';
   else attachment='<a class="chat-file-link chat-attachment" href="'+escapeHtml(url)+'" target="_blank" rel="noopener" download="'+escapeHtml(m.attachment_name||"Файл")+'">▤ '+escapeHtml(m.attachment_name||"Файл")+'</a>';
  }
- return '<div class="chat-message-row '+(mine?"mine":"")+'" data-message-row="'+m.id+'"><div class="chat-bubble '+(deleted?"deleted":"")+'" data-message-body="'+m.id+'">'+quote+escapeHtml(body)+attachment+'</div><div class="chat-bubble-meta"><time>'+time+'</time>'+(m.edited_at&&!deleted?'<span class="chat-edited-label">изменено</span>':"")+(status?'<span>· '+status+'</span>':"")+'</div>'+(reactionHtml?'<div class="chat-reactions">'+reactionHtml+'</div>':"")+actions+'</div>';
+ return '<div class="chat-message-row '+(mine?"mine":"")+'" data-message-row="'+m.id+'"><div class="chat-bubble '+(deleted?"deleted":"")+(momentId?" moment-message":"")+'" data-message-body="'+m.id+'">'+quote+escapeHtml(body)+attachment+'</div><div class="chat-bubble-meta"><time>'+time+'</time>'+(m.edited_at&&!deleted?'<span class="chat-edited-label">изменено</span>':"")+(status?'<span>· '+status+'</span>':"")+'</div>'+(reactionHtml?'<div class="chat-reactions">'+reactionHtml+'</div>':"")+actions+'</div>';
 }
 async function loadChatThread(){
  if(!activeChatId)return;const other=activeChatId,box=$("chatThread");
