@@ -13,8 +13,25 @@ const reply = (body: Record<string, unknown>, status = 200) =>
 const norm = (v: unknown) => String(v ?? "").trim().toLowerCase()
   .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
   .replace(/ё/g, "е").replace(/[^\p{L}\p{N}]+/gu, " ").trim().replace(/\s+/g, " ");
-const oneOf = (value: unknown, variants: string[]) => variants.includes(norm(value));
-const hasAll = (value: string, groups: string[][]) => groups.every(group => group.some(term => value.includes(norm(term))));
+const oneOf = (value: unknown, variants: string[]) => variants.some(v => norm(v) === norm(value));
+const containsAny = (value: string, variants: string[]) => variants.some(v => value.includes(norm(v)));
+const hasDate = (value: unknown) => {
+  const v = norm(value);
+  return ["2026 11 19","19 11 2026","19 ноября 2026","19 ноября 2026 года","19 ноября","19 ноя","19 11","19 11 26","19 11 2026 года","19 november 2026","november 19 2026","november 19","nov 19 2026","nov 19","11 19 2026","2026 11 19 года"].includes(v);
+};
+const validPlatforms = (value: unknown) => {
+  const v = norm(value);
+  const ps = containsAny(v, ["ps5","playstation 5","play station 5","плейстейшен 5","плейстейшн 5","пс5","пс 5","сонька 5"]);
+  const xbox = containsAny(v, ["xbox","x box","иксбокс","икс бокс"]);
+  const series = containsAny(v, ["series x","series s","series xs","series x s","series one x","series one s","series one x s","серия x","серия s","серия икс","серия эс","икс s","x s","x|s","x s","x и s","x или s"]);
+  return ps && xbox && series;
+};
+const validYandexUrl = (value: unknown) => {
+  try {
+    const u = new URL(String(value ?? "").trim());
+    return u.protocol === "https:" && ["yandex.ru","yandex.com","yandex.by","yandex.kz","yandex.uz"].some(host => u.hostname === host || u.hostname.endsWith("." + host));
+  } catch { return false; }
+};
 
 function officialRockstarUrl(value: unknown) {
   try {
@@ -27,31 +44,19 @@ function officialRockstarUrl(value: unknown) {
 
 function validStage(stage: number, a: Record<string, unknown>) {
   if (stage === 1) {
-    return oneOf(a.jason, ["Jason", "Джейсон", "Джэйсон"])
-      && oneOf(a.lucia, ["Lucia", "Лусия", "Люсия", "Люсиа"])
-      && oneOf(a.state, ["Leonida", "Леонида"])
-      && oneOf(a.city, ["Vice City", "Вайс Сити", "Вайс-Сити", "Вайссити"]);
+    return oneOf(a.jason, ["Jason","Джейсон","Джэйсон","Джейсонн"])
+      && oneOf(a.lucia, ["Lucia","Лусия","Люсия","Люсиа","Люча"])
+      && oneOf(a.state, ["Leonida","Леонида","Леонидия"])
+      && oneOf(a.city, ["Vice City","ViceCity","Вайс Сити","Вайс-Сити","Вайссити","Вайс-Сити","Вайс сити"]);
   }
   if (stage === 2) {
-    const date = norm(a.date);
-    const dateOk = [
-      "2026 11 19", "19 11 2026", "19 ноября 2026", "19 ноября 2026 года",
-      "19 november 2026", "november 19 2026", "nov 19 2026"
-    ].includes(date);
-    const platforms = norm(a.platforms);
-    const psOk = hasAll(platforms, [["ps5", "playstation 5", "плейстейшен 5", "пс5"]]);
-    const xboxOk = hasAll(platforms, [["xbox", "иксбокс"], ["series x", "series s", "серия x", "серия s", "x s", "иксбокс series"]]);
-    return dateOk && psOk && xboxOk && officialRockstarUrl(a.official_link) && (() => {
-      try {
-        const u = new URL(String(a.yandex_link ?? "").trim());
-        return u.protocol === "https:" && /(^|\\.)yandex\\.(ru|com|by|kz|uz)$/i.test(u.hostname);
-      } catch { return false; }
-    })();
+    return hasDate(a.date) && validPlatforms(a.platforms)
+      && officialRockstarUrl(a.official_link) && validYandexUrl(a.yandex_link);
   }
   if (stage === 3) {
-    return oneOf(a.real_city, ["Miami", "Майами"])
-      && oneOf(a.real_state, ["Florida", "Флорида"])
-      && oneOf(a.game_title, ["Grand Theft Auto VI", "Grand Theft Auto 6", "GTA VI", "GTA 6", "ГТА 6", "ГТА 6", "Гранд Тефт Авто 6", "Гранд Тефт Авто 6"]);
+    return oneOf(a.real_city, ["Miami","Майами","Маями"])
+      && oneOf(a.real_state, ["Florida","Флорида","Флорида штат"])
+      && oneOf(a.game_title, ["Grand Theft Auto VI","Grand Theft Auto 6","GTA VI","GTA 6","GTA 6","ГТА 6","ГТА VI","ГТА 6 часть","Гранд Тефт Авто 6","Гранд Тефт Авто VI","Гранд Theft Auto 6"]);
   }
   return false;
 }
