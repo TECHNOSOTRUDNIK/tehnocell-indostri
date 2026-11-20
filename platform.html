@@ -872,11 +872,14 @@ async function openStoryGroup(userId,storyId=null){
  const items=results.filter(Boolean);
  if(!items.length){$("closeStoryViewer").click();showNotice("История уже недоступна.");return;}
  storyViewerItems=items;storyViewerIndex=storyId?Math.max(0,items.findIndex(x=>x.id===storyId)):0;
- // Декодируем фото уже после открытия viewer, чтобы не задерживать реакцию на касание.
- const first=items[0];
- if(first.media_type!=="video"){const img=new Image();img.decoding="async";img.src=first.url;await img.decode?.().catch(()=>{});}
- const next=items[1];if(next&&next.media_type!=="video"){const img=new Image();img.decoding="async";img.src=next.url;img.decode?.().catch(()=>{});}
- if(first.music?.previewUrl){storyAudio.pause();storyAudio.src=first.music.previewUrl;storyAudio.currentTime=Number(first.music.startSeconds)||0;storyAudio.play().catch(()=>{});}
+ // Первое фото уже прогревается при загрузке ленты; не блокируем открытие ожиданием decode().
+ items.forEach(item=>{
+  if(item.url&&new Date(item.expires_at)>new Date()){
+   item.cacheUntil=Date.now()+3500000;
+   if(!item.profile)item.profile=group.profile;
+   tcMomentOpenCache.set(item.id,item);
+  }
+ });
  renderStoryViewer();
 }
 function storyFormatTime(value){return new Date(value).toLocaleString("ru-RU",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});}
