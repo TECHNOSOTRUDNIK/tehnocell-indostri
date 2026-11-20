@@ -263,6 +263,27 @@
 .tc-story-play-toggle[hidden]{display:none}
 @media(max-width:650px){.tc-story-viewer{width:100%;height:100dvh;max-height:100dvh;border-radius:0}.tc-story-viewer-backdrop{padding:0}.tc-story-viewer-gradient{padding-bottom:calc(24px + env(safe-area-inset-bottom))}}
 
+
+/* Dynamic TEHNOCELL Moments cards inside messenger */
+.chat-moment-card{display:block;width:min(100%,280px);padding:0!important;overflow:hidden;border:1px solid #454545!important;border-radius:15px!important;background:#101010!important;color:#fff!important;text-align:left;white-space:normal!important;cursor:pointer;transition:transform .22s ease,border-color .22s ease,background .22s ease}
+.chat-message-row.mine .chat-moment-card{background:#111!important;border-color:#555!important;color:#fff!important}
+.chat-moment-card:active{transform:scale(.985)}
+.chat-moment-visual{height:148px;position:relative;overflow:hidden;background:linear-gradient(135deg,#292929,#080808);display:grid;place-items:center}
+.chat-moment-visual img,.chat-moment-visual video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.chat-moment-card:hover .chat-moment-visual img{transform:scale(1.045)}
+.chat-moment-visual:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,#0009);pointer-events:none}
+.chat-moment-play{position:absolute;z-index:1;width:40px;height:40px;border:1px solid #ffffffa0;border-radius:50%;background:#0808089c;display:grid;place-items:center;font-size:15px;backdrop-filter:blur(8px)}
+.chat-moment-brand{position:absolute;z-index:2;top:10px;left:11px;font-size:8px;font-weight:900;letter-spacing:1.8px;text-shadow:0 1px 8px #000}
+.chat-moment-type{position:absolute;z-index:2;right:10px;top:9px;padding:4px 7px;border:1px solid #ffffff55;border-radius:99px;background:#0008;font-size:7px;letter-spacing:1px}
+.chat-moment-info{padding:11px 12px 12px;display:grid;gap:8px}
+.chat-moment-author{display:flex;align-items:center;gap:7px;min-width:0}
+.chat-moment-avatar{width:25px;height:25px;flex:0 0 25px;border-radius:50%;overflow:hidden;background:#292929;display:grid;place-items:center;font-size:10px;font-weight:800}
+.chat-moment-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-moment-author strong{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-moment-caption{font-size:10px;line-height:1.45;color:#c8c8c8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.chat-moment-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #ffffff18;color:#aaa;font-size:8px;letter-spacing:.5px}
+.chat-moment-open{color:#fff;font-weight:800;letter-spacing:1px}
+.chat-moment-expired{width:min(100%,280px);padding:13px;border:1px solid #333;border-radius:13px;background:#151515;color:#999;font-size:10px}
 </style>
 
 <style id="tc-chat-list-layout-fix">
@@ -877,7 +898,7 @@ $("tcMomentCopyLink").addEventListener("click",async()=>{if(!tcMomentShareStory)
 $("tcMomentSend").addEventListener("click",async()=>{
  if(!tcMomentShareStory)return;const ids=[...$("tcMomentFriends").querySelectorAll(".tc-moment-friend.selected")].map(x=>x.dataset.friend);if(!ids.length)return;
  const b=$("tcMomentSend");b.disabled=true;const story=tcMomentShareStory,url=tcMomentShareUrl(story),caption=story.caption?"\n\n«"+story.caption.slice(0,180)+"»":"";
- const rows=ids.map(id=>({sender_id:currentUser.id,receiver_id:id,body:"Поделился(ась) историей TEHNOCELL MOMENTS"+caption+"\n"+url,message_type:"text"}));
+ const rows=ids.map(id=>({sender_id:currentUser.id,receiver_id:id,body:"[[TC_MOMENT:"+story.id+"]]",message_type:"text"}));
  const {error}=await db.from("tc_direct_messages").insert(rows);b.disabled=false;
  if(error){showNotice("Не удалось отправить историю: "+error.message);updateMomentShareSelection();return;}
  closeMomentShare();showNotice(ids.length===1?"История отправлена другу.":"История отправлена друзьям: "+ids.length);
@@ -1236,7 +1257,7 @@ async function openChat(id,name,avatarPath=null){
  $("chatPresence").textContent=isOnline(id)?"В сети":"Личная переписка";$("chatInput").disabled=false;$("chatSend").disabled=false;$("chatAttachButton").disabled=false;$("chatRecordButton").disabled=false;$("chatReplyPreview").hidden=true;chatReplyingTo=null;
  await loadChatThread();document.querySelectorAll("[data-chat]").forEach(b=>b.classList.toggle("active",b.dataset.chat===id));$("page-messages").classList.add("chat-open");
 }
-function renderChatMessage(m,reactions,replyMap,attachmentUrls){
+function renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap=new Map()){
  const mine=m.sender_id===currentUser.id,deleted=!!m.deleted_at,body=deleted?"Сообщение удалено":m.body,time=new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}),reply=m.reply_to_id?replyMap.get(m.reply_to_id):null;
  const quote=reply?'<div class="chat-reply-quote">'+escapeHtml(reply.deleted_at?"Сообщение удалено":reply.body.slice(0,140))+'</div>':"";
  const status=mine?(m.read_at?"Прочитано":m.delivered_at?"Доставлено":"Отправлено"):"",react=reactions.filter(x=>x.message_id===m.id),grouped=new Map();
@@ -1244,7 +1265,9 @@ function renderChatMessage(m,reactions,replyMap,attachmentUrls){
  const reactionHtml=[...grouped.entries()].map(([emoji,x])=>'<button type="button" class="chat-reaction '+(x.mine?"mine":"")+'" data-reaction="'+m.id+'" data-emoji="'+escapeHtml(emoji)+'">'+escapeHtml(emoji)+' '+x.count+'</button>').join("");
  const actions=deleted?"":'<div class="chat-message-actions"><button type="button" data-reply="'+m.id+'">↩ Ответить</button><button type="button" data-copy="'+m.id+'">▢ Копировать</button><button type="button" data-forward="'+m.id+'">➤ Переслать</button>'+(mine?'<button type="button" data-edit="'+m.id+'">✎ Изменить</button><button type="button" data-delete-message="'+m.id+'">⌫ Удалить</button>':"")+'</div>';
  const url=attachmentUrls.get(m.id);let attachment="";
- if(!deleted&&url){
+ const momentId=!deleted?(m.body||"").match(/^\\[\\[TC_MOMENT:([0-9a-f-]{36})\\]\\]$/i)?.[1]:null;
+ if(momentId){const moment=momentMap.get(momentId);if(moment){const author=moment.profile?.display_name||"Участник",avatar=moment.profile?.avatar_path?db.storage.from("profile-avatars").getPublicUrl(moment.profile.avatar_path).data.publicUrl:null,preview=moment.url||"",captionText=moment.caption||"Момент, которым хочется поделиться.";attachment='<button type="button" class="chat-moment-card" data-open-moment="'+momentId+'"><span class="chat-moment-visual">'+(preview?(moment.media_type==="video"?'<video muted playsinline preload="metadata" src="'+escapeHtml(preview)+'#t=0.1"></video>':'<img loading="lazy" src="'+escapeHtml(preview)+'" alt="">'):'')+'<span class="chat-moment-brand">TEHNOCELL / MOMENTS</span><span class="chat-moment-type">'+(moment.media_type==="video"?"ВИДЕО":"ФОТО")+'</span>'+(moment.media_type==="video"?'<span class="chat-moment-play">▶</span>':'')+'</span><span class="chat-moment-info"><span class="chat-moment-author"><span class="chat-moment-avatar">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':escapeHtml(author.charAt(0).toUpperCase()))+'</span><strong>'+escapeHtml(author)+verifiedBadge(moment.user_id)+'</strong></span><span class="chat-moment-caption">'+escapeHtml(captionText)+'</span><span class="chat-moment-footer"><span>ИСТОРИЯ · 24 ЧАСА</span><span class="chat-moment-open">ОТКРЫТЬ ↗</span></span></span></button>';}else{attachment='<div class="chat-moment-expired">История больше недоступна</div>';}}
+ if(!momentId&&!deleted&&url){
   if(m.message_type==="image")attachment='<a class="chat-attachment" href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+escapeHtml(url)+'" alt="Изображение"></a>';
   else if(m.message_type==="video")attachment='<div class="chat-attachment"><video controls preload="metadata" src="'+escapeHtml(url)+'"></video></div>';
   else if(m.message_type==="audio")attachment='<div class="chat-attachment"><audio controls preload="metadata" src="'+escapeHtml(url)+'"></audio></div>';
@@ -1262,8 +1285,11 @@ async function loadChatThread(){
  const all=[...(sent.data||[]),...(received.data||[])].sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));chatMessagesCache=all;
  const ids=all.map(m=>m.id),replyIds=all.map(m=>m.reply_to_id).filter(Boolean);
  const [rr,qr]=await Promise.all([ids.length?db.from("tc_message_reactions").select("id,message_id,user_id,emoji").in("message_id",ids):Promise.resolve({data:[],error:null}),replyIds.length?db.from("tc_direct_messages").select("id,body,deleted_at").in("id",replyIds):Promise.resolve({data:[],error:null})]);
- const reactions=rr.data||[],replyMap=new Map((qr.data||[]).map(m=>[m.id,m]));const attachmentUrls=new Map();await Promise.all(all.filter(m=>m.attachment_path&&!m.deleted_at).map(async m=>{const {data,error}=await db.storage.from("tc-chat-media").createSignedUrl(m.attachment_path,3600);if(!error&&data?.signedUrl)attachmentUrls.set(m.id,data.signedUrl);}));let previousDay="";
- box.innerHTML=all.map(m=>{const day=new Date(m.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
+ const reactions=rr.data||[],replyMap=new Map((qr.data||[]).map(m=>[m.id,m]));const attachmentUrls=new Map();await Promise.all(all.filter(m=>m.attachment_path&&!m.deleted_at).map(async m=>{const {data,error}=await db.storage.from("tc-chat-media").createSignedUrl(m.attachment_path,3600);if(!error&&data?.signedUrl)attachmentUrls.set(m.id,data.signedUrl);}));
+ const momentIds=[...new Set(all.map(m=>(m.body||"").match(/^\\[\\[TC_MOMENT:([0-9a-f-]{36})\\]\\]$/i)?.[1]).filter(Boolean))],momentMap=new Map();
+ if(momentIds.length){const {data:momentRows}=await db.from("tc_stories").select("id,user_id,media_path,media_type,caption,created_at,expires_at").in("id",momentIds);const rows=momentRows||[];const userIds=[...new Set(rows.map(x=>x.user_id))];const {data:momentProfiles}=userIds.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",userIds):{data:[]};const profileMap=new Map((momentProfiles||[]).map(x=>[x.id,x]));await Promise.all(rows.map(async x=>{const seconds=Math.max(60,Math.floor((new Date(x.expires_at).getTime()-Date.now())/1000));const {data,error}=await db.storage.from("tc-stories").createSignedUrl(x.media_path,seconds);if(!error&&data?.signedUrl)momentMap.set(x.id,{...x,url:data.signedUrl,profile:profileMap.get(x.user_id)||{display_name:"Участник"}});}));}
+ let previousDay="";
+ box.innerHTML=all.map(m=>{const day=new Date(m.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
  box.scrollTop=box.scrollHeight;
  const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at&&!m.deleted_at);
  if(unread.length){const {error}=await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
@@ -1359,6 +1385,7 @@ $("chatHoldMenu").addEventListener("click",async e=>{
 });
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
 $("chatThread").addEventListener("click",async e=>{
+ const momentButton=e.target.closest("[data-open-moment]");if(momentButton){const id=momentButton.dataset.openMoment;let group=storyGroups.find(g=>g.stories.some(x=>x.id===id));if(!group){await loadStories();group=storyGroups.find(g=>g.stories.some(x=>x.id===id));}if(group)await openStoryGroup(group.userId,id);else showNotice("История больше недоступна.");return;}
  const reply=e.target.closest("[data-reply]");if(reply){setChatReply(reply.dataset.reply);return;}
  const react=e.target.closest("[data-react], [data-reaction]");
  if(react){const id=react.dataset.react||react.dataset.reaction,emoji=react.dataset.emoji,existing=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(existing.data){const r=await db.from("tc_message_reactions").delete().eq("id",existing.data.id);if(r.error)showNotice("Не удалось убрать реакцию.");}else{const r=await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});if(r.error)showNotice("Не удалось добавить реакцию.");}await loadChatThread();return;}
