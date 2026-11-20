@@ -471,7 +471,7 @@
 <script>
 const SUPABASE_URL="https://jvagiuiregvlrfooxdao.supabase.co";
 const SUPABASE_KEY="sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);window.__tcPlatformDb=db;window.__tcPlatformBootPhase="client-ready";
 let currentUser=null, communities=[], memberships=new Set(), memberCounts=new Map(), currentCommentPost=null, communityFilter="all", activeChatId=null, activeChatName="", currentPage="home", currentProfileId=null;
 const VERIFIED_TEAM=["1762dd53-22ee-4f97-a9e4-1914e7b7f2d4","b9ae2975-ba4e-402e-b85f-ec8c4b05cf3a","bfac130b-376b-471a-a342-e5839fbefaa0"];
 function isVerified(id){return VERIFIED_TEAM.includes(id);}
@@ -1168,8 +1168,24 @@ async function loadHomeCounts(){
  $("homeNotificationCount").textContent=(notificationCount||0)+" непрочитанных событий.";
  $("unreadBadge").textContent=notificationCount?String(notificationCount):"";
 }
-db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT"||!session)location.replace("login.html?next=platform");});
-boot();
+db.auth.onAuthStateChange((event,session)=>{
+ if(event==="SIGNED_OUT") location.replace("login.html?next=platform");
+});
+window.addEventListener("error",event=>{
+ const message=event.message||"Неизвестная ошибка JavaScript";
+ console.error("TEHNOCELL platform error:",event.error||message);
+ showNotice("Ошибка запуска платформы: "+message);
+});
+window.addEventListener("unhandledrejection",event=>{
+ const reason=event.reason?.message||String(event.reason||"Неизвестная ошибка");
+ console.error("TEHNOCELL platform promise error:",event.reason);
+ showNotice("Ошибка загрузки данных: "+reason);
+});
+boot().then(()=>{window.__tcPlatformBootPhase="boot-finished";}).catch(error=>{
+ window.__tcPlatformBootPhase="boot-failed";
+ console.error("TEHNOCELL boot failed:",error);
+ showNotice("Не удалось запустить платформу: "+(error?.message||"неизвестная ошибка"));
+});
 </script>
 
 <style id="tc-glass-selection-style">
@@ -1242,7 +1258,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 })();
 </script>
 
-<script src="account-access.js?v=3"></script>
+<script src="account-access.js?v=4"></script>
 
 <script>
 (async()=>{
