@@ -47,10 +47,13 @@
   }
 
   async function run() {
-    if (busy || !window.supabase) return;
+    if (busy) return;
+    // Reuse the platform's single Supabase client. A second client sharing
+    // the same persisted refresh token can race token rotation.
+    if (!db) db = window.__tcPlatformDb || null;
+    if (!db) return;
     busy = true;
     try {
-      if (!db) db = window.supabase.createClient(URL, KEY);
       const { data } = await db.auth.getSession();
       const user = data?.session?.user;
       const old = document.getElementById("tcAccountSuspension");
