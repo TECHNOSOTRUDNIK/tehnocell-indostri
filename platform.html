@@ -1836,96 +1836,58 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 
  function playRewardReveal(){
   const canvas=$vc("vcRevealCanvas");if(!canvas)return;
-  const ctx=canvas.getContext("2d",{alpha:true});
-  let w=0,h=0,dpr=1,t=0,raf=0,alive=true;
-  const logo=new Image();
-  logo.crossOrigin="anonymous";
-  logo.src="https://www.rockstargames.com/VI/_next/static/media/vi.0hxa9~pf214xe.png?akim=1&imdensity=1&imwidth=640";
-  let logoReady=false;
+  const ctx=canvas.getContext("2d",{alpha:false});if(!ctx)return;
+  let w=0,h=0,dpr=1,raf=0,started=0;
+  const stage=canvas.parentElement;
+  const logo=new Image();let logoReady=false;
   logo.onload=()=>{logoReady=true;};
-  logo.onerror=()=>console.warn("VICE CITY: не удалось загрузить официальный логотип VI");
-  const resize=()=>{const r=canvas.getBoundingClientRect();w=r.width;h=r.height;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);};
-  resize();const ro=new ResizeObserver(resize);ro.observe(canvas);
+  logo.onerror=()=>console.warn("VICE CITY: Rockstar artwork failed to load; ENNIE animation remains available.");
+  logo.src="https://www.rockstargames.com/VI/_next/static/media/vi.0hxa9~pf214xe.png?akim=1&imdensity=1&imwidth=640";
+  const resize=()=>{
+   const r=(stage||canvas).getBoundingClientRect(),nw=Math.max(0,r.width),nh=Math.max(0,r.height);
+   if(nw<2||nh<2){w=0;h=0;return;}
+   w=nw;h=nh;dpr=Math.min(window.devicePixelRatio||1,2);
+   const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
+   if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh;}
+   ctx.setTransform(dpr,0,0,dpr,0,0);
+  };
+  resize();const ro=new ResizeObserver(resize);ro.observe(stage||canvas);
   const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
-  const ease=v=>{v=Math.max(0,Math.min(1,v));return 1-Math.pow(1-v,3);};
-  function aura(x,y,r,alpha){
-   const g=ctx.createRadialGradient(x,y,r*.25,x,y,r*2.2);
-   g.addColorStop(0,"rgba(255,255,255,.16)");g.addColorStop(.42,"rgba(255,255,255,.055)");g.addColorStop(1,"rgba(255,255,255,0)");
-   ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*2.2,0,Math.PI*2);ctx.fill();ctx.restore();
-  }
-  function orbits(x,y,r,alpha,time){
+  function sphere(x,y,r,alpha,time){
    ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
-   for(let i=0;i<3;i++){ctx.save();ctx.rotate(time*(.12+i*.035)+i*1.05);ctx.beginPath();ctx.ellipse(0,0,r*(1.45+i*.22),r*(.47+i*.1),0,0,Math.PI*2);ctx.strokeStyle="rgba(255,255,255,"+(.12-i*.025)+")";ctx.lineWidth=.8;ctx.stroke();ctx.restore();}
-   ctx.restore();
-  }
-  // Та же жемчужная сфера, что рисуется в основном ENNIE: те же пропорции,
-  // градиенты, блик и мягкая светящаяся кромка. Без частиц и без формы сердца.
-  function drawEnnie(x,y,r,alpha,time){
    const breathing=1+Math.sin(time*1.1)*.018,rr=r*breathing;
-   ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
-   ctx.shadowColor="rgba(255,255,255,.58)";ctx.shadowBlur=35;
-   const sphere=ctx.createRadialGradient(-rr*.32,-rr*.38,rr*.03,rr*.12,rr*.1,rr*1.15);
-   sphere.addColorStop(0,"#fff");sphere.addColorStop(.38,"#f8f8f8");sphere.addColorStop(.7,"#d9d9d9");sphere.addColorStop(1,"#777");
-   ctx.fillStyle=sphere;ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-   const inner=ctx.createRadialGradient(-rr*.25,-rr*.35,0,0,0,rr);
-   inner.addColorStop(0,"rgba(255,255,255,.95)");inner.addColorStop(.4,"rgba(255,255,255,.12)");inner.addColorStop(1,"rgba(0,0,0,.23)");
-   ctx.fillStyle=inner;ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.fill();
-   ctx.beginPath();ctx.ellipse(-rr*.22,-rr*.48,rr*.23,rr*.075,-.45,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.8)";ctx.fill();
-   ctx.strokeStyle="rgba(255,255,255,.7)";ctx.lineWidth=.8;ctx.stroke();
-   ctx.restore();
+   ctx.shadowColor="rgba(255,255,255,.65)";ctx.shadowBlur=26;
+   let g=null;try{g=ctx.createRadialGradient(-rr*.32,-rr*.38,rr*.03,rr*.12,rr*.1,rr*1.15);}catch(e){}
+   if(g){g.addColorStop(0,"#fff");g.addColorStop(.38,"#f8f8f8");g.addColorStop(.7,"#d9d9d9");g.addColorStop(1,"#777");ctx.fillStyle=g;}else ctx.fillStyle="#e8e8e8";
+   ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+   try{const inner=ctx.createRadialGradient(-rr*.25,-rr*.35,0,0,0,rr);inner.addColorStop(0,"rgba(255,255,255,.95)");inner.addColorStop(.4,"rgba(255,255,255,.12)");inner.addColorStop(1,"rgba(0,0,0,.23)");ctx.fillStyle=inner;ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.fill();}catch(e){}
+   ctx.beginPath();ctx.ellipse(-rr*.22,-rr*.48,rr*.23,rr*.075,-.45,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.85)";ctx.fill();
+   ctx.strokeStyle="rgba(255,255,255,.75)";ctx.lineWidth=1;ctx.stroke();ctx.restore();
   }
-  function drawLogo(x,y,maxW,maxH,alpha,white,time){
-   if(!logoReady||!logo.naturalWidth)return;
-   const scale=Math.min(maxW/logo.naturalWidth,maxH/logo.naturalHeight);
-   const dw=logo.naturalWidth*scale,dh=logo.naturalHeight*scale,dx=x-dw/2,dy=y-dh/2;
+  function logoDraw(x,y,maxW,maxH,alpha,white,time){
+   if(!logoReady||!logo.naturalWidth||alpha<=.002)return;
+   const scale=Math.min(maxW/logo.naturalWidth,maxH/logo.naturalHeight),dw=logo.naturalWidth*scale,dh=logo.naturalHeight*scale;
    ctx.save();ctx.globalAlpha=alpha;
-   if(white){
-    const off=document.createElement("canvas");off.width=logo.naturalWidth;off.height=logo.naturalHeight;
-    const o=off.getContext("2d");o.drawImage(logo,0,0);
-    o.globalCompositeOperation="source-in";o.fillStyle="#fff";o.fillRect(0,0,off.width,off.height);
-    ctx.shadowColor="#fff";ctx.shadowBlur=30;ctx.drawImage(off,dx,dy,dw,dh);
-    ctx.shadowBlur=0;ctx.globalAlpha=alpha*.35;ctx.drawImage(off,dx,dy,dw,dh);
-   }else{
-    ctx.shadowColor="#f35abf";ctx.shadowBlur=17*(1-smooth((time-8.2)/1.5));
-    ctx.drawImage(logo,dx,dy,dw,dh);
-   }
+   if(white){ctx.shadowColor="#fff";ctx.shadowBlur=24;ctx.drawImage(logo,x-dw/2,y-dh/2,dw,dh);ctx.globalCompositeOperation="source-atop";ctx.fillStyle="#fff";ctx.fillRect(x-dw/2,y-dh/2,dw,dh);}
+   else{ctx.shadowColor="#f35abf";ctx.shadowBlur=14*(1-smooth((time-8.2)/1.5));ctx.drawImage(logo,x-dw/2,y-dh/2,dw,dh);}
    ctx.restore();
   }
-  const started=performance.now();
   function frame(now){
-   if(!canvas.isConnected){alive=false;ro.disconnect();cancelAnimationFrame(raf);return;}
-   const elapsed=(now-started)/1000;t=elapsed;
-   ctx.clearRect(0,0,w,h);
-   const bg=ctx.createRadialGradient(w*.5,h*.48,0,w*.5,h*.48,Math.max(w,h)*.72);
-   bg.addColorStop(0,"#100d13");bg.addColorStop(.55,"#08070a");bg.addColorStop(1,"#030304");
-   ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
-   const cx=w*.5,cy=h*.47,unit=Math.min(w,h);
-   const morph=ease((elapsed-2.55)/2.35);
-   const whiteFade=smooth((elapsed-6.05)/1.55);
-   const finalIn=smooth((elapsed-6.45)/1.9);
-   const orbAlpha=1-morph;
-   // Сфера сохраняет круглую форму до самого конца перехода — не сжимается в лепёшку.
-   if(orbAlpha>.002){
-    const r=unit*.155*(1-.12*morph);
-    aura(cx,cy,r,orbAlpha);
-    orbits(cx,cy,unit*.155,orbAlpha*(1-smooth((elapsed-2.8)/1.2)),elapsed);
-    drawEnnie(cx,cy,r,orbAlpha,elapsed);
+   if(!canvas.isConnected){ro.disconnect();cancelAnimationFrame(raf);return;}
+   if(!w||!h){resize();raf=requestAnimationFrame(frame);return;}
+   if(!started)started=now;
+   const time=(now-started)/1000;
+   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#050506";ctx.fillRect(0,0,w,h);
+   const cx=w/2,cy=h*.47,unit=Math.min(w,h);
+   const morph=smooth((time-3.35)/2.1),orbAlpha=1-morph;
+   const fade=smooth((time-6.45)/1.5),logoIn=smooth((time-3.9)/1.65);
+   const whiteAlpha=logoIn*(1-fade),colorAlpha=logoIn*smooth((time-6.65)/1.8);
+   if(orbAlpha>.001){
+    const r=unit*.205;
+    try{const glow=ctx.createRadialGradient(cx,cy,1,cx,cy,r*2.25);glow.addColorStop(0,"rgba(255,255,255,.2)");glow.addColorStop(1,"rgba(255,255,255,0)");ctx.globalAlpha=orbAlpha;ctx.fillStyle=glow;ctx.beginPath();ctx.arc(cx,cy,r*2.25,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}catch(e){}
+    sphere(cx,cy,r,orbAlpha,time);
    }
-   // Оригинальная форма Rockstar раскрывается как цельный силуэт, а не текстовый шрифт.
-   // Сначала появляется чистый белый неон, затем цвет исходного PNG.
-   const logoReveal=smooth((elapsed-2.85)/1.7);
-   const whiteAlpha=logoReveal*(1-whiteFade);
-   const colorAlpha=logoReveal*finalIn;
-   const maxW=w*.86,maxH=h*.78;
-   if(whiteAlpha>.002)drawLogo(cx,cy,maxW,maxH,whiteAlpha,true,elapsed);
-   if(colorAlpha>.002)drawLogo(cx,cy,maxW,maxH,colorAlpha,false,elapsed);
-   // Мягкий световой проход подчёркивает смену материала, не добавляя пыли или частиц.
-   if(elapsed>3.1&&elapsed<6.8){
-    const p=smooth((elapsed-3.1)/.5)*(1-smooth((elapsed-6.1)/.7));
-    ctx.save();ctx.globalAlpha=.13*p;const sweep=ctx.createLinearGradient(cx-maxW*.55,cy,cx+maxW*.55,cy);
-    sweep.addColorStop(0,"rgba(255,255,255,0)");sweep.addColorStop(.48,"rgba(255,255,255,.9)");sweep.addColorStop(1,"rgba(255,255,255,0)");
-    ctx.fillStyle=sweep;ctx.fillRect(cx-maxW*.55,cy-maxH*.55,maxW*1.1,maxH*1.1);ctx.restore();
-   }
+   if(logoReady){const maxW=w*.88,maxH=h*.8;logoDraw(cx,cy,maxW,maxH,whiteAlpha,true,time);logoDraw(cx,cy,maxW,maxH,colorAlpha,false,time);}
    raf=requestAnimationFrame(frame);
   }
   raf=requestAnimationFrame(frame);
