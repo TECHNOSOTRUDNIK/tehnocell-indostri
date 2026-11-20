@@ -883,7 +883,6 @@ $("tcMomentSend").addEventListener("click",async()=>{
  closeMomentShare();showNotice(ids.length===1?"История отправлена другу.":"История отправлена друзьям: "+ids.length);
 });
 async function openStoryStats(story){
- clearTimeout(storyAutoTimer);clearInterval(storyProgressTimer);
  const box=$("tcStoryStatsBody");box.innerHTML='<div class="tc-story-stats-empty">Загружаем активность…</div>';
  $("tcStoryStatsModal").classList.add("open");$("tcStoryStatsModal").setAttribute("aria-hidden","false");
  const [likes,views]=await Promise.all([
@@ -897,7 +896,7 @@ async function openStoryStats(story){
  const person=(id,time)=>{const p=map.get(id)||{display_name:"Участник"},avatar=p.avatar_path?db.storage.from("profile-avatars").getPublicUrl(p.avatar_path).data.publicUrl:null;return '<div class="tc-story-person">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':'<span class="tc-story-person-avatar">'+escapeHtml((p.display_name||"У").charAt(0).toUpperCase())+'</span>')+'<span class="tc-story-person-copy"><strong>'+escapeHtml(p.display_name||"Участник")+'</strong><small>'+storyFormatTime(time)+'</small></span></div>';};
  box.innerHTML='<section class="tc-story-stats-section"><h4>♥ ПОНРАВИЛАСЬ · '+likeRows.length+'</h4>'+(likeRows.length?likeRows.map(x=>person(x.user_id,x.created_at)).join(""):'<div class="tc-story-stats-empty">Пока никто не поставил отметку.</div>')+'</section><section class="tc-story-stats-section"><h4>◉ ПОСМОТРЕЛИ · '+viewRows.length+'</h4>'+(viewRows.length?viewRows.map(x=>person(x.viewer_id,x.viewed_at)).join(""):'<div class="tc-story-stats-empty">Пока нет просмотров.</div>')+'</section>';
 }
-$("tcStoryStatsClose").addEventListener("click",()=>{$("tcStoryStatsModal").classList.remove("open");$("tcStoryStatsModal").setAttribute("aria-hidden","true");if($("storyViewerModal").classList.contains("open"))renderStoryViewer();});
+$("tcStoryStatsClose").addEventListener("click",()=>{$("tcStoryStatsModal").classList.remove("open");$("tcStoryStatsModal").setAttribute("aria-hidden","true");});
 $("tcStoryStatsModal").addEventListener("click",e=>{if(e.target.id==="tcStoryStatsModal")$("tcStoryStatsClose").click();});
 function pauseMomentForShare(){
  if(storySharePaused)return;storySharePaused=true;
