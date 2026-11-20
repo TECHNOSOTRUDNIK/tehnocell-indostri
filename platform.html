@@ -348,6 +348,38 @@
   box-shadow:0 0 17px #ff55bd77;pointer-events:none;z-index:3;
 }
 
+
+/* VICE CITY award: cinematic ENNIE reveal */
+.vc-award-cinematic{position:relative;overflow:hidden;padding:14px 18px 20px;background:radial-gradient(ellipse at 50% 18%,#ff5bc31c,transparent 44%),radial-gradient(ellipse at 50% 75%,#42e7f014,transparent 54%),linear-gradient(145deg,#17121b,#090d12 72%);border:1px solid #d66bc755;box-shadow:inset 0 0 35px #ffffff08,0 14px 42px #0008;animation:vc-award-arrive .9s both}
+.vc-award-cinematic:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 20%,#ffffff0b 42%,transparent 62%);transform:translateX(-100%);animation:vc-award-sweep 4.5s 1.1s ease-in-out infinite}
+@keyframes vc-award-arrive{from{opacity:0;transform:translateY(18px) scale(.97);filter:blur(7px)}to{opacity:1;transform:none;filter:none}}
+@keyframes vc-award-sweep{to{transform:translateX(120%)}}
+.vc-reveal-stage{height:205px;position:relative;display:grid;place-items:center;overflow:hidden;margin:-2px auto 4px;isolation:isolate}
+.vc-reveal-stage:before,.vc-reveal-stage:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #ffffff16;border-radius:50%;box-shadow:0 0 32px #ff55bd12,inset 0 0 30px #46e5f20b;animation:vc-orbit 12s linear infinite}
+.vc-reveal-stage:after{width:164px;height:164px;border-style:dashed;border-color:#46e5f233;animation-direction:reverse;animation-duration:18s}
+@keyframes vc-orbit{to{transform:rotate(360deg)}}
+.vc-reveal-orb{position:absolute;width:132px;height:132px;border-radius:50%;z-index:3;background:radial-gradient(circle at 32% 25%,#fff 0 8%,#f8fbff 17%,#dce9f5 31%,#8997aa 48%,#252d3c 69%,#080b11 83%);box-shadow:0 0 15px #fff,0 0 42px #b8eaffaa,0 0 76px #ff5acb55,inset -12px -15px 25px #05070d;animation:vc-orb-breathe 2.4s ease-in-out infinite,vc-orb-morph 5.4s 1.2s forwards}
+.vc-reveal-orb:before,.vc-reveal-orb:after{content:"";position:absolute;inset:9px;border:1px solid #ffffffb0;border-radius:43% 57% 61% 39%/42% 39% 61% 58%;filter:drop-shadow(0 0 7px #fff);animation:vc-orb-layer 4s linear infinite}
+.vc-reveal-orb:after{inset:18px;border-color:#ff9fe0aa;animation-direction:reverse;animation-duration:5s}
+.vc-reveal-orb i,.vc-reveal-orb b,.vc-reveal-orb em{position:absolute;display:block;border-radius:50%;background:#fff;box-shadow:0 0 13px #fff,0 0 24px #77eaff}
+.vc-reveal-orb i{width:5px;height:5px;top:15%;left:21%}.vc-reveal-orb b{width:3px;height:3px;right:14%;top:43%}.vc-reveal-orb em{width:4px;height:4px;left:27%;bottom:15%}
+@keyframes vc-orb-breathe{50%{transform:scale(1.055);box-shadow:0 0 22px #fff,0 0 58px #b8eaffcc,0 0 95px #ff5acb77}}
+@keyframes vc-orb-layer{to{transform:rotate(360deg) scale(1.08)}}
+@keyframes vc-orb-morph{0%,32%{border-radius:50%;opacity:1;transform:scale(1)}48%{border-radius:44% 56% 38% 62%/56% 40% 60% 44%;transform:scaleX(1.16) scaleY(.82)}65%{border-radius:18% 82% 18% 82%/50%;transform:scaleX(.78) scaleY(1.14);opacity:.2}76%,100%{opacity:0;transform:scale(.5)}}
+.vc-reveal-symbol,.vc-reveal-final{position:absolute;z-index:2;font-family:Arial Black,Impact,sans-serif;font-size:100px;font-weight:1000;letter-spacing:-12px;line-height:1;opacity:0;transform:scale(.45) skewX(-9deg)}
+.vc-reveal-symbol{color:#fff;text-shadow:0 0 4px #fff,0 0 15px #fff,0 0 36px #dffaff,0 0 65px #7deaff,0 0 95px #ff5cc8;animation:vc-symbol-neon 5.4s 1.2s both}
+.vc-reveal-final{font-size:108px;letter-spacing:-13px;background:linear-gradient(180deg,#fff 0%,#e7e9ef 35%,#8c96a8 52%,#fff 69%,#747d90 100%);background-clip:text;-webkit-background-clip:text;color:transparent;text-shadow:0 4px 0 #111,0 0 18px #fff5;filter:drop-shadow(0 0 12px #d9f7ff88);animation:vc-final-mark 5.4s 1.2s both}
+@keyframes vc-symbol-neon{0%,48%{opacity:0;transform:scale(.45) skewX(-9deg);filter:blur(12px)}58%,72%{opacity:1;transform:scale(1.08) skewX(0);filter:blur(0)}83%{opacity:.15;transform:scale(1.18);filter:blur(9px)}100%{opacity:0}}
+@keyframes vc-final-mark{0%,68%{opacity:0;transform:scale(.72) skewX(-8deg);filter:blur(9px)}82%{opacity:.3;transform:scale(1.05);filter:blur(2px)}100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 12px #d9f7ff88)}}
+.vc-reward-caption{display:grid;gap:3px;margin:0 auto 13px;text-align:center;letter-spacing:2px}
+.vc-reward-caption span{font-size:7px;color:#d8a6d0}.vc-reward-caption strong{font-size:19px;letter-spacing:5px}.vc-reward-caption small{font-size:7px;color:#8b8b98;letter-spacing:2.4px}
+.vc-frame-demo{width:78px;height:78px;margin:0 auto 13px;border-radius:50%;overflow:visible;position:relative;display:grid;place-items:center;background:#12131a;box-shadow:0 0 0 1.5px #ff55bd,0 0 0 3px #46e5f2,0 0 17px #ff55bd55}
+.vc-frame-demo img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;position:relative;z-index:1}
+.vc-frame-demo .vc-frame-fallback{font-size:16px;color:#aaa;letter-spacing:2px}
+.vc-award h3{font-size:19px;letter-spacing:.4px}.vc-award p{max-width:330px;margin:0 auto;font-size:10px}
+.vc-ennie-reward{background:transparent;border:0;justify-content:center;text-align:center;margin:12px 0 0}
+.vc-ennie-reward p{font-size:11px}
+
 </style>
 
 <style id="tc-chat-list-layout-fix">
@@ -1782,11 +1814,31 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  function render(){
   if(!state){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">VICE CITY</h2><p class="vc-intro-copy">Подключаю расследование…</p>';return;}
   const progress=state.progress||{stage:0};
-  if(progress.completed_at){content.innerHTML='<div class="vc-eyebrow">CASE CLOSED · REWARD UNLOCKED</div><h2 class="vc-title">РАССЛЕДОВАНИЕ<br>ЗАВЕРШЕНО</h2><div class="vc-award"><div class="vc-frame-demo">T</div><h3>ТЫ ЗАСЛУЖИЛ ЭТО.</h3><p>VICE CITY — LIMITED EDITION<br>Эксклюзивная рамка добавлена в твою коллекцию и автоматически применена к профилю.</p></div><div class="vc-ennie"><div class="vc-ennie-orb"></div><div><strong>ENNIE</strong><p>Ну вот! А я говорила, что у тебя получится. Теперь эту историю можно увидеть прямо на твоём профиле.</p></div></div><div class="vc-actions"><button class="vc-primary" id="vcCloseAward">ЗАМЕЧАТЕЛЬНО</button></div>';$vc("vcCloseAward").onclick=close;return;}
+  if(progress.completed_at){
+   content.innerHTML='<div class="vc-eyebrow">CASE CLOSED · REWARD UNLOCKED</div><h2 class="vc-title">ТЫ ДОШЁЛ<br>ДО КОНЦА.</h2><div class="vc-award vc-award-cinematic"><div class="vc-reveal-stage" aria-label="Анимация ENNIE и символа VI"><div class="vc-reveal-orb" id="vcRevealOrb"><i></i><b></b><em></em></div><div class="vc-reveal-symbol" id="vcRevealSymbol">VI</div><div class="vc-reveal-final" id="vcRevealFinal">VI</div></div><div class="vc-reward-caption"><span>TEHNOCELL ORIGINAL EVENT</span><strong>VICE CITY</strong><small>LIMITED EDITION FRAME</small></div><div class="vc-frame-demo" id="vcFrameDemo"><span class="vc-frame-fallback">TC</span></div><h3>ТЫ ЗАСЛУЖИЛ ЭТО.</h3><p>Эксклюзивная рамка добавлена в твою коллекцию и автоматически применена к профилю.</p></div><div class="vc-ennie vc-ennie-reward"><div><strong>ENNIE</strong><p>Ну вот! А я говорила, что у тебя получится. Теперь эта история останется с тобой.</p></div></div><div class="vc-actions"><button class="vc-primary" id="vcCloseAward">ЗАМЕЧАТЕЛЬНО</button></div>';
+   loadRewardAvatar();playRewardReveal();$vc("vcCloseAward").onclick=close;return;
+  }
   if(!state.active||remaining()<=0){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">ВРЕМЯ<br>ВЫШЛО</h2><p class="vc-intro-copy">Расследование VICE CITY завершено. Если ты успел получить рамку, она останется в твоей коллекции навсегда.</p><div class="vc-actions"><button class="vc-secondary" id="vcCloseExpired">ЗАКРЫТЬ</button></div>';$vc("vcCloseExpired").onclick=close;return;}
   if(progress.stage===0){content.innerHTML=intro();$vc("vcStart").onclick=()=>{content.dataset.started="1";renderStage(1);};$vc("vcLater").onclick=close;updateModalTimer();return;}
   renderStage(Math.min(3,Number(progress.stage)+1));
  }
+
+ async function loadRewardAvatar(){
+  try{
+   const db=window.__tcPlatformDb;if(!db)return;
+   const {data:{user}}=await db.auth.getUser();if(!user)return;
+   const {data,error}=await db.from("profiles").select("avatar_path,display_name").eq("id",user.id).maybeSingle();
+   if(error||!data?.avatar_path)return;
+   const url=db.storage.from("profile-avatars").getPublicUrl(data.avatar_path).data.publicUrl;
+   const box=$vc("vcFrameDemo");if(!box)return;
+   box.innerHTML='<img src="'+esc(url)+'" alt="Твой аватар">';
+  }catch(e){console.warn("VICE CITY reward avatar:",e);}
+ }
+ function playRewardReveal(){
+  const stage=$vc("vcRevealStage");if(!stage)return;
+  stage.classList.remove("vc-reveal-replay");void stage.offsetWidth;stage.classList.add("vc-reveal-replay");
+ }
+
  function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
  function renderStage(n,errorText=""){
   const s=stages[n-1],completed=Number(state.progress?.stage||0);
