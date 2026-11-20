@@ -1839,7 +1839,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   const ctx=canvas.getContext("2d",{alpha:true});
   let w=0,h=0,dpr=1,t=0,raf=0;
   const particles=[];
-  for(let i=0;i<125;i++)particles.push({angle:Math.random()*Math.PI*2,radius:75+Math.random()*90,speed:.0015+Math.random()*.004,size:.5+Math.random()*1.7,alpha:.2+Math.random()*.7,phase:Math.random()*Math.PI*2});
+  for(let i=0;i<125;i++)particles.push({angle:Math.random()*Math.PI*2,radius:65+Math.random()*75,speed:.0015+Math.random()*.004,size:.5+Math.random()*1.7,alpha:.2+Math.random()*.7,phase:Math.random()*Math.PI*2});
   const resize=()=>{const r=canvas.getBoundingClientRect();w=r.width;h=r.height;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);};
   resize();const ro=new ResizeObserver(resize);ro.observe(canvas);
   const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
@@ -1855,15 +1855,17 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
    ctx.save();for(const q of particles){q.angle+=q.speed;const pulse=.75+Math.sin(t*2+q.phase)*.25;const px=x+Math.cos(q.angle)*q.radius,py=y+Math.sin(q.angle)*q.radius*.65;if(Math.hypot(px-x,py-y)<r*.92)continue;ctx.globalAlpha=q.alpha*pulse*alpha;ctx.fillStyle="#fff";ctx.beginPath();ctx.arc(px,py,q.size,0,Math.PI*2);ctx.fill();}ctx.restore();
   }
   function drawEnnie(x,y,r,alpha){
-   const breathing=1+Math.sin(t*1.1)*.018,speaking=1+Math.sin(t*5)*.025,rr=r*breathing*speaking;
-   ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
-   ctx.shadowColor="rgba(255,255,255,.58)";ctx.shadowBlur=35;
-   const sphere=ctx.createRadialGradient(-rr*.32,-rr*.38,rr*.03,rr*.12,rr*.1,rr*1.15);
-   sphere.addColorStop(0,"#fff");sphere.addColorStop(.38,"#f8f8f8");sphere.addColorStop(.7,"#d9d9d9");sphere.addColorStop(1,"#777");
-   ctx.fillStyle=sphere;ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-   const inner=ctx.createRadialGradient(-rr*.25,-rr*.35,0,0,0,rr);inner.addColorStop(0,"rgba(255,255,255,.95)");inner.addColorStop(.4,"rgba(255,255,255,.12)");inner.addColorStop(1,"rgba(0,0,0,.23)");ctx.fillStyle=inner;ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.fill();
-   ctx.beginPath();ctx.ellipse(-rr*.22,-rr*.48,rr*.23,rr*.075,-.45,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.8)";ctx.fill();
-   ctx.strokeStyle="rgba(255,255,255,.7)";ctx.lineWidth=.8;ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.stroke();ctx.restore();
+   const breathing=1+Math.sin(t*1.1)*.018,speakingPulse=1+Math.sin(t*5)*.025,rr=r*breathing*speakingPulse;
+   const cycle=(t%12)/12,morphIn=Math.max(0,Math.min(1,(cycle-.18)/.22)),morphOut=Math.max(0,Math.min(1,(cycle-.58)/.22));
+   const smoothHeart=v=>v*v*(3-2*v),heartMix=smoothHeart(morphIn)*(1-smoothHeart(morphOut));
+   const points=[],count=120;
+   for(let i=0;i<count;i++){const ang=i/count*Math.PI*2,cx=Math.cos(ang),cy=Math.sin(ang),hx=16*Math.pow(Math.sin(ang),3)/17,hy=-(13*Math.cos(ang)-5*Math.cos(2*ang)-2*Math.cos(3*ang)-Math.cos(4*ang))/17;points.push({x:cx*(1-heartMix)+hx*heartMix,y:cy*(1-heartMix)+hy*heartMix});}
+   ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.shadowColor="rgba(255,255,255,.58)";ctx.shadowBlur=35;
+   const sphere=ctx.createRadialGradient(-rr*.32,-rr*.38,rr*.03,rr*.12,rr*.1,rr*1.15);sphere.addColorStop(0,"#ffffff");sphere.addColorStop(.38,"#f8f8f8");sphere.addColorStop(.7,"#d9d9d9");sphere.addColorStop(1,"#777777");ctx.fillStyle=sphere;
+   ctx.beginPath();points.forEach((pt,i)=>{const px=pt.x*rr,py=pt.y*rr;if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);});ctx.closePath();ctx.fill();ctx.shadowBlur=0;
+   const inner=ctx.createRadialGradient(-rr*.25,-rr*.35,0,0,0,rr);inner.addColorStop(0,"rgba(255,255,255,.95)");inner.addColorStop(.4,"rgba(255,255,255,.12)");inner.addColorStop(1,"rgba(0,0,0,.23)");ctx.fillStyle=inner;ctx.fill();
+   ctx.save();ctx.globalAlpha=1-heartMix*.35;ctx.beginPath();ctx.ellipse(-rr*.22,-rr*.48,rr*.23,rr*.075,-.45,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.8)";ctx.fill();ctx.restore();
+   ctx.strokeStyle="rgba(255,255,255,.7)";ctx.lineWidth=.8;ctx.stroke();ctx.restore();
   }
   function palm(x,y,scale,lean,alpha){
    ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.scale(scale,scale);ctx.strokeStyle="#160b28";ctx.lineWidth=5;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(0,0);ctx.quadraticCurveTo(lean*.45,-45,lean,-150);ctx.stroke();
