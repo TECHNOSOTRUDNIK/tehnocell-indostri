@@ -810,8 +810,8 @@ async function loadStories(){
  const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[]};
  const pm=new Map((profiles||[]).map(x=>[x.id,x]));
  storyGroups=[...new Set([currentUser.id,...ids])].map(id=>({userId:id,profile:pm.get(id)||{id,display_name:id===currentUser.id?"Вы":"Участник"},stories:storyRows.filter(s=>s.user_id===id)})).filter(g=>g.stories.length||g.userId===currentUser.id);
- // Заранее скачиваем первые фото групп в Blob и декодируем их. Viewer использует тот же Blob URL — повторной загрузки оригинала нет.
- await Promise.all(storyGroups.map(async g=>{
+ // Заранее скачиваем первые фото групп в фоне. Лента не ждёт завершения загрузки; Viewer использует тот же Blob URL.
+ Promise.all(storyGroups.map(async g=>{
   const first=g.stories[0];if(!first?.url)return;
   const item={...first,profile:g.profile,cacheUntil:Date.now()+3500000};
   if(first.media_type==="image"){
