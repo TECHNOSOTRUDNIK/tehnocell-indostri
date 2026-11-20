@@ -292,6 +292,24 @@
 .chat-moment-visual{height:122px}
 .chat-moment-info{padding:9px 10px 10px;gap:6px}
 .chat-moment-caption{font-size:9px}
+
+/* VICE CITY special event */
+.vc-teaser{position:relative;isolation:isolate;overflow:hidden;margin:16px 0 20px;padding:20px 22px;border:1px solid #35313b;border-radius:17px;background:radial-gradient(ellipse at 85% 15%,#ff4fb51b,transparent 38%),radial-gradient(ellipse at 72% 95%,#45dff21b,transparent 42%),linear-gradient(112deg,#111 0%,#17121b 58%,#101a20 100%);cursor:pointer;transition:border-color .2s,transform .2s}
+.vc-teaser:active{transform:scale(.995)}.vc-teaser:hover{border-color:#8b6687}
+.vc-teaser:before{content:"";position:absolute;z-index:-1;right:5%;top:-58px;width:150px;height:150px;border:1px solid #ff58bf55;border-radius:50%;box-shadow:0 0 0 18px #48dff20a,0 0 0 38px #ff58bf0a}
+.vc-teaser:after{content:"";position:absolute;z-index:-1;right:12%;bottom:-46px;width:190px;height:75px;background:repeating-linear-gradient(90deg,transparent 0 12px,#ff6acb55 13px 14px,transparent 15px 24px);transform:perspective(80px) rotateX(35deg);opacity:.65}
+.vc-teaser-row{display:flex;align-items:center;gap:14px}.vc-teaser-copy{min-width:0;flex:1}.vc-kicker{font-size:8px;letter-spacing:2px;color:#c4a7c1;font-weight:850}.vc-teaser h3{font-size:clamp(17px,3vw,22px);letter-spacing:-.5px;margin:7px 0 5px}.vc-teaser p{font-size:11px;color:#b9adb9;line-height:1.55;margin:0}.vc-teaser-go{width:39px;height:39px;flex:0 0 39px;border:1px solid #ffffff55;border-radius:50%;display:grid;place-items:center;background:#ffffff0a;color:#fff;font-size:19px}.vc-teaser-time{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:9px;color:#c9b6c7;letter-spacing:.7px}.vc-teaser-time b{font-variant-numeric:tabular-nums;color:#fff;font-size:10px}.vc-teaser.is-collapsed{padding:10px 14px;margin:10px 0}.vc-teaser.is-collapsed .vc-teaser-copy p,.vc-teaser.is-collapsed .vc-teaser-time,.vc-teaser.is-collapsed .vc-teaser-go{display:none}.vc-teaser.is-collapsed h3{font-size:11px;margin:0}.vc-teaser.is-collapsed .vc-kicker{font-size:7px}
+.vc-overlay{position:fixed;inset:0;z-index:2147482500;display:none;align-items:center;justify-content:center;padding:14px;background:#030305eF;backdrop-filter:blur(10px)}.vc-overlay.open{display:flex}.vc-window{position:relative;width:min(100%,620px);max-height:min(92dvh,850px);overflow:auto;border:1px solid #49404c;border-radius:22px;background:radial-gradient(ellipse at 90% 0%,#ff55bb18,transparent 38%),radial-gradient(ellipse at 0% 100%,#39dff012,transparent 40%),#0d0d10;color:#f5f5f5;box-shadow:0 30px 100px #000c}
+.vc-window:before{content:"";display:block;height:4px;background:linear-gradient(90deg,#ff4fba,#9a65d6,#42e6f4)}
+.vc-close{position:absolute;right:14px;top:15px;width:36px;height:36px;border:1px solid #ffffff35;border-radius:50%;background:#111;color:#fff;font-size:22px;z-index:2}.vc-content{padding:clamp(22px,5vw,38px)}.vc-eyebrow{font-size:8px;letter-spacing:2.4px;color:#d49dc9;font-weight:850}.vc-title{font-size:clamp(31px,8vw,58px);letter-spacing:-2.8px;line-height:.95;margin:13px 0 10px}.vc-subtitle{font-size:11px;color:#aaa;letter-spacing:1.6px}.vc-intro-art{height:142px;position:relative;overflow:hidden;margin:22px 0;border:1px solid #ffffff18;border-radius:15px;background:linear-gradient(180deg,#18111f,#0b121a)}
+.vc-sun{position:absolute;width:90px;height:90px;border-radius:50%;right:18%;top:10px;background:linear-gradient(145deg,#ff65c6,#8b55c8);box-shadow:0 0 45px #ff4cba55}
+.vc-skyline{position:absolute;left:0;right:0;bottom:0;height:75px;background:linear-gradient(90deg,transparent 0 4%,#171c29 4% 12%,transparent 12% 15%,#202034 15% 21%,transparent 21% 24%,#18232b 24% 35%,transparent 35% 38%,#242033 38% 45%,transparent 45% 49%,#182a31 49% 62%,transparent 62% 65%,#241b30 65% 75%,transparent 75% 78%,#17242e 78% 90%,transparent 90%);border-bottom:1px solid #ff60c455}
+.vc-grid{position:absolute;left:-5%;right:-5%;bottom:-54px;height:90px;background:repeating-linear-gradient(90deg,#48dff255 0 1px,transparent 1px 35px),repeating-linear-gradient(0deg,#ff58bf44 0 1px,transparent 1px 20px);transform:perspective(90px) rotateX(42deg)}
+.vc-intro-copy{font-size:13px;line-height:1.75;color:#c8c1ca}.vc-ennie{display:flex;gap:11px;align-items:flex-start;padding:13px;margin:17px 0;border:1px solid #39333e;border-radius:13px;background:#ffffff08}.vc-ennie-orb{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#c4c4d2 30%,#363640 65%,#111);box-shadow:0 0 20px #ffffff22}.vc-ennie strong{font-size:10px;letter-spacing:1px}.vc-ennie p{font-size:11px;line-height:1.6;color:#bbb;margin:5px 0 0}.vc-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.vc-primary,.vc-secondary{min-height:43px;padding:0 16px;border-radius:10px;font-size:10px;font-weight:850;letter-spacing:.7px}.vc-primary{border:1px solid #fff;background:#f5f5f5;color:#111}.vc-secondary{border:1px solid #ffffff35;background:#141418;color:#eee}.vc-progress{display:flex;gap:6px;margin:20px 0}.vc-progress span{height:4px;flex:1;border-radius:9px;background:#333}.vc-progress span.done{background:linear-gradient(90deg,#ff58bd,#49dff0)}.vc-stage-title{font-size:22px;letter-spacing:-.7px;margin:5px 0}.vc-stage-desc{font-size:11px;line-height:1.65;color:#aaa}.vc-source-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.vc-source{display:inline-flex;align-items:center;gap:7px;padding:9px 11px;border:1px solid #ffffff25;border-radius:9px;color:#eee;text-decoration:none;font-size:10px;background:#ffffff08}.vc-form{display:grid;gap:10px;margin-top:15px}.vc-field{display:grid;gap:5px}.vc-field label{font-size:9px;color:#aaa}.vc-field input{width:100%;min-height:43px;padding:10px 12px;border:1px solid #3a3740;border-radius:9px;background:#141419;color:#fff;font:inherit;font-size:12px;outline:none}.vc-field input:focus{border-color:#d56bb4}.vc-hint{font-size:9px;color:#888;line-height:1.5}.vc-error{min-height:18px;color:#ff9bcf;font-size:10px;line-height:1.5}.vc-countdown{font-size:11px;color:#e2c5df;font-variant-numeric:tabular-nums}.vc-award{padding:20px;border:1px solid #a45a9a66;border-radius:15px;background:linear-gradient(140deg,#ff4fb51a,#42dff20e);text-align:center}.vc-frame-demo{position:relative;width:92px;height:92px;margin:0 auto 16px;border-radius:50%;background:linear-gradient(145deg,#292929,#111);display:grid;place-items:center;font-size:34px;font-weight:900;box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 28px #ff55bd55}.vc-award h3{font-size:22px;margin:0 0 7px}.vc-award p{font-size:11px;line-height:1.6;color:#c8c0ca}
+.search-person-avatar.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd55}
+.person-profile-head .search-person-avatar.tc-avatar-framed{box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 20px #ff55bd55}
+@media(max-width:520px){.vc-overlay{padding:0;align-items:flex-end}.vc-window{width:100%;max-height:96dvh;border-radius:20px 20px 0 0}.vc-content{padding:25px 20px 30px}.vc-teaser{padding:17px}.vc-teaser:before{right:-10px}}
+
 </style>
 
 <style id="tc-chat-list-layout-fix">
@@ -581,6 +599,7 @@ button,a,[role="button"],input,select,textarea,label,[tabindex]{-webkit-tap-high
 <section class="page active" id="page-home">
 <div class="home-heading"><div><div class="eyebrow">TEHNOCELL / PERSONAL SPACE</div><h1 class="page-title">Добро пожаловать, <span id="greetingName">...</span></h1><p class="page-subtitle">Ваше пространство для общения, музыки, идей и сервисов компании.</p></div><div class="home-live-pill"><i></i><span>ВЫ В СЕТИ</span></div></div>
 <section class="home-hero"><div class="home-hero-copy"><div class="welcome-tag">TEHNOCELL PLATFORM · ВАШ ЦИФРОВОЙ ЦЕНТР</div><h2>Всё начинается<br>с вашего пространства.</h2><p>Люди, публикации, музыка и продукты TEHNOCELL — собраны в одном месте.</p><div class="home-hero-actions"><a href="#feed" data-page="feed" class="primary-btn">Открыть ленту <b>↗</b></a><a href="account.html" id="homeAccountLink" class="secondary-btn">Мой профиль</a></div></div><div class="home-hero-art" aria-hidden="true"><div class="home-orbit orbit-one"></div><div class="home-orbit orbit-two"></div><div class="home-monogram">T<span>.</span></div><div class="home-art-caption">INNOVATION<br>IN MOTION</div></div></section>
+<section class="vc-teaser" id="vcTeaser" role="button" tabindex="0" aria-label="Открыть специальное приключение"><div class="vc-teaser-row"><div class="vc-teaser-copy"><div class="vc-kicker">TEHNOCELL / SPECIAL EVENT</div><h3>У тебя есть одно незавершённое приключение.</h3><p>Город не спит. И кое-что ждёт именно тебя.</p><div class="vc-teaser-time">ДО ЗАКРЫТИЯ РАССЛЕДОВАНИЯ <b id="vcTeaserTimer">ЗАГРУЗКА…</b></div></div><div class="vc-teaser-go" aria-hidden="true">↗</div></div></section>
 <div class="home-metrics"><a class="home-metric" href="#communities" data-page="communities"><span>МОИ СООБЩЕСТВА</span><strong id="homeCommunityCount">—</strong><small>Открыть сообщества ↗</small></a><a class="home-metric" href="#notifications" data-page="notifications"><span>УВЕДОМЛЕНИЯ</span><strong id="homeNotificationCount">—</strong><small>Непрочитанные события ↗</small></a><div class="home-metric"><span>ВАШ СТАТУС</span><strong class="home-status-value"><i></i> Онлайн</strong><small>Статус обновляется автоматически</small></div></div>
 <div class="home-main-grid"><div class="home-main-column">
 <section class="home-sound-card" id="homeSoundCard"><div class="home-card-kicker">TEHNOCELL IDENTITY SOUND</div><div class="home-sound-empty"><div class="home-sound-note">♫</div><div><strong>Ваша музыка — часть профиля</strong><p>Добавьте композицию в TEHNOCELL ID, и она появится здесь.</p><a href="account.html" class="panel-link">Настроить музыку ↗</a></div></div></section>
@@ -660,16 +679,17 @@ document.addEventListener("click",e=>{const profileButton=e.target.closest("[dat
 
 let globalSearchTimer=null, globalSearchToken=0;
 function searchText(value){return String(value||"").replace(/[\\%_]/g," ").replace(/[(),]/g," ").trim().slice(0,70);}
-function personAvatar(person){return '<div class="search-person-avatar">'+avatarMarkup(person.display_name||person.username||"Пользователь",person.avatar_path)+'</div>';}
-function renderPerson(person){const name=person.display_name||"Пользователь";const handle=person.username?"@"+person.username:"Участник TEHNOCELL";return '<button type="button" class="search-person" data-profile="'+escapeHtml(person.id)+'">'+personAvatar(person)+'<span class="search-person-copy"><span class="search-person-name">'+escapeHtml(name)+verifiedBadge(person.id)+onlineBadge(person.id)+'</span><span class="search-person-handle">'+escapeHtml(handle)+'</span>'+(person.bio?'<span class="search-person-bio">'+escapeHtml(person.bio.slice(0,90))+'</span>':'')+'</span><span class="search-person-arrow">›</span></button>';}
+function safeUsername(value){const v=String(value??"").trim();return v&&v.toLowerCase()!=="null"&&v.toLowerCase()!=="undefined"?v:"";}
+function personAvatar(person){return '<div class="search-person-avatar'+(person.selected_avatar_frame_id?' tc-avatar-framed':'')+'">'+avatarMarkup(person.display_name||safeUsername(person.username)||"Пользователь",person.avatar_path)+'</div>';}
+function renderPerson(person){const name=person.display_name||"Пользователь";const username=safeUsername(person.username);const handle=username?"@"+username:"Участник TEHNOCELL";return '<button type="button" class="search-person" data-profile="'+escapeHtml(person.id)+'">'+personAvatar(person)+'<span class="search-person-copy"><span class="search-person-name">'+escapeHtml(name)+verifiedBadge(person.id)+onlineBadge(person.id)+'</span><span class="search-person-handle">'+escapeHtml(handle)+'</span>'+(person.bio?'<span class="search-person-bio">'+escapeHtml(person.bio.slice(0,90))+'</span>':'')+'</span><span class="search-person-arrow">›</span></button>';}
 function showSearchMessage(message){$("globalSearchResults").hidden=false;$("globalSearchResults").innerHTML='<div class="search-empty">'+escapeHtml(message)+'</div>';}
 async function loadPeopleSearch(){
  const input=$("globalSearch"),box=$("globalSearchResults"),term=searchText(input.value),token=++globalSearchToken;
  box.hidden=false;showSearchMessage(term.length<2?"Люди TEHNOCELL появятся здесь. Введите имя или логин.":"Ищем людей…");
- let query=db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,created_at").order("created_at",{ascending:false}).limit(12);
+ let query=db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,selected_avatar_frame_id,created_at").order("created_at",{ascending:false}).limit(12);
  if(term.length>=2){
   const pattern="%"+term+"%";
-  query=db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,created_at").or("display_name.ilike."+pattern+",username.ilike."+pattern).order("created_at",{ascending:false}).limit(12);
+  query=db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,selected_avatar_frame_id,created_at").or("display_name.ilike."+pattern+",username.ilike."+pattern).order("created_at",{ascending:false}).limit(12);
  }
  const {data,error}=await query;
  if(token!==globalSearchToken)return;
@@ -687,7 +707,7 @@ async function openPersonProfile(id){
  $("globalSearchResults").hidden=true;
  $("publicProfileContent").innerHTML='<div class="loading">Открываем профиль…</div>';
  switchPage("person");
- const {data,error}=await db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,created_at").eq("id",id).maybeSingle();
+ const {data,error}=await db.from("profiles").select("id,username,display_name,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,selected_avatar_frame_id,created_at").eq("id",id).maybeSingle();
  if(error||!data){$("publicProfileContent").innerHTML='<div class="empty">Не удалось открыть профиль.</div>';return;}
  const name=data.display_name||"Пользователь";
  let action="";
@@ -707,7 +727,7 @@ async function openPersonProfile(id){
  $("publicProfileContent").dataset.theme=data.profile_theme||"mono";
  const bannerUrl=data.profile_banner_path?db.storage.from("profile-avatars").getPublicUrl(data.profile_banner_path).data.publicUrl:null;
   const bannerMarkup=bannerUrl?'<div class="tc-public-banner"><img src="'+escapeHtml(bannerUrl)+'" alt="Баннер профиля" loading="eager" referrerpolicy="no-referrer"></div>':"";
-  $("publicProfileContent").innerHTML=bannerMarkup+'<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+verifiedBadge(data.id)+onlineBadge(data.id)+'</h2><div>'+(data.username?"@"+escapeHtml(data.username):"Участник TEHNOCELL")+'</div></div></div>'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div><audio class="tc-sound-audio" controls preload="metadata" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_path).data.publicUrl)+'">Ваш браузер не поддерживает аудио.</audio><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div>';
+  $("publicProfileContent").innerHTML=bannerMarkup+'<div class="person-profile-head">'+personAvatar(data)+'<div class="person-profile-names"><h2>'+escapeHtml(name)+verifiedBadge(data.id)+onlineBadge(data.id)+'</h2><div>'+(username?"@"+escapeHtml(username):"Участник TEHNOCELL")+'</div></div></div>'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div><audio class="tc-sound-audio" controls preload="metadata" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_path).data.publicUrl)+'">Ваш браузер не поддерживает аудио.</audio><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div>';
  const publicBanner=$("publicProfileContent").querySelector(".tc-public-banner img");
   if(publicBanner)publicBanner.addEventListener("error",()=>publicBanner.parentElement.classList.add("is-unavailable"),{once:true});
   $("publicProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
@@ -1668,4 +1688,87 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  }catch(error){console.warn('Platform offline cache cleanup:',error);}
 })();
 </script>
-</body></html>
+
+<div class="vc-overlay" id="vcOverlay" role="dialog" aria-modal="true" aria-label="VICE CITY — специальное событие">
+ <section class="vc-window"><button class="vc-close" id="vcClose" type="button" aria-label="Закрыть">×</button><div class="vc-content" id="vcContent"></div></section>
+</div>
+
+<script>
+(function(){
+ const $vc=id=>document.getElementById(id);
+ const overlay=$vc("vcOverlay"),content=$vc("vcContent"),teaser=$vc("vcTeaser");
+ if(!overlay||!teaser)return;
+ let state=null,timer=null,booted=false;
+ const endpoint="tc-vice-city-quest";
+ const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ function open(){overlay.classList.add("open");document.body.style.overflow="hidden";render();}
+ function close(){overlay.classList.remove("open");document.body.style.overflow="";if(state)renderTeaser();}
+ $vc("vcClose").addEventListener("click",close);
+ overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
+ teaser.addEventListener("click",open);teaser.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});
+ async function call(body){
+  const {data,error}=await window.__tcPlatformDb.functions.invoke(endpoint,{body});
+  if(error)throw new Error(error.message||"Не удалось связаться с сервером события.");
+  if(data?.error)throw new Error(data.error);
+  return data;
+ }
+ async function load(){
+  if(!window.__tcPlatformDb||!window.__tcPlatformDb.auth)return false;
+  try{const {data}=await window.__tcPlatformDb.auth.getSession();if(!data?.session)return false;
+   state=await call({action:"status"});renderTeaser();if(overlay.classList.contains("open"))render();return true;
+  }catch(e){console.warn("VICE CITY event:",e);return false;}
+ }
+ function remaining(){if(!state?.event?.ends_at)return 0;return Math.max(0,new Date(state.event.ends_at).getTime()-Date.now());}
+ function format(ms){const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),sec=s%60;return d+"д "+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");}
+ function renderTeaser(){
+  if(!state)return;
+  const done=!!state.progress?.completed_at,active=state.active&&remaining()>0;
+  $vc("vcTeaserTimer").textContent=active?format(remaining()):done?"ПРОЙДЕНО":"СОБЫТИЕ ЗАВЕРШЕНО";
+  teaser.classList.toggle("is-collapsed",localStorage.getItem("tc_vc_teaser_collapsed_v1")==="1");
+  teaser.querySelector("h3").textContent=done?"Ты раскрыл тайну Vice City.": "У тебя есть одно незавершённое приключение.";
+  teaser.querySelector("p").textContent=done?"Твоя награда уже ждёт в коллекции рамок.":"Город не спит. И кое-что ждёт именно тебя.";
+  teaser.querySelector(".vc-kicker").textContent=done?"TEHNOCELL / НАГРАДА ПОЛУЧЕНА":"TEHNOCELL / SPECIAL EVENT";
+ }
+ function intro(){
+  return '<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT · LIMITED TIME</div><h1 class="vc-title">VICE<br>CITY</h1><div class="vc-subtitle">THE CITY NEVER TELLS THE WHOLE STORY</div><div class="vc-intro-art"><div class="vc-sun"></div><div class="vc-skyline"></div><div class="vc-grid"></div></div><p class="vc-intro-copy">Есть города, которые невозможно забыть. Неон, пальмы, ночные улицы и история, которую нужно собрать по частям. Тебе предстоит пройти три этапа расследования, изучить открытые источники и доказать, что ты внимателен к деталям.</p><div class="vc-ennie"><div class="vc-ennie-orb"></div><div><strong>ENNIE · QUEST GUIDE</strong><p>Я буду рядом на каждом этапе. Подскажу направление, объясню задание и проверю результат. Но ответы придётся найти тебе самому. Готов?</p></div></div><div class="vc-countdown">ДО ЗАКРЫТИЯ: <b id="vcModalTimer">—</b></div><div class="vc-actions"><button class="vc-primary" id="vcStart">НАЧАТЬ ПРИКЛЮЧЕНИЕ ↗</button><button class="vc-secondary" id="vcLater">ПОЗЖЕ</button></div>';
+ }
+ const stages=[
+  {title:"ROCKSTAR DISCOVERY",desc:"Открой официальную страницу Grand Theft Auto VI. Найди имена двух главных героев, название вымышленного штата и главный город игры.",fields:[["jason","Имя первого главного героя","Jason"],["lucia","Имя второй главной героини","Lucia"],["state","Название вымышленного штата","Leonida"],["city","Главный город игры","Vice City"]],links:[["Официальная страница Rockstar","https://www.rockstargames.com/VI"]],hint:"Подсказка Энни: имена героев указаны в официальном описании игры. Не торопись — проверь написание."},
+  {title:"YANDEX INVESTIGATION",desc:"Теперь найди официальную новость Rockstar о запуске игры. Используй Яндекс для поиска, затем сверь информацию с сайтом Rockstar.",fields:[["date","Дата выхода (например, 19 ноября 2026)","19 ноября 2026"],["platforms","Две платформы запуска","PS5, Xbox Series X|S"],["yandex_link","Ссылка на страницу поиска Яндекса","https://yandex.ru/search/?text=GTA+VI+Rockstar+release"],["official_link","Ссылка на официальную новость Rockstar","https://www.rockstargames.com/newswire/"]],links:[["Найти через Яндекс","https://yandex.ru/search/?text=Rockstar+Games+GTA+VI+launch+date"],["Rockstar Newswire","https://www.rockstargames.com/newswire"]],hint:"Подсказка Энни: в официальной новости указаны дата запуска и консоли. Ссылка должна вести на Яндекс и на домен rockstargames.com."},
+  {title:"VICE CITY DETECTIVE",desc:"Финальная часть. Разберись, какие реальные места вдохновили вымышленную карту и как называется сама игра.",fields:[["real_city","Реальный город — вдохновение для Vice City","Miami"],["real_state","Штат, который вдохновил Leonida","Florida"],["game_title","Полное название игры","Grand Theft Auto VI"]],links:[["Поиск в Яндексе","https://yandex.ru/search/?text=Vice+City+inspired+by+Miami+Leonida+Florida"]],hint:"Подсказка Энни: ищи не только название города, но и реальный штат, на основе которого создана Leonida."}
+ ];
+ function render(){
+  if(!state){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">VICE CITY</h2><p class="vc-intro-copy">Подключаю расследование…</p>';return;}
+  const progress=state.progress||{stage:0};
+  if(progress.completed_at){content.innerHTML='<div class="vc-eyebrow">CASE CLOSED · REWARD UNLOCKED</div><h2 class="vc-title">РАССЛЕДОВАНИЕ<br>ЗАВЕРШЕНО</h2><div class="vc-award"><div class="vc-frame-demo">T</div><h3>ТЫ ЗАСЛУЖИЛ ЭТО.</h3><p>VICE CITY — LIMITED EDITION<br>Эксклюзивная рамка добавлена в твою коллекцию и автоматически применена к профилю.</p></div><div class="vc-ennie"><div class="vc-ennie-orb"></div><div><strong>ENNIE</strong><p>Ну вот! А я говорила, что у тебя получится. Теперь эту историю можно увидеть прямо на твоём профиле.</p></div></div><div class="vc-actions"><button class="vc-primary" id="vcCloseAward">ЗАМЕЧАТЕЛЬНО</button></div>';$vc("vcCloseAward").onclick=close;return;}
+  if(!state.active||remaining()<=0){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">ВРЕМЯ<br>ВЫШЛО</h2><p class="vc-intro-copy">Расследование VICE CITY завершено. Если ты успел получить рамку, она останется в твоей коллекции навсегда.</p><div class="vc-actions"><button class="vc-secondary" id="vcCloseExpired">ЗАКРЫТЬ</button></div>';$vc("vcCloseExpired").onclick=close;return;}
+  if(progress.stage===0){content.innerHTML=intro();$vc("vcStart").onclick=()=>{content.dataset.started="1";renderStage(1);};$vc("vcLater").onclick=close;updateModalTimer();return;}
+  renderStage(Math.min(3,Number(progress.stage)+1));
+ }
+ function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
+ function renderStage(n,errorText=""){
+  const s=stages[n-1],completed=Number(state.progress?.stage||0);
+  content.innerHTML='<div class="vc-eyebrow">VICE CITY / INVESTIGATION '+String(n).padStart(2,"0")+' OF 03</div><h2 class="vc-stage-title">'+s.title+'</h2><p class="vc-stage-desc">'+s.desc+'</p><div class="vc-progress">'+[1,2,3].map(i=>'<span class="'+(i<=completed?'done':'')+'"></span>').join("")+'</div><div class="vc-source-row">'+s.links.map(x=>'<a class="vc-source" href="'+esc(x[1])+'" target="_blank" rel="noopener noreferrer">'+esc(x[0])+' ↗</a>').join("")+'</div><form class="vc-form" id="vcForm">'+s.fields.map(f=>'<div class="vc-field"><label for="vc_'+f[0]+'">'+esc(f[1])+'</label><input id="vc_'+f[0]+'" name="'+f[0]+'" '+(f[0].includes("link")?'type="url"':'type="text"')+' placeholder="'+esc(f[2])+'" autocomplete="off" required></div>').join("")+'<div class="vc-hint">ENNIE: '+esc(s.hint)+'</div><div class="vc-error" id="vcError">'+esc(errorText)+'</div><div class="vc-actions"><button class="vc-primary" type="submit">ПРОВЕРИТЬ ОТВЕТЫ ↗</button><button class="vc-secondary" type="button" id="vcCloseStage">ЗАКРЫТЬ</button></div></form>';
+  $vc("vcCloseStage").onclick=close;
+  $vc("vcForm").addEventListener("submit",async e=>{
+   e.preventDefault();const btn=e.submitter;btn.disabled=true;btn.textContent="ПРОВЕРЯЮ…";
+   const answers=Object.fromEntries(new FormData(e.currentTarget).entries());
+   try{
+    const result=await call({action:"submit",stage:n,answers});
+    state.progress={...(state.progress||{}),stage:result.stage,completed_at:result.completed?new Date().toISOString():null,awarded_at:result.awarded?new Date().toISOString():null};
+    if(result.completed){state.progress.completed_at=new Date().toISOString();state.progress.awarded_at=new Date().toISOString();renderTeaser();render();}
+    else{const refreshed=await call({action:"status"});state=refreshed;renderStage(Math.min(3,Number(state.progress.stage)+1));}
+   }catch(err){const box=$vc("vcError");if(box)box.textContent=err.message||"Не удалось проверить ответы.";btn.disabled=false;btn.textContent="ПРОВЕРИТЬ ОТВЕТЫ ↗";}
+  });
+ }
+ function tick(){if(state){renderTeaser();updateModalTimer();if(overlay.classList.contains("open")&&state.active&&remaining()<=0)render();}}
+ async function boot(){
+  if(booted)return;booted=true;
+  for(let i=0;i<60;i++){if(window.__tcPlatformDb&&window.__tcPlatformDb.auth){const ok=await load();if(ok)break;}await new Promise(r=>setTimeout(r,500));}
+  timer=setInterval(tick,1000);
+  window.addEventListener("focus",load);
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+})();
+</script>
+</body></html></html>
