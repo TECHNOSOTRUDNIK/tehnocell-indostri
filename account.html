@@ -1612,7 +1612,7 @@ async function loadAccount() {
     // Метаданные Auth остаются резервным вариантом для старых аккаунтов.
     const { data: savedProfile } = await db
         .from("profiles")
-        .select("display_name,username,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,created_at")
+        .select("display_name,username,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,selected_avatar_frame_id,created_at")
         .eq("id", currentUser.id)
         .maybeSingle();
 
@@ -1720,6 +1720,7 @@ async function loadAccount() {
 
     }
 
+    window.tcSelectedAvatarFrame=!!savedProfile?.selected_avatar_frame_id;
     window.tcSelectedAvatarFrame=!!savedProfile?.selected_avatar_frame_id;
     setAvatar(getInitial(displayName), avatarURL);
     renderPublicProfilePreview(savedProfile, currentUser);
