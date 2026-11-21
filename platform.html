@@ -159,6 +159,26 @@
 .chat-file-link{display:flex;align-items:center;gap:9px;max-width:300px;padding:10px;border:1px solid #444;border-radius:9px;color:#eee;text-decoration:none;background:#151515;font-size:10px;overflow-wrap:anywhere}
 @media(max-width:650px){.chat-tool-btn{width:36px;flex-basis:36px}.tc-chat-compose{gap:6px}}
 
+
+/* TEHNOCELL custom chat media + voice recorder */
+.tc-chat-video{position:relative;width:min(100%,360px);margin-top:8px;border-radius:13px;overflow:hidden;background:#050505;border:1px solid #383838}
+.tc-chat-video video{display:block;width:100%;max-height:320px;aspect-ratio:16/9;object-fit:contain;background:#000}
+.tc-chat-video-controls{display:flex;align-items:center;gap:9px;padding:9px 10px;background:linear-gradient(180deg,#1b1b1b,#101010)}
+.tc-chat-video-controls button{border:0;background:#292929;color:#fff;border-radius:9px;width:32px;height:30px;font-size:14px}
+.tc-chat-video-controls input{min-width:0;flex:1;accent-color:#fff;height:3px}
+.tc-chat-video-time{font-size:10px;color:#aaa;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tc-voice-recording{margin:0 12px 8px;padding:11px 13px;border:1px solid #414141;border-radius:14px;background:#171717;align-items:center;gap:11px}
+.tc-voice-recording[hidden]{display:none}
+.tc-voice-recording:not([hidden]){display:flex}
+.tc-voice-rec-dot{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px #ffffff18;animation:tcVoicePulse 1.2s infinite}
+.tc-voice-rec-copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.tc-voice-rec-copy strong{font-size:12px;color:#fff}
+.tc-voice-rec-copy span{font-size:10px;color:#aaa;font-variant-numeric:tabular-nums}
+.tc-voice-rec-actions{display:flex;gap:7px}
+.tc-voice-rec-actions button{height:34px;min-width:38px;border:1px solid #444;border-radius:10px;background:#242424;color:#fff;font-size:13px}
+.tc-voice-rec-actions .send{background:#fff;color:#111;border-color:#fff;padding:0 12px;font-weight:800}
+@keyframes tcVoicePulse{50%{opacity:.35;transform:scale(.86)}}
+
 /* Chat workspace refinement */
 #page-messages{max-width:1500px;margin:0 auto;padding:28px clamp(14px,2.8vw,42px) 44px}
 #page-messages .page-title{font-size:clamp(34px,5vw,54px);letter-spacing:-2.4px}
@@ -845,7 +865,7 @@ button,a,[role="button"],input,select,textarea,label,[tabindex]{-webkit-tap-high
  <div class="chat-window"><div class="chat-window-head tc-chat-head"><div class="tc-chat-heading"><div id="chatHeaderAvatar" class="tc-chat-avatar">T</div><div class="tc-chat-heading-copy"><strong id="chatTitle">Выберите переписку</strong><span id="chatPresence">Ваши личные сообщения</span></div></div><button type="button" id="chatBackToList" class="secondary-btn tc-chat-back" aria-label="К списку переписок">←</button><button type="button" id="chatMoreButton" class="tc-chat-more" aria-label="Действия с перепиской" aria-expanded="false">⋮</button><div id="chatMoreMenu" class="tc-chat-more-menu" hidden><button type="button" data-chat-action="search">⌕ Поиск по переписке</button><button type="button" data-chat-action="clear">⌫ Очистить мои сообщения</button></div></div>
  <input id="chatSearchInThread" class="field" type="search" placeholder="Поиск по этой переписке…" hidden autocomplete="off"><div class="chat-thread" id="chatThread" aria-live="polite"><div class="chat-empty">Выберите переписку слева или откройте профиль друга и нажмите «Написать».</div></div>
  <div id="chatReplyPreview" class="chat-reply-preview" hidden><div><strong>Ответ на сообщение</strong><span id="chatReplyText"></span></div><button type="button" id="chatReplyCancel" aria-label="Отменить ответ">×</button></div>
- <div id="chatMediaStatus" class="chat-media-status" aria-live="polite"></div><form class="chat-compose tc-chat-compose" id="chatForm"><input id="chatFileInput" type="file" accept="image/*,video/mp4,audio/*,.pdf,.txt,.doc,.docx" hidden><button type="button" class="secondary-btn chat-tool-btn" id="chatAttachButton" disabled aria-label="Прикрепить файл"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 12.5 7.8-7.8a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg></button><button type="button" class="secondary-btn chat-tool-btn" id="chatRecordButton" disabled aria-label="Записать голосовое сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M9 21.5h6"/></svg></button><textarea class="field" id="chatInput" maxlength="4000" rows="1" placeholder="Напишите сообщение…" autocomplete="off" disabled></textarea><button class="primary-btn" id="chatSend" disabled aria-label="Отправить сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></form><div class="tc-chat-footnote">Enter — отправить · Shift + Enter — новая строка</div></div>
+ <div id="chatMediaStatus" class="chat-media-status" aria-live="polite"></div><div class="tc-voice-recording" id="chatVoiceRecording" hidden><span class="tc-voice-rec-dot"></span><div class="tc-voice-rec-copy"><strong>Запись голосового</strong><span id="chatVoiceTimer">00:00 · Нажмите отправить, когда закончите</span></div><div class="tc-voice-rec-actions"><button type="button" id="chatVoiceCancel" aria-label="Отменить запись">✕</button><button type="button" class="send" id="chatVoiceSend">➤</button></div></div><form class="chat-compose tc-chat-compose" id="chatForm"><input id="chatFileInput" type="file" accept="image/*,video/mp4,audio/*,.pdf,.txt,.doc,.docx" hidden><button type="button" class="secondary-btn chat-tool-btn" id="chatAttachButton" disabled aria-label="Прикрепить файл"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 12.5 7.8-7.8a4 4 0 0 1 5.7 5.7l-9.2 9.2a6 6 0 0 1-8.5-8.5l9.2-9.2"/></svg></button><button type="button" class="secondary-btn chat-tool-btn" id="chatRecordButton" disabled aria-label="Записать голосовое сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M9 21.5h6"/></svg></button><textarea class="field" id="chatInput" maxlength="4000" rows="1" placeholder="Напишите сообщение…" autocomplete="off" disabled></textarea><button class="primary-btn" id="chatSend" disabled aria-label="Отправить сообщение"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button></form><div class="tc-chat-footnote">Enter — отправить · Shift + Enter — новая строка</div></div>
 </div><div class="chat-hold-menu" id="chatHoldMenu" role="menu" aria-label="Действия с сообщением"><div class="chat-hold-reactions"><button type="button" data-hold-react="❤️" aria-label="Нравится">❤️</button><button type="button" data-hold-react="👍" aria-label="Класс">👍</button><button type="button" data-hold-react="😂" aria-label="Смешно">😂</button><button type="button" data-hold-react="🔥" aria-label="Огонь">🔥</button><button type="button" data-hold-react="😮" aria-label="Удивлён">😮</button><button type="button" data-hold-react="😢" aria-label="Грустно">😢</button></div><div class="chat-hold-actions"><button type="button" data-hold-action="reply">↩ Ответить</button><button type="button" data-hold-action="copy">▢ Копировать</button><button type="button" data-hold-action="edit">✎ Изменить</button><button type="button" data-hold-action="delete">⌫ Удалить</button></div></div></section>
 <section class="page" id="page-notifications">
 <div class="eyebrow">ВАЖНЫЕ СОБЫТИЯ</div><h1 class="page-title">Уведомления</h1><p class="page-subtitle">Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения.</p>
@@ -1576,6 +1596,7 @@ async function openChat(id,name,avatarPath=null){
  await loadChatThread();document.querySelectorAll("[data-chat]").forEach(b=>b.classList.toggle("active",b.dataset.chat===id));$("page-messages").classList.add("chat-open");
 }
 function tcMomentMessageId(value){const body=String(value||"");if(!body.startsWith("[[TC_MOMENT:")||!body.endsWith("]]"))return null;const id=body.slice(12,-2);return /^[0-9a-f-]{36}$/i.test(id)?id:null;}
+function formatChatDay(value){const date=new Date(value),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),day=new Date(date.getFullYear(),date.getMonth(),date.getDate()),diff=Math.round((today-day)/86400000);if(diff===0)return "Сегодня";if(diff===1)return "Вчера";return date.toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});}
 function renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap=new Map()){
  const mine=m.sender_id===currentUser.id,deleted=!!m.deleted_at,body=deleted?"Сообщение удалено":(tcMomentMessageId(m.body)?"":m.body),time=new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}),reply=m.reply_to_id?replyMap.get(m.reply_to_id):null;
  const quote=reply?'<div class="chat-reply-quote">'+escapeHtml(reply.deleted_at?"Сообщение удалено":reply.body.slice(0,140))+'</div>':"";
@@ -1588,7 +1609,7 @@ function renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap=new Map
  if(momentId){const moment=momentMap.get(momentId);if(moment){const author=moment.profile?.display_name||"Участник",avatar=moment.profile?.avatar_path?db.storage.from("profile-avatars").getPublicUrl(moment.profile.avatar_path).data.publicUrl:null,preview=moment.url||"",captionText=moment.caption||"Момент, которым хочется поделиться.";attachment='<button type="button" class="chat-moment-card" data-open-moment="'+momentId+'"><span class="chat-moment-visual">'+(preview?(moment.media_type==="video"?'<video muted playsinline preload="metadata" src="'+escapeHtml(preview)+'#t=0.1"></video>':'<img loading="lazy" src="'+escapeHtml(preview)+'" alt="">'):'')+'<span class="chat-moment-brand">TEHNOCELL / MOMENTS</span><span class="chat-moment-type">'+(moment.media_type==="video"?"ВИДЕО":"ФОТО")+'</span>'+(moment.media_type==="video"?'<span class="chat-moment-play">▶</span>':'')+'</span><span class="chat-moment-info"><span class="chat-moment-author"><span class="chat-moment-avatar">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':escapeHtml(author.charAt(0).toUpperCase()))+'</span><strong>'+escapeHtml(author)+verifiedBadge(moment.user_id)+'</strong></span><span class="chat-moment-caption">'+escapeHtml(captionText)+'</span><span class="chat-moment-footer"><span>ИСТОРИЯ · 24 ЧАСА</span><span class="chat-moment-open">ОТКРЫТЬ ↗</span></span></span></button>';}else{attachment='<div class="chat-moment-expired">История больше недоступна</div>';}}
  if(!momentId&&!deleted&&url){
   if(m.message_type==="image")attachment='<a class="chat-attachment" href="'+escapeHtml(url)+'" target="_blank" rel="noopener"><img loading="lazy" src="'+escapeHtml(url)+'" alt="Изображение"></a>';
-  else if(m.message_type==="video")attachment='<div class="chat-attachment"><video controls preload="metadata" src="'+escapeHtml(url)+'"></video></div>';
+  else if(m.message_type==="video")attachment='<div class="tc-chat-video" data-chat-video><video playsinline preload="metadata" src="'+escapeHtml(url)+'"></video><div class="tc-chat-video-controls"><button type="button" data-video-toggle aria-label="Воспроизвести">▶</button><input type="range" min="0" max="1000" value="0" data-video-seek aria-label="Перемотка видео"><span class="tc-chat-video-time" data-video-time>0:00 / 0:00</span><button type="button" data-video-fullscreen aria-label="На весь экран">⛶</button></div></div>';
   else if(m.message_type==="audio")attachment='<div class="chat-attachment"><audio controls preload="metadata" src="'+escapeHtml(url)+'"></audio></div>';
   else attachment='<a class="chat-file-link chat-attachment" href="'+escapeHtml(url)+'" target="_blank" rel="noopener" download="'+escapeHtml(m.attachment_name||"Файл")+'">▤ '+escapeHtml(m.attachment_name||"Файл")+'</a>';
  }
@@ -1624,7 +1645,7 @@ async function loadChatThread(options={}){
   }));
  }
  let previousDay="";
- box.innerHTML=all.map(m=>{const day=new Date(m.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
+ box.innerHTML=all.map(m=>{const day=formatChatDay(m.created_at);let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
  if(options.preserveScroll&&!wasNearBottom)box.scrollTop=oldScrollTop;else box.scrollTop=box.scrollHeight;
  const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at&&!m.deleted_at);
  if(unread.length){const {error}=await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
@@ -1737,6 +1758,11 @@ $("chatHoldMenu").addEventListener("click",async e=>{
  }
 });
 document.addEventListener("pointerdown",e=>{if(!e.target.closest("#chatHoldMenu")&&!e.target.closest("[data-message-row]"))closeChatHoldMenu();});
+function chatVideoClock(value){if(!Number.isFinite(value))return "0:00";const n=Math.floor(value);return Math.floor(n/60)+":"+String(n%60).padStart(2,"0");}
+$("chatThread").addEventListener("click",async e=>{const toggle=e.target.closest("[data-video-toggle]");if(toggle){const player=toggle.closest("[data-chat-video]"),video=player?.querySelector("video");if(!video)return;if(video.paused){await video.play().catch(()=>{});toggle.textContent="Ⅱ";toggle.setAttribute("aria-label","Пауза");}else{video.pause();toggle.textContent="▶";toggle.setAttribute("aria-label","Воспроизвести");}return;}const full=e.target.closest("[data-video-fullscreen]");if(full){const player=full.closest("[data-chat-video]");try{if(document.fullscreenElement)await document.exitFullscreen();else await (player.requestFullscreen?.()||player.querySelector("video")?.webkitEnterFullscreen?.());}catch(_){}return;}});
+$("chatThread").addEventListener("input",e=>{if(!e.target.matches("[data-video-seek]"))return;const video=e.target.closest("[data-chat-video]")?.querySelector("video");if(video&&Number.isFinite(video.duration))video.currentTime=(Number(e.target.value)/1000)*video.duration;});
+$("chatThread").addEventListener("timeupdate",e=>{if(!e.target.matches("video"))return;const player=e.target.closest("[data-chat-video]");if(!player)return;const video=e.target,seek=player.querySelector("[data-video-seek]"),time=player.querySelector("[data-video-time]");if(seek&&Number.isFinite(video.duration))seek.value=String(Math.round(video.currentTime/video.duration*1000));if(time)time.textContent=chatVideoClock(video.currentTime)+" / "+chatVideoClock(video.duration);});
+$("chatThread").addEventListener("ended",e=>{if(!e.target.matches("video"))return;const toggle=e.target.closest("[data-chat-video]")?.querySelector("[data-video-toggle]");if(toggle){toggle.textContent="▶";toggle.setAttribute("aria-label","Воспроизвести");}});
 $("chatThread").addEventListener("click",async e=>{
  const momentButton=e.target.closest("[data-open-moment]");if(momentButton){const id=momentButton.dataset.openMoment;let group=storyGroups.find(g=>g.stories.some(x=>x.id===id));if(!group){await loadStories();group=storyGroups.find(g=>g.stories.some(x=>x.id===id));}await openSharedMoment(id);return;}
  const reply=e.target.closest("[data-reply]");if(reply){setChatReply(reply.dataset.reply);return;}
@@ -1757,7 +1783,7 @@ $("chatForm").addEventListener("submit",async e=>{
   chatMessagesCache.push(sent);
   let replyMap=new Map();if(sent.reply_to_id){const quoted=chatMessagesCache.find(x=>x.id===sent.reply_to_id);if(quoted)replyMap.set(quoted.id,quoted);}
   const lastDay=$("chatThread").querySelector(".chat-day-divider:last-of-type span")?.textContent||"";
-  const day=new Date(sent.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+  const day=formatChatDay(sent.created_at);
   if(day!==lastDay){const divider=document.createElement("div");divider.className="chat-day-divider";divider.innerHTML="<span>"+escapeHtml(day)+"</span>";$("chatThread").appendChild(divider);}
   const wrap=document.createElement("div");wrap.innerHTML=renderChatMessage(sent,[],replyMap,new Map(),new Map());if(wrap.firstElementChild)$("chatThread").appendChild(wrap.firstElementChild);
   $("chatThread").scrollTop=$("chatThread").scrollHeight;updateChatContactPreview(sent);
@@ -1781,27 +1807,34 @@ async function sendChatAttachment(file,forcedType=null){
 }
 $("chatAttachButton").addEventListener("click",()=>$("chatFileInput").click());
 $("chatFileInput").addEventListener("change",async e=>{const file=e.target.files?.[0];e.target.value="";if(file)await sendChatAttachment(file);});
-let chatRecorder=null,chatRecorderStream=null,chatRecorderChunks=[],chatRecordingTimer=null;
+let chatRecorder=null,chatRecorderStream=null,chatRecorderChunks=[],chatRecordingTimer=null,chatRecordingStartedAt=0,chatDiscardRecording=false;
+function chatVoiceUi(active){$("chatVoiceRecording").hidden=!active;$("chatRecordButton").disabled=active;$("chatAttachButton").disabled=active;$("chatInput").disabled=active;$("chatSend").disabled=active;}
+function chatVoiceCleanup(){clearInterval(chatRecordingTimer);chatRecordingTimer=null;chatRecorderStream?.getTracks().forEach(t=>t.stop());chatRecorderStream=null;chatRecorder=null;chatRecorderChunks=[];chatDiscardRecording=false;$("chatVoiceTimer").textContent="00:00 · Нажмите отправить, когда закончите";chatVoiceUi(false);}
 $("chatRecordButton").addEventListener("click",async()=>{
- if(chatRecorder&&chatRecorder.state==="recording"){chatRecorder.stop();return;}
- if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){showNotice("Запись голосовых сообщений не поддерживается этим браузером.");return;}
+ if(chatRecorder)return;
+ if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==="undefined"){showNotice("Запись недоступна. Откройте платформу по HTTPS и разрешите микрофон.");return;}
  try{
-  chatRecorderStream=await navigator.mediaDevices.getUserMedia({audio:{channelCount:{ideal:1},sampleRate:{ideal:48000},sampleSize:{ideal:16},echoCancellation:true,noiseSuppression:true,autoGainControl:true}});chatRecorderChunks=[];
-  const preferred=MediaRecorder.isTypeSupported("audio/webm;codecs=opus")?"audio/webm;codecs=opus":MediaRecorder.isTypeSupported("audio/ogg;codecs=opus")?"audio/ogg;codecs=opus":MediaRecorder.isTypeSupported("audio/mp4")?"audio/mp4":"";
-  const recorderOptions={audioBitsPerSecond:64000};if(preferred)recorderOptions.mimeType=preferred;
-  chatRecorder=new MediaRecorder(chatRecorderStream,recorderOptions);
-  chatRecorder.ondataavailable=e=>{if(e.data?.size)chatRecorderChunks.push(e.data);};
+  chatRecorderStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});chatRecorderChunks=[];
+  const supported=["audio/webm;codecs=opus","audio/ogg;codecs=opus","audio/mp4","audio/webm","audio/ogg"],mimeType=supported.find(type=>MediaRecorder.isTypeSupported(type))||"";
+  chatRecorder=new MediaRecorder(chatRecorderStream,mimeType?{mimeType,audioBitsPerSecond:64000}:{audioBitsPerSecond:64000});
+  chatRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)chatRecorderChunks.push(e.data);};
+  chatRecorder.onerror=e=>{console.error("Voice recorder error",e.error||e);showNotice("Ошибка записи голоса. Попробуйте ещё раз.");chatDiscardRecording=true;try{chatRecorder?.stop();}catch(_){chatVoiceCleanup();}};
   chatRecorder.onstop=async()=>{
-   clearTimeout(chatRecordingTimer);chatRecorderStream?.getTracks().forEach(t=>t.stop());chatRecorderStream=null;
-   $("chatRecordButton").textContent="●";$("chatRecordButton").disabled=false;$("chatMediaStatus").textContent="Обрабатываем голосовое сообщение…";
-   const blob=new Blob(chatRecorderChunks,{type:chatRecorder.mimeType||"audio/webm"}),ext=blob.type.includes("mp4")?"m4a":"webm";
-   const file=new File([blob],"voice-"+Date.now()+"."+ext,{type:(blob.type||"audio/webm").split(";")[0]});chatRecorder=null;chatRecorderChunks=[];await sendChatAttachment(file,"audio");
+   const recorder=chatRecorder,discard=chatDiscardRecording,actualType=recorder?.mimeType||chatRecorderChunks.find(x=>x.type)?.type||"audio/webm",blob=new Blob(chatRecorderChunks,{type:actualType});
+   chatRecorderStream?.getTracks().forEach(t=>t.stop());chatRecorderStream=null;clearInterval(chatRecordingTimer);chatRecordingTimer=null;chatRecorder=null;
+   if(discard||!blob.size){chatVoiceCleanup();$("chatMediaStatus").textContent="";return;}
+   const baseType=actualType.split(";")[0].toLowerCase(),ext=baseType.includes("mp4")?"m4a":baseType.includes("ogg")?"ogg":"webm";
+   const file=new File([blob],"voice-"+Date.now()+"."+ext,{type:baseType});chatVoiceCleanup();$("chatMediaStatus").textContent="Отправляем голосовое сообщение…";await sendChatAttachment(file,"audio");
   };
-  chatRecorder.start(1000);$("chatRecordButton").textContent="■";$("chatMediaStatus").textContent="Идёт запись… нажмите ■, чтобы отправить";
-  chatRecordingTimer=setTimeout(()=>{if(chatRecorder?.state==="recording")chatRecorder.stop();},180000);
- }catch(err){chatRecorderStream?.getTracks().forEach(t=>t.stop());chatRecorderStream=null;showNotice("Не удалось начать запись. Проверьте разрешение на микрофон.");}
+  chatRecorder.start(250);chatRecordingStartedAt=Date.now();chatVoiceUi(true);
+  const updateTimer=()=>{const sec=Math.floor((Date.now()-chatRecordingStartedAt)/1000);$("chatVoiceTimer").textContent=String(Math.floor(sec/60)).padStart(2,"0")+":"+String(sec%60).padStart(2,"0")+" · Идёт запись";};
+  updateTimer();chatRecordingTimer=setInterval(updateTimer,250);
+ }catch(err){console.error("Microphone permission/recording error:",err);chatRecorderStream?.getTracks().forEach(t=>t.stop());chatRecorderStream=null;chatVoiceCleanup();showNotice(err?.name==="NotAllowedError"?"Разрешите доступ к микрофону в настройках браузера.":"Не удалось начать запись: "+(err?.message||"проверьте микрофон"));}
 });
-window.addEventListener("pagehide",()=>{if(chatRecorder?.state==="recording")chatRecorder.stop();});
+$("chatVoiceSend").addEventListener("click",()=>{if(chatRecorder?.state==="recording")chatRecorder.stop();});
+$("chatVoiceCancel").addEventListener("click",()=>{if(!chatRecorder)return;chatDiscardRecording=true;if(chatRecorder.state==="recording")chatRecorder.stop();else chatVoiceCleanup();});
+window.addEventListener("pagehide",()=>{if(chatRecorder?.state==="recording"){chatDiscardRecording=true;chatRecorder.stop();}});
+
 async function appendRealtimeChatMessage(message){
  if(!message||!activeChatId)return;
  const other=message.sender_id===currentUser.id?message.receiver_id:message.sender_id;
@@ -1826,7 +1859,7 @@ async function appendRealtimeChatMessage(message){
  chatMessagesCache.push(message);
  const lastDivider=[...box.querySelectorAll(".chat-day-divider")].at(-1);
  const lastDay=lastDivider?.querySelector("span")?.textContent||"";
- const day=new Date(message.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+ const day=formatChatDay(message.created_at);
  if(day!==lastDay){const divider=document.createElement("div");divider.className="chat-day-divider";const span=document.createElement("span");span.textContent=day;divider.appendChild(span);box.appendChild(divider);}
  const wrap=document.createElement("div");
  wrap.innerHTML=renderChatMessage(message,[],replyMap,attachmentUrls,momentMap);
