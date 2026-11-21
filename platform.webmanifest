@@ -1,0 +1,20 @@
+{
+  "id": "/tehnocell-indostri/platform.html",
+  "name": "TEHNOCELL PLATFORM",
+  "short_name": "TEHNOCELL",
+  "description": "Социальная платформа TEHNOCELL INDOSTRI",
+  "start_url": "/tehnocell-indostri/platform.html?source=installed",
+  "scope": "/tehnocell-indostri/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090909",
+  "theme_color": "#090909",
+  "icons": [
+    {
+      "src": "tehnocell-icon.svg?v=1",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
