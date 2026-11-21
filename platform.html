@@ -312,6 +312,47 @@
 
  .avatar.tc-avatar-framed,.home-online-avatar.tc-avatar-framed,.composer-avatar.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd55}.profile-photo.tc-avatar-framed{overflow:visible;box-shadow:0 0 0 3px #ff55bd,0 0 0 6px #46e5f2,0 0 18px #ff55bd66}.tc-story-ring.tc-avatar-framed{box-shadow:0 0 0 2px #ff55bd,0 0 0 4px #46e5f2,0 0 13px #ff55bd66}
 
+
+/* VICE CITY investigation — five cinematic chapters */
+.vc-mission{position:relative;overflow:hidden;border:1px solid #4b3b51;border-radius:19px;background:radial-gradient(ellipse at 90% 0%,#b44bd51c,transparent 42%),linear-gradient(150deg,#17131d,#0a0d12 72%);box-shadow:inset 0 0 35px #b44bd50a,0 18px 50px #0008}
+.vc-mission:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 15%,#bd69ff0b 48%,transparent 78%);transform:translateX(-100%);animation:vcMissionSweep 7s ease-in-out infinite}
+.vc-mission-top{position:relative;display:flex;justify-content:space-between;align-items:center;padding:18px 18px 13px;border-bottom:1px solid #ffffff12}
+.vc-mission-tag{margin-top:7px;color:#d78cff;font-size:9px;font-weight:900;letter-spacing:1.8px}
+.vc-mission-count{display:flex;align-items:baseline;gap:3px;color:#aaa}.vc-mission-count strong{font-size:28px;color:#fff;letter-spacing:-1px}.vc-mission-count span{font-size:10px}
+.vc-mission-track{position:relative;display:flex;gap:7px;padding:15px 18px 13px}
+.vc-mission-track span{position:relative;display:block;flex:1;height:4px;border-radius:8px;background:#34303a;overflow:visible;transition:background .4s}
+.vc-mission-track span.done{background:linear-gradient(90deg,#9c55db,#e77be0);box-shadow:0 0 10px #b85be866}
+.vc-mission-track span.current{background:#6b426f;animation:vcTrackPulse 1.7s ease-in-out infinite}
+.vc-mission-track span i{position:absolute;right:0;top:50%;width:8px;height:8px;border:1px solid #8d6a95;border-radius:50%;background:#15121a;transform:translate(50%,-50%)}
+.vc-mission-track span.done i{background:#f5a4ff;border-color:#f5a4ff;box-shadow:0 0 9px #e77be0}
+.vc-mission-body{position:relative;padding:12px 18px 20px}
+.vc-mission-watermark{position:absolute;right:10px;top:-8px;font-size:clamp(90px,22vw,150px);font-weight:950;line-height:1;color:#ffffff06;letter-spacing:-10px;pointer-events:none}
+.vc-mission-body .vc-stage-title{position:relative;font-size:clamp(22px,6vw,30px);letter-spacing:-1px;margin:3px 0 8px}
+.vc-mission-body .vc-stage-desc{position:relative;max-width:490px;margin-bottom:17px}
+.vc-mission-scan{height:1px;margin:12px 0 15px;background:linear-gradient(90deg,transparent,#b86ce5aa,#ffffff22,transparent);transform-origin:left;animation:vcScanLine 2.8s ease-in-out infinite}
+.vc-mission .vc-source-row{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:0 0 15px}
+.vc-mission .vc-source-item{min-width:0;padding:8px;border:1px solid #ffffff16;border-radius:11px;background:#ffffff06;transition:transform .2s,border-color .2s,background .2s}
+.vc-mission .vc-source-item:active{transform:scale(.98)}
+.vc-mission .vc-source{display:flex;justify-content:space-between;border:0;background:transparent;padding:2px 0 7px;font-size:9px}
+.vc-mission .vc-copy-source{width:100%;padding:7px;border-radius:7px;font-size:8px;letter-spacing:1px}
+.vc-mission .vc-form{margin-top:0}
+.vc-mission .vc-field{padding:9px 10px;border:1px solid #ffffff13;border-radius:10px;background:#ffffff05;transition:border-color .2s,background .2s}
+.vc-mission .vc-field:focus-within{border-color:#b66be0;background:#b66be00b}
+.vc-mission .vc-field label{font-size:9px;letter-spacing:.3px}
+.vc-mission .vc-field input{min-height:39px;background:#090a0e;border-color:#38313e;font-size:11px}
+.vc-mission .vc-field input::placeholder{color:#57505d;font-size:8px;letter-spacing:.7px}
+.vc-mission .vc-hint{display:grid;gap:5px;padding:11px 12px;border-left:2px solid #bd71e9;border-radius:0 9px 9px 0;background:#bd71e90d}
+.vc-mission .vc-hint b{color:#d99af4;font-size:8px;letter-spacing:1.5px}
+.vc-mission .vc-hint span{color:#bdb4c4;font-size:10px;line-height:1.55}
+.vc-mission .vc-submit{display:flex;align-items:center;justify-content:space-between;gap:18px;min-width:190px;background:linear-gradient(110deg,#fff,#e8d9f0);box-shadow:0 0 18px #b75ce52b}
+.vc-mission .vc-submit i{font-size:16px;font-style:normal}
+.vc-enter{animation:vcMissionEnter .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes vcMissionEnter{from{opacity:0;transform:translateY(16px) scale(.985);filter:blur(5px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes vcMissionSweep{0%,65%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes vcTrackPulse{0%,100%{box-shadow:0 0 4px #c66ce544}50%{box-shadow:0 0 13px #c66ce5aa}}
+@keyframes vcScanLine{0%,100%{opacity:.45;transform:scaleX(.55)}50%{opacity:1;transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){.vc-mission,.vc-mission:before,.vc-mission-track span.current,.vc-mission-scan{animation:none!important}.vc-enter{animation:none!important}}
+
 /* VICE CITY frame: keep the portrait perfectly circular inside the neon ring */
 .avatar.tc-avatar-framed,
 .profile-photo.tc-avatar-framed,
@@ -1820,12 +1861,14 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   teaser.querySelector(".vc-kicker").textContent=done?"TEHNOCELL / НАГРАДА ПОЛУЧЕНА":"TEHNOCELL / SPECIAL EVENT";
  }
  function intro(){
-  return '<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT · LIMITED TIME</div><h1 class="vc-title">VICE<br>CITY</h1><div class="vc-subtitle">THE CITY NEVER TELLS THE WHOLE STORY</div><div class="vc-intro-art"><div class="vc-sun"></div><div class="vc-skyline"></div><div class="vc-grid"></div></div><p class="vc-intro-copy">Есть города, которые невозможно забыть. Неон, пальмы, ночные улицы и история, которую нужно собрать по частям. Тебе предстоит пройти три этапа расследования, изучить открытые источники и доказать, что ты внимателен к деталям. Это фан-событие TEHNOCELL, не связанное с Rockstar Games.</p><div class="vc-ennie"><div class="vc-ennie-orb"></div><div><strong>ENNIE · QUEST GUIDE</strong><p>Я буду рядом на каждом этапе. Подскажу направление, объясню задание и проверю результат. Но ответы придётся найти тебе самому. Готов?</p></div></div><div class="vc-countdown">ДО ЗАКРЫТИЯ: <b id="vcModalTimer">—</b></div><div class="vc-actions"><button class="vc-primary" id="vcStart">НАЧАТЬ ПРИКЛЮЧЕНИЕ ↗</button><button class="vc-secondary" id="vcLater">ПОЗЖЕ</button></div>';
+  return '<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT · LIMITED TIME</div><h1 class="vc-title">VICE<br>CITY</h1><div class="vc-subtitle">THE CITY NEVER TELLS THE WHOLE STORY</div><div class="vc-intro-art"><div class="vc-sun"></div><div class="vc-skyline"></div><div class="vc-grid"></div></div><p class="vc-intro-copy">Есть города, которые невозможно забыть. Неон, пальмы, ночные улицы и история, которую нужно собрать по частям. Тебя ждут пять глав расследования: поиск улик, проверка источников, изучение карты, реальные прототипы города и финальное досье. Каждый этап открывает следующую часть истории. Это фан-событие TEHNOCELL, не связанное с Rockstar Games.</p><div class="vc-ennie"><div class="vc-ennie-orb"></div><div><strong>ENNIE · QUEST GUIDE</strong><p>Я буду рядом на каждом этапе. Подскажу направление, объясню задание и проверю результат. Но ответы придётся найти тебе самому. Готов?</p></div></div><div class="vc-countdown">ДО ЗАКРЫТИЯ: <b id="vcModalTimer">—</b></div><div class="vc-actions"><button class="vc-primary" id="vcStart">НАЧАТЬ ПРИКЛЮЧЕНИЕ ↗</button><button class="vc-secondary" id="vcLater">ПОЗЖЕ</button></div>';
  }
  const stages=[
-  {title:"ROCKSTAR DISCOVERY",desc:"Открой официальную страницу Grand Theft Auto VI. Найди имена двух главных героев, название вымышленного штата и главный город игры.",fields:[["jason","Имя первого главного героя"],["lucia","Имя второй главной героини"],["state","Название вымышленного штата"],["city","Главный город игры"]],links:[["Официальная страница Rockstar","https://www.rockstargames.com/VI"]],hint:"Имена героев указаны в официальном описании игры. Не торопись — проверь написание."},
-  {title:"YANDEX INVESTIGATION",desc:"Теперь найди официальную новость Rockstar о запуске игры. Используй Яндекс для поиска, затем сверь информацию с сайтом Rockstar.",fields:[["date","Дата выхода игры"],["platforms","Две платформы запуска"],["yandex_link","Ссылка на найденную страницу Яндекса"],["official_link","Ссылка на официальную новость Rockstar"]],links:[["Найти через Яндекс","https://yandex.ru/search/?text=Rockstar+Games+GTA+VI+launch+date"],["Официальная новость Rockstar","https://www.rockstargames.com/newswire/article/39akk424a9oo53/grand-theft-auto-vi-now-available"]],hint:"В официальной новости указаны дата запуска и консоли. Ссылка должна вести на Яндекс и на домен rockstargames.com."},
-  {title:"VICE CITY DETECTIVE",desc:"Финальная часть. Разберись, какие реальные места вдохновили вымышленную карту и как называется сама игра.",fields:[["real_city","Реальный город — вдохновение для Vice City"],["real_state","Штат, который вдохновил Leonida"],["game_title","Полное название игры"]],links:[["Поиск в Яндексе","https://yandex.ru/search/?text=Vice+City+inspired+by+Miami+Leonida+Florida"]],hint:"Ищи не только название города, но и реальный штат, на основе которого создана Leonida."}
+  {title:"ДОСЬЕ / ДВА ГЕРОЯ",tag:"ПЕРВАЯ УЛИКА",desc:"Открой официальный сайт Rockstar и собери базовое досье. Здесь важна точность: имена, штат и город.",fields:[["jason","Имя первого главного героя"],["lucia","Имя второй главной героини"],["state","Название вымышленного штата"],["city","Главный город игры"]],links:[["Официальная страница Rockstar","https://www.rockstargames.com/VI"]],hint:"Подсказка Энни: ответы спрятаны в официальном описании игры. Проверь написание каждого имени."},
+  {title:"ХРОНОЛОГИЯ ЗАПУСКА",tag:"ВТОРАЯ УЛИКА",desc:"Восстанови хронологию запуска. Сверь дату и платформы по официальной публикации, а затем приложи обе ссылки.",fields:[["date","Дата выхода игры"],["platforms","Платформы запуска"],["yandex_link","Ссылка на результат поиска Яндекса"],["official_link","Ссылка на новость Rockstar"]],links:[["Найти через Яндекс","https://yandex.ru/search/?text=Rockstar+Games+GTA+VI+release+date+platforms"],["Официальная новость Rockstar","https://www.rockstargames.com/newswire/article/39akk424a9oo53/grand-theft-auto-vi-now-available"]],hint:"Энни советует: не доверяй одному сниппету поисковика — открой первоисточник Rockstar."},
+  {title:"КАРТА ЛЕОНИДЫ",tag:"ТРЕТЬЯ УЛИКА",desc:"Перейди от героев к миру игры. Найди три названия мест, которые Rockstar раскрыла в материалах о Леониде.",fields:[["location_one","Первое место: Port …"],["location_two","Второе место: Amb…"],["location_three","Третье место: Grass…"]],links:[["Официальная страница GTA VI","https://www.rockstargames.com/VI"],["Поиск по карте Леониды","https://yandex.ru/search/?text=GTA+VI+Leonida+Port+Gellhorn+Ambrosia+Grassrivers"]],hint:"Подсказка Энни: ищи названия Port Gellhorn, Ambrosia и Grassrivers. Введи их полностью."},
+  {title:"СЛЕД РЕАЛЬНОГО ГОРОДА",tag:"ЧЕТВЁРТАЯ УЛИКА",desc:"Теперь отдели вымысел от реальности. Найди, какой настоящий город и штат стали главным вдохновением для Vice City и Леониды.",fields:[["real_city","Реальный город — вдохновение для Vice City"],["real_state","Реальный штат — вдохновение для Leonida"]],links:[["Поиск в Яндексе","https://yandex.ru/search/?text=Vice+City+Miami+Leonida+Florida+inspiration"],["Официальная страница Rockstar","https://www.rockstargames.com/VI"]],hint:"Подсказка Энни: вымышленный город и штат имеют реальные прототипы во Флориде."},
+  {title:"ПОСЛЕДНЕЕ ДОСЬЕ",tag:"ФИНАЛЬНАЯ УЛИКА",desc:"Последняя проверка перед закрытием дела. Установи полное название игры, студию-разработчика и издателя.",fields:[["game_title","Полное название игры"],["developer","Студия-разработчик"],["publisher","Издатель игры"]],links:[["Официальная страница Rockstar","https://www.rockstargames.com/VI"],["Поиск в Яндексе","https://yandex.ru/search/?text=Grand+Theft+Auto+VI+developer+publisher"]],hint:"Подсказка Энни: внимательно различай студию, которая разрабатывает игру, и компанию, которая её издаёт."}
  ];
  function render(){
   if(!state){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">VICE CITY</h2><p class="vc-intro-copy">Подключаю расследование…</p>';return;}
@@ -1836,7 +1879,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   }
   if(!state.active||remaining()<=0){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">ВРЕМЯ<br>ВЫШЛО</h2><p class="vc-intro-copy">Расследование VICE CITY завершено. Если ты успел получить рамку, она останется в твоей коллекции навсегда.</p><div class="vc-actions"><button class="vc-secondary" id="vcCloseExpired">ЗАКРЫТЬ</button></div>';$vc("vcCloseExpired").onclick=close;return;}
   if(progress.stage===0){content.innerHTML=intro();$vc("vcStart").onclick=()=>{content.dataset.started="1";renderStage(1);};$vc("vcLater").onclick=close;updateModalTimer();return;}
-  renderStage(Math.min(3,Number(progress.stage)+1));
+  renderStage(Math.min(5,Number(progress.stage)+1));
  }
 
  async function loadRewardAvatar(){
@@ -1933,18 +1976,19 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
  function renderStage(n,errorText=""){
   const s=stages[n-1],completed=Number(state.progress?.stage||0);
-  content.innerHTML='<div class="vc-eyebrow">VICE CITY / INVESTIGATION '+String(n).padStart(2,"0")+' OF 03</div><h2 class="vc-stage-title">'+s.title+'</h2><p class="vc-stage-desc">'+s.desc+'</p><div class="vc-progress">'+[1,2,3].map(i=>'<span class="'+(i<=completed?'done':'')+'"></span>').join("")+'</div><div class="vc-source-row">'+s.links.map((x,i)=>'<div class="vc-source-item"><a class="vc-source" href="'+esc(x[1])+'" target="_blank" rel="noopener noreferrer">'+esc(x[0])+' ↗</a><button type="button" class="vc-copy-source" data-copy-source="'+i+'" aria-label="Скопировать ссылку">КОПИРОВАТЬ ССЫЛКУ</button></div>').join("")+'</div><form class="vc-form" id="vcForm">'+s.fields.map(f=>'<div class="vc-field"><label for="vc_'+f[0]+'">'+esc(f[1])+'</label><input id="vc_'+f[0]+'" name="'+f[0]+'" '+(f[0].includes("link")?'type="url"':'type="text"')+' placeholder="" autocomplete="off" autocapitalize="off" spellcheck="false" required></div>').join("")+'<div class="vc-hint">Подсказка: '+esc(s.hint)+'</div><div class="vc-error" id="vcError">'+esc(errorText)+'</div><div class="vc-actions"><button class="vc-primary" type="submit">ПРОВЕРИТЬ ОТВЕТЫ ↗</button><button class="vc-secondary" type="button" id="vcCloseStage">ЗАКРЫТЬ</button></div></form>';
-  content.querySelectorAll("[data-copy-source]").forEach(btn=>btn.addEventListener("click",async()=>{const value=s.links[Number(btn.dataset.copySource)][1];try{await navigator.clipboard.writeText(value);btn.textContent="СКОПИРОВАНО";}catch{const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();try{document.execCommand("copy");btn.textContent="СКОПИРОВАНО";}catch{btn.textContent="НЕ УДАЛОСЬ";}area.remove();}setTimeout(()=>btn.textContent="КОПИРОВАТЬ ССЫЛКУ",1800);}));
+  const progressDots=[1,2,3,4,5].map(i=>'<span class="'+(i<=completed?'done':'')+(i===n?' current':'')+'"><i></i></span>').join("");
+  content.innerHTML='<section class="vc-mission vc-enter"><div class="vc-mission-top"><div><div class="vc-eyebrow">VICE CITY / ДЕЛО № 006</div><div class="vc-mission-tag">'+esc(s.tag)+'</div></div><div class="vc-mission-count"><strong>'+String(n).padStart(2,"0")+'</strong><span>/ 05</span></div></div><div class="vc-mission-track">'+progressDots+'</div><div class="vc-mission-body"><div class="vc-mission-watermark">'+String(n).padStart(2,"0")+'</div><h2 class="vc-stage-title">'+s.title+'</h2><p class="vc-stage-desc">'+s.desc+'</p><div class="vc-mission-scan"></div><div class="vc-source-row">'+s.links.map((x,i)=>'<div class="vc-source-item"><a class="vc-source" href="'+esc(x[1])+'" target="_blank" rel="noopener noreferrer">'+esc(x[0])+' ↗</a><button type="button" class="vc-copy-source" data-copy-source="'+i+'" aria-label="Скопировать ссылку">КОПИРОВАТЬ</button></div>').join("")+'</div><form class="vc-form" id="vcForm">'+s.fields.map(f=>'<div class="vc-field"><label for="vc_'+f[0]+'">'+esc(f[1])+'</label><input id="vc_'+f[0]+'" name="'+f[0]+'" '+(f[0].includes("link")?'type="url"':'type="text"')+' placeholder="ВВЕДИ НАЙДЕННУЮ УЛИКУ" autocomplete="off" autocapitalize="off" spellcheck="false" required></div>').join("")+'<div class="vc-hint"><b>ENNIE / ПОДСКАЗКА</b><span>'+esc(s.hint)+'</span></div><div class="vc-error" id="vcError">'+esc(errorText)+'</div><div class="vc-actions"><button class="vc-primary vc-submit" type="submit"><span>ПРОВЕРИТЬ УЛИКИ</span><i>↗</i></button><button class="vc-secondary" type="button" id="vcCloseStage">ЗАКРЫТЬ ДЕЛО</button></div></form></div></section>';
+  content.querySelectorAll("[data-copy-source]").forEach(btn=>btn.addEventListener("click",async()=>{const value=s.links[Number(btn.dataset.copySource)][1];try{await navigator.clipboard.writeText(value);btn.textContent="ГОТОВО";}catch{const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();try{document.execCommand("copy");btn.textContent="ГОТОВО";}catch{btn.textContent="ОШИБКА";}area.remove();}setTimeout(()=>btn.textContent="КОПИРОВАТЬ",1800);}));
   $vc("vcCloseStage").onclick=close;
   $vc("vcForm").addEventListener("submit",async e=>{
-   e.preventDefault();const btn=e.submitter;btn.disabled=true;btn.textContent="ПРОВЕРЯЮ…";
+   e.preventDefault();const btn=e.submitter;btn.disabled=true;btn.innerHTML="<span>ЭННИ ПРОВЕРЯЕТ…</span><i>◌</i>";
    const answers=Object.fromEntries(new FormData(e.currentTarget).entries());
    try{
     const result=await call({action:"submit",stage:n,answers});
     state.progress={...(state.progress||{}),stage:result.stage,completed_at:result.completed?new Date().toISOString():null,awarded_at:result.awarded?new Date().toISOString():null};
     if(result.completed){state.progress.completed_at=new Date().toISOString();state.progress.awarded_at=new Date().toISOString();renderTeaser();render();}
-    else{const refreshed=await call({action:"status"});state=refreshed;renderStage(Math.min(3,Number(state.progress.stage)+1));}
-   }catch(err){const box=$vc("vcError");if(box)box.textContent=err.message||"Не удалось проверить ответы.";btn.disabled=false;btn.textContent="ПРОВЕРИТЬ ОТВЕТЫ ↗";}
+    else{const refreshed=await call({action:"status"});state=refreshed;renderStage(Math.min(5,Number(state.progress.stage)+1));}
+   }catch(err){const box=$vc("vcError");if(box)box.textContent=err.message||"Не удалось проверить ответы.";btn.disabled=false;btn.innerHTML="<span>ПРОВЕРИТЬ УЛИКИ</span><i>↗</i>";}
   });
  }
  function tick(){if(state){renderTeaser();updateModalTimer();if(overlay.classList.contains("open")&&state.active&&remaining()<=0)render();}}
