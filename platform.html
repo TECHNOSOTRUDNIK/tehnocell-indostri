@@ -1949,35 +1949,91 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  function playRewardReveal(){
   const canvas=$vc("vcRevealCanvas");if(!canvas)return;
   const ctx=canvas.getContext("2d",{alpha:false});if(!ctx)return;
-  let w=0,h=0,dpr=1,raf=0,started=0,lastFrame=0,ro=null;
-  const stage=canvas.parentElement,logo=new Image();let logoReady=false,logoFailed=false;
-  logo.onload=()=>{logoReady=true;};logo.onerror=()=>{logoFailed=true;};
+  let w=0,h=0,dpr=1,raf=0,started=0,lastFrame=0,ro=null,finished=false;
+  const stage=canvas.parentElement,logo=new Image();let logoReady=false,logoFailed=false,targetPoints=null;
+  logo.onload=()=>{logoReady=true;targetPoints=buildLogoContour(logo);};
+  logo.onerror=()=>{logoFailed=true;targetPoints=makeFallbackContour();};
   logo.src="https://www.rockstargames.com/VI/_next/static/media/vi.0hxa9~pf214xe.png?akim=1&imdensity=1&imwidth=640";
-  const resize=()=>{const r=stage.getBoundingClientRect();w=Math.max(0,r.width);h=Math.max(0,r.height);dpr=Math.min(devicePixelRatio||1,1.25);const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh;}ctx.setTransform(dpr,0,0,dpr,0,0);};
+  const clamp=v=>Math.max(0,Math.min(1,v)),smooth=v=>{v=clamp(v);return v*v*(3-2*v);},ease=v=>v<.5?4*v*v*v:1-Math.pow(-2*v+2,3)/2;
+  const COUNT=220;
+  function makeFallbackContour(){return Array.from({length:COUNT},(_,i)=>{const a=i/COUNT*Math.PI*2;return{x:Math.cos(a)*(1+.12*Math.cos(a*3)),y:Math.sin(a)};});}
+  // Извлекаем внешний контур настоящего PNG-логотипа, чтобы шар превращался в его силуэт.
+  function buildLogoContour(img){
+   const off=document.createElement("canvas"),size=180;off.width=size;off.height=size;
+   const oc=off.getContext("2d",{willReadFrequently:true});
+   const scale=Math.min(size*.82/img.naturalWidth,size*.82/img.naturalHeight);
+   const dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;
+   oc.clearRect(0,0,size,size);oc.drawImage(img,(size-dw)/2,(size-dh)/2,dw,dh);
+   let data;try{data=oc.getImageData(0,0,size,size).data;}catch(e){return makeFallbackContour();}
+   let sx=0,sy=0,n=0;
+   for(let y=0;y<size;y+=2)for(let x=0;x<size;x+=2){if(data[(y*size+x)*4+3]>30){sx+=x;sy+=y;n++;}}
+   if(!n)return makeFallbackContour();
+   const cx=sx/n,cy=sy/n,maxR=size*.49,raw=[];
+   for(let i=0;i<COUNT;i++){
+    const a=i/COUNT*Math.PI*2;let last=0;
+    for(let rr=0;rr<=maxR;rr+=.7){const px=Math.round(cx+Math.cos(a)*rr),py=Math.round(cy+Math.sin(a)*rr);if(px<0||py<0||px>=size||py>=size)break;if(data[(py*size+px)*4+3]>24)last=rr;}
+    raw.push({x:Math.cos(a)*last,y:Math.sin(a)*last});
+   }
+   // Normalize separately so the original logo proportions remain intact.
+   const maxX=Math.max(...raw.map(p=>Math.abs(p.x)),1),maxY=Math.max(...raw.map(p=>Math.abs(p.y)),1);
+   return raw.map(p=>({x:p.x/maxX,y:p.y/maxY}));
+  }
+  let bg=null;
+  function resize(){
+   const r=stage.getBoundingClientRect();w=Math.max(0,r.width);h=Math.max(0,r.height);
+   dpr=Math.min(devicePixelRatio||1,1.15);
+   const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
+   if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh;buildBackground();}
+   ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function buildBackground(){
+   if(!w||!h)return;
+   bg=document.createElement("canvas");bg.width=Math.max(1,Math.round(w*dpr));bg.height=Math.max(1,Math.round(h*dpr));
+   const b=bg.getContext("2d");b.setTransform(dpr,0,0,dpr,0,0);
+   b.fillStyle="#080711";b.fillRect(0,0,w,h);
+   const sky=b.createLinearGradient(0,0,0,h);sky.addColorStop(0,"#090914");sky.addColorStop(.52,"#171027");sky.addColorStop(.78,"#35152f");sky.addColorStop(1,"#090812");b.fillStyle=sky;b.fillRect(0,0,w,h);
+   const glow=b.createRadialGradient(w*.5,h*.64,0,w*.5,h*.64,w*.65);glow.addColorStop(0,"#e34b9b30");glow.addColorStop(.45,"#8c45cf18");glow.addColorStop(1,"#08071100");b.fillStyle=glow;b.fillRect(0,0,w,h);
+   // Далёкий неоновый горизонт и силуэт города — статичный слой почти бесплатен для GPU.
+   const horizon=h*.77;b.fillStyle="#090812";
+   for(let i=0;i<22;i++){const bw=w/22+2,bx=i*w/22,bh=h*(.07+((i*17)%9)*.018);b.fillRect(bx,horizon-bh,bw,bh);}
+   b.fillStyle="#f26ab0";b.globalAlpha=.18;b.fillRect(0,horizon,w,1);b.globalAlpha=1;
+   b.strokeStyle="#bd6bdb18";b.lineWidth=1;
+   for(let i=0;i<8;i++){b.beginPath();b.moveTo(w*.5,horizon);b.lineTo(i*w/7, h);b.stroke();}
+   for(let i=1;i<5;i++){const yy=horizon+(h-horizon)*i/5;b.beginPath();b.moveTo(0,yy);b.lineTo(w,yy);b.stroke();}
+  }
   resize();if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(stage);}else window.addEventListener("resize",resize);
-  const clamp=v=>Math.max(0,Math.min(1,v)),smooth=v=>{v=clamp(v);return v*v*(3-2*v);};
-  const motes=Array.from({length:22},(_,i)=>({a:i*2.399,r:.55+(i%7)*.09,size:.45+(i%3)*.25,seed:i*13.7}));
-  function orb(x,y,rx,ry,alpha){
-   if(alpha<=.005)return;
-   ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);ctx.scale(rx,ry);
-   const g=ctx.createRadialGradient(-.3,-.38,.04,0,0,1);g.addColorStop(0,"#fff");g.addColorStop(.34,"#f2f1fa");g.addColorStop(.72,"#aab0c2");g.addColorStop(1,"#171923");
-   ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,1,0,Math.PI*2);ctx.fill();
-   ctx.strokeStyle="#ffffff99";ctx.lineWidth=.012;ctx.stroke();
-   ctx.fillStyle="#fff";ctx.globalAlpha=alpha*.55;ctx.beginPath();ctx.ellipse(-.2,-.43,.22,.065,-.4,0,Math.PI*2);ctx.fill();ctx.restore();
+  const dust=Array.from({length:38},(_,i)=>({x:(i*73.17%100)/100,y:(i*37.91%100)/100,v:.000035+(i%5)*.000012,size:.45+(i%4)*.3,phase:i*1.71}));
+  const sparks=Array.from({length:8},(_,i)=>({a:i*Math.PI/4,r:.28+(i%3)*.055,phase:i*2.3}));
+  function drawAtmosphere(t){
+   if(bg)ctx.drawImage(bg,0,0,w,h);
+   for(let i=0;i<dust.length;i++){const p=dust[i],yy=(p.y-t*p.v*60+1)%1;ctx.globalAlpha=.16+.25*(.5+.5*Math.sin(t*1.4+p.phase));ctx.fillStyle=i%4===0?"#ff9bd7":"#c8c3ff";ctx.beginPath();ctx.arc(p.x*w,yy*h,p.size,0,Math.PI*2);ctx.fill();}
+   ctx.globalAlpha=1;
+   // Несколько редких световых искр, как отражения неоновых вывесок.
+   for(let i=0;i<sparks.length;i++){const p=sparks[i],a=p.a+t*.11,rr=Math.min(w,h)*p.r,xx=w/2+Math.cos(a)*rr,yy=h*.48+Math.sin(a)*rr*.65,al=.25+.3*(.5+.5*Math.sin(t*2+p.phase));ctx.globalAlpha=al;ctx.fillStyle="#ffb0e3";ctx.fillRect(xx,yy,1.4,1.4);}
+   ctx.globalAlpha=1;
   }
-  function fallbackVI(x,y,mw,mh,white){
-   ctx.save();ctx.textAlign="center";ctx.textBaseline="middle";ctx.font="italic 900 "+Math.min(mh*.78,mw*.48)+"px Georgia,serif";ctx.fillStyle=white?"#fff":"#f05abf";ctx.fillText("VI",x,y);ctx.restore();
+  function morphPath(x,y,rx,ry,morph,t){
+   const pts=[];
+   for(let i=0;i<COUNT;i++){
+    const a=i/COUNT*Math.PI*2,cx=Math.cos(a),cy=Math.sin(a),dst=targetPoints?targetPoints[i]:{x:cx,y:cy};
+    const wobble=(Math.sin(t*1.45+a*4)+Math.sin(t*.9+a*7))*.004*(1-morph);
+    pts.push({x:x+(cx+(dst.x-cx)*morph)*rx*(1+wobble),y:y+(cy+(dst.y-cy)*morph)*ry*(1+wobble)});
+   }
+   const path=new Path2D();path.moveTo((pts[0].x+pts[COUNT-1].x)/2,(pts[0].y+pts[COUNT-1].y)/2);
+   for(let i=0;i<COUNT;i++){const p=pts[i],n=pts[(i+1)%COUNT];path.quadraticCurveTo(p.x,p.y,(p.x+n.x)/2,(p.y+n.y)/2);}
+   path.closePath();return path;
   }
-  function logoShape(x,y,mw,mh,alpha,white,open){
-   if(alpha<=.002)return;
-   ctx.save();ctx.globalAlpha=alpha;
-   const revealW=mw*(.04+.96*open);
-   ctx.beginPath();ctx.rect(x-revealW/2,y-mh/2,revealW,mh);ctx.clip();
-   if(logoReady&&logo.naturalWidth){
-    const scale=Math.min(mw/logo.naturalWidth,mh/logo.naturalHeight),dw=logo.naturalWidth*scale,dh=logo.naturalHeight*scale;
-    ctx.filter=white?"brightness(0) invert(1)":"none";ctx.drawImage(logo,x-dw/2,y-dh/2,dw,dh);
-   }else if(logoFailed){fallbackVI(x,y,mw,mh,white);}
+  function drawLivingShape(path,x,y,rx,ry,t,morph){
+   ctx.save();ctx.shadowColor="#f1dcff";ctx.shadowBlur=12;const g=ctx.createRadialGradient(x-rx*.32,y-ry*.4,2,x,y,Math.max(rx,ry)*1.25);g.addColorStop(0,"#fff");g.addColorStop(.48,"#f6f4fb");g.addColorStop(.82,"#d7d8e2");g.addColorStop(1,"#9298ad");ctx.fillStyle=g;ctx.fill(path);ctx.restore();
+   ctx.save();ctx.clip(path);const shine=ctx.createRadialGradient(x-rx*.3,y-ry*.35,0,x,y,Math.max(rx,ry));shine.addColorStop(0,"#ffffffb8");shine.addColorStop(.5,"#ffffff20");shine.addColorStop(1,"#ffffff00");ctx.fillStyle=shine;ctx.fillRect(x-rx*1.5,y-ry*1.5,rx*3,ry*3);
+   // Тонкие движущиеся слои повторяют контур, как в настоящем ядре ENNIE.
+   for(let k=0;k<3;k++){ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(t*.55+k)*.025);ctx.scale(1.015+k*.018,1.015+k*.018);ctx.translate(-x,-y);ctx.globalAlpha=.11+k*.035;ctx.strokeStyle="#fff";ctx.lineWidth=1.2+k*.45;ctx.stroke(path);ctx.restore();}
    ctx.restore();
+  }
+  function drawLogoColor(x,y,mw,mh,alpha){
+   if(!logoReady||alpha<=.001)return;
+   const scale=Math.min(mw/logo.naturalWidth,mh/logo.naturalHeight),dw=logo.naturalWidth*scale,dh=logo.naturalHeight*scale;
+   ctx.save();ctx.globalAlpha=alpha;ctx.drawImage(logo,x-dw/2,y-dh/2,dw,dh);ctx.restore();
   }
   function frame(now){
    if(!canvas.isConnected){if(ro)ro.disconnect();else window.removeEventListener("resize",resize);cancelAnimationFrame(raf);return;}
@@ -1985,24 +2041,19 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
    if(w<2||h<2){resize();raf=requestAnimationFrame(frame);return;}
    if(now-lastFrame<32){raf=requestAnimationFrame(frame);return;}lastFrame=now;
    if(!started)started=now;const t=(now-started)/1000;
-   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle="#080710";ctx.fillRect(0,0,w,h);
-   const x=w/2,y=h*.48,u=Math.min(w,h),base=u*.19,ready=logoReady||logoFailed;
-   const morph=ready?smooth((t-2.15)/2.9):0;
-   const reveal=ready?smooth((t-2.35)/2.75):0;
-   const color=smooth((t-5.65)/1.25);
-   const orbAlpha=1-smooth((morph-.48)/.52);
-   const orbW=base*(1+1.9*morph),orbH=base*(1-.66*morph);
-   if(t<2.8){
-    for(let i=0;i<motes.length;i++){const p=motes[i],a=p.a+t*(.22+(i%4)*.035),dist=base*(1.18+p.r*.38);const px=x+Math.cos(a)*dist,py=y+Math.sin(a)*dist*.72;ctx.globalAlpha=(1-smooth((t-1.7)/1.1))*(.18+.22*(.5+.5*Math.sin(t*2+p.seed)));ctx.fillStyle="#e9d9ff";ctx.beginPath();ctx.arc(px,py,p.size,0,Math.PI*2);ctx.fill();}
-    ctx.globalAlpha=1;
-   }
-   orb(x,y,orbW,orbH,orbAlpha);
-   if(ready&&reveal>.001){
-    const mw=u*.84,mh=u*.56;
-    logoShape(x,y,mw,mh,reveal*(1-color*.12),true,reveal);
-    if(color>.001)logoShape(x,y,mw,mh,color,false,1);
-   }
-   if(t>8.5){ctx.globalAlpha=1;cancelAnimationFrame(raf);return;}
+   drawAtmosphere(t);
+   const x=w*.5,y=h*.49,u=Math.min(w,h),ready=!!targetPoints;
+   const morph=ready?smooth((t-1.45)/3.45):0;
+   const rx=u*(.205+.205*morph),ry=u*(.205-.075*morph);
+   const path=morphPath(x,y,rx,ry,morph,t);
+   drawLivingShape(path,x,y,rx,ry,t,morph);
+   // Цветной оригинал не возникает отдельно: он проявляется уже поверх полностью
+   // сформировавшегося того же силуэта.
+   const logoAlpha=ready?smooth((t-4.5)/1.6):0;
+   if(logoAlpha>.001)drawLogoColor(x,y,u*.86,u*.58,logoAlpha);
+   // После трансформации оставляем мягкую атмосферу, а не запускаем эффект заново.
+   if(t>7.2)finished=true;
+   if(finished&&t>8.2){ctx.globalAlpha=1;raf=0;return;}
    raf=requestAnimationFrame(frame);
   }
   raf=requestAnimationFrame(frame);
