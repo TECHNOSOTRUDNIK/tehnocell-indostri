@@ -1594,8 +1594,8 @@ function renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap=new Map
  }
  return '<div class="chat-message-row '+(mine?"mine":"")+'" data-message-row="'+m.id+'"><div class="chat-bubble '+(deleted?"deleted":"")+(momentId?" moment-message":"")+'" data-message-body="'+m.id+'">'+quote+escapeHtml(body)+attachment+'</div><div class="chat-bubble-meta"><time>'+time+'</time>'+(m.edited_at&&!deleted?'<span class="chat-edited-label">изменено</span>':"")+(status?'<span>· '+status+'</span>':"")+'</div>'+(reactionHtml?'<div class="chat-reactions">'+reactionHtml+'</div>':"")+actions+'</div>';
 }
-async function loadChatThread(){
- if(!activeChatId)return;const other=activeChatId,box=$("chatThread");
+async function loadChatThread(options={}){
+ if(!activeChatId)return;const other=activeChatId,box=$("chatThread"),oldScrollTop=box.scrollTop,wasNearBottom=box.scrollHeight-box.clientHeight-box.scrollTop<100;
  const [sent,received]=await Promise.all([
   db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id,message_type,attachment_path,attachment_name,attachment_mime,attachment_size").eq("sender_id",currentUser.id).eq("receiver_id",other).order("created_at",{ascending:true}).limit(250),
   db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id,message_type,attachment_path,attachment_name,attachment_mime,attachment_size").eq("sender_id",other).eq("receiver_id",currentUser.id).order("created_at",{ascending:true}).limit(250)
@@ -1625,9 +1625,27 @@ async function loadChatThread(){
  }
  let previousDay="";
  box.innerHTML=all.map(m=>{const day=new Date(m.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
- box.scrollTop=box.scrollHeight;
+ if(options.preserveScroll&&!wasNearBottom)box.scrollTop=oldScrollTop;else box.scrollTop=box.scrollHeight;
  const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at&&!m.deleted_at);
  if(unread.length){const {error}=await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
+}
+
+async function refreshChatMessageReactions(messageId){
+ const row=$("chatThread").querySelector('[data-message-row="'+messageId+'"]');if(!row)return;
+ const {data,error}=await db.from("tc_message_reactions").select("id,message_id,user_id,emoji").eq("message_id",messageId);
+ if(error){console.warn("Reaction refresh failed:",error.message);return;}
+ const grouped=new Map();(data||[]).forEach(x=>{const v=grouped.get(x.emoji)||{count:0,mine:false};v.count++;if(x.user_id===currentUser.id)v.mine=true;grouped.set(x.emoji,v);});
+ const html=[...grouped.entries()].map(([emoji,x])=>'<button type="button" class="chat-reaction '+(x.mine?"mine":"")+'" data-reaction="'+messageId+'" data-emoji="'+escapeHtml(emoji)+'">'+escapeHtml(emoji)+' '+x.count+'</button>').join("");
+ let target=row.querySelector(".chat-reactions");
+ if(html){if(!target){target=document.createElement("div");target.className="chat-reactions";row.insertBefore(target,row.querySelector(".chat-message-actions"));}target.innerHTML=html;}
+ else if(target)target.remove();
+}
+function updateChatContactPreview(message){
+ const contact=$("chatContacts").querySelector('[data-chat="'+message.receiver_id+'"],[data-chat="'+message.sender_id+'"]');
+ if(!contact)return;
+ const preview=contact.querySelector(".chat-contact-preview"),time=contact.querySelector(".chat-contact-time");
+ if(preview)preview.textContent="Вы: "+String(message.body||"").slice(0,58);
+ if(time)time.textContent=new Date(message.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
 }
 function setChatReply(id){const m=chatMessagesCache.find(x=>x.id===id);if(!m)return;chatReplyingTo=id;$("chatReplyText").textContent=m.deleted_at?"Сообщение удалено":m.body.slice(0,160);$("chatReplyPreview").hidden=false;$("chatInput").focus();}
 function clearChatReply(){chatReplyingTo=null;$("chatReplyPreview").hidden=true;$("chatReplyText").textContent="";}
@@ -1685,7 +1703,7 @@ $("chatHoldMenu").addEventListener("click",async e=>{
   const old=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();
   const result=old.data?await db.from("tc_message_reactions").delete().eq("id",old.data.id):await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});
   if(result.error)showNotice("Не удалось изменить реакцию: "+result.error.message);
-  closeChatHoldMenu();await loadChatThread();return;
+  closeChatHoldMenu();await refreshChatMessageReactions(id);return;
  }
  const kind=button.dataset.holdAction;if(!kind||!id)return;
  const m=chatMessagesCache.find(x=>x.id===id);
@@ -1723,18 +1741,27 @@ $("chatThread").addEventListener("click",async e=>{
  const momentButton=e.target.closest("[data-open-moment]");if(momentButton){const id=momentButton.dataset.openMoment;let group=storyGroups.find(g=>g.stories.some(x=>x.id===id));if(!group){await loadStories();group=storyGroups.find(g=>g.stories.some(x=>x.id===id));}await openSharedMoment(id);return;}
  const reply=e.target.closest("[data-reply]");if(reply){setChatReply(reply.dataset.reply);return;}
  const react=e.target.closest("[data-react], [data-reaction]");
- if(react){const id=react.dataset.react||react.dataset.reaction,emoji=react.dataset.emoji,existing=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(existing.data){const r=await db.from("tc_message_reactions").delete().eq("id",existing.data.id);if(r.error)showNotice("Не удалось убрать реакцию.");}else{const r=await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});if(r.error)showNotice("Не удалось добавить реакцию.");}await loadChatThread();return;}
+ if(react){const id=react.dataset.react||react.dataset.reaction,emoji=react.dataset.emoji,existing=await db.from("tc_message_reactions").select("id").eq("message_id",id).eq("user_id",currentUser.id).eq("emoji",emoji).maybeSingle();if(existing.data){const r=await db.from("tc_message_reactions").delete().eq("id",existing.data.id);if(r.error)showNotice("Не удалось убрать реакцию.");}else{const r=await db.from("tc_message_reactions").insert({message_id:id,user_id:currentUser.id,emoji});if(r.error)showNotice("Не удалось добавить реакцию.");}await refreshChatMessageReactions(id);return;}
  const edit=e.target.closest("[data-edit]");if(edit){const id=edit.dataset.edit,m=chatMessagesCache.find(x=>x.id===id),row=$("chatThread").querySelector('[data-message-row="'+id+'"]');if(!m||!row)return;const body=row.querySelector("[data-message-body]");body.innerHTML='<textarea class="chat-edit-box" maxlength="4000">'+escapeHtml(m.body)+'</textarea><div class="chat-edit-actions"><button type="button" data-save-edit="'+id+'">Сохранить</button><button type="button" data-cancel-edit="'+id+'">Отмена</button></div>';body.querySelector("textarea").focus();return;}
  const save=e.target.closest("[data-save-edit]");if(save){const id=save.dataset.saveEdit,row=$("chatThread").querySelector('[data-message-row="'+id+'"]'),value=row.querySelector("textarea").value.trim();if(!value){showNotice("Сообщение не может быть пустым.");return;}const r=await db.from("tc_direct_messages").update({body:value,edited_at:new Date().toISOString()}).eq("id",id).eq("sender_id",currentUser.id).is("deleted_at",null);if(r.error){showNotice("Не удалось изменить сообщение: "+r.error.message);return;}showNotice("Сообщение изменено.");await loadChatThread();await loadConversations();return;}
  const cancel=e.target.closest("[data-cancel-edit]");if(cancel){await loadChatThread();return;}
  const del=e.target.closest("[data-delete-message]");if(del){const id=del.dataset.deleteMessage,button=del;if(button.dataset.confirm!=="yes"){button.dataset.confirm="yes";button.textContent="Точно удалить?";return;}const message=chatMessagesCache.find(x=>x.id===id);const r=await db.from("tc_direct_messages").update({body:"Сообщение удалено",deleted_at:new Date().toISOString(),edited_at:null}).eq("id",id).eq("sender_id",currentUser.id).is("deleted_at",null);if(r.error){showNotice("Не удалось удалить сообщение: "+r.error.message);return;}if(message?.attachment_path)await db.storage.from("tc-chat-media").remove([message.attachment_path]);await loadChatThread();await loadConversations();}
 });
 $("chatForm").addEventListener("submit",async e=>{
- e.preventDefault();const body=$("chatInput").value.trim();if(!body||!activeChatId)return;const target=activeChatId,reply=chatReplyingTo;$("chatSend").disabled=true;
+ e.preventDefault();const body=$("chatInput").value.trim();if(!body||!activeChatId)return;const target=activeChatId,reply=chatReplyingTo,button=$("chatSend");button.disabled=true;
  const payload={sender_id:currentUser.id,receiver_id:target,body};if(reply)payload.reply_to_id=reply;
- const {error}=await db.from("tc_direct_messages").insert(payload);$("chatSend").disabled=false;
+ const {data:sent,error}=await db.from("tc_direct_messages").insert(payload).select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id,message_type,attachment_path,attachment_name,attachment_mime,attachment_size").single();button.disabled=false;
  if(error){showNotice("Не удалось отправить сообщение: "+error.message);return;}
- $("chatInput").value="";$("chatInput").style.height="auto";chatReplyingTo=null;$("chatReplyPreview").hidden=true;await loadChatThread();await loadConversations();
+ $("chatInput").value="";$("chatInput").style.height="auto";chatReplyingTo=null;$("chatReplyPreview").hidden=true;
+ if(sent){
+  chatMessagesCache.push(sent);
+  let replyMap=new Map();if(sent.reply_to_id){const quoted=chatMessagesCache.find(x=>x.id===sent.reply_to_id);if(quoted)replyMap.set(quoted.id,quoted);}
+  const lastDay=$("chatThread").querySelector(".chat-day-divider:last-of-type span")?.textContent||"";
+  const day=new Date(sent.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+  if(day!==lastDay){const divider=document.createElement("div");divider.className="chat-day-divider";divider.innerHTML="<span>"+escapeHtml(day)+"</span>";$("chatThread").appendChild(divider);}
+  const wrap=document.createElement("div");wrap.innerHTML=renderChatMessage(sent,[],replyMap,new Map(),new Map());if(wrap.firstElementChild)$("chatThread").appendChild(wrap.firstElementChild);
+  $("chatThread").scrollTop=$("chatThread").scrollHeight;updateChatContactPreview(sent);
+ }
 });
 
 async function sendChatAttachment(file,forcedType=null){
@@ -1778,8 +1805,8 @@ window.addEventListener("pagehide",()=>{if(chatRecorder?.state==="recording")cha
 function startMessengerRealtime(){
  if(messengerRealtimeChannel||!currentUser)return;
  messengerRealtimeChannel=db.channel("tehnocell-messenger-"+currentUser.id)
- .on("postgres_changes",{event:"*",schema:"public",table:"tc_direct_messages"},payload=>{const m=payload.new||payload.old;if(!m||!(m.sender_id===currentUser.id||m.receiver_id===currentUser.id))return;clearTimeout(chatRefreshTimer);chatRefreshTimer=setTimeout(()=>{loadConversations();if(activeChatId&&(m.sender_id===activeChatId||m.receiver_id===activeChatId))loadChatThread();},150);})
- .on("postgres_changes",{event:"*",schema:"public",table:"tc_message_reactions"},payload=>{const r=payload.new||payload.old;if(r&&chatMessagesCache.some(m=>m.id===r.message_id))loadChatThread();}).subscribe();
+ .on("postgres_changes",{event:"*",schema:"public",table:"tc_direct_messages"},payload=>{const m=payload.new||payload.old;if(!m||!(m.sender_id===currentUser.id||m.receiver_id===currentUser.id))return;if(m.sender_id===currentUser.id)return;clearTimeout(chatRefreshTimer);chatRefreshTimer=setTimeout(()=>{if(activeChatId&&(m.sender_id===activeChatId||m.receiver_id===activeChatId))loadChatThread({preserveScroll:true});loadConversations();},220);})
+ .on("postgres_changes",{event:"*",schema:"public",table:"tc_message_reactions"},payload=>{const r=payload.new||payload.old;if(r&&chatMessagesCache.some(m=>m.id===r.message_id))refreshChatMessageReactions(r.message_id);}).subscribe();
 }
 document.getElementById("markAllNotifications").addEventListener("click",async()=>{const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).is("read_at",null);if(error){showNotice("Не удалось отметить уведомления: "+error.message);return;}await loadNotifications();await loadHomeCounts();});
 async function loadNotifications(){
