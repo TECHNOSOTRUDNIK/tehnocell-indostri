@@ -43,20 +43,35 @@ function officialRockstarUrl(value: unknown) {
 }
 
 function validStage(stage: number, a: Record<string, unknown>) {
+  // Этап 1 — герои и вымышленный мир.
   if (stage === 1) {
-    return oneOf(a.jason, ["Jason","Джейсон","Джэйсон","Джейсонн"])
-      && oneOf(a.lucia, ["Lucia","Лусия","Люсия","Люсиа","Люча"])
+    return oneOf(a.jason, ["Jason","Jason Duval","Джейсон","Джейсон Дюваль","Джэйсон"])
+      && oneOf(a.lucia, ["Lucia","Lucia Caminos","Лусия","Люсия","Люсиа","Лусия Каминос"])
       && oneOf(a.state, ["Leonida","Леонида","Леонидия"])
-      && oneOf(a.city, ["Vice City","ViceCity","Вайс Сити","Вайс-Сити","Вайссити","Вайс-Сити","Вайс сити"]);
+      && oneOf(a.city, ["Vice City","ViceCity","Вайс Сити","Вайс-Сити","Вайссити"]);
   }
+  // Этап 2 — дата, платформы и обе ссылки.
   if (stage === 2) {
     return hasDate(a.date) && validPlatforms(a.platforms)
       && officialRockstarUrl(a.official_link) && validYandexUrl(a.yandex_link);
   }
+  // Этап 3 — три названия на карте Леониды. Раньше здесь ошибочно
+  // проверялись ответы от этапа 4/5, поэтому правильные названия не засчитывались.
   if (stage === 3) {
+    return oneOf(a.location_one, ["Port Gellhorn","Порт Геллхорн","Порт Геллхорн"])
+      && oneOf(a.location_two, ["Ambrosia","Амброзия"])
+      && oneOf(a.location_three, ["Grassrivers","Грассриверс","Грасс Риверс"]);
+  }
+  // Этап 4 — реальные прототипы.
+  if (stage === 4) {
     return oneOf(a.real_city, ["Miami","Майами","Маями"])
-      && oneOf(a.real_state, ["Florida","Флорида","Флорида штат"])
-      && oneOf(a.game_title, ["Grand Theft Auto VI","Grand Theft Auto 6","GTA VI","GTA 6","GTA 6","ГТА 6","ГТА VI","ГТА 6 часть","Гранд Тефт Авто 6","Гранд Тефт Авто VI","Гранд Theft Auto 6"]);
+      && oneOf(a.real_state, ["Florida","Флорида","штат Флорида"]);
+  }
+  // Этап 5 — название игры, разработчик и издатель.
+  if (stage === 5) {
+    return oneOf(a.game_title, ["Grand Theft Auto VI","Grand Theft Auto 6","GTA VI","GTA 6","ГТА 6","ГТА VI","Гранд Тефт Авто 6","Гранд Тефт Авто VI"])
+      && oneOf(a.developer, ["Rockstar North","Рокстар Норт"])
+      && oneOf(a.publisher, ["Rockstar Games","Рокстар Геймс","Рокстар"]);
   }
   return false;
 }
@@ -108,7 +123,7 @@ Deno.serve(async (req) => {
   if (!active) return reply({ error: "Время этого приключения завершилось. Следите за следующими событиями TEHNOCELL." }, 410);
 
   const stage = Number(body.stage);
-  if (![1, 2, 3].includes(stage)) return reply({ error: "Неизвестный этап." }, 400);
+  if (![1, 2, 3, 4, 5].includes(stage)) return reply({ error: "Неизвестный этап." }, 400);
 
   if (!progress) {
     const created = await admin.from("tc_event_progress")
