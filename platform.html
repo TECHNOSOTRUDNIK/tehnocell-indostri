@@ -2079,4 +2079,11 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
 </body></html></html>
