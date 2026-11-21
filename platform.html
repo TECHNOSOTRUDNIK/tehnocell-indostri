@@ -1596,6 +1596,7 @@ async function openChat(id,name,avatarPath=null){
  await loadChatThread();document.querySelectorAll("[data-chat]").forEach(b=>b.classList.toggle("active",b.dataset.chat===id));$("page-messages").classList.add("chat-open");
 }
 function tcMomentMessageId(value){const body=String(value||"");if(!body.startsWith("[[TC_MOMENT:")||!body.endsWith("]]"))return null;const id=body.slice(12,-2);return /^[0-9a-f-]{36}$/i.test(id)?id:null;}
+function chatDayKey(value){const d=new Date(value);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function formatChatDay(value){const date=new Date(value),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate()),day=new Date(date.getFullYear(),date.getMonth(),date.getDate()),diff=Math.round((today-day)/86400000);if(diff===0)return "Сегодня";if(diff===1)return "Вчера";return date.toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});}
 function renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap=new Map()){
  const mine=m.sender_id===currentUser.id,deleted=!!m.deleted_at,body=deleted?"Сообщение удалено":(tcMomentMessageId(m.body)?"":m.body),time=new Date(m.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}),reply=m.reply_to_id?replyMap.get(m.reply_to_id):null;
@@ -1644,8 +1645,8 @@ async function loadChatThread(options={}){
    tcMomentOpenCache.set(x.id,item);momentMap.set(x.id,item);
   }));
  }
- let previousDay="";
- box.innerHTML=all.map(m=>{const day=formatChatDay(m.created_at);let divider="";if(day!==previousDay){previousDay=day;divider='<div class="chat-day-divider"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
+ let previousDayKey="";
+ box.innerHTML=all.map(m=>{const key=chatDayKey(m.created_at),day=formatChatDay(m.created_at);let divider="";if(key!==previousDayKey){previousDayKey=key;divider='<div class="chat-day-divider" data-chat-day="'+key+'"><span>'+escapeHtml(day)+'</span></div>';}return divider+renderChatMessage(m,reactions,replyMap,attachmentUrls,momentMap);}).join("")||'<div class="chat-empty">Это начало вашей переписки. Поздоровайтесь!</div>';
  if(options.preserveScroll&&!wasNearBottom)box.scrollTop=oldScrollTop;else box.scrollTop=box.scrollHeight;
  const unread=all.filter(m=>m.receiver_id===currentUser.id&&!m.read_at&&!m.deleted_at);
  if(unread.length){const {error}=await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString(),read_at:new Date().toISOString()}).in("id",unread.map(m=>m.id));if(!error){await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).eq("actor_id",other).eq("kind","message").is("read_at",null);loadHomeCounts();}}
@@ -1857,10 +1858,8 @@ async function appendRealtimeChatMessage(message){
  const momentId=tcMomentMessageId(message.body);
  if(momentId){await loadChatThread({preserveScroll:true});return;}
  chatMessagesCache.push(message);
- const lastDivider=[...box.querySelectorAll(".chat-day-divider")].at(-1);
- const lastDay=lastDivider?.querySelector("span")?.textContent||"";
- const day=formatChatDay(message.created_at);
- if(day!==lastDay){const divider=document.createElement("div");divider.className="chat-day-divider";const span=document.createElement("span");span.textContent=day;divider.appendChild(span);box.appendChild(divider);}
+ const dayKey=chatDayKey(message.created_at),day=formatChatDay(message.created_at);
+ if(!box.querySelector('.chat-day-divider[data-chat-day="'+dayKey+'"]')){const divider=document.createElement("div");divider.className="chat-day-divider";divider.dataset.chatDay=dayKey;const span=document.createElement("span");span.textContent=day;divider.appendChild(span);box.appendChild(divider);}
  const wrap=document.createElement("div");
  wrap.innerHTML=renderChatMessage(message,[],replyMap,attachmentUrls,momentMap);
  if(wrap.firstElementChild)box.appendChild(wrap.firstElementChild);
