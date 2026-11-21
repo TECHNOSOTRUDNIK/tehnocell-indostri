@@ -8,7 +8,7 @@ on:
       - ".github/workflows/android-platform.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -46,15 +46,24 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: gradle -p android-app assembleDebug --stacktrace -PciVersionCode=${{ github.run_number }}
 
-      - name: Upload APK
+      - name: Keep APK as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TEHNOCELL-Platform-signed-v${{ github.run_number }}
+          name: TEHNOCELL-Platform-v${{ github.run_number }}
           path: android-app/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
-# Trigger signed build after repository signing secrets were configured.
-
-# Retry with corrected signing secrets.
-
-# Trigger build with official dependency repositories.
+      - name: Publish APK to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: platform-v1.0.${{ github.run_number }}
+          name: TEHNOCELL PLATFORM 1.0.${{ github.run_number }}
+          body: |
+            Установочный APK TEHNOCELL PLATFORM.
+            Приложение открывает актуальную веб-платформу TEHNOCELL.
+          files: android-app/app/build/outputs/apk/debug/app-debug.apk
+          make_latest: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
