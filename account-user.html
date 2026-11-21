@@ -800,6 +800,12 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
 .vc-frame-orbit{border-color:#ffd36acc!important;box-shadow:0 0 10px #ffd36a55!important}
 .vc-frame-orbit.second{border-color:#b84cffcc!important;box-shadow:0 0 10px #b84cff66!important}
 
+
+/* VICE CITY: force the collectible ring to remain visible on both account avatars. */
+#profilePhoto.tc-avatar-vice-city,#settingsPhoto.tc-avatar-vice-city{position:relative!important;isolation:isolate!important;overflow:visible!important;border-radius:50%!important;clip-path:none!important}
+#profilePhoto.tc-avatar-vice-city>img,#settingsPhoto.tc-avatar-vice-city>img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important;clip-path:circle(50%)!important;z-index:1!important}
+#profilePhoto.tc-avatar-vice-city::before,#settingsPhoto.tc-avatar-vice-city::before{content:""!important;position:absolute!important;inset:-19%!important;z-index:4!important;pointer-events:none!important}
+#profilePhoto.tc-avatar-vice-city::after,#settingsPhoto.tc-avatar-vice-city::after{content:""!important;position:absolute!important;inset:-5px!important;border-radius:50%!important;z-index:5!important;pointer-events:none!important;border:2px solid #ffd36a!important;outline:2px solid #b84cff!important;outline-offset:2px!important;box-shadow:0 0 8px #ffd36a88,0 0 17px #a53cff99!important}
 </style></head>
 <body><header class="header"><div class="logo">
     TEHNOCELL <span>ID</span>
@@ -2442,14 +2448,10 @@ $("supportReplyForm").addEventListener("submit",async e=>{
 (function(){
  const back=document.getElementById("tcBackButton");
  if(!back)return;
+ back.setAttribute("href",new URL("platform.html",location.href).href);
  back.addEventListener("click",function(event){
-  const ref=document.referrer;
-  let safe=false;
-  try{
-   const url=new URL(ref);
-   safe=url.origin===location.origin&&!/\/(login|register|account|account-user)\.html$/.test(url.pathname);
-  }catch(_){}
-  if(safe&&history.length>1){event.preventDefault();history.back();}
+  event.preventDefault();
+  window.location.assign(new URL("platform.html",location.href).href);
  });
 })();
 </script>
