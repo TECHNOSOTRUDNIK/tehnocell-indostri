@@ -2036,7 +2036,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 
  function initRewardTrailer(){
   const host=$vc("vcTrailerWrap");if(!host)return;
-  const src="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/vice-city-media-v1/GTAVI_Out_Now.mp4";
+  const src="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/vice-city-media-v1/GTAVI_Out_Now.mp4?v=2";
   host.innerHTML='<div class="tc-native-player" data-tc-player><video class="tc-native-video" playsinline webkit-playsinline preload="metadata" poster="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" aria-label="Официальный ролик GTA VI"><source src="'+src+'" type="video/mp4"></video><div class="tc-player-overlay"><button type="button" class="tc-player-bigplay" aria-label="Воспроизвести">▶</button><span class="tc-player-loading">ЗАГРУЗКА РОЛИКА…</span></div><div class="tc-player-controls"><button type="button" class="tc-player-toggle" aria-label="Воспроизвести">▶</button><span class="tc-player-time">0:00 / 0:30</span><input class="tc-player-seek" type="range" min="0" max="1000" value="0" aria-label="Позиция воспроизведения"><button type="button" class="tc-player-sound" aria-label="Включить звук">ЗВУК ВЫКЛ.</button><button type="button" class="tc-player-full" aria-label="Полный экран">⛶</button></div><div class="tc-player-error" hidden>Не удалось загрузить видео. Проверь подключение и попробуй ещё раз.</div></div><div class="vc-trailer-fallback">ОФИЦИАЛЬНЫЙ ФАЙЛ ROCKSTAR · 4K · 00:30</div>';
   const player=host.querySelector("[data-tc-player]"),video=player?.querySelector("video");
   if(!player||!video)return;
