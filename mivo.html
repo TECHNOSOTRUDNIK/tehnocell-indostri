@@ -885,9 +885,9 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
   <section id="mivoDevelopmentNotice" role="status" aria-label="Статус разработки MIVO">
     <div class="pause-mark" aria-hidden="true">Ⅱ</div>
     <div class="pause-copy">
-      <div class="pause-label">ОБЪЯВЛЕНИЕ · СТАТУС ПРОЕКТА</div>
-      <h2>Разработка MIVO временно приостановлена</h2>
-      <p>Сейчас я временно переключаюсь на другие задачи и пока не буду заниматься развитием MIVO. Проект не закрыт — мы планируем вернуться к нему позже. Сроки возобновления разработки пока не определены. Спасибо, что остаётесь с нами.</p>
+      <div class="pause-label">СТАТУС · MIVO В РАЗРАБОТКЕ</div>
+      <h2>MIVO продолжает развиваться</h2>
+      <p>Веб-плеер, поиск, избранное, история и плейлисты доступны. Личные подборки пока сохраняются в этом браузере, без синхронизации между устройствами. Полный лицензированный мировой каталог и единый поток полных версий ещё не подключены — доступность музыки зависит от источника.</p>
     </div>
   </section>
 
@@ -963,7 +963,7 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 <div class="settings-heading"><div class="eyebrow-line">MIVO / ПЕРСОНАЛЬНОЕ ПРОСТРАНСТВО <span></span></div><h2>Настройки</h2><p>Настрой внешний вид, поведение приложения и удобство прослушивания.</p></div>
 <div class="settings-layout">
 <div class="settings-group"><h3>Внешний вид</h3><p>Сделай интерфейс таким, каким тебе удобно пользоваться.</p>
-<label class="setting-row"><span><b>Цвет оформления</b><small>Цвет кнопок и выделения</small></span><input id="uiAccent" type="color" value="#b99cff"></label>
+<label class="setting-row"><span><b>Цвет оформления</b><small>Цвет кнопок и выделения</small></span><input id="uiAccent" type="color" value="#ffffff"></label>
 <label class="setting-row"><span><b>Стиль интерфейса</b><small>Общая атмосфера приложения</small></span><select id="uiTheme"><option value="dark">Тёмный</option><option value="black">Абсолютно чёрный</option><option value="soft">Мягкий графит</option></select></label>
 <label class="setting-row"><span><b>Размер текста</b><small>Масштаб подписей и заголовков</small></span><select id="uiFont"><option value="small">Маленький</option><option value="normal">Обычный</option><option value="large">Крупный</option></select></label>
 <label class="setting-row"><span><b>Плотность карточек</b><small>Больше музыки или крупные обложки</small></span><select id="uiDensity"><option value="comfortable">Просторная</option><option value="compact">Компактная</option></select></label>
@@ -1021,7 +1021,7 @@ body.mivo-no-ambient .np-backdrop:after{display:none!important}
 
 <script>
 let localTracks=[],catalogTracks=readStore("mivo_catalog_cache_v1",[]),hitTracks=[],queue=[],current=-1,currentTrackKey=null,searchTimer=null,searchController=null,searchSequence=0,liked=new Set(readStore("mivo_liked_v1",[])),recent=readStore("mivo_recent_v1",[]),playlists=readStore("mivo_playlists_v1",[]),repeat=false,shuffle=false;
-if(!Array.isArray(catalogTracks))catalogTracks=[];if(!Array.isArray(recent))recent=[];if(!Array.isArray(playlists))playlists=[];
+if(!Array.isArray(catalogTracks))catalogTracks=[];else catalogTracks=catalogTracks.filter(t=>t&&typeof t==="object"&&t.genre!=="Local");if(!Array.isArray(recent))recent=[];if(!Array.isArray(playlists))playlists=[];playlists=playlists.filter(p=>p&&typeof p==="object").map(p=>({...p,tracks:Array.isArray(p.tracks)?p.tracks.filter(k=>typeof k==="string"):[],items:Array.isArray(p.items)?p.items.filter(t=>t&&typeof t==="object"):[]}));
 function readStore(key,fallback){try{const value=JSON.parse(localStorage.getItem(key)||"null");return value??fallback}catch(_){return fallback}}
 function writeStore(key,value){try{localStorage.setItem(key,JSON.stringify(value))}catch(_){toast("Не удалось сохранить данные в этом браузере")}}
 function trackKey(t){return t.id||((t.genre==="Local"?"local:":"track:")+t.title+"::"+t.artist)}
@@ -1063,13 +1063,29 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshMiv
 
 function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),2400)}
 function allTracks(){return [...localTracks,...catalogTracks,...hitTracks]}
-function trackSnapshot(t){return {id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.url,releaseDate:t.releaseDate,chartRank:t.chartRank,symbol:t.symbol,style:t.style}}
-function persistCatalog(){const old=readStore("mivo_catalog_cache_v1",[]),map=new Map();[...old,...catalogTracks].forEach(t=>{if(t&&t.id)map.set(t.id,trackSnapshot(t))});writeStore("mivo_catalog_cache_v1",[...map.values()].slice(-100))}
+function trackSnapshot(t){return {id:t.id,title:t.title,artist:t.artist,genre:t.genre,collectionName:t.collectionName,artworkUrl100:t.artworkUrl100,trackViewUrl:t.trackViewUrl,url:t.genre==="Local"?"":t.url,releaseDate:t.releaseDate,chartRank:t.chartRank,symbol:t.symbol,style:t.style}}
+function persistCatalog(){const saved=readStore("mivo_catalog_cache_v1",[]),old=Array.isArray(saved)?saved:[],map=new Map();[...old,...catalogTracks].forEach(t=>{if(t&&t.id&&t.genre!=="Local")map.set(t.id,trackSnapshot(t))});writeStore("mivo_catalog_cache_v1",[...map.values()].slice(-100))}
 function restoreHistoryTracks(){
  const history=readStore("mivo_recent_tracks_v1",{}),savedLikes=readStore("mivo_liked_tracks_v1",{}),known=new Set(catalogTracks.map(trackKey));
- [...recent,...liked].forEach(key=>{const t=history[key]||savedLikes[key];if(t&&!known.has(trackKey(t))){catalogTracks.push(t);known.add(trackKey(t))}});
+ [...recent,...liked].forEach(key=>{const t=history[key]||savedLikes[key];if(t&&t.genre!=="Local"&&!known.has(trackKey(t))){catalogTracks.push(t);known.add(trackKey(t))}});
 }
 restoreHistoryTracks();
+function hydratePlaylistLibrary(){
+ let changed=false;
+ playlists.forEach(p=>{
+  p.tracks.forEach(key=>{
+   if(p.items.some(item=>trackKey(item)===key))return;
+   const track=allTracks().find(t=>trackKey(t)===key);
+   if(track){p.items.push(trackSnapshot(track));changed=true}
+  });
+  p.items.forEach(track=>{
+   if(track.genre==="Local")return;
+   if(!catalogTracks.some(item=>trackKey(item)===trackKey(track)))catalogTracks.push(track);
+  });
+ });
+ if(changed)savePlaylists();
+}
+hydratePlaylistLibrary();
 function card(t,i,local=false){
  const d=document.createElement("div");d.className="music-card";
  const art=t.artworkUrl100?escapeHtml(t.artworkUrl100.replace("100x100","300x300")):"";
@@ -1096,13 +1112,16 @@ $("playlistModal").addEventListener("click",e=>{if(e.target.id==="playlistModal"
 $("playlistNameInput").addEventListener("keydown",e=>{if(e.key==="Enter")submitPlaylistModal();if(e.key==="Escape")closePlaylistModal()});
 function createPlaylist(name){
  name=(name||"").trim().slice(0,48);if(!name){toast("Введи название плейлиста");return null}
- const p={id:"pl_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7),name,tracks:[],createdAt:Date.now()};
+ const p={id:"pl_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7),name,tracks:[],items:[],createdAt:Date.now()};
  playlists.unshift(p);savePlaylists();renderPlaylists();toast("Плейлист «"+name+"» создан");return p;
 }
 function addTrackToPlaylist(track,playlistId){
  const p=playlists.find(x=>x.id===playlistId);if(!p||!track)return;
+ p.tracks=Array.isArray(p.tracks)?p.tracks:[];
+ p.items=Array.isArray(p.items)?p.items:[];
  const key=trackKey(track);if(p.tracks.includes(key)){toast("Композиция уже есть в плейлисте");return}
- p.tracks.push(key);savePlaylists();renderPlaylists();toast("Добавлено в «"+p.name+"»");
+ p.tracks.push(key);p.items=p.items.filter(item=>trackKey(item)!==key);p.items.push(trackSnapshot(track));
+ savePlaylists();renderPlaylists();toast("Добавлено в «"+p.name+"»");
 }
 async function choosePlaylistForTrack(track){
  if(!playlists.length){openPlaylistModal(p=>addTrackToPlaylist(track,p.id));return}
@@ -1227,9 +1246,18 @@ function renderPlaylists(){
 }
 function playPlaylist(id){
  const p=playlists.find(x=>x.id===id);if(!p)return;
- const tracks=allTracks(),available=p.tracks.map(k=>tracks.find(t=>trackKey(t)===k)).filter(Boolean);
- if(!available.length){toast("В плейлисте пока нет доступных треков. Найди их через поиск или добавь аудиофайлы заново.");return}
- queue=available.map(trackKey);playTrack(tracks.indexOf(available[0]));toast("Запущен плейлист «"+p.name+"»");
+ const tracks=allTracks();
+ (p.items||[]).forEach(snapshot=>{
+  if(!snapshot||snapshot.genre==="Local")return;
+  const index=tracks.findIndex(t=>trackKey(t)===trackKey(snapshot));
+  if(index<0){catalogTracks.push(snapshot);tracks.push(snapshot)}
+  else if(!tracks[index].url&&snapshot.url)Object.assign(tracks[index],snapshot);
+ });
+ const available=p.tracks.map(k=>tracks.find(t=>trackKey(t)===k)).filter(t=>t&&t.url);
+ if(!available.length){toast("В плейлисте пока нет доступных композиций. Для локальных файлов выбери их на этом устройстве ещё раз.");return}
+ queue=available.map(trackKey);playTrack(tracks.indexOf(available[0]));
+ const missing=p.tracks.length-available.length;
+ toast(missing?"Запущены доступные треки. Пока недоступно: "+missing:"Запущен плейлист «"+p.name+"»");
 }
 function renderMixes(){
  const root=$("mixGrid"),empty=$("mixEmpty");if(!root)return;root.replaceChildren();
@@ -1426,8 +1454,8 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
   if("mediaSession"in navigator){
    try{
     navigator.mediaSession.metadata=new MediaMetadata({title:t.title,artist:t.artist,album:t.collectionName||"MIVO",artwork:t.artworkUrl100?[{src:t.artworkUrl100.replace("100x100","300x300"),sizes:"600x600",type:"image/jpeg"}]:[]});
-    navigator.mediaSession.setActionHandler("play",()=>togglePlay());
-    navigator.mediaSession.setActionHandler("pause",()=>togglePlay());
+    navigator.mediaSession.setActionHandler("play",()=>{if(audio.paused)togglePlay()});
+    navigator.mediaSession.setActionHandler("pause",()=>{if(!audio.paused)togglePlay()});
     navigator.mediaSession.setActionHandler("previoustrack",()=>move(-1));
     navigator.mediaSession.setActionHandler("nexttrack",()=>move(1));
     navigator.mediaSession.setActionHandler("seekto",d=>{if(Number.isFinite(d.seekTime))audio.currentTime=d.seekTime});
@@ -1678,9 +1706,9 @@ render(allTracks());renderLocal();renderMixes();renderPlaylists();
 <script>
 (function(){
  const $=id=>document.getElementById(id);
- const defaults={accent:"#b99cff",theme:"dark",font:"normal",density:"comfortable",corners:"soft",columns:"auto",motion:true,ambient:true,autoplay:true,rememberVolume:true,autoPlayer:false,autoLyrics:false,dataSaver:false,reduceMotion:false,language:"ru",start:"home"};
+ const defaults={accent:"#ffffff",theme:"dark",font:"normal",density:"comfortable",corners:"soft",columns:"auto",motion:true,ambient:true,autoplay:true,rememberVolume:true,autoPlayer:false,autoLyrics:false,dataSaver:false,reduceMotion:false,language:"ru",start:"home"};
  let p={...defaults};
- try{p={...p,...JSON.parse(localStorage.getItem("mivo_ui_settings_v1")||"{}")}}catch(_){}
+ try{const saved=JSON.parse(localStorage.getItem("mivo_ui_settings_v1")||"{}");p={...p,...saved};if(String(saved.accent||"").toLowerCase()==="#b99cff")p.accent=defaults.accent}catch(_){}
  const ids={accent:"uiAccent",theme:"uiTheme",font:"uiFont",density:"uiDensity",corners:"uiCorners",columns:"uiColumns",motion:"uiMotion",ambient:"uiAmbient",autoplay:"uiAutoplay",rememberVolume:"uiRememberVolume",autoPlayer:"uiAutoPlayer",autoLyrics:"uiAutoLyrics",dataSaver:"uiDataSaver",reduceMotion:"uiReduceMotion",language:"uiLanguage",start:"uiStart"};
  function apply(){
   document.documentElement.style.setProperty("--accent",p.accent);
