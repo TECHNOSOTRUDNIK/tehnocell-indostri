@@ -452,6 +452,24 @@
 .vc-trailer-fallback{display:block;padding:9px 11px;color:#e7d5b5;text-align:center;text-decoration:none;font-size:8px;letter-spacing:.7px;border-top:1px solid #ffffff16}
 @media(max-width:520px){.vc-trailer-topline{top:8px;left:9px;right:9px;font-size:7px}.vc-trailer-bottom{font-size:6px;left:9px}.vc-trailer-play{padding:9px 13px;font-size:8px}}
 
+/* TEHNOCELL native VICE CITY trailer player */
+.tc-native-player{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#030306;border-radius:13px;isolation:isolate}
+.tc-native-video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+.tc-player-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;background:linear-gradient(180deg,#0005,transparent 30%,transparent 65%,#0009)}
+.tc-player-bigplay{pointer-events:auto;width:54px;height:54px;border:1px solid #f0d078;border-radius:50%;background:#17101dcc;color:#f5d36f;font-size:20px;box-shadow:0 0 28px #9d55df66}
+.tc-player-loading{position:absolute;top:12px;left:12px;color:#fff;font-size:8px;letter-spacing:1.5px;text-shadow:0 1px 5px #000}
+.tc-player-loading[hidden]{display:none}
+.tc-player-controls{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;padding:9px 10px;background:linear-gradient(transparent,#050509ed);color:#fff}
+.tc-player-controls button{border:0;background:transparent;color:#f2d47d;font:inherit;font-size:12px;font-weight:800;white-space:nowrap;padding:5px}
+.tc-player-time{font-size:9px;font-variant-numeric:tabular-nums;white-space:nowrap;color:#fff}
+.tc-player-seek{min-width:30px;flex:1;height:3px;accent-color:#c77bff}
+.tc-player-sound{font-size:8px!important;letter-spacing:.4px}
+.tc-player-full{font-size:19px!important}
+.tc-player-error{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:#fff;background:#08080dee;font-size:12px}
+.tc-player-error[hidden]{display:none}
+.vc-trailer-player .vc-trailer-fallback{color:#e7d5b5}
+@media(max-width:390px){.tc-player-controls{gap:4px;padding:7px}.tc-player-time{font-size:8px}.tc-player-sound{font-size:7px!important}}
+
 /* VICE CITY reward: premium collectible presentation */
 .vc-award-cinematic{position:relative;overflow:hidden;padding:13px 15px 16px;border:1px solid #8b5c9c88;border-radius:20px;background:radial-gradient(ellipse at 50% 5%,#9c52d522,transparent 42%),linear-gradient(155deg,#17121d,#080a10 78%);box-shadow:inset 0 1px #ffffff13,inset 0 0 42px #b55ce50d,0 18px 48px #0009;animation:vc-award-arrive .9s both}
 .vc-award-cinematic:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 18%,#ffffff0b 43%,transparent 65%);transform:translateX(-130%);animation:vc-award-sweep 5.8s 1.2s ease-in-out infinite}
@@ -2018,8 +2036,22 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 
  function initRewardTrailer(){
   const host=$vc("vcTrailerWrap");if(!host)return;
-  const player='<div class="vc-trailer-frame"><iframe src="https://www.rockstargames.com/videoplayer?autoplay=true&muted=false&embed=&id=55kss26g&locale=ru_ru" title="Официальный ролик GTA VI" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><a class="vc-trailer-fallback" href="https://www.rockstargames.com/VI/out-now" target="_blank" rel="noopener noreferrer">ЕСЛИ АВТОЗАПУСК ЗАБЛОКИРОВАН · ОТКРЫТЬ РОЛИК НА ROCKSTAR ↗</a>';
-  host.innerHTML=player;
+  const src="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/vice-city-media-v1/GTAVI_Out_Now.mp4";
+  host.innerHTML='<div class="tc-native-player" data-tc-player><video class="tc-native-video" playsinline webkit-playsinline preload="metadata" poster="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" aria-label="Официальный ролик GTA VI"><source src="'+src+'" type="video/mp4"></video><div class="tc-player-overlay"><button type="button" class="tc-player-bigplay" aria-label="Воспроизвести">▶</button><span class="tc-player-loading">ЗАГРУЗКА РОЛИКА…</span></div><div class="tc-player-controls"><button type="button" class="tc-player-toggle" aria-label="Воспроизвести">▶</button><span class="tc-player-time">0:00 / 0:30</span><input class="tc-player-seek" type="range" min="0" max="1000" value="0" aria-label="Позиция воспроизведения"><button type="button" class="tc-player-sound" aria-label="Включить звук">ЗВУК ВЫКЛ.</button><button type="button" class="tc-player-full" aria-label="Полный экран">⛶</button></div><div class="tc-player-error" hidden>Не удалось загрузить видео. Проверь подключение и попробуй ещё раз.</div></div><div class="vc-trailer-fallback">ОФИЦИАЛЬНЫЙ ФАЙЛ ROCKSTAR · 4K · 00:30</div>';
+  const player=host.querySelector("[data-tc-player]"),video=player?.querySelector("video");
+  if(!player||!video)return;
+  const toggle=player.querySelector(".tc-player-toggle"),big=player.querySelector(".tc-player-bigplay"),sound=player.querySelector(".tc-player-sound"),seek=player.querySelector(".tc-player-seek"),time=player.querySelector(".tc-player-time"),loading=player.querySelector(".tc-player-loading"),error=player.querySelector(".tc-player-error");
+  const fmt=v=>{v=Math.max(0,Math.floor(Number(v)||0));return Math.floor(v/60)+":"+String(v%60).padStart(2,"0");};
+  const paint=()=>{const d=Number.isFinite(video.duration)?video.duration:30;time.textContent=fmt(video.currentTime)+" / "+fmt(d);seek.value=String(d?Math.round(video.currentTime/d*1000):0);};
+  const sync=()=>{const paused=video.paused;toggle.textContent=paused?"▶":"Ⅱ";toggle.setAttribute("aria-label",paused?"Воспроизвести":"Пауза");big.textContent=paused?"▶":"Ⅱ";big.style.opacity=paused?"1":"0";};
+  const play=async()=>{try{await video.play();}catch(e){video.muted=true; sound.textContent="ВКЛЮЧИТЬ ЗВУК";}};
+  toggle.addEventListener("click",()=>video.paused?play():video.pause());
+  big.addEventListener("click",()=>video.paused?play():video.pause());
+  sound.addEventListener("click",()=>{video.muted=!video.muted;sound.textContent=video.muted?"ВКЛЮЧИТЬ ЗВУК":"ЗВУК ВКЛ.";if(!video.muted&&video.paused)play();});
+  seek.addEventListener("input",()=>{if(Number.isFinite(video.duration))video.currentTime=video.duration*(Number(seek.value)/1000);paint();});
+  player.querySelector(".tc-player-full").addEventListener("click",()=>{if(player.requestFullscreen)player.requestFullscreen();else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen();});
+  video.addEventListener("play",sync);video.addEventListener("pause",sync);video.addEventListener("timeupdate",paint);video.addEventListener("loadedmetadata",()=>{paint();loading.hidden=true;});video.addEventListener("canplay",()=>{loading.hidden=true;});video.addEventListener("waiting",()=>{loading.hidden=false;});video.addEventListener("playing",()=>{loading.hidden=true;});video.addEventListener("error",()=>{loading.hidden=true;error.hidden=false;});
+  video.muted=true;video.play().catch(()=>{loading.hidden=true;sync();});
  }
  function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
  function renderStage(n,errorText=""){
