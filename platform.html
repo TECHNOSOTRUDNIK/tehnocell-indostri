@@ -509,6 +509,11 @@
 @keyframes vcPurpleRing{0%,100%{transform:scale(.96);opacity:.45}50%{transform:scale(1.08);opacity:.95}}
 @keyframes vcPurpleButton{0%,100%{box-shadow:0 0 9px rgba(155,91,255,.2),inset 0 0 8px rgba(155,91,255,.1)}50%{box-shadow:0 0 22px rgba(174,119,255,.5),inset 0 0 15px rgba(155,91,255,.25)}}
 @media(prefers-reduced-motion:reduce){.vc-teaser,.vc-teaser:before,.vc-teaser-go{animation:none!important}}
+
+/* Keep palm artwork visible above the circular preview after legacy frame rules */
+.vc-frame-demo:before{content:"";position:absolute;inset:-17%;border:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23e4c895' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 88 Q19 62 17 37 M17 37 Q4 30 3 18 Q15 20 20 33 Q16 17 25 8 Q29 22 21 35 Q34 20 43 23 Q35 36 20 40'/%3E%3Cpath d='M87 88 Q81 62 83 37 M83 37 Q96 30 97 18 Q85 20 80 33 Q84 17 75 8 Q71 22 79 35 Q66 20 57 23 Q65 36 80 40'/%3E%3C/g%3E%3Cpath d='M30 91 Q50 83 70 91' fill='none' stroke='%238fc9c2' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M38 95 Q50 90 62 95' fill='none' stroke='%23d8a98b' stroke-width='1' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='8' r='2' fill='%23e4c895'/%3E%3C/svg%3E") center/100% 100% no-repeat;animation:none;z-index:4;pointer-events:none}
+.vc-frame-demo:after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1.8px solid #e4c895;outline:1px solid #8fc9c2;outline-offset:2px;z-index:3;pointer-events:none}
+.vc-frame-orbit{border-color:#e4c895aa!important;box-shadow:none!important}.vc-frame-orbit.second{border-color:#8fc9c288!important}
 </style>
 
 <style id="tc-chat-list-layout-fix">
@@ -1970,7 +1975,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   const host=$vc("vcTrailerWrap"),button=$vc("vcPlayTrailer");
   if(!host||!button)return;
   button.addEventListener("click",()=>{
-   host.innerHTML='<div class="vc-trailer-frame"><iframe src="https://www.youtube-nocookie.com/embed/_yl5ELcmugI?autoplay=1&playsinline=1&rel=0" title="Официальный ролик GTA VI" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><a class="vc-trailer-fallback" href="https://www.rockstargames.com/VI/out-now" target="_blank" rel="noopener noreferrer">ЕСЛИ РОЛИК НЕ ЗАПУСТИЛСЯ · ОТКРЫТЬ НА САЙТЕ ROCKSTAR ↗</a>';
+   host.innerHTML='<div class="vc-trailer-frame"><iframe src="https://www.rockstargames.com/videoplayer?autoplay=true&embed=&id=55kss26g&locale=ru_ru" title="Официальный ролик GTA VI" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><a class="vc-trailer-fallback" href="https://www.rockstargames.com/VI/out-now" target="_blank" rel="noopener noreferrer">ЕСЛИ РОЛИК НЕ ЗАПУСТИЛСЯ · ОТКРЫТЬ НА САЙТЕ ROCKSTAR ↗</a>';
   },{once:true});
  }
  function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
