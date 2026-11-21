@@ -1775,9 +1775,9 @@ async function sendChatAttachment(file,forcedType=null){
  const uploaded=await db.storage.from("tc-chat-media").upload(path,file,{contentType:mime,upsert:false});
  if(uploaded.error){$("chatMediaStatus").textContent="";$("chatAttachButton").disabled=false;$("chatRecordButton").disabled=false;showNotice("Не удалось загрузить файл: "+uploaded.error.message);return;}
  const body=type==="audio"?"Голосовое сообщение":type==="image"?"Фотография":type==="video"?"Видео":"Файл";
- const {error}=await db.from("tc_direct_messages").insert({sender_id:currentUser.id,receiver_id:activeChatId,body,message_type:type,attachment_path:path,attachment_name:file.name||"Файл",attachment_mime:mime,attachment_size:file.size});
+ const {data:sent,error}=await db.from("tc_direct_messages").insert({sender_id:currentUser.id,receiver_id:activeChatId,body,message_type:type,attachment_path:path,attachment_name:file.name||"Файл",attachment_mime:mime,attachment_size:file.size}).select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id,message_type,attachment_path,attachment_name,attachment_mime,attachment_size").single();
  if(error){await db.storage.from("tc-chat-media").remove([path]);$("chatMediaStatus").textContent="";$("chatAttachButton").disabled=false;$("chatRecordButton").disabled=false;showNotice("Файл загружен, но сообщение не отправлено: "+error.message);return;}
- $("chatMediaStatus").textContent="";$("chatAttachButton").disabled=false;$("chatRecordButton").disabled=false;await loadChatThread();await loadConversations();
+ $("chatMediaStatus").textContent="";$("chatAttachButton").disabled=false;$("chatRecordButton").disabled=false;if(sent)await appendRealtimeChatMessage(sent);
 }
 $("chatAttachButton").addEventListener("click",()=>$("chatFileInput").click());
 $("chatFileInput").addEventListener("change",async e=>{const file=e.target.files?.[0];e.target.value="";if(file)await sendChatAttachment(file);});
