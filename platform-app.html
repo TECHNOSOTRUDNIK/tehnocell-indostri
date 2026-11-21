@@ -2,21 +2,183 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080808">
-<meta name="description" content="TEHNOCELL PLATFORM — социальная платформа TEHNOCELL INDOSTRI. Общение, публикации, сообщества и TEHNOCELL ID.">
-<link rel="manifest" href="platform.webmanifest">
-<link rel="icon" href="tehnocell-icon.svg">
+<meta name="description" content="TEHNOCELL PLATFORM — социальная платформа для общения, публикаций, сообществ и TEHNOCELL ID. Скачать APK для Android.">
+<link rel="icon" type="image/svg+xml" href="tehnocell-icon.svg">
 <title>TEHNOCELL PLATFORM — TEHNOCELLSOFT</title>
 <style>
-:root{color-scheme:dark;--bg:#080808;--line:#292929;--white:#f5f5f5}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}a{color:inherit;text-decoration:none}nav{position:fixed;z-index:20;top:0;left:0;width:100%;height:72px;padding:0 max(6%,calc((100% - 1180px)/2));display:flex;align-items:center;justify-content:space-between;background:#080808df;backdrop-filter:blur(16px);border-bottom:1px solid #222}.logo{font-size:14px;font-weight:900;letter-spacing:2px}.logo span{color:#888}.nav-links{display:flex;gap:25px}.nav-links a{font-size:10px;letter-spacing:1.2px;color:#aaa}.hero{min-height:94vh;padding:125px 22px 80px;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}.hero:before,.hero:after{content:"";position:absolute;border:1px solid #ffffff0c;border-radius:50%;width:min(76vw,720px);aspect-ratio:1;pointer-events:none}.hero:after{width:min(58vw,540px);border-color:#ffffff12}.glow{position:absolute;width:420px;height:420px;border-radius:50%;background:#ffffff12;filter:blur(100px);animation:breathe 7s ease-in-out infinite alternate}@keyframes breathe{to{transform:scale(1.25);opacity:.45}}.hero-content{position:relative;z-index:1;max-width:900px}.kicker,.label{font-size:10px;letter-spacing:3px;color:#888;font-weight:800}.kicker{margin-bottom:27px}.hero h1{font-size:clamp(43px,9vw,100px);line-height:.95;letter-spacing:-5px;font-weight:900}.hero h1 span{color:#777}.hero-copy{max-width:650px;margin:27px auto 0;color:#aaa;font-size:15px;line-height:1.85}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:36px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:49px;padding:0 24px;border:1px solid #eee;background:#f5f5f5;color:#080808;font-size:10px;font-weight:900;letter-spacing:1.5px;transition:.2s}.btn:hover{transform:translateY(-3px);background:#ccc}.btn.ghost{background:transparent;color:#eee;border-color:#444}.hero-meta{margin-top:62px;padding-top:22px;border-top:1px solid #292929;display:flex;justify-content:center;gap:clamp(22px,7vw,85px);flex-wrap:wrap}.hero-meta strong{display:block;font-size:11px;letter-spacing:1px}.hero-meta small{display:block;margin-top:7px;color:#777;font-size:9px;letter-spacing:1.2px}section{padding:95px 22px}.wrap{max-width:1080px;margin:auto}.label{margin-bottom:15px}h2{font-size:clamp(29px,5vw,49px);letter-spacing:-2px;line-height:1.08}.lead{max-width:620px;color:#888;font-size:13px;line-height:1.8;margin-top:18px}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:42px}.feature{border:1px solid var(--line);background:linear-gradient(145deg,#151515,#0d0d0d);padding:24px;min-height:190px}.feature b{display:grid;place-items:center;width:38px;height:38px;background:#eee;color:#080808;border-radius:10px;font-size:12px;margin-bottom:25px}.feature h3{font-size:16px;margin-bottom:10px}.feature p{font-size:11px;color:#888;line-height:1.7}.install{background:#f3f3f3;color:#090909}.install .label{color:#888}.install .lead{color:#666}.install-panel{margin-top:32px;padding:clamp(22px,5vw,42px);background:#fff;border:1px solid #ddd;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}.install-panel h3{font-size:21px;margin-bottom:9px}.install-panel p{max-width:590px;color:#666;font-size:12px;line-height:1.75}.install-panel .btn{background:#111;color:white;border-color:#111}.note{margin-top:15px;color:#777;font-size:10px;line-height:1.7}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px}.step{padding:19px;border:1px solid #ddd;background:#fafafa}.step span{font-size:10px;color:#999;letter-spacing:2px}.step h4{margin:13px 0 8px;font-size:13px}.step p{color:#777;font-size:11px;line-height:1.7}footer{padding:30px 6%;border-top:1px solid #222;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:#777;font-size:10px;letter-spacing:1px}footer a{color:#bbb}@media(max-width:700px){nav{height:62px;padding:0 18px}.nav-links{gap:12px}.nav-links a{font-size:8px}.hero{min-height:88vh;padding-top:110px}.hero h1{letter-spacing:-2px}.hero-copy{font-size:13px}.feature-grid,.steps{grid-template-columns:1fr}.feature{min-height:145px}.install-panel{grid-template-columns:1fr}.hero-meta{gap:20px}.hero-meta strong{font-size:9px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#080808;color:#f5f5f5;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+::selection{background:#fff;color:#000}
+nav{position:fixed;top:0;left:0;width:100%;height:76px;padding:0 8%;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.82);backdrop-filter:blur(15px);border-bottom:1px solid #222;z-index:1000}
+.logo{font-size:17px;font-weight:800;letter-spacing:2px}
+.logo span{color:#888}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:11px;letter-spacing:1.5px;color:#aaa;transition:.3s}
+.nav-links a:hover{color:#fff}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:120px 20px 80px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;width:550px;height:550px;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 70%);animation:glow 6s ease-in-out infinite alternate;pointer-events:none}
+@keyframes glow{from{transform:scale(.8);opacity:.4}to{transform:scale(1.2);opacity:.9}}
+.hero-label{color:#888;font-size:11px;letter-spacing:5px;margin-bottom:30px;animation:appear 1s ease forwards}
+.hero h1{font-size:clamp(42px,9vw,100px);font-weight:900;letter-spacing:-4px;line-height:1;animation:appear 1s ease .15s both}
+.hero h1 span{color:#777}
+.hero-description{max-width:580px;color:#999;line-height:1.8;font-size:15px;margin-top:30px;animation:appear 1s ease .3s both}
+.hero-buttons{display:flex;gap:15px;margin-top:40px;animation:appear 1s ease .45s both}
+.button{padding:15px 27px;border:1px solid #fff;font-size:11px;letter-spacing:2px;transition:.3s;display:inline-block}
+.button.primary{background:#fff;color:#000}
+.button:hover{background:#888;border-color:#888;color:#000;transform:translateY(-3px)}
+@keyframes appear{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+section{padding:110px 10%}
+.section-label{color:#777;font-size:11px;letter-spacing:4px;margin-bottom:20px}
+.section-title{font-size:clamp(30px,5vw,55px);letter-spacing:-2px;margin-bottom:25px}
+.section-text{max-width:680px;color:#999;font-size:15px;line-height:1.9}
+.line{width:100%;height:1px;background:#222}
+.about{background:#0d0d0d}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.about-number{font-size:clamp(90px,15vw,180px);font-weight:900;color:#151515;text-align:center;letter-spacing:-10px}
+.preview{text-align:center}
+.preview .section-text{margin:0 auto}
+.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px;margin-top:65px;align-items:stretch;text-align:left}
+.overview-card{min-height:280px;border:1px solid #292929;background:linear-gradient(145deg,#151515,#0b0b0b);padding:28px;display:flex;flex-direction:column;justify-content:space-between;transition:.4s;position:relative;overflow:hidden}
+.overview-card:hover{transform:translateY(-8px);border-color:#777}
+.overview-index{font-size:10px;letter-spacing:3px;color:#666}
+.overview-mark{font-size:46px;font-weight:900;letter-spacing:-4px;color:#eee;margin:28px 0}
+.overview-card h3{font-size:19px;margin-bottom:10px}
+.overview-card p{font-size:12px;line-height:1.75;color:#888}
+.features{background:#0d0d0d}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#292929;border:1px solid #292929;margin-top:55px}
+.feature{background:#0d0d0d;padding:35px 28px;min-height:180px;transition:.3s}
+.feature:hover{background:#171717}
+.feature-number{color:#666;font-size:12px;margin-bottom:25px}
+.feature h3{font-size:17px;margin-bottom:13px}
+.feature p{color:#888;font-size:13px;line-height:1.7}
+.download{text-align:center;padding-top:140px;padding-bottom:140px}
+.download .section-text{margin:0 auto}
+.download-button{display:inline-block;margin-top:40px;padding:19px 40px;background:#fff;color:#000;font-size:12px;font-weight:bold;letter-spacing:2px;transition:.3s}
+.download-button:hover{background:#aaa;transform:translateY(-5px)}
+.download-note{margin-top:20px;color:#666;font-size:11px;letter-spacing:1px;line-height:1.8}
+footer{border-top:1px solid #222;padding:35px 8%;display:flex;justify-content:space-between;align-items:center;gap:20px}
+footer p{color:#666;font-size:11px;letter-spacing:1px}
+footer a{color:#aaa;font-size:11px;transition:.3s}
+footer a:hover{color:#fff}
+.reveal{opacity:0;transform:translateY(35px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:800px){nav{height:65px;padding:0 5%}.logo{font-size:14px}.nav-links{gap:13px}.nav-links a{font-size:9px;letter-spacing:.5px}section{padding:80px 7%}.about-grid{grid-template-columns:1fr;gap:20px}.about-number{font-size:100px}.overview-grid{grid-template-columns:1fr;max-width:460px;margin-left:auto;margin-right:auto;gap:16px}.overview-card{min-height:220px}.features-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.nav-links{gap:9px}.nav-links a{font-size:8px}.hero h1{letter-spacing:-2px}.hero-description{font-size:13px}.hero-buttons{flex-direction:column;width:100%;max-width:260px}.features-grid{grid-template-columns:1fr}footer{flex-direction:column;text-align:center}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<nav><a class="logo" href="index.html">TEHNOCELL <span>INDOSTRI</span></a><div class="nav-links"><a href="#features">ВОЗМОЖНОСТИ</a><a href="#install">СКАЧАТЬ APK</a><a href="index.html">КОМПАНИЯ ↗</a></div></nav>
-<header class="hero"><div class="glow"></div><div class="hero-content"><div class="kicker">TEHNOCELL INDOSTRI · DIGITAL PRODUCT</div><h1>TEHNOCELL<br><span>PLATFORM</span></h1><p class="hero-copy">Единое цифровое пространство для общения, публикаций, сообществ и личного профиля. Установи приложение TEHNOCELL PLATFORM на Android и получи доступ к актуальной версии нашей социальной платформы.</p><div class="actions"><a class="btn" href="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk">СКАЧАТЬ APK ↓</a></div><div class="hero-meta"><div><strong>СОЦИАЛЬНАЯ ПЛАТФОРМА</strong><small>КАТЕГОРИЯ ПРОДУКТА</small></div><div><strong>ANDROID APK</strong><small>УСТАНОВОЧНЫЙ ФАЙЛ</small></div><div><strong>TEHNOCELL ID</strong><small>ЕДИНАЯ УЧЁТНАЯ ЗАПИСЬ</small></div></div></div></header>
-<section id="features"><div class="wrap"><div class="label">01 / ВОЗМОЖНОСТИ</div><h2>Всё важное<br>в одном пространстве.</h2><p class="lead">TEHNOCELL PLATFORM объединяет социальные функции экосистемы и постепенно получает новые возможности.</p><div class="feature-grid"><article class="feature"><b>01</b><h3>Лента и публикации</h3><p>Делись новостями, фотографиями и идеями, следи за обновлениями других участников.</p></article><article class="feature"><b>02</b><h3>Общение</h3><p>Личные сообщения, список контактов и присутствие участников онлайн.</p></article><article class="feature"><b>ID</b><h3>TEHNOCELL ID</h3><p>Личный профиль, настройки и единая цифровая идентичность внутри платформы.</p></article><article class="feature"><b>04</b><h3>Сообщества</h3><p>Объединяйся с людьми, публикуй материалы и участвуй в обсуждениях.</p></article><article class="feature"><b>05</b><h3>Истории</h3><p>Короткие фото- и видеопубликации с настройками приватности.</p></article><article class="feature"><b>06</b><h3>Сервисы TEHNOCELL</h3><p>Переходи к продуктам экосистемы и связанным цифровым возможностям.</p></article></div></div></section>
-<section class="install" id="install"><div class="wrap"><div class="label">02 / УСТАНОВКА</div><h2>Платформа всегда<br>под рукой.</h2><p class="lead">Скачай официальный установочный файл TEHNOCELL PLATFORM и установи приложение на Android-устройство.</p><div class="install-panel"><div><h3>TEHNOCELL PLATFORM для Android</h3><p>Официальный APK-файл. После загрузки открой его и подтверди установку. Если Android попросит разрешение на установку из этого источника, разреши его для приложения, через которое открыт файл.</p></div><a class="btn" href="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk" download>СКАЧАТЬ APK ↓</a></div><p class="note">Версия приложения: Android 8.0 и новее. Для работы с лентой, сообщениями и профилем требуется подключение к интернету.</p></div></section>
-<footer><span>© 2026 TEHNOCELL INDOSTRI</span><a href="index.html">САЙТ КОМПАНИИ</a><span>TEHNOCELL PLATFORM · SOCIAL PLATFORM</span></footer>
-</body></html>
+<nav>
+<a href="index.html" class="logo">TEHNOCELL<span>.</span></a>
+<div class="nav-links">
+<a href="#about">О ПРОЕКТЕ</a>
+<a href="#preview">ОБЗОР</a>
+<a href="#features">ВОЗМОЖНОСТИ</a>
+<a href="#download">СКАЧАТЬ</a>
+</div>
+</nav>
+
+<header class="hero">
+<div class="hero-label">ПРОДУКТ TEHNOCELLSOFT</div>
+<h1>TEHNOCELL<br><span>PLATFORM</span></h1>
+<p class="hero-description">Единое цифровое пространство TEHNOCELL для общения, публикаций, сообществ и личного профиля. Всё необходимое для взаимодействия с экосистемой — в одном приложении.</p>
+<div class="hero-buttons">
+<a href="#download" class="button primary">СКАЧАТЬ ПРИЛОЖЕНИЕ</a>
+<a href="#about" class="button">УЗНАТЬ БОЛЬШЕ</a>
+</div>
+</header>
+
+<div class="line"></div>
+
+<section class="about" id="about">
+<div class="about-grid">
+<div class="reveal">
+<div class="section-label">01 / О ПРОЕКТЕ</div>
+<h2 class="section-title">Общение.<br>В одном пространстве.</h2>
+<p class="section-text">TEHNOCELL PLATFORM — социальная платформа, разработанная TEHNOCELL INDOSTRI. Здесь можно делиться публикациями, общаться, находить сообщества и управлять собственной цифровой идентичностью через TEHNOCELL ID.<br><br>Мы создаём единое пространство с собственным стилем, инструментами и сервисами, которое развивается вместе с экосистемой TEHNOCELL.</p>
+</div>
+<div class="about-number reveal">TP.</div>
+</div>
+</section>
+
+<div class="line"></div>
+
+<section class="preview" id="preview">
+<div class="reveal">
+<div class="section-label">02 / ОБЗОР</div>
+<h2 class="section-title">Внутри платформы</h2>
+<p class="section-text">Основные пространства TEHNOCELL PLATFORM — от публикаций и общения до личного профиля.</p>
+</div>
+<div class="overview-grid">
+<article class="overview-card reveal">
+<div class="overview-index">01 / FEED</div>
+<div class="overview-mark">TC.</div>
+<div><h3>Лента публикаций</h3><p>Новости, фотографии, идеи и обновления участников в едином потоке.</p></div>
+</article>
+<article class="overview-card reveal">
+<div class="overview-index">02 / CONNECT</div>
+<div class="overview-mark">↔</div>
+<div><h3>Общение</h3><p>Контакты, личные сообщения и информация о присутствии участников.</p></div>
+</article>
+<article class="overview-card reveal">
+<div class="overview-index">03 / IDENTITY</div>
+<div class="overview-mark">ID.</div>
+<div><h3>TEHNOCELL ID</h3><p>Личный профиль, настройки аккаунта и единая цифровая идентичность.</p></div>
+</article>
+</div>
+</section>
+
+<div class="line"></div>
+
+<section class="features" id="features">
+<div class="reveal">
+<div class="section-label">03 / ВОЗМОЖНОСТИ</div>
+<h2 class="section-title">Больше возможностей.<br>Одно пространство.</h2>
+<p class="section-text">Инструменты платформы объединяют повседневное общение и взаимодействие с экосистемой TEHNOCELL.</p>
+</div>
+<div class="features-grid">
+<div class="feature reveal"><div class="feature-number">01</div><h3>Публикации и лента</h3><p>Делитесь новостями, фотографиями и своими идеями.</p></div>
+<div class="feature reveal"><div class="feature-number">02</div><h3>Личные сообщения</h3><p>Общайтесь с другими участниками платформы.</p></div>
+<div class="feature reveal"><div class="feature-number">03</div><h3>Контакты и онлайн</h3><p>Находите участников и следите за их присутствием.</p></div>
+<div class="feature reveal"><div class="feature-number">04</div><h3>Сообщества</h3><p>Объединяйтесь вокруг интересов и общих тем.</p></div>
+<div class="feature reveal"><div class="feature-number">05</div><h3>Истории</h3><p>Делитесь короткими фото- и видеоматериалами.</p></div>
+<div class="feature reveal"><div class="feature-number">06</div><h3>TEHNOCELL ID</h3><p>Управляйте личным профилем и настройками аккаунта.</p></div>
+</div>
+</section>
+
+<div class="line"></div>
+
+<section class="download" id="download">
+<div class="reveal">
+<div class="section-label">04 / ЗАГРУЗКА</div>
+<h2 class="section-title">Откройте<br>TEHNOCELL PLATFORM.</h2>
+<p class="section-text">Приложение доступно для устройств Android. Загрузите официальный установочный файл APK, откройте его на устройстве и завершите установку.</p>
+<a class="download-button" href="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk" download>↓ &nbsp; СКАЧАТЬ APK</a>
+<div class="download-note">ANDROID APPLICATION · VERSION 1.0.16<br>ANDROID 8.0+ · APK · 2.48 MB</div>
+</div>
+</section>
+
+<footer>
+<p>© 2026 TEHNOCELLSOFT</p>
+<a href="index.html">TEHNOCELL INDOSTRI</a>
+<p>TEHNOCELL PLATFORM</p>
+</footer>
+
+<script>
+if("IntersectionObserver" in window){
+ const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+   if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target);}
+  });
+ },{threshold:.12});
+ document.querySelectorAll(".reveal").forEach(element=>observer.observe(element));
+}else{
+ document.querySelectorAll(".reveal").forEach(element=>element.classList.add("visible"));
+}
+</script>
+</body>
+</html>
