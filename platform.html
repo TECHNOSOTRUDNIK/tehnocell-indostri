@@ -432,6 +432,26 @@
 }
 
 
+/* VICE CITY collectible frame: palms, warm metal and coastal details — no neon */
+.avatar.tc-avatar-framed::before,.profile-photo.tc-avatar-framed::before,.search-person-avatar.tc-avatar-framed::before,.home-online-avatar.tc-avatar-framed::before,.composer-avatar.tc-avatar-framed::before,.tc-preview-avatar.tc-avatar-framed::before{content:"";position:absolute;inset:-16%;z-index:4;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23e4c895' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 88 Q19 62 17 37 M17 37 Q4 30 3 18 Q15 20 20 33 Q16 17 25 8 Q29 22 21 35 Q34 20 43 23 Q35 36 20 40'/%3E%3Cpath d='M87 88 Q81 62 83 37 M83 37 Q96 30 97 18 Q85 20 80 33 Q84 17 75 8 Q71 22 79 35 Q66 20 57 23 Q65 36 80 40'/%3E%3C/g%3E%3Cpath d='M30 91 Q50 83 70 91' fill='none' stroke='%238fc9c2' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M38 95 Q50 90 62 95' fill='none' stroke='%23d8a98b' stroke-width='1' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='8' r='2' fill='%23e4c895'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.avatar.tc-avatar-framed::after,.profile-photo.tc-avatar-framed::after,.search-person-avatar.tc-avatar-framed::after,.home-online-avatar.tc-avatar-framed::after,.composer-avatar.tc-avatar-framed::after,.tc-preview-avatar.tc-avatar-framed::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1.8px solid #e4c895;outline:1px solid #8fc9c2;outline-offset:2px;box-shadow:0 0 0 5px #e4c89518,inset 0 0 0 1px #fff5;pointer-events:none;z-index:3}
+.vc-frame-demo{box-shadow:0 0 0 1.8px #e4c895,0 0 0 4px #8fc9c2,0 0 0 7px #e4c89522,inset 0 0 0 1px #fff4!important;animation:vcFrameAwardPulse 4.8s ease-in-out infinite}
+.vc-frame-demo:before{content:"";position:absolute;inset:-17%;border:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%23e4c895' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 88 Q19 62 17 37 M17 37 Q4 30 3 18 Q15 20 20 33 Q16 17 25 8 Q29 22 21 35 Q34 20 43 23 Q35 36 20 40'/%3E%3Cpath d='M87 88 Q81 62 83 37 M83 37 Q96 30 97 18 Q85 20 80 33 Q84 17 75 8 Q71 22 79 35 Q66 20 57 23 Q65 36 80 40'/%3E%3C/g%3E%3Cpath d='M30 91 Q50 83 70 91' fill='none' stroke='%238fc9c2' stroke-width='1.4' stroke-linecap='round'/%3E%3Cpath d='M38 95 Q50 90 62 95' fill='none' stroke='%23d8a98b' stroke-width='1' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='8' r='2' fill='%23e4c895'/%3E%3C/svg%3E") center/100% 100% no-repeat;animation:none;z-index:4;pointer-events:none}
+.vc-frame-demo:after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1.8px solid #e4c895;outline:1px solid #8fc9c2;outline-offset:2px;z-index:3;pointer-events:none}
+.vc-frame-orbit{border-color:#e4c895aa!important;box-shadow:none!important}.vc-frame-orbit.second{border-color:#8fc9c288!important}
+.vc-trailer-player{position:relative;z-index:2;overflow:hidden;margin:0 -3px 12px;border:1px solid #ffffff20;border-radius:14px;background:#08090d;box-shadow:0 12px 32px #0008}
+.vc-trailer-poster{position:relative;aspect-ratio:16/9;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#3b3440,#08090d 75%)}
+.vc-trailer-poster>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vc-trailer-shade{position:absolute;inset:0;background:linear-gradient(180deg,#08090d88,transparent 40%,#08090dcc)}
+.vc-trailer-topline{position:absolute;top:11px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;color:#fff;font-size:8px;letter-spacing:1.2px;text-shadow:0 1px 5px #000}
+.vc-trailer-topline b{padding:4px 7px;border:1px solid #ffffff66;border-radius:20px;background:#08090d88;font-size:9px;letter-spacing:.7px}
+.vc-trailer-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:10px;padding:11px 17px;border:1px solid #f0d9b4;border-radius:30px;background:#101116d9;color:#fff;font:inherit;font-size:9px;font-weight:900;letter-spacing:1px;white-space:nowrap;box-shadow:0 5px 24px #0009}
+.vc-trailer-play i{font-style:normal;color:#f0d9b4;font-size:13px}
+.vc-trailer-bottom{position:absolute;bottom:10px;left:12px;color:#f3e5d2;font-size:7px;letter-spacing:1.1px;text-shadow:0 1px 5px #000}
+.vc-trailer-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}.vc-trailer-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vc-trailer-fallback{display:block;padding:9px 11px;color:#e7d5b5;text-align:center;text-decoration:none;font-size:8px;letter-spacing:.7px;border-top:1px solid #ffffff16}
+@media(max-width:520px){.vc-trailer-topline{top:8px;left:9px;right:9px;font-size:7px}.vc-trailer-bottom{font-size:6px;left:9px}.vc-trailer-play{padding:9px 13px;font-size:8px}}
+
 /* VICE CITY reward: premium collectible presentation */
 .vc-award-cinematic{position:relative;overflow:hidden;padding:13px 15px 16px;border:1px solid #8b5c9c88;border-radius:20px;background:radial-gradient(ellipse at 50% 5%,#9c52d522,transparent 42%),linear-gradient(155deg,#17121d,#080a10 78%);box-shadow:inset 0 1px #ffffff13,inset 0 0 42px #b55ce50d,0 18px 48px #0009;animation:vc-award-arrive .9s both}
 .vc-award-cinematic:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 18%,#ffffff0b 43%,transparent 65%);transform:translateX(-130%);animation:vc-award-sweep 5.8s 1.2s ease-in-out infinite}
@@ -1926,8 +1946,8 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   if(!state){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">VICE CITY</h2><p class="vc-intro-copy">Подключаю расследование…</p>';return;}
   const progress=state.progress||{stage:0};
   if(progress.completed_at){
-   content.innerHTML='<div class="vc-eyebrow">CASE CLOSED / ДОСЬЕ ЗАКРЫТО</div><h2 class="vc-title">ТЫ ПРОШЁЛ<br>ВЕСЬ ПУТЬ.</h2><div class="vc-award vc-award-cinematic"><div class="vc-award-header"><span>TEHNOCELL / SPECIAL DROP</span><b>№ 001 · НАВСЕГДА</b></div><div class="vc-reveal-stage vc-trailer-scene" aria-label="Кинематографическое превращение ENNIE в знак VI"><canvas id="vcRevealCanvas"></canvas><div class="vc-scene-grain"></div><div class="vc-reveal-corners"><i></i><i></i><i></i><i></i></div></div><div class="vc-reward-identity"><div><small>ТВОЯ НАГРАДА</small><strong>VICE CITY</strong><span>LIMITED EDITION / AVATAR FRAME</span></div><b class="vc-reward-seal">UNLOCKED</b></div><div class="vc-frame-pedestal"><div class="vc-frame-demo" id="vcFrameDemo"><span class="vc-frame-fallback">TC</span><i class="vc-frame-orbit"></i><i class="vc-frame-orbit second"></i></div><div class="vc-frame-meta"><strong>РАМКА ДОБАВЛЕНА</strong><span>ТВОЙ АВАТАР · ТВОЙ ЗНАК</span><small>Предмет навсегда закреплён за твоим TEHNOCELL ID</small></div></div><div class="vc-award-confirm"><i>✓</i><span>НАГРАДА ПОЛУЧЕНА И ПРИМЕНЕНА К ПРОФИЛЮ</span></div></div><div class="vc-ennie vc-ennie-reward"><div><strong>ENNIE</strong><p>Это было настоящее приключение. И теперь у тебя есть знак, который напоминает, что ты его прошёл.</p></div></div><div class="vc-actions"><button class="vc-primary" id="vcCloseAward">ЗАМЕЧАТЕЛЬНО</button></div>';
-   loadRewardAvatar();playRewardReveal();$vc("vcCloseAward").onclick=close;return;
+   content.innerHTML='<div class="vc-eyebrow">ПУТЬ ЗАВЕРШЁН · НАГРАДА ТВОЯ</div><h2 class="vc-title">ТЫ ПРОШЁЛ<br>ВСЕ ПЯТЬ ЭТАПОВ.</h2><div class="vc-award vc-award-cinematic"><div class="vc-award-header"><span>TEHNOCELL · ОСОБОЕ СОБЫТИЕ</span><b>№ 001 · НАВСЕГДА</b></div><div class="vc-trailer-player" id="vcTrailerWrap"><div class="vc-trailer-poster"><img src="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" alt="Кадр официального ролика GTA VI" loading="lazy"><div class="vc-trailer-shade"></div><div class="vc-trailer-topline"><span>ОФИЦИАЛЬНЫЙ РОЛИК ROCKSTAR</span><b>00:30</b></div><button class="vc-trailer-play" id="vcPlayTrailer" type="button"><i>▶</i><span>СМОТРЕТЬ РОЛИК</span></button><div class="vc-trailer-bottom">ПОСЛЕДНИЙ ВЫПУЩЕННЫЙ РОЛИК · 30 СЕКУНД</div></div></div><div class="vc-reward-identity"><div><small>ТВОЯ НАГРАДА</small><strong>VICE CITY</strong><span>ОГРАНИЧЕННЫЙ ВЫПУСК · РАМКА АВАТАРА</span></div><b class="vc-reward-seal">ПОЛУЧЕНО</b></div><div class="vc-frame-pedestal"><div class="vc-frame-demo" id="vcFrameDemo"><span class="vc-frame-fallback">TC</span><i class="vc-frame-orbit"></i><i class="vc-frame-orbit second"></i></div><div class="vc-frame-meta"><strong>РАМКА ДОБАВЛЕНА</strong><span>ТВОЙ АВАТАР · ТВОЙ ЗНАК</span><small>Предмет навсегда закреплён за твоим TEHNOCELL ID</small></div></div><div class="vc-award-confirm"><i>✓</i><span>НАГРАДА ПОЛУЧЕНА И ПРИМЕНЕНА К ПРОФИЛЮ</span></div></div><div class="vc-actions"><button class="vc-primary" id="vcCloseAward">ЗАМЕЧАТЕЛЬНО</button></div>';
+   loadRewardAvatar();initRewardTrailer();$vc("vcCloseAward").onclick=close;return;
   }
   if(!state.active||remaining()<=0){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">ВРЕМЯ<br>ВЫШЛО</h2><p class="vc-intro-copy">Расследование VICE CITY завершено. Если ты успел получить рамку, она останется в твоей коллекции навсегда.</p><div class="vc-actions"><button class="vc-secondary" id="vcCloseExpired">ЗАКРЫТЬ</button></div>';$vc("vcCloseExpired").onclick=close;return;}
   if(progress.stage===0){content.innerHTML=intro();$vc("vcStart").onclick=()=>{content.dataset.started="1";renderStage(1);};$vc("vcLater").onclick=close;updateModalTimer();return;}
@@ -1946,116 +1966,12 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   }catch(e){console.warn("VICE CITY reward avatar:",e);}
  }
 
- function playRewardReveal(){
-  const canvas=$vc("vcRevealCanvas");if(!canvas)return;
-  const ctx=canvas.getContext("2d",{alpha:false});if(!ctx)return;
-  let w=0,h=0,dpr=1,raf=0,started=0,lastFrame=0,ro=null;
-  const stage=canvas.parentElement,logo=new Image();let logoReady=false,logoFailed=false,targetPoints=null;
-  logo.onload=()=>{logoReady=true;targetPoints=buildLogoContour(logo);};
-  logo.onerror=()=>{logoFailed=true;targetPoints=makeFallbackContour();};
-  logo.src="https://www.rockstargames.com/VI/_next/static/media/vi.0hxa9~pf214xe.png?akim=1&imdensity=1&imwidth=640";
-  const clamp=v=>Math.max(0,Math.min(1,v)),smooth=v=>{v=clamp(v);return v*v*(3-2*v);},ease=v=>v<.5?4*v*v*v:1-Math.pow(-2*v+2,3)/2;
-  const COUNT=220;
-  function makeFallbackContour(){return Array.from({length:COUNT},(_,i)=>{const a=i/COUNT*Math.PI*2;return{x:Math.cos(a)*(1+.12*Math.cos(a*3)),y:Math.sin(a)};});}
-  // Извлекаем внешний контур настоящего PNG-логотипа, чтобы шар превращался в его силуэт.
-  function buildLogoContour(img){
-   const off=document.createElement("canvas"),size=180;off.width=size;off.height=size;
-   const oc=off.getContext("2d",{willReadFrequently:true});
-   const scale=Math.min(size*.82/img.naturalWidth,size*.82/img.naturalHeight);
-   const dw=img.naturalWidth*scale,dh=img.naturalHeight*scale;
-   oc.clearRect(0,0,size,size);oc.drawImage(img,(size-dw)/2,(size-dh)/2,dw,dh);
-   let data;try{data=oc.getImageData(0,0,size,size).data;}catch(e){return makeFallbackContour();}
-   let sx=0,sy=0,n=0;
-   for(let y=0;y<size;y+=2)for(let x=0;x<size;x+=2){if(data[(y*size+x)*4+3]>30){sx+=x;sy+=y;n++;}}
-   if(!n)return makeFallbackContour();
-   const cx=sx/n,cy=sy/n,maxR=size*.49,raw=[];
-   for(let i=0;i<COUNT;i++){
-    const a=i/COUNT*Math.PI*2;let last=0;
-    for(let rr=0;rr<=maxR;rr+=.7){const px=Math.round(cx+Math.cos(a)*rr),py=Math.round(cy+Math.sin(a)*rr);if(px<0||py<0||px>=size||py>=size)break;if(data[(py*size+px)*4+3]>24)last=rr;}
-    raw.push({x:Math.cos(a)*last,y:Math.sin(a)*last});
-   }
-   // Normalize separately so the original logo proportions remain intact.
-   const maxX=Math.max(...raw.map(p=>Math.abs(p.x)),1),maxY=Math.max(...raw.map(p=>Math.abs(p.y)),1);
-   return raw.map(p=>({x:p.x/maxX,y:p.y/maxY}));
-  }
-  let bg=null;
-  function resize(){
-   const r=stage.getBoundingClientRect();w=Math.max(0,r.width);h=Math.max(0,r.height);
-   dpr=Math.min(devicePixelRatio||1,1.15);
-   const bw=Math.max(1,Math.round(w*dpr)),bh=Math.max(1,Math.round(h*dpr));
-   if(canvas.width!==bw||canvas.height!==bh){canvas.width=bw;canvas.height=bh;buildBackground();}
-   ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  function buildBackground(){
-   if(!w||!h)return;
-   bg=document.createElement("canvas");bg.width=Math.max(1,Math.round(w*dpr));bg.height=Math.max(1,Math.round(h*dpr));
-   const b=bg.getContext("2d");b.setTransform(dpr,0,0,dpr,0,0);
-   b.fillStyle="#080711";b.fillRect(0,0,w,h);
-   const sky=b.createLinearGradient(0,0,0,h);sky.addColorStop(0,"#090914");sky.addColorStop(.52,"#171027");sky.addColorStop(.78,"#35152f");sky.addColorStop(1,"#090812");b.fillStyle=sky;b.fillRect(0,0,w,h);
-   const glow=b.createRadialGradient(w*.5,h*.64,0,w*.5,h*.64,w*.65);glow.addColorStop(0,"#e34b9b30");glow.addColorStop(.45,"#8c45cf18");glow.addColorStop(1,"#08071100");b.fillStyle=glow;b.fillRect(0,0,w,h);
-   // Далёкий неоновый горизонт и силуэт города — статичный слой почти бесплатен для GPU.
-   const horizon=h*.77;b.fillStyle="#090812";
-   for(let i=0;i<22;i++){const bw=w/22+2,bx=i*w/22,bh=h*(.07+((i*17)%9)*.018);b.fillRect(bx,horizon-bh,bw,bh);}
-   b.fillStyle="#f26ab0";b.globalAlpha=.18;b.fillRect(0,horizon,w,1);b.globalAlpha=1;
-   b.strokeStyle="#bd6bdb18";b.lineWidth=1;
-   for(let i=0;i<8;i++){b.beginPath();b.moveTo(w*.5,horizon);b.lineTo(i*w/7, h);b.stroke();}
-   for(let i=1;i<5;i++){const yy=horizon+(h-horizon)*i/5;b.beginPath();b.moveTo(0,yy);b.lineTo(w,yy);b.stroke();}
-  }
-  resize();if(window.ResizeObserver){ro=new ResizeObserver(resize);ro.observe(stage);}else window.addEventListener("resize",resize);
-  const dust=Array.from({length:38},(_,i)=>({x:(i*73.17%100)/100,y:(i*37.91%100)/100,v:.000035+(i%5)*.000012,size:.45+(i%4)*.3,phase:i*1.71}));
-  const sparks=Array.from({length:8},(_,i)=>({a:i*Math.PI/4,r:.28+(i%3)*.055,phase:i*2.3}));
-  function drawAtmosphere(t){
-   if(bg)ctx.drawImage(bg,0,0,w,h);
-   for(let i=0;i<dust.length;i++){const p=dust[i],yy=(p.y-t*p.v*60+1)%1;ctx.globalAlpha=.16+.25*(.5+.5*Math.sin(t*1.4+p.phase));ctx.fillStyle=i%4===0?"#ff9bd7":"#c8c3ff";ctx.beginPath();ctx.arc(p.x*w,yy*h,p.size,0,Math.PI*2);ctx.fill();}
-   ctx.globalAlpha=1;
-   // Несколько редких световых искр, как отражения неоновых вывесок.
-   for(let i=0;i<sparks.length;i++){const p=sparks[i],a=p.a+t*.11,rr=Math.min(w,h)*p.r,xx=w/2+Math.cos(a)*rr,yy=h*.48+Math.sin(a)*rr*.65,al=.25+.3*(.5+.5*Math.sin(t*2+p.phase));ctx.globalAlpha=al;ctx.fillStyle="#ffb0e3";ctx.fillRect(xx,yy,1.4,1.4);}
-   ctx.globalAlpha=1;
-  }
-  function morphPath(x,y,rx,ry,morph,t){
-   const pts=[];
-   for(let i=0;i<COUNT;i++){
-    const a=i/COUNT*Math.PI*2,cx=Math.cos(a),cy=Math.sin(a),dst=targetPoints?targetPoints[i]:{x:cx,y:cy};
-    const wobble=(Math.sin(t*1.45+a*4)+Math.sin(t*.9+a*7))*.004*(1-morph);
-    pts.push({x:x+(cx+(dst.x-cx)*morph)*rx*(1+wobble),y:y+(cy+(dst.y-cy)*morph)*ry*(1+wobble)});
-   }
-   const path=new Path2D();path.moveTo((pts[0].x+pts[COUNT-1].x)/2,(pts[0].y+pts[COUNT-1].y)/2);
-   for(let i=0;i<COUNT;i++){const p=pts[i],n=pts[(i+1)%COUNT];path.quadraticCurveTo(p.x,p.y,(p.x+n.x)/2,(p.y+n.y)/2);}
-   path.closePath();return path;
-  }
-  function drawLivingShape(path,x,y,rx,ry,t,morph){
-   ctx.save();ctx.shadowColor="#f1dcff";ctx.shadowBlur=12;const g=ctx.createRadialGradient(x-rx*.32,y-ry*.4,2,x,y,Math.max(rx,ry)*1.25);g.addColorStop(0,"#fff");g.addColorStop(.48,"#f6f4fb");g.addColorStop(.82,"#d7d8e2");g.addColorStop(1,"#9298ad");ctx.fillStyle=g;ctx.fill(path);ctx.restore();
-   ctx.save();ctx.clip(path);const shine=ctx.createRadialGradient(x-rx*.3,y-ry*.35,0,x,y,Math.max(rx,ry));shine.addColorStop(0,"#ffffffb8");shine.addColorStop(.5,"#ffffff20");shine.addColorStop(1,"#ffffff00");ctx.fillStyle=shine;ctx.fillRect(x-rx*1.5,y-ry*1.5,rx*3,ry*3);
-   // Тонкие движущиеся слои повторяют контур, как в настоящем ядре ENNIE.
-   for(let k=0;k<3;k++){ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(t*.55+k)*.025);ctx.scale(1.015+k*.018,1.015+k*.018);ctx.translate(-x,-y);ctx.globalAlpha=.11+k*.035;ctx.strokeStyle="#fff";ctx.lineWidth=1.2+k*.45;ctx.stroke(path);ctx.restore();}
-   ctx.restore();
-  }
-  function drawLogoColor(x,y,mw,mh,alpha){
-   if(!logoReady||alpha<=.001)return;
-   const scale=Math.min(mw/logo.naturalWidth,mh/logo.naturalHeight),dw=logo.naturalWidth*scale,dh=logo.naturalHeight*scale;
-   ctx.save();ctx.globalAlpha=alpha;ctx.drawImage(logo,x-dw/2,y-dh/2,dw,dh);ctx.restore();
-  }
-  function frame(now){
-   if(!canvas.isConnected){if(ro)ro.disconnect();else window.removeEventListener("resize",resize);cancelAnimationFrame(raf);return;}
-   if(document.hidden){raf=requestAnimationFrame(frame);return;}
-   if(w<2||h<2){resize();raf=requestAnimationFrame(frame);return;}
-   const interval=((now-started)/1000)>8.2?50:32;if(now-lastFrame<interval){raf=requestAnimationFrame(frame);return;}lastFrame=now;
-   if(!started)started=now;const t=(now-started)/1000;
-   drawAtmosphere(t);
-   const x=w*.5,y=h*.49,u=Math.min(w,h),ready=!!targetPoints;
-   const morph=ready?smooth((t-1.45)/3.45):0;
-   const rx=u*(.205+.205*morph),ry=u*(.205-.075*morph);
-   const path=morphPath(x,y,rx,ry,morph,t);
-   drawLivingShape(path,x,y,rx,ry,t,morph);
-   // Цветной оригинал не возникает отдельно: он проявляется уже поверх полностью
-   // сформировавшегося того же силуэта.
-   const logoAlpha=ready?smooth((t-4.5)/1.6):0;
-   if(logoAlpha>.001)drawLogoColor(x,y,u*.86,u*.58,logoAlpha);
-   // После трансформации оставляем мягкую атмосферу, а не запускаем эффект заново.
-   // После появления логотипа оставляем только лёгкое движение фоновой пыли (20 fps).
-   raf=requestAnimationFrame(frame);
-  }
-  raf=requestAnimationFrame(frame);
+ function initRewardTrailer(){
+  const host=$vc("vcTrailerWrap"),button=$vc("vcPlayTrailer");
+  if(!host||!button)return;
+  button.addEventListener("click",()=>{
+   host.innerHTML='<div class="vc-trailer-frame"><iframe src="https://www.youtube-nocookie.com/embed/_yl5ELcmugI?autoplay=1&playsinline=1&rel=0" title="Официальный ролик GTA VI" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><a class="vc-trailer-fallback" href="https://www.rockstargames.com/VI/out-now" target="_blank" rel="noopener noreferrer">ЕСЛИ РОЛИК НЕ ЗАПУСТИЛСЯ · ОТКРЫТЬ НА САЙТЕ ROCKSTAR ↗</a>';
+  },{once:true});
  }
  function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
  function renderStage(n,errorText=""){
