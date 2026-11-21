@@ -1,13 +1,13 @@
 {
-  "version": 5,
-  "source": "Синхронизировано с актуальными HTML-файлами main; добавлена TEHNOCELL Platform и Moments.",
-  "updated_at": "2026-11-18T22:29:32.030Z",
+  "version": 6,
+  "source": "Пересобрано по актуальным HTML-файлам main; добавлена страница загрузки TEHNOCELL PLATFORM и уточнены функции платформы, Moments и статусы направлений.",
+  "updated_at": "2026-11-21T09:06:24.310Z",
   "site_map": [
     {
       "slug": "index.html",
-      "title": "TEHNOCELL INDOSTRI — Technology Company",
+      "title": "TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/index.html",
-      "description": "TEHNOCELL INDOSTRI — независимая технологическая компания."
+      "description": "Главная страница TEHNOCELL INDOSTRI: компания, цифровая экосистема, платформа, подразделения, продукты, проекты и контакты."
     },
     {
       "slug": "account.html",
@@ -23,19 +23,19 @@
     },
     {
       "slug": "register.html",
-      "title": "Регистрация — TEHNOCELL ID",
+      "title": "TEHNOCELL ID — регистрация",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/register.html",
       "description": ""
     },
     {
       "slug": "game.html",
-      "title": "TEHNOCELLGAME",
+      "title": "TEHNOCELLGAME | TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/game.html",
-      "description": "Игровое подразделение TEHNOCELL."
+      "description": "TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI."
     },
     {
       "slug": "soft.html",
-      "title": "TEHNOCELLSOFT",
+      "title": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/soft.html",
       "description": "Подразделение программного обеспечения."
     },
@@ -59,7 +59,7 @@
     },
     {
       "slug": "weather-app.html",
-      "title": "TEHNOCELL WEATHER — приложение",
+      "title": "TEHNOCELL WEATHER — TEHNOCELLSOFT",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html",
       "description": "Мобильная версия погодного сервиса."
     },
@@ -71,29 +71,55 @@
     },
     {
       "slug": "mivo.html",
-      "title": "MIVO — музыкальная платформа TEHNOCELL INDOSTRI",
+      "title": "MIVO — Музыка без границ",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/mivo.html",
-      "description": "MIVO — собственная музыкальная платформа TEHNOCELL INDOSTRI."
+      "description": "MIVO — музыка без границ. Музыкальная платформа TEHNOCELL INDOSTRI."
     },
     {
       "slug": "platform.html",
-      "title": "TEHNOCELL Platform — социальная платформа TEHNOCELL",
+      "title": "TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/platform.html",
-      "description": "Социальная платформа: лента публикаций, профили, лайки, комментарии, социальные связи и TEHNOCELL Moments — истории с фото и видео."
+      "description": "Основная социальная платформа TEHNOCELL INDOSTRI: лента публикаций, сообщества, личные чаты, уведомления, профили, друзья, TEHNOCELL ID и TEHNOCELL Moments (истории). Также содержит специальное событие VICE CITY."
+    },
+    {
+      "slug": "platform-app.html",
+      "title": "TEHNOCELL PLATFORM — TEHNOCELLSOFT",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/platform-app.html",
+      "description": "Официальная страница приложения TEHNOCELL PLATFORM: описание, возможности, сведения о версии APK и ссылка на скачивание Android-приложения."
     }
   ],
   "documents": [
     {
       "slug": "index.html",
-      "title": "TEHNOCELL INDOSTRI — Technology Company",
+      "title": "TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/index.html",
-      "description": "TEHNOCELL INDOSTRI — независимая технологическая компания.",
-      "content": "TEHNOCELL INDOSTRI — Technology Company T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗ 04 / AUDIO F MIVO Собственная музыкальная платформа MIVO. В ПЛАНАХ ↗ 05 / AUTOMOTIVE C TEHNOCELLCAR Автомобильные технологии и цифровые решения. В ПЛАНАХ ↗ 06 / NETWORK M TEHNOCELL MESSENGER Коммуникационные сервисы и цифровое взаимодействие. В ПЛАНАХ ↗ 07 / SECURITY V TEHNOCELLVPN Сетевые технологии и инструменты конфиденциальности. В ПЛАНАХ ↗ 02 / PROJECTS Создаём собственные цифровые продукты. Каждое направление развивается как часть единой технологической экосистемы. TEHNOCELL ECOSYSTEM Будущее начинается с разработки. Мы постепенно создаём собственные приложения, сервисы и игровые проекты. Это только начало развития TEHNOCELL INDOSTRI. ↗ T I. 03 / ABOUT US Больше, чем просто разработка. TEHNOCELL INDOSTRI — независимая технологическая компания, ориентированная на создание собственных цифровых продуктов и развитие различных технологических направлений. Наша цель — постепенно сформировать единую экосистему, в которой программное обеспечение, игровые проекты и другие технологии будут дополнять друг друга. 04 / CONTACT Есть идея? Свяжитесь с нами. Мы открыты к общению, предложениям и новым возможностям. tehnocellindostri@gmail.com НАПИСАТЬ НАМ → TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗ 04 / AUDIO F MIVO Собственная музыкальная платформа MIVO. В ПЛАНАХ ↗ 05 / AUTOMOTIVE C TEHNOCELLCAR Автомобильные технологии и цифровые решения. В ПЛАНАХ ↗ 06 / NETWORK M TEHNOCELL MESSENGER Коммуникационные сервисы и цифровое взаимодействие. В ПЛАНАХ ↗ 07 / SECURITY V TEHNOCELLVPN Сетевые технологии и инструменты конфиденциальности. В ПЛАНАХ ↗ 02 / PROJECTS Создаём собственные цифровые продукты. Каждое направление развивается как часть единой технологической экосистемы. TEHNOCELL ECOSYSTEM Будущее начинается с разработки. Мы постепенно создаём собственные приложения, сервисы и игровые проекты. Это только начало развития TEHNOCELL INDOSTRI. ↗ T I. 03 / ABOUT US Больше, чем просто разработка. TEHNOCELL INDOSTRI — независимая технологическая компания, ориентированная на создание собственных цифровых продуктов и развитие различных технологических направлений. Наша цель — постепенно сформировать единую экосистему, в которой программное обеспечение, игровые проекты и другие технологии будут дополнять друг друга. 04 / CONTACT Есть идея? Свяжитесь с нами. Мы открыты к общению, предложениям и новым возможностям. tehnocellindostri@gmail.com НАПИСАТЬ НАМ → TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI",
+      "description": "Главная страница TEHNOCELL INDOSTRI: компания, цифровая экосистема, платформа, подразделения, продукты, проекты и контакты.",
+      "content": "TEHNOCELL INDOSTRI T TEHNOCELL INDOSTRI Главная Платформа Направления Проекты О компании Контакты ? Войти Independent Technology Company TEHNOCELL INDOSTRI. Мы создаём собственную цифровую экосистему: общение, сообщества, полезные сервисы, игры и технологии — в едином пространстве TEHNOCELL. СКАЧАТЬ PLATFORM APK ↓ О TEHNOCELL ЕДИНСТВО ОДИН АККАУНТ ОБЩЕНИЕ ЛЮДИ И СООБЩЕСТВА РАЗВИТИЕ ШАГ ЗА ШАГОМ 01 / THE TEHNOCELL PLATFORM Не просто сайт. Целый цифровой мир. Мы постепенно создаём единую платформу, в которой можно находить людей, общаться, делиться идеями, открывать сообщества и пользоваться сервисами TEHNOCELL. T S 01 / COMMUNITY Сообщества Публикации, обсуждения и люди с общими интересами. ПЕРВЫЙ ЭТАП M 02 / MESSAGING Общение Личные сообщения и групповые чаты в одном месте. СЛЕДУЮЩИЙ ЭТАП ID 03 / IDENTITY Один аккаунт Единый профиль для сервисов TEHNOCELL. ОСНОВА ЭКОСИСТЕМЫ + 04 / MORE Новые возможности Сервисы и функции будут появляться постепенно. ПОЭТАПНО TEHNOCELL PLATFORM → СКАЧАТЬ APK ↓ НАША ФИЛОСОФИЯ Мы не копируем существующие платформы. Мы объединяем удачные идеи и создаём собственный опыт TEHNOCELL. 02 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / SOCIAL PLATFORM P TEHNOCELL PLATFORM Социальная платформа для общения, публикаций, сообществ и единого цифрового профиля. ● ДОСТУПНО ↗ 04 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗ 05 / MUSIC M MIVO Музыкальная платформа TEHNOCELL: открывай новые жанры, исполнителей и звучание со всего мира. ● РАЗРАБОТКА НА ПАУЗЕ ↗ 06 / AUTOMOTIVE C TEHNOCELLCAR Автомобильные технологии и цифровые решения. В ПЛАНАХ ↗ 07 / NETWORK M TEHNOCELL MESSENGER Коммуникационные сервисы и цифровое взаимодействие. В ПЛАНАХ ↗ 08 / SECURITY V TEHNOCELLVPN Сетевые технологии и инструменты конфиденциальности. В ПЛАНАХ ↗ 03 / PROJECTS Создаём собственные цифровые продукты. Каждое направление развивается как часть единой технологической экосистемы. TEHNOCELL ECOSYSTEM Будущее начинается с разработки. Мы постепенно создаём собственные приложения, сервисы и игровые проекты. Это только начало развития TEHNOCELL INDOSTRI. ↗ T I. 04 / ABOUT US Больше, чем просто разработка. TEHNOCELL INDOSTRI — независимая технологическая компания, ориентированная на создание собственных цифровых продуктов и развитие различных технологических направлений. Наша цель — постепенно сформировать единую экосистему, в которой программное обеспечение, игровые проекты и другие технологии будут дополнять друг друга. 05 / CONTACT Есть идея? Свяжитесь с нами. Мы открыты к общению, предложениям и новым возможностям. tehnocellindostri@gmail.com НАПИСАТЬ НАМ → TEHNOCELL INDOSTRI INDEPENDENT TECHNOLOGY COMPANY Главная Подразделения О компании © TEHNOCELL INDOSTRI\n\nАКТУАЛЬНЫЙ СТАТУС НАПРАВЛЕНИЙ ПО ОПУБЛИКОВАННОЙ ГЛАВНОЙ СТРАНИЦЕ: TEHNOCELLSOFT — активно; TEHNOCELLGAME — активно; TEHNOCELL PLATFORM — доступна; TEHNOCELL WEATHER — доступен; MIVO — разработка на паузе; TEHNOCELLCAR, TEHNOCELL MESSENGER и TEHNOCELLVPN — планы, не объявляй их готовыми продуктами.",
       "structure": {
         "headings": [
           {
             "level": "h1",
             "text": "TEHNOCELL INDOSTRI."
+          },
+          {
+            "level": "h2",
+            "text": "Не просто сайт. Целый цифровой мир."
+          },
+          {
+            "level": "h3",
+            "text": "Сообщества"
+          },
+          {
+            "level": "h3",
+            "text": "Общение"
+          },
+          {
+            "level": "h3",
+            "text": "Один аккаунт"
+          },
+          {
+            "level": "h3",
+            "text": "Новые возможности"
           },
           {
             "level": "h2",
@@ -106,6 +132,10 @@
           {
             "level": "h3",
             "text": "TEHNOCELLGAME"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL PLATFORM"
           },
           {
             "level": "h3",
@@ -158,7 +188,13 @@
             "title": ""
           },
           {
-            "text": "Подразделения",
+            "text": "Платформа",
+            "href": "#platform",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "Направления",
             "href": "#divisions",
             "aria": "",
             "title": ""
@@ -188,14 +224,26 @@
             "title": ""
           },
           {
-            "text": "НАШИ НАПРАВЛЕНИЯ →",
-            "href": "#divisions",
+            "text": "СКАЧАТЬ PLATFORM APK ↓",
+            "href": "https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk",
             "aria": "",
             "title": ""
           },
           {
-            "text": "О КОМПАНИИ",
+            "text": "О TEHNOCELL",
             "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "TEHNOCELL PLATFORM →",
+            "href": "platform-app.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "СКАЧАТЬ APK ↓",
+            "href": "https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk",
             "aria": "",
             "title": ""
           },
@@ -212,8 +260,20 @@
             "title": ""
           },
           {
-            "text": "03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗",
+            "text": "03 / SOCIAL PLATFORM P TEHNOCELL PLATFORM Социальная платформа для общения, публикаций, сообществ и единого цифрового профиля. ● ДОСТУПНО ↗",
+            "href": "platform-app.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "04 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жизни. ● ДОСТУПНО ↗",
             "href": "weather.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "05 / MUSIC M MIVO Музыкальная платформа TEHNOCELL: открывай новые жанры, исполнителей и звучание со всего мира. ● РАЗРАБОТКА НА ПАУЗЕ ↗",
+            "href": "mivo.html",
             "aria": "",
             "title": ""
           },
@@ -253,12 +313,12 @@
           {
             "tag": "header",
             "id": "",
-            "text": "T TEHNOCELL INDOSTRI Главная Подразделения Проекты О компании Контакты ? Войти"
+            "text": "T TEHNOCELL INDOSTRI Главная Платформа Направления Проекты О компании Контакты ? Войти"
           },
           {
             "tag": "main",
             "id": "",
-            "text": "Independent Technology Company TEHNOCELL INDOSTRI. Независимая технологическая компания, объединяющая разработку программного обеспечения, игровые проекты и современные цифровые решения. НАШИ НАПРАВЛЕНИЯ → О КОМПАНИИ TEHNOCELL TECHNOLOGY INDEPENDENT DEVELOPMENT INNOVATION DIGITAL FUTURE 01 / OUR STRUCTURE Наши подразделения Различные направления разработки, объединённые одной технологической экосистемой. 01 / SOFTWARE S TEHNOCELLSOFT Программное обеспечение, приложения и цифровые инструменты. ● АКТИВНО ↗ 02 / GAMING G TEHNOCELLGAME Разработка игр, игровых механик и интерактивных проектов. ● АКТИВНО ↗ 03 / WEATHER W TEHNOCELL WEATHER Погодные данные и цифровые инструменты для повседневной жиз"
+            "text": "Independent Technology Company TEHNOCELL INDOSTRI. Мы создаём собственную цифровую экосистему: общение, сообщества, полезные сервисы, игры и технологии — в едином пространстве TEHNOCELL. СКАЧАТЬ PLATFORM APK ↓ О TEHNOCELL ЕДИНСТВО ОДИН АККАУНТ ОБЩЕНИЕ ЛЮДИ И СООБЩЕСТВА РАЗВИТИЕ ШАГ ЗА ШАГОМ 01 / THE TEHNOCELL PLATFORM Не просто сайт. Целый цифровой мир. Мы постепенно создаём единую платформу, в которой можно находить людей, общаться, делиться идеями, открывать сообщества и пользоваться сервисами TEHNOCELL. T S 01 / COMMUNITY Сообщества Публикации, обсуждения и люди с общими интересами. ПЕРВЫЙ "
           },
           {
             "tag": "footer",
@@ -267,14 +327,14 @@
           }
         ]
       },
-      "source_sha": "e8c3fc1ff34b94b708b705a913edf2b79a54996d"
+      "source_sha": "56d769b04fe8ab50f0d076446eabcf391ce11e10"
     },
     {
       "slug": "account.html",
       "title": "TEHNOCELL ID — Личный кабинет",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/account.html",
       "description": "Общая учётная запись и личный кабинет TEHNOCELL ID.",
-      "content": "TEHNOCELL ID — Личный кабинет TEHNOCELL ID ← Назад Обзор Поддержка Настройки Выйти ↗ Обзор аккаунта Центр управления TEHNOCELL INDOSTRI ✦ TEHNOCELL · BIRTHDAY EDITION Сегодня ваш день. Пусть он будет по-настоящему особенным. T Пользователь ✓ Добро пожаловать в TEHNOCELL. Ваш публичный профиль Так вас видят другие участники ПРЕДПРОСМОТР T Пользователь Участник TEHNOCELL Пользователь пока ничего не рассказал о себе. Профиль Добавить в друзья · доступно другим Написать · доступно друзьям Это публичная часть профиля. Почта, TEHNOCELL ID и настройки безопасности здесь не отображаются. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор аккаунта Загрузка... Ваш уникальный TEHNOCELL ID Электронная почта Загрузка... Почта вашего аккаунта Дата регистрации Загрузка... Дата создания TEHNOCELL ID Дата рождения Укажите настоящую дату. Год рождения не сохраняется — только день и месяц. После сохранения изменить дату самостоятельно нельзя. День Выберите день ⌄ Месяц Выберите месяц ⌄ Сохранить дату Дата ещё не указана. Профиль T Пользователь ✓ Ваша фотография профиля TEHNOCELL ID. Изменить фото Удалить фото Поддерживаются JPG, PNG и WEBP. Максимальный размер — 5 МБ. Личные данные Отображаемое имя О себе Сохранить изменения Оформление публичного профиля Настройте, как вас увидят другие участники TEHNOCELL. Статус Стиль профиля Чёрно-белый Графитовый Ледяной Фиолетовый Музыка профиля Загрузите одну композицию — она будет доступна для прослушивания прямо в вашем публичном профиле. Название композиции Исполнитель Аудиофайл Файл не выбран. Поддерживаются MP3, M4A, AAC, WAV, OGG, WEBM и FLAC до 20 МБ. Обложка композиции Обложка автоматически берётся из аудиофайла. Если её нет, TEHNOCELL создаст собственную. При желании можно загрузить свою. Убрать музыку из профиля Во что играете Баннер профиля Баннер ещё не установлен Выбрать изображение Убрать баннер Баннер: JPG, PNG или WEBP до 5 МБ. Музыка загружается в хранилище TEHNOCELL и становится публично доступной вместе с профилем. Загружайте только аудио, на которое у вас есть права или разрешение. Сохранить оформление Внешний вид Тема оформления Выберите оформление личного кабинета. ☀ Дневная ☾ Ночная Уведомления Управление уведомлениями Управляйте настройками уведомлений. Включить Выключить Пауза 1 час Пауза 8 часов Пауза 24 часа Уведомления включены. Безопасность Изменение пароля Новый пароль Изменить пароль Аккаунт Информация об аккаунте Электронная почта TEHNOCELL ID Выйти из аккаунта × ENNIE · TEHNOCELL AI С днём рождения! Пусть впереди будет больше радостных событий, интересных идей и смелости воплощать задуманное. Желаем отличного дня и яркого нового года жизни! Спасибо, Энни!",
+      "content": "TEHNOCELL ID — Личный кабинет TEHNOCELL ID ← Назад Обзор Поддержка Настройки Выйти ↗ Обзор аккаунта Центр управления TEHNOCELL INDOSTRI ✦ TEHNOCELL · BIRTHDAY EDITION Сегодня ваш день. Пусть он будет по-настоящему особенным. T Пользователь ✓ Добро пожаловать в TEHNOCELL. Ваш публичный профиль Так вас видят другие участники ПРЕДПРОСМОТР T Пользователь Участник TEHNOCELL Пользователь пока ничего не рассказал о себе. Профиль Добавить в друзья · доступно другим Написать · доступно друзьям Это публичная часть профиля. Почта, TEHNOCELL ID и настройки безопасности здесь не отображаются. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор аккаунта Загрузка... Ваш уникальный TEHNOCELL ID Электронная почта Загрузка... Почта вашего аккаунта Дата регистрации Загрузка... Дата создания TEHNOCELL ID Дата рождения Укажите настоящую дату. Год рождения не сохраняется — только день и месяц. После сохранения изменить дату самостоятельно нельзя. День Выберите день ⌄ Месяц Выберите месяц ⌄ Сохранить дату Дата ещё не указана. Профиль T Пользователь ✓ Ваша фотография профиля TEHNOCELL ID. Изменить фото Удалить фото Поддерживаются JPG, PNG и WEBP. Максимальный размер — 5 МБ. Личные данные Отображаемое имя О себе Сохранить изменения Оформление публичного профиля Настройте, как вас увидят другие участники TEHNOCELL. Статус Стиль профиля Чёрно-белый Графитовый Ледяной Фиолетовый Музыка профиля Загрузите одну композицию — она будет доступна для прослушивания прямо в вашем публичном профиле. Название композиции Исполнитель Аудиофайл Файл не выбран. Поддерживаются MP3, M4A, AAC, WAV, OGG, WEBM и FLAC до 20 МБ. Обложка композиции Обложка автоматически берётся из аудиофайла. Если её нет, TEHNOCELL создаст собственную. При желании можно загрузить свою. Убрать музыку из профиля Во что играете Баннер профиля Баннер ещё не установлен Выбрать изображение Убрать баннер Баннер: JPG, PNG или WEBP до 5 МБ. Музыка загружается в хранилище TEHNOCELL и становится публично доступной вместе с профилем. Загружайте только аудио, на которое у вас есть права или разрешение. Сохранить оформление Коллекция рамок Эксклюзивные рамки открываются за специальные события и достижения TEHNOCELL. Загружаем коллекцию… Внешний вид Тема оформления Выберите оформление личного кабинета. ☀ Дневная ☾ Ночная Уведомления Управление уведомлениями Управляйте настройками уведомлений. Включить Выключить Пауза 1 час Пауза 8 часов Пауза 24 часа Уведомления включены. Безопасность Изменение пароля Новый пароль Изменить пароль Аккаунт Информация об аккаунте Электронная почта TEHNOCELL ID Выйти из аккаунта × ENNIE · TEHNOCELL AI С днём рождения! Пусть впереди будет больше радостных событий, интересных идей и смелости воплощать задуманное. Желаем отличного дня и яркого нового года жизни! Спасибо, Энни!",
       "structure": {
         "headings": [
           {
@@ -320,6 +380,10 @@
           {
             "level": "h4",
             "text": "Музыка профиля"
+          },
+          {
+            "level": "h3",
+            "text": "Коллекция рамок"
           },
           {
             "level": "h2",
@@ -373,6 +437,16 @@
           }
         ],
         "controls": [
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
           {
             "tag": "button",
             "type": "",
@@ -573,17 +647,18 @@
           {
             "tag": "main",
             "id": "",
-            "text": "Обзор аккаунта Центр управления TEHNOCELL INDOSTRI ✦ TEHNOCELL · BIRTHDAY EDITION Сегодня ваш день. Пусть он будет по-настоящему особенным. T Пользователь ✓ Добро пожаловать в TEHNOCELL. Ваш публичный профиль Так вас видят другие участники ПРЕДПРОСМОТР T Пользователь Участник TEHNOCELL Пользователь пока ничего не рассказал о себе. Профиль Добавить в друзья · доступно другим Написать · доступно друзьям Это публичная часть профиля. Почта, TEHNOCELL ID и настройки безопасности здесь не отображаются. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме TEHNOCELL. Информация об аккаунте Идентификатор акк"
+            "text": "Обзор аккаунта Центр управления TEHNOCELL INDOSTRI ✦ TEHNOCELL · BIRTHDAY EDITION Сегодня ваш день. Пусть он будет по-настоящему особенным. T Пользователь ✓ Добро пожаловать в TEHNOCELL. Ваш публичный профиль Так вас видят другие участники ПРЕДПРОСМОТР T Пользователь Участник TEHNOCELL Пользователь пока ничего не рассказал о себе. Профиль Добавить в друзья · доступно другим Написать · доступно друзьям Это публичная часть профиля. Почта, TEHNOCELL ID и настройки безопасности здесь не отображаются. TEHNOCELL ID / PERSONAL ACCOUNT Добро пожаловать, Пользователь ✓ Ваш единый аккаунт в экосистеме T"
           }
         ]
-      }
+      },
+      "source_sha": "a324dca3bb041d9fffeab1e468020e37043a5934"
     },
     {
       "slug": "login.html",
       "title": "Вход — TEHNOCELL ID",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/login.html",
       "description": "",
-      "content": "Вход — TEHNOCELL ID TEHNOCELL ID С возвращением Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL. Электронная почта Пароль Войти в аккаунт Ещё нет аккаунта? Зарегистрироваться TEHNOCELL INDOSTRI © 2026 TEHNOCELL ID С возвращением Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL. Электронная почта Пароль Войти в аккаунт Ещё нет аккаунта? Зарегистрироваться TEHNOCELL INDOSTRI © 2026",
+      "content": "Вход — TEHNOCELL ID TEHNOCELL ID С возвращением Войдите в свой аккаунт, чтобы продолжить пользоваться экосистемой TEHNOCELL. Электронная почта Пароль Войти в аккаунт Ещё нет аккаунта? Зарегистрироваться TEHNOCELL INDOSTRI © 2026",
       "structure": {
         "headings": [
           {
@@ -603,51 +678,39 @@
           {
             "tag": "input",
             "type": "email",
-            "label": "name@example.com",
-            "id": "email",
-            "name": "",
-            "placeholder": "name@example.com",
-            "disabled": false
+            "label": "name@example.com"
           },
           {
             "tag": "input",
             "type": "password",
-            "label": "Введите пароль",
-            "id": "password",
-            "name": "",
-            "placeholder": "Введите пароль",
-            "disabled": false
+            "label": "Введите пароль"
           },
           {
             "tag": "button",
             "type": "submit",
-            "label": "",
-            "id": "loginButton",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "loginButton"
           }
         ],
         "sections": []
       },
-      "source_sha": "4856627358f23a0af7f47bddac5d8d4a9bd19461"
+      "source_sha": "390a9e3dbbb774139a670643ffdd49612c6b5287"
     },
     {
       "slug": "register.html",
-      "title": "Регистрация — TEHNOCELL ID",
+      "title": "TEHNOCELL ID — регистрация",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/register.html",
       "description": "",
-      "content": "Регистрация — TEHNOCELL ID TEHNOCELL ID Создать аккаунт Присоединяйтесь к экосистеме TEHNOCELL INDOSTRI. Имя пользователя Электронная почта Пароль Повторите пароль Создать аккаунт Уже есть аккаунт? Войти TEHNOCELL INDOSTRI © 2026 TEHNOCELL ID Создать аккаунт Присоединяйтесь к экосистеме TEHNOCELL INDOSTRI. Имя пользователя Электронная почта Пароль Повторите пароль Создать аккаунт Уже есть аккаунт? Войти TEHNOCELL INDOSTRI © 2026",
+      "content": "TEHNOCELL ID — регистрация T TEHNOCELL ID ЕДИНЫЙ АККАУНТ ЭКОСИСТЕМЫ TEHNOCELL ACCOUNT / 01 Твой цифровой профиль начинается здесь. Один аккаунт для сервисов TEHNOCELL INDOSTRI. Создай ID и используй его в TENO и других продуктах экосистемы. АККАУНТ ПОДТВЕРЖДЕНИЕ ЗАЩИТА КАК К ТЕБЕ ОБРАЩАТЬСЯ 01 ЭЛЕКТРОННАЯ ПОЧТА 02 ПАРОЛЬ 03 ПОКАЗАТЬ Придумай пароль, который сложно угадать. ПОВТОРИ ПАРОЛЬ 04 ПОКАЗАТЬ Создать TEHNOCELL ID  ↗ Отправить письмо повторно Уже есть TEHNOCELL ID? Войти в аккаунт ЗАЩИЩЁННОЕ СОЕДИНЕНИЕ · SUPABASE AUTH TEHNOCELL INDOSTRI · 2026",
       "structure": {
         "headings": [
           {
             "level": "h1",
-            "text": "Создать аккаунт"
+            "text": "Твой цифровой профиль начинается здесь."
           }
         ],
         "links": [
           {
-            "text": "Войти",
+            "text": "Войти в аккаунт",
             "href": "login.html",
             "aria": "",
             "title": ""
@@ -656,59 +719,60 @@
         "controls": [
           {
             "tag": "input",
-            "type": "text",
-            "label": "Как к вам обращаться",
-            "id": "name",
-            "name": "",
-            "placeholder": "Как к вам обращаться",
-            "disabled": false
+            "type": "",
+            "label": "Имя"
           },
           {
             "tag": "input",
             "type": "email",
-            "label": "name@example.com",
-            "id": "email",
-            "name": "",
-            "placeholder": "name@example.com",
-            "disabled": false
+            "label": "name@example.com"
           },
           {
             "tag": "input",
             "type": "password",
-            "label": "Минимум 6 символов",
-            "id": "password",
-            "name": "",
-            "placeholder": "Минимум 6 символов",
-            "disabled": false
+            "label": "Не менее 6 символов"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": ""
           },
           {
             "tag": "input",
             "type": "password",
-            "label": "Введите пароль ещё раз",
-            "id": "confirmPassword",
-            "name": "",
-            "placeholder": "Введите пароль ещё раз",
-            "disabled": false
+            "label": "Введи пароль ещё раз"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": ""
           },
           {
             "tag": "button",
             "type": "submit",
-            "label": "",
-            "id": "registerButton",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "registerButton"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "resendButton"
           }
         ],
-        "sections": []
+        "sections": [
+          {
+            "tag": "main",
+            "id": "",
+            "text": "T TEHNOCELL ID ЕДИНЫЙ АККАУНТ ЭКОСИСТЕМЫ TEHNOCELL ACCOUNT / 01 Твой цифровой профиль начинается здесь. Один аккаунт для сервисов TEHNOCELL INDOSTRI. Создай ID и используй его в TENO и других продуктах экосистемы. АККАУНТ ПОДТВЕРЖДЕНИЕ ЗАЩИТА КАК К ТЕБЕ ОБРАЩАТЬСЯ 01 ЭЛЕКТРОННАЯ ПОЧТА 02 ПАРОЛЬ 03 ПОКАЗАТЬ Придумай пароль, который сложно угадать. ПОВТОРИ ПАРОЛЬ 04 ПОКАЗАТЬ Создать TEHNOCELL ID  ↗ Отправить письмо повторно Уже есть TEHNOCELL ID? Войти в аккаунт ЗАЩИЩЁННОЕ СОЕДИНЕНИЕ · SUPABASE AUTH TEHNOCELL INDOSTRI · 2026"
+          }
+        ]
       },
-      "source_sha": "72fede8473c52f55c9ca1ecaff8add73c5e29735"
+      "source_sha": "0839b97013b922d39c6122b654e8ceda02c92a17"
     },
     {
       "slug": "game.html",
-      "title": "TEHNOCELLGAME",
+      "title": "TEHNOCELLGAME | TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/game.html",
-      "description": "Игровое подразделение TEHNOCELL.",
+      "description": "TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI.",
       "content": "TEHNOCELLGAME | TEHNOCELL INDOSTRI TEHNOCELL GAME Главная Игры О подразделении TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умения и побеждай могущественных боссов. Тебя ждут динамичные битвы, необычные способности и разнообразные испытания. В игре появятся как знакомые стенды из JoJo, так и оригинальные персонажи с собственными силами. ПЛАТФОРМЫ Android / Windows ЖАНР 2D Action РЕЛИЗ БЕТЫ Ноябрь 2026* Android — скоро Windows — скоро *Ориентировочная дата. Может измениться. Подробнее об игре → GAME PREVIEW Скриншоты игры Взгляни на игровой мир Stand Ascension. Скриншоты скоро появятся Галерея находится в разработке. WHO WE ARE О TEHNOCELLGAME TEHNOCELLGAME — игровое подразделение TEHNOCELL INDOSTRI, занимающееся разработкой и развитием игровых проектов. Наша цель — создавать интересные игровые продукты, экспериментировать с механиками и предлагать игрокам новые впечатления. © 2026 TEHNOCELL INDOSTRI. TEHNOCELL INDOSTRI — официальный сайт.",
       "structure": {
         "headings": [
@@ -785,7 +849,7 @@
           {
             "tag": "main",
             "id": "",
-            "text": "TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умения и побеждай могущественных боссов. Тебя ждут дин"
+            "text": "TEHNOCELL INDOSTRI DIVISION TEHNOCELLGAME Игровое подразделение TEHNOCELL INDOSTRI. Создаём игровые миры, необычные механики и проекты, в которые хочется возвращаться. OUR PROJECTS Наши игры Игровые проекты TEHNOCELLGAME. TEHNOCELLGAME PRESENTS STAND ASCENSION THE TOWER YOUR ASCENSION BEGINS HERE Stand Ascension: The Tower Разработчик: Stand Ascension BETA — COMING SOON Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Сражайся с врагами, используй уникальные способности стендов и покоряй 100 этажей загадочной башни. Становись сильнее, открывай новые умен"
           },
           {
             "tag": "footer",
@@ -793,11 +857,12 @@
             "text": "© 2026 TEHNOCELL INDOSTRI. TEHNOCELL INDOSTRI — официальный сайт."
           }
         ]
-      }
+      },
+      "source_sha": "83b5dbc8a88e0599ad350d23af8bebf3ae1611e6"
     },
     {
       "slug": "soft.html",
-      "title": "TEHNOCELLSOFT",
+      "title": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/soft.html",
       "description": "Подразделение программного обеспечения.",
       "content": "TEHNOCELLSOFT — TEHNOCELL INDOSTRI TEHNOCELL . О НАС ПРОДУКТЫ ГЛАВНАЯ SOFTWARE DEVELOPMENT DIVISION TEHNOCELL SOFT Подразделение TEHNOCELL INDOSTRI, занимающееся разработкой программного обеспечения, приложений и цифровых продуктов. НАШИ ПРОДУКТЫ 01 / О ПОДРАЗДЕЛЕНИИ Создаём цифровые решения. TEHNOCELLSOFT — программное подразделение TEHNOCELL INDOSTRI. Наша деятельность направлена на создание приложений, программных продуктов и цифровых инструментов. Каждый проект — это возможность воплотить новую идею в реальность. TS. 02 / НАШИ ПРОДУКТЫ Разработки TEHNOCELLSOFT Ознакомьтесь с нашими программными продуктами и проектами. ANDROID APPLICATION · 01 TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Текущие условия, почасовой прогноз, прогноз на 7 дней, атмосферные показатели и качество воздуха — всё в одном приложении. WEATHER APPLICATION ОТКРЫТЬ ПРОЕКТ → 03 / TEHNOCELL INDOSTRI Технологии. Идеи. Разработка. TEHNOCELLSOFT продолжает развиваться, создавая новые программные продукты в рамках TEHNOCELL INDOSTRI. © 2026 TEHNOCELL INDOSTRI ГЛАВНАЯ СТРАНИЦА TEHNOCELLSOFT",
@@ -896,14 +961,15 @@
             "text": "© 2026 TEHNOCELL INDOSTRI ГЛАВНАЯ СТРАНИЦА TEHNOCELLSOFT"
           }
         ]
-      }
+      },
+      "source_sha": "af8c9da5016b3227c5b1a1f872c2e5d6c0a018e0"
     },
     {
       "slug": "tehnosellsoft.html",
       "title": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/tehnosellsoft.html",
       "description": "",
-      "content": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI ← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT Наши программы TEHNOCELL WEATHER Утилита для точного отслеживания погодных условий и метеорологических данных. Минималистичный интерфейс, мгновенное обновление информации и высокая оптимизация для стабильной работы. Платформа: Windows / Android Версия: 1.0.0 (Релиз) Статус: Доступно для скачивания Скачать приложение © 2026 TEHNOCELL INDOSTRI. Все права защищены. ← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT Наши программы TEHNOCELL WEATHER Утилита для точного отслеживания погодных условий и метеорологических данных. Минималистичный интерфейс, мгновенное обновление информации и высокая оптимизация для стабильной работы. Платформа: Windows / Android Версия: 1.0.0 (Релиз) Статус: Доступно для скачивания Скачать приложение &copy; 2026 TEHNOCELL INDOSTRI. Все права защищены.",
+      "content": "TEHNOCELLSOFT | TEHNOCELL INDOSTRI ← Главная TEHNOCELL INDOSTRI DIVISION TEHNOCELLSOFT Наши программы TEHNOCELL WEATHER Утилита для точного отслеживания погодных условий и метеорологических данных. Минималистичный интерфейс, мгновенное обновление информации и высокая оптимизация для стабильной работы. Платформа: Windows / Android Версия: 1.0.0 (Релиз) Статус: Доступно для скачивания Скачать приложение &copy; 2026 TEHNOCELL INDOSTRI. Все права защищены.",
       "structure": {
         "headings": [
           {
@@ -947,14 +1013,14 @@
           }
         ]
       },
-      "source_sha": "48e2650ab28d0e77dc39081c486e950d5c71c0d8"
+      "source_sha": "57e7cf971936fa96de486d734ac36434686a053c"
     },
     {
       "slug": "stand-ascension.html",
       "title": "Stand Ascension: The Tower",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/stand-ascension.html",
       "description": "",
-      "content": "Stand Ascension: The Tower TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON | NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 / ABILITIES Способности стендов Используй уникальные силы и подбирай подходящий стиль сражения. 03 / BOSSES Могущественные боссы Приготовься к сложным противникам, которые проверят твои навыки. 04 / PROGRESSION Развитие персонажа Становись сильнее, открывай новые умения и совершенствуй свои возможности. GAME INFORMATION Информация об игре Проект находится в разработке. Следи за новостями, чтобы узнать о новых возможностях и выходе бета-версии. Название Stand Ascension: The Tower Разработчик Stand Ascension Жанр 2D Action Платформы Android / Windows Статус В разработке Бета Ноябрь 2026* VISUAL EXPERIENCE Галерея игры Загляни в мир Stand Ascension. Настоящие игровые скриншоты появятся здесь по мере разработки. Игровой скриншот №1 Скоро появится Игровой скриншот №2 Скоро появится Игровой скриншот №3 Скоро появится DEVELOPMENT Путь к вершине. Stand Ascension: The Tower находится в разработке. Мы постепенно готовим проект к бета-тестированию. Подготовка проекта Подробности о ходе разработки появятся позже. YOUR ASCENSION AWAITS Готов подняться? Бета-версия игры пока не выпущена. Следи за обновлениями и будь готов к началу своего пути. ANDROID — СКОРО WINDOWS — СКОРО TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON | NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 / ABILITIES Способности стендов Используй уникальные силы и подбирай подходящий стиль сражения. 03 / BOSSES Могущественные боссы Приготовься к сложным противникам, которые проверят твои навыки. 04 / PROGRESSION Развитие персонажа Становись сильнее, открывай новые умения и совершенствуй свои возможности. GAME INFORMATION Информация об игре Проект находится в разработке. Следи за новостями, чтобы узнать о новых возможностях и выходе бета-версии. Название Stand Ascension: The Tower Разработчик Stand Ascension Жанр 2D Action Платформы Android / Windows Статус В разработке Бета Ноябрь 2026* VISUAL EXPERIENCE Галерея игры Загляни в мир Stand Ascension. Настоящие игровые скриншоты появятся здесь по мере разработки. Игровой скриншот №1 Скоро появится Игровой скриншот №2 Скоро появится Игровой скриншот №3 Скоро появится DEVELOPMENT Путь к вершине. Stand Ascension: The Tower находится в разработке. Мы постепенно готовим проект к бета-тестированию. Подготовка проекта Подробности о ходе разработки появятся позже. YOUR ASCENSION AWAITS Готов подняться? Бета-версия игры пока не выпущена. Следи за обновлениями и будь готов к началу своего пути. ANDROID — СКОРО WINDOWS — СКОРО TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм",
+      "content": "Stand Ascension: The Tower TEHNOCELL . ИГРЫ ОСОБЕННОСТИ ГАЛЕРЕЯ СКАЧАТЬ TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON   |   NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 / ABILITIES Способности стендов Используй уникальные силы и подбирай подходящий стиль сражения. 03 / BOSSES Могущественные боссы Приготовься к сложным противникам, которые проверят твои навыки. 04 / PROGRESSION Развитие персонажа Становись сильнее, открывай новые умения и совершенствуй свои возможности. GAME INFORMATION Информация об игре Проект находится в разработке. Следи за новостями, чтобы узнать о новых возможностях и выходе бета-версии. Название Stand Ascension: The Tower Разработчик Stand Ascension Жанр 2D Action Платформы Android / Windows Статус В разработке Бета Ноябрь 2026* VISUAL EXPERIENCE Галерея игры Загляни в мир Stand Ascension. Настоящие игровые скриншоты появятся здесь по мере разработки. Игровой скриншот №1 Скоро появится Игровой скриншот №2 Скоро появится Игровой скриншот №3 Скоро появится DEVELOPMENT Путь к вершине. Stand Ascension: The Tower находится в разработке. Мы постепенно готовим проект к бета-тестированию. Подготовка проекта Подробности о ходе разработки появятся позже. YOUR ASCENSION AWAITS Готов подняться? Бета-версия игры пока не выпущена. Следи за обновлениями и будь готов к началу своего пути. ANDROID — СКОРО WINDOWS — СКОРО TEHNOCELL INDOSTRI TEHNOCELLGAME © 2026 TEHNOCELL INDOSTRI ← Назад к играм",
       "structure": {
         "headings": [
           {
@@ -1062,7 +1128,7 @@
           {
             "tag": "main",
             "id": "",
-            "text": "TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON   |   NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испытание. 01 / TOWER 100 этажей Преодолевай этаж за этажом и приближайся к загадочной вершине башни. 02 "
+            "text": "TEHNOCELLGAME ORIGINAL PROJECT STAND ASCENSION Поднимись на вершину загадочной башни. Сражайся, развивай свои способности и открой тайны, скрытые за сотней этажей. ОБ ИГРЕ → ГАЛЕРЕЯ ● BETA COMING SOON   |   NOVEMBER 2026* THE BEGINNING Твоя история начинается здесь. Stand Ascension: The Tower — пиксельная 2D-игра, вдохновлённая JoJo’s Bizarre Adventure. Тебя ждёт загадочная башня, наполненная противниками, испытаниями и могущественными боссами. Становись сильнее, открывай новые способности и попробуй добраться до самой вершины. GAME FEATURES Что тебя ожидает? Каждая ступень башни — новое испыт"
           },
           {
             "tag": "footer",
@@ -1071,7 +1137,7 @@
           }
         ]
       },
-      "source_sha": "8e6bc100bb19a74d68aaae40cf9faf5fecb02295"
+      "source_sha": "c50c4b12c87d252de25e7a953d20f9ed5044429b"
     },
     {
       "slug": "weather.html",
@@ -1087,6 +1153,16 @@
             "tag": "input",
             "type": "text",
             "label": "Введите город..."
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Моё местоположение"
           },
           {
             "tag": "button",
@@ -1108,17 +1184,18 @@
           {
             "tag": "main",
             "id": "",
-            "text": "TEHNOCELL WEATHER --:-- Загрузка... Найти ⌖ Избранные города + В избранное Пока нет сохранённых городов Загрузка погоды... Москва --° Загрузка... Ощущается как --° Ожидание данных... Почасовой прогноз Интерактивная карта погоды ◎ Моё место TEHNOCELL · ATMOSPHERE Сейчас --° Сейчас +6 часов +12 часов ◌ Анализируем атмосферу Здесь появится краткая картина погодных изменений. Осадки — Ветер — Ощущается — Выбери место на карте. Атмосфера покажет, как изменится погода в ближайшие часы. Прогноз на 7 дней Влажность --% Относительная влажность Ветер -- Скорость ветра Давление -- Гектопаскали Видимость -- Километры УФ-индекс -- Ультрафиолет Вероятность"
+            "text": "TEHNOCELL WEATHER --:-- Загрузка... Найти ⌖ Избранные города + В избранное Пока нет сохранённых городов Загрузка погоды... Москва --° Загрузка... Ощущается как --° Ожидание данных... Почасовой прогноз Интерактивная карта погоды ◎ Моё место TEHNOCELL · ATMOSPHERE Сейчас --° Сейчас +6 часов +12 часов ◌ Анализируем атмосферу Здесь появится краткая картина погодных изменений. Осадки — Ветер — Ощущается — Выбери место на карте. Атмосфера покажет, как изменится погода в ближайшие часы. Прогноз на 7 дней Влажность --% Относительная влажность Ветер -- Скорость ветра Давление -- Гектопаскали Видимость "
           }
         ]
-      }
+      },
+      "source_sha": "56c3f5b089da64cf709f02c39dc73125e677f73d"
     },
     {
       "slug": "weather-app.html",
-      "title": "TEHNOCELL WEATHER — приложение",
+      "title": "TEHNOCELL WEATHER — TEHNOCELLSOFT",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/weather-app.html",
       "description": "Мобильная версия погодного сервиса.",
-      "content": "TEHNOCELL WEATHER — TEHNOCELLSOFT TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW. 02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения. 03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранного города. 09 Поиск городов Находите нужные города и получайте информацию о погоде. 04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓ СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0 © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER",
+      "content": "TEHNOCELL WEATHER — TEHNOCELLSOFT TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL WEATHER Современное приложение для наблюдения за погодой. Вся необходимая информация о погоде — в одном месте. Просто, удобно и информативно. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Погода. Без лишнего. TEHNOCELL WEATHER — приложение, разработанное подразделением TEHNOCELLSOFT. Его задача — предоставить пользователю понятную и подробную информацию о погодных условиях. Мы стремились объединить полезные инструменты, удобство использования и минималистичный интерфейс. TW. 02 / ОБЗОР Интерфейс приложения Посмотрите, как выглядит TEHNOCELL WEATHER. Три фрагмента интерфейса приложения. 03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход и закат Время восхода и захода солнца для выбранного города. 09 Поиск городов Находите нужные города и получайте информацию о погоде. 04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓   СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0 © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER",
       "structure": {
         "headings": [
           {
@@ -1222,7 +1299,7 @@
             "title": ""
           },
           {
-            "text": "↓ СКАЧАТЬ APK",
+            "text": "↓   СКАЧАТЬ APK",
             "href": "https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/v1.0.0/default.TEHNOCELL-WEATHER.apk",
             "aria": "",
             "title": ""
@@ -1254,12 +1331,12 @@
           {
             "tag": "section",
             "id": "features",
-            "text": "03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнавайте уровень ультрафиолетового излучения. 08 Восход"
+            "text": "03 / ВОЗМОЖНОСТИ Больше, чем прогноз. Получайте подробную информацию об окружающих погодных условиях и следите за изменениями. 01 Текущая погода Температура, ощущаемая температура и основные погодные условия. 02 Почасовой прогноз Следите за изменениями погоды в течение дня. 03 Прогноз на 7 дней Планируйте неделю, заранее узнавая о погодных изменениях. 04 Атмосферные показатели Влажность, давление, скорость ветра и видимость. 05 Качество воздуха Информация об AQI, PM2.5 и PM10. 06 Weather Intelligence Дополнительная информация для более подробного понимания погодных условий. 07 УФ-индекс Узнава"
           },
           {
             "tag": "section",
             "id": "download",
-            "text": "04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓ СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0"
+            "text": "04 / ЗАГРУЗКА Попробуйте TEHNOCELL WEATHER. Приложение доступно для устройств Android. Загрузите установочный файл и начните пользоваться TEHNOCELL WEATHER. ↓   СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.0"
           },
           {
             "tag": "footer",
@@ -1267,14 +1344,15 @@
             "text": "© 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL WEATHER"
           }
         ]
-      }
+      },
+      "source_sha": "1b796063d9c12ba3c5054be78cba90e3c3ac3518"
     },
     {
       "slug": "ennie.html",
       "title": "ENNIE — TEHNOCELL AI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/ennie.html",
       "description": "",
-      "content": "E ENNIE TEHNOCELL AI Новый диалог ТВОИ ДИАЛОГИ Здесь пока пусто E TEHNOCELL ID Проверка аккаунта... ENNIE TEHNOCELL AI ENNIE ONLINE YOUR PERSONAL AI ASSISTANT Привет. Я ENNIE . Ну что, мой хороший, какие сегодня планы? Я рядом. Можем поговорить, разобраться с задачами или просто провести немного времени вместе. ТВОЁ ПРОСТРАНСТВО Что будем делать? Мой день Планы и задачи ↗ Моя память Идеи и заметки ↗ TC HUB Экосистема TEHNOCELL ↗ TC NEWS Новости компании ↗ TC STATUS Состояние сервисов ↗ Быстрые действия Создать что-нибудь ↗ E ENNIE ENNIE может ошибаться. Проверяй важную информацию. ENNIE — TEHNOCELL AI ENNIE CONTROL Настройки E TEHNOCELL ID Аккаунт не подключён TC-ID: проверка... Открыть профиль Копировать email ВНЕШНИЙ ВИД Тёмная тема Оформление интерфейса ГОЛОС ENNIE Голосовые ответы ENNIE сможет отвечать голосом БЕЗОПАСНОСТЬ Очистить историю диалогов → Выйти из аккаунта → ENNIE — TEHNOCELL AI PERSONAL ASSISTANT ! Ты уверена? Это действие нельзя будет отменить. Отмена Продолжить ENNIE SPACE Мой день",
+      "content": "ENNIE — TEHNOCELL AI E ENNIE TEHNOCELL AI Новый диалог ТВОИ ДИАЛОГИ Здесь пока пусто E TEHNOCELL ID Проверка аккаунта... ENNIE TEHNOCELL AI ENNIE ONLINE YOUR PERSONAL AI ASSISTANT Привет. Я ENNIE . Ну что, мой хороший, какие сегодня планы? Я рядом. Можем поговорить, разобраться с задачами или просто провести немного времени вместе. ТВОЁ ПРОСТРАНСТВО Что будем делать? Мой день Планы и задачи ↗ Моя память Идеи и заметки ↗ TC HUB Экосистема TEHNOCELL ↗ TC NEWS Новости компании ↗ TC STATUS Состояние сервисов ↗ Быстрые действия Создать что-нибудь ↗ ENNIE думает… ENNIE может ошибаться. Проверяй важную информацию. ENNIE — TEHNOCELL AI ENNIE CONTROL Настройки E TEHNOCELL ID Аккаунт не подключён TC-ID: проверка... Открыть профиль Копировать email ВНЕШНИЙ ВИД Тёмная тема Оформление интерфейса ГОЛОС ENNIE Голосовые ответы ENNIE сможет отвечать голосом БЕЗОПАСНОСТЬ Очистить историю диалогов → Выйти из аккаунта → ENNIE — TEHNOCELL AI PERSONAL ASSISTANT ! Ты уверена? Это действие нельзя будет отменить. Отмена Продолжить ENNIE SPACE Мой день \\n/* ENNIE typing status label — restored */\\n.typing-label{display:inline-flex;align-items:center;color:var(--muted,#929292);font-size:12px;font-weight:500;letter-spacing:.15px;line-height:1.3;white-space:nowrap;animation:ennieTypingLabel 1.8s ease-in-out infinite;}\\n@keyframes ennieTypingLabel{0%,100%{opacity:.58}50%{opacity:1}}\\n@media(prefers-reduced-motion:reduce){.typing-label{animation:none;opacity:1}}\\n",
       "structure": {
         "headings": [
           {
@@ -1310,252 +1388,139 @@
           {
             "tag": "button",
             "type": "",
-            "label": "Закрыть меню",
-            "id": "sidebarClose",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Закрыть меню"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "newChatBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "newChatBtn"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "Настройки",
-            "id": "settingsBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Настройки"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "Открыть меню",
-            "id": "menuToggle",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Открыть меню"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "Настройки",
-            "id": "topSettingsBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Настройки"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": ""
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": ""
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": ""
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": ""
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": ""
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": ""
           },
           {
             "tag": "button",
             "type": "",
-            "label": "Прикрепить изображение",
-            "id": "attachBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Прикрепить файл или фотографию"
           },
           {
             "tag": "input",
             "type": "file",
-            "label": "",
-            "id": "imageInput",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "imageInput"
           },
           {
             "tag": "textarea",
             "type": "",
-            "label": "Напиши мне что-нибудь...",
-            "id": "messageInput",
-            "name": "",
-            "placeholder": "Напиши мне что-нибудь...",
-            "disabled": false
+            "label": "Напиши мне что-нибудь..."
           },
           {
             "tag": "button",
             "type": "button",
-            "label": "Голосовой ввод",
-            "id": "micBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Голосовой ввод"
           },
           {
             "tag": "button",
             "type": "button",
-            "label": "Отправить",
-            "id": "sendBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Отправить"
           },
           {
             "tag": "button",
             "type": "button",
-            "label": "Перетащить сюда, чтобы удалить",
-            "id": "voiceTrashZone",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Перетащить сюда, чтобы удалить"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "Закрыть",
-            "id": "closeSettings",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Закрыть"
           },
           {
             "tag": "button",
             "type": "button",
-            "label": "",
-            "id": "copyAccountEmail",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "copyAccountEmail"
           },
           {
             "tag": "input",
             "type": "checkbox",
-            "label": "",
-            "id": "themeToggle",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "themeToggle"
           },
           {
             "tag": "input",
             "type": "checkbox",
-            "label": "",
-            "id": "voiceOutputToggle",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "voiceOutputToggle"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "clearHistoryBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "clearHistoryBtn"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "logoutBtn",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "logoutBtn"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "confirmCancel",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "confirmCancel"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "",
-            "id": "confirmAccept",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "confirmAccept"
           },
           {
             "tag": "button",
             "type": "",
-            "label": "Закрыть",
-            "id": "closeWidgetModal",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": "Удалить распознанное сообщение",
-            "id": "",
-            "name": "",
-            "placeholder": "",
-            "disabled": false
+            "label": "Закрыть"
           }
         ],
         "sections": [
           {
             "tag": "main",
             "id": "",
-            "text": "ENNIE TEHNOCELL AI ENNIE ONLINE YOUR PERSONAL AI ASSISTANT Привет. Я ENNIE . Ну что, мой хороший, какие сегодня планы? Я рядом. Можем поговорить, разобраться с задачами или просто провести немного времени вместе. ТВОЁ ПРОСТРАНСТВО Что будем делать? Мой день Планы и задачи ↗ Моя память Идеи и заметки ↗ TC HUB Экосистема TEHNOCELL ↗ TC NEWS Новости компании ↗ TC STATUS Состояние сервисов ↗ Быстрые действия Создать что-нибудь ↗ E ENNIE ENNIE может ошибаться. Проверяй важную информацию. ENNIE — TEHNOCELL AI"
+            "text": "ENNIE TEHNOCELL AI ENNIE ONLINE YOUR PERSONAL AI ASSISTANT Привет. Я ENNIE . Ну что, мой хороший, какие сегодня планы? Я рядом. Можем поговорить, разобраться с задачами или просто провести немного времени вместе. ТВОЁ ПРОСТРАНСТВО Что будем делать? Мой день Планы и задачи ↗ Моя память Идеи и заметки ↗ TC HUB Экосистема TEHNOCELL ↗ TC NEWS Новости компании ↗ TC STATUS Состояние сервисов ↗ Быстрые действия Создать что-нибудь ↗ ENNIE думает… ENNIE может ошибаться. Проверяй важную информацию. ENNIE — TEHNOCELL AI"
           },
           {
             "tag": "section",
@@ -1564,49 +1529,543 @@
           }
         ]
       },
-      "source_sha": "4bc40b890ec3c092c39d59b55dacdee7bc900465"
+      "source_sha": "2a07a08f73c989269531f887b652b4d3a5a545ab"
     },
     {
       "slug": "mivo.html",
-      "title": "MIVO — музыкальная платформа TEHNOCELL INDOSTRI",
+      "title": "MIVO — Музыка без границ",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/mivo.html",
-      "description": "MIVO — собственная музыкальная платформа TEHNOCELL INDOSTRI.",
-      "content": "MIVO — музыкальная платформа TEHNOCELL INDOSTRI. Это часть нашей экосистемы, а не стороннее приложение. На странице доступны поиск музыкального каталога, карточки композиций, очередь, мини-плеер, полноэкранный плеер, плейлисты, избранное, история прослушивания и окно текстов песен. Текущий поиск использует каталог Apple/iTunes, который обычно предоставляет короткие ознакомительные preview-фрагменты, а не полные музыкальные записи. Полные треки доступны через пользовательские аудиофайлы или лицензированный музыкальный источник.",
+      "description": "MIVO — музыка без границ. Музыкальная платформа TEHNOCELL INDOSTRI.",
+      "content": "MIVO — Музыка без границ M mivo . МУЗЫКА ⌂ Главная ⌕ Обзор музыки ◈ Миксы для тебя ▤ Моя медиатека ♡ Мне нравится ТВОЯ КОЛЛЕКЦИЯ ◷ Недавно слушали ▧ Плейлисты M Гость MIVO ТВОЯ МУЗЫКАЛЬНАЯ ВСЕЛЕННАЯ Ⅱ ОБЪЯВЛЕНИЕ · СТАТУС ПРОЕКТА Разработка MIVO временно приостановлена Сейчас я временно переключаюсь на другие задачи и пока не буду заниматься развитием MIVO. Проект не закрыт — мы планируем вернуться к нему позже. Сроки возобновления разработки пока не определены. Спасибо, что остаётесь с нами. ‹ › ⌕ Ctrl K × ⚙ ТЕМА ЗВУК · В ПЛАНАХ M ВОЙТИ МУЗЫКАЛЬНАЯ ПЛАТФОРМА TEHNOCELL INDOSTRI ТВОЙ МИР. В ЗВУКЕ. Открывай новые голоса, находи любимые звучания и собирай собственную музыкальную вселенную. СЛУШАТЬ МУЗЫКУ ↗ ДОБАВИТЬ СВОЮ МУЗЫКУ + M ЗВУКОВАЯ СЦЕНА MIVO 01 / ∞ МУЗЫКА БЕЗ ГРАНИЦ MIVO / ПОЛНОФОРМАТНЫЙ КАТАЛОГ Музыка целиком. Без 30-секундных обрывков. Подключи Apple Music, чтобы искать русские хиты и музыку СНГ и слушать полные версии прямо в MIVO. Доступность зависит от страны каталога и подписки. Подключить Apple Music Отключить Найти музыку Полные версии станут доступны после настройки защищённого токена MIVO и подключения аккаунта Apple Music. — — Пауза Воспроизведение идёт через официальный Apple MusicKit. MIVO не скачивает и не хранит эти треки. Нужны действующая подписка и авторизация; каталог зависит от региона. MIVO / СЕЙЧАС СЛУШАЮТ Хиты СНГ · сейчас в тренде Популярная музыка России и стран СНГ. Подборка обновляется по доступным музыкальным данным. ОБНОВИТЬ ↻ Загружаем музыкальный чарт… MIVO ДЛЯ ТЕБЯ Миксы для тебя Похоже на то, что ты слушаешь. Подборки меняются на основе твоей музыки, избранного и истории. Добавь музыку с устройства или найди треки через поиск — и MIVO соберёт первые персональные миксы. MIVO ОТКРЫТИЯ Открой свой музыкальный мир Исследуй сцены, культуры и звучания — без выдуманных треков и фальшивых подборок. RU Русская сцена Поп, рок, хип-хоп и новое звучание CIS Музыка СНГ Артисты и направления региона GLB Мировая музыка Хиты и открытия со всего мира NEW Новые голоса Независимые исполнители MIVO MUSIC Музыка, которую хочется слушать Слушай популярные композиции, открывай новые имена и собирай собственную коллекцию. M / ПОИСК И МУЗЫКАЛЬНЫЕ ОТКРЫТИЯ Находи музыку. Открывай своё звучание. Поиск использует открытые музыкальные метаданные и доступные ознакомительные фрагменты. Полные версии и большой каталог требуют отдельных лицензированных источников. 01 Популярное Хиты России и мира 02 Новые релизы Свежая музыка 03 Жанры и сцены От попа до андеграунда Треки Релизы Миксы Моя волна МУЗЫКАЛЬНЫЙ КАТАЛОГ 0 композиций Открой релиз, чтобы увидеть композиции из него. Каталог MIVO наполняется. Пока здесь нет опубликованных композиций. КАРТА МУЗЫКИ Музыкальные направления Будущая карта жанров и сцен — от локальной музыки до мировых направлений. 01 / POP & MAINSTREAM Популярная музыка Главные хиты и чарты 02 / HIP-HOP & R&B Ритм и культура Хип-хоп, рэп и R&B 03 / ROCK & ALTERNATIVE Громче границ Рок, инди и альтернатива 04 / ELECTRONIC Электронная сцена От house до techno 05 / CLASSICAL & JAZZ Вне времени Классика, джаз и инструментал 06 / WORLD Звучание планеты Музыкальные культуры мира ТВОИ ПЛЕЙЛИСТЫ Твои плейлисты Создавай собственные подборки и собирай музыку по настроению. ＋ СОЗДАТЬ ПЛЕЙЛИСТ Пока нет плейлистов. Создай первый и добавляй в него любимые композиции. ТВОЯ КОЛЛЕКЦИЯ Твоя медиатека Твои собственные аудиофайлы, избранное и история прослушивания. Твоя музыка — на твоём устройстве Добавляй аудиофайлы и слушай их в MIVO. Сейчас файлы остаются только в памяти текущего браузера и не загружаются на сервер. ВЫБРАТЬ АУДИОФАЙЛЫ + Избранное и история сохраняются в этом браузере. Полный онлайн-каталог будет подключён отдельно после подготовки музыкальных источников и прав на воспроизведение. MIVO / ПЕРСОНАЛЬНОЕ ПРОСТРАНСТВО Настройки Настрой внешний вид, поведение приложения и удобство прослушивания. Внешний вид Сделай интерфейс таким, каким тебе удобно пользоваться. Цвет оформления Цвет кнопок и выделения Стиль интерфейса Общая атмосфера приложения Тёмный Абсолютно чёрный Мягкий графит Размер текста Масштаб подписей и заголовков Маленький Обычный Крупный Плотность карточек Больше музыки или крупные обложки Просторная Компактная Скругление карточек Форма обложек и блоков Мягкое Сильное Минимальное Количество колонок Сколько карточек в ряд Автоматически Две Три Анимации интерфейса Плавные переходы и движения Атмосферный фон Световые оттенки в большом плеере Воспроизведение Управляй поведением плеера. Автопереход к следующему треку Продолжать очередь после песни Запоминать громкость Сохранять уровень звука Открывать большой плеер автоматически Показывать экран композиции при запуске Автоматически открывать текст Если текст доступен Экономия ресурсов Для мобильного интернета и плавной работы. Экономия трафика Отключить лишние эффекты Уменьшить движение Снизить количество анимаций Приложение Общие параметры. Язык интерфейса Сейчас доступен русский Русский Стартовый раздел Куда переходить при открытии Главная Моя волна Каталог Медиатека Сбросить настройки ⌂ Главная 〰 Моя волна ⌕ Каталог ▤ Коллекция ⚙ Настройки M Выбери свой первый трек ТВОЯ МУЗЫКА · MIVO ♡ ⤨ ◀ ▶ ▶ ↻ 0:00 0:00 ≋ ◖ × MIVO / СЕЙЧАС ИГРАЕТ ЗВУКОВАЯ СЦЕНА M ТВОЙ МУЗЫКАЛЬНЫЙ МОМЕНТ Выбери трек MIVO МУЗЫКА · ПУЛЬС MIVO 0:00 0:00 ⤨ ◀ ▶ ▶ ↻ ♡ В избранное ≋ ТЕКСТ ПЕСНИ ГРОМКОСТЬ ПУЛЬС MIVO Обложка превращается в живую звуковую сцену. Это пространство твоего прослушивания. TEHNOCELL INDOSTRI MIVO — МУЗЫКА, КОТОРАЯ ОЖИВАЕТ MIVO / ТВОЯ КОЛЛЕКЦИЯ Новый плейлист Дай своей подборке имя. Потом сможешь добавлять в неё любые доступные композиции. Название плейлиста 0 / 48 ОТМЕНА СОЗДАТЬ MIVO / ТВОЁ ПРОСТРАНСТВО Настрой свою MIVO Выбери атмосферу, цвет и плотность карточек. Настройки сохранятся на этом устройстве. Атмосфера Ледяное сияние Фиолетовый космос Тёплый закат Океан Чёрно-белая классика Свой цвет акцента Вид карточек Просторные Компактные СБРОСИТЬ СОХРАНИТЬ MIVO / ДЕЙСТВИЕ Подтверждение ОТМЕНА ПОДТВЕРДИТЬ MIVO / ТЕКСТ ПЕСНИ Текст композиции × Выбери композицию, чтобы найти её текст. Текст доступен не для каждой песни. Источник — открытая база LRCLIB.",
       "structure": {
         "headings": [
           {
+            "level": "h2",
+            "text": "Разработка MIVO временно приостановлена"
+          },
+          {
             "level": "h1",
-            "text": "MIVO"
+            "text": "ТВОЙ МИР. В ЗВУКЕ."
           },
           {
             "level": "h2",
-            "text": "Музыкальная платформа TEHNOCELL INDOSTRI"
+            "text": "Музыка целиком. Без 30-секундных обрывков."
+          },
+          {
+            "level": "h2",
+            "text": "Хиты СНГ · сейчас в тренде"
+          },
+          {
+            "level": "h2",
+            "text": "Миксы для тебя"
+          },
+          {
+            "level": "h2",
+            "text": "Открой свой музыкальный мир"
+          },
+          {
+            "level": "h2",
+            "text": "Музыка, которую хочется слушать"
+          },
+          {
+            "level": "h3",
+            "text": "Находи музыку. Открывай своё звучание."
+          },
+          {
+            "level": "h2",
+            "text": "Музыкальные направления"
+          },
+          {
+            "level": "h2",
+            "text": "Твои плейлисты"
+          },
+          {
+            "level": "h2",
+            "text": "Твоя медиатека"
+          },
+          {
+            "level": "h2",
+            "text": "Настройки"
+          },
+          {
+            "level": "h3",
+            "text": "Внешний вид"
+          },
+          {
+            "level": "h3",
+            "text": "Воспроизведение"
+          },
+          {
+            "level": "h3",
+            "text": "Экономия ресурсов"
+          },
+          {
+            "level": "h3",
+            "text": "Приложение"
+          },
+          {
+            "level": "h2",
+            "text": "Выбери трек"
+          },
+          {
+            "level": "h3",
+            "text": "Новый плейлист"
+          },
+          {
+            "level": "h3",
+            "text": "Настрой свою MIVO"
+          },
+          {
+            "level": "h3",
+            "text": "Подтверждение"
+          },
+          {
+            "level": "h3",
+            "text": "Текст композиции"
           }
         ],
         "links": [
           {
-            "text": "MIVO",
+            "text": "M mivo .",
             "href": "mivo.html",
             "aria": "",
             "title": ""
+          },
+          {
+            "text": "M ВОЙТИ",
+            "href": "login.html",
+            "aria": "Войти в TEHNOCELL ID",
+            "title": ""
           }
         ],
-        "controls": [],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Назад"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Вперёд"
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "Ищи треки, исполнителей и альбомы..."
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Очистить поиск"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Настройки оформления MIVO"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "qualityBtn"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "exploreBtn"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "uploadHero"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "appleConnect"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "appleDisconnect"
+          },
+          {
+            "tag": "input",
+            "type": "search",
+            "label": "Поиск в Apple Music"
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "applePause"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "refreshHits"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "createPlaylistBtn"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "uploadBtn"
+          },
+          {
+            "tag": "input",
+            "type": "file",
+            "label": "fileInput"
+          },
+          {
+            "tag": "input",
+            "type": "color",
+            "label": "uiAccent"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiTheme"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiFont"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiDensity"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiCorners"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiColumns"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiMotion"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiAmbient"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiAutoplay"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiRememberVolume"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiAutoPlayer"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiAutoLyrics"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiDataSaver"
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "label": "uiReduceMotion"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiLanguage"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "uiStart"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "uiReset"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Нравится"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Случайный порядок"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Предыдущий трек"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Воспроизвести"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Следующий трек"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Повторить трек"
+          },
+          {
+            "tag": "input",
+            "type": "range",
+            "label": "progress"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Текст песни"
+          },
+          {
+            "tag": "input",
+            "type": "range",
+            "label": "volume"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Закрыть"
+          },
+          {
+            "tag": "input",
+            "type": "range",
+            "label": "npProgress"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Случайный порядок"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Предыдущий трек"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Воспроизвести"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Следующий трек"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Повтор"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "npLike"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "openLyrics"
+          },
+          {
+            "tag": "input",
+            "type": "range",
+            "label": "npVolume"
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "Например, Ночной город"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "playlistCancel"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "playlistCreate"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "themeSelect"
+          },
+          {
+            "tag": "input",
+            "type": "color",
+            "label": "accentPicker"
+          },
+          {
+            "tag": "select",
+            "type": "",
+            "label": "densitySelect"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "resetCustomize"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "saveCustomize"
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "label": "actionInput"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "actionCancel"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "actionAccept"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "closeLyrics"
+          }
+        ],
         "sections": [
           {
             "tag": "main",
             "id": "",
-            "text": "MIVO — музыкальная платформа TEHNOCELL INDOSTRI."
+            "text": "Ⅱ ОБЪЯВЛЕНИЕ · СТАТУС ПРОЕКТА Разработка MIVO временно приостановлена Сейчас я временно переключаюсь на другие задачи и пока не буду заниматься развитием MIVO. Проект не закрыт — мы планируем вернуться к нему позже. Сроки возобновления разработки пока не определены. Спасибо, что остаётесь с нами. ‹ › ⌕ Ctrl K × ⚙ ТЕМА ЗВУК · В ПЛАНАХ M ВОЙТИ МУЗЫКАЛЬНАЯ ПЛАТФОРМА TEHNOCELL INDOSTRI ТВОЙ МИР. В ЗВУКЕ. Открывай новые голоса, находи любимые звучания и собирай собственную музыкальную вселенную. СЛУШАТЬ МУЗЫКУ ↗ ДОБАВИТЬ СВОЮ МУЗЫКУ + M ЗВУКОВАЯ СЦЕНА MIVO 01 / ∞ МУЗЫКА БЕЗ ГРАНИЦ MIVO / ПОЛНОФОРМА"
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "M Выбери свой первый трек ТВОЯ МУЗЫКА · MIVO ♡ ⤨ ◀ ▶ ▶ ↻ 0:00 0:00 ≋ ◖"
           }
         ]
-      }
+      },
+      "source_sha": "e572f419c76c4a7c2ed78216b6c68eec8f4ee00d"
     },
     {
       "slug": "platform.html",
-      "title": "TEHNOCELL Platform — социальная платформа TEHNOCELL",
+      "title": "TEHNOCELL INDOSTRI",
       "url": "https://technosotrudnik.github.io/tehnocell-indostri/platform.html",
-      "description": "Социальная платформа: лента публикаций, профили, лайки, комментарии, социальные связи и TEHNOCELL Moments — истории с фото и видео.",
-      "content": "TEHNOCELL INDOSTRI T TEHNOCELL INDOSTRI PLATFORM ПРОСТРАНСТВО ⌂ Главная ▤ Лента ◫ Сообщества ▤ Чаты ♧ Уведомления АККАУНТ ◎ Профиль ↗ Сайт компании T Загрузка… TEHNOCELL ID TEHNOCELL / ПЛАТФОРМА Сайт компании ↗ Истории TEHNOCELL ID TEHNOCELL / PERSONAL SPACE Добро пожаловать, ... Ваше пространство для общения, музыки, идей и сервисов компании. ВЫ В СЕТИ TEHNOCELL PLATFORM · ВАШ ЦИФРОВОЙ ЦЕНТР Всё начинается с вашего пространства. Люди, публикации, музыка и продукты TEHNOCELL — собраны в одном месте. Открыть ленту ↗ Мой профиль T . INNOVATION IN MOTION МОИ СООБЩЕСТВА — Открыть сообщества ↗ УВЕДОМЛЕНИЯ — Непрочитанные события ↗ ВАШ СТАТУС Онлайн Статус обновляется автоматически TEHNOCELL IDENTITY SOUND ♫ Ваша музыка — часть профиля Добавьте композицию в TEHNOCELL ID, и она появится здесь. Настроить музыку ↗ LIVE COMMUNITY Сейчас в TEHNOCELL 0 В СЕТИ Подключаемся к пространству… YOUR ACTIVITY Быстрый доступ ▤ Чаты Личные диалоги ↗ ◎ Друзья и заявки Ваш круг общения ↗ ⌘ Сообщества Находите единомышленников ↗ Экосистема TEHNOCELL ПРОДУКТЫ И СЕРВИСЫ E ENNIE Интеллектуальный помощник TEHNOCELL. ОТКРЫТЬ ↗ W WEATHER Погода и актуальная информация об условиях. ОТКРЫТЬ ↗ M MIVO Музыкальная платформа TEHNOCELL. В РАЗРАБОТКЕ S TEHNOCELLSOFT Программные продукты и инструменты. ОТКРЫТЬ ↗ G TEHNOCELLGAME Игры и интерактивные проекты. ОТКРЫТЬ ↗ ПУБЛИКАЦИИ УЧАСТНИКОВ Лента Последние публикации из открытых сообществ. TEHNOCELL MOMENTS Истории ＋ Добавить Загружаем истории… T Поделитесь тем, что у вас нового… Загружаем публикации… Создать публикацию Выберите сообщество, участником которого вы являетесь, и поделитесь своей мыслью. Написать запись Правила общения Уважайте других участников. Не публикуйте личные данные, оскорбления и опасный контент. ЛЮДИ И ИНТЕРЕСЫ Сообщества Создавайте пространства по интересам, вступайте в сообщества и общайтесь с участниками. Все Мои ＋ Создать Загружаем сообщества… TEHNOCELL COMMUNICATION Чаты Личные переписки с друзьями и участниками TEHNOCELL. Всё общение — внутри вашей платформы. Переписки Загружаем… T Выберите переписку Ваши личные сообщения ← ⋮ ⌕ Поиск по переписке ⌫ Очистить мои сообщения Выберите переписку слева или откройте профиль друга и нажмите «Написать». Ответ на сообщение × Enter — отправить · Shift + Enter — новая строка ❤️ 👍 😂 🔥 😮 😢 ↩ Ответить ▢ Копировать ✎ Изменить ⌫ Удалить ВАЖНЫЕ СОБЫТИЯ Уведомления Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения. Отметить всё просмотренным Загружаем уведомления… ← Назад TEHNOCELL IDENTITY Публичный профиль участника Выберите пользователя ВАШ TEHNOCELL ID Профиль Единый аккаунт для сервисов и общения внутри экосистемы. T Загружаем профиль… Настройки ID ↗ Социальный профиль ЛЮДИ TEHNOCELL Входящие заявки Загрузка… Отправленные Загрузка… Мои друзья Загрузка… Аккаунт Имя, описание профиля, фотография и настройки безопасности управляются через TEHNOCELL ID. Открыть личный кабинет → ⌂ Главная ▤ Лента ◫ Группы ✉ Чаты ♧ События ◎ Профиль Профиль участника × Загрузка… Сообщество × Новое сообщество × Название Категория Общее Технологии Игры Музыка Творчество Образование Общение Описание Отмена Создать сообщество Новая публикация × Сообщество Текст публикации Фотографии · до 4 файлов, JPG / PNG / WEBP Каждая фотография — до 5 МБ. Можно опубликовать и без текста. Отмена Опубликовать TEHNOCELL MOMENTS Новая история × Фото или видео · до 50 МБ Фото будет показано 7 секунд. Видео — до 60 секунд. Подпись Кто увидит историю Все участники Только друзья Музыка из MIVO Не выбрана Выбрать трек Для историй доступны музыкальные фрагменты из каталога MIVO. Полные версии открываются в MIVO, если они доступны. Отмена Опубликовать историю × ‹ › Обсуждение × Ваш комментарий Отправить",
+      "description": "Основная социальная платформа TEHNOCELL INDOSTRI: лента публикаций, сообщества, личные чаты, уведомления, профили, друзья, TEHNOCELL ID и TEHNOCELL Moments (истории). Также содержит специальное событие VICE CITY.",
+      "content": "TEHNOCELL INDOSTRI T TEHNOCELL INDOSTRI PLATFORM ПРОСТРАНСТВО ⌂ Главная ▤ Лента ◫ Сообщества ▤ Чаты ♧ Уведомления АККАУНТ ◎ Профиль ↗ Сайт компании T Загрузка… TEHNOCELL ID TEHNOCELL / ПЛАТФОРМА Сайт компании ↗ Истории TEHNOCELL ID TEHNOCELL / PERSONAL SPACE Добро пожаловать, ... Ваше пространство для общения, музыки, идей и сервисов компании. ВЫ В СЕТИ TEHNOCELL PLATFORM · ВАШ ЦИФРОВОЙ ЦЕНТР Всё начинается с вашего пространства. Люди, публикации, музыка и продукты TEHNOCELL — собраны в одном месте. Открыть ленту ↗ Мой профиль T . INNOVATION IN MOTION × TEHNOCELL / SPECIAL EVENT У тебя есть одно незавершённое приключение. Город не спит. И кое-что ждёт именно тебя. ДО ЗАКРЫТИЯ РАССЛЕДОВАНИЯ ЗАГРУЗКА… ↗ МОИ СООБЩЕСТВА — Открыть сообщества ↗ УВЕДОМЛЕНИЯ — Непрочитанные события ↗ ВАШ СТАТУС Онлайн Статус обновляется автоматически TEHNOCELL IDENTITY SOUND ♫ Ваша музыка — часть профиля Добавьте композицию в TEHNOCELL ID, и она появится здесь. Настроить музыку ↗ LIVE COMMUNITY Сейчас в TEHNOCELL 0 В СЕТИ Подключаемся к пространству… YOUR ACTIVITY Быстрый доступ ▤ Чаты Личные диалоги ↗ ◎ Друзья и заявки Ваш круг общения ↗ ⌘ Сообщества Находите единомышленников ↗ Экосистема TEHNOCELL ПРОДУКТЫ И СЕРВИСЫ E ENNIE Интеллектуальный помощник TEHNOCELL. ОТКРЫТЬ ↗ W WEATHER Погода и актуальная информация об условиях. ОТКРЫТЬ ↗ M MIVO Музыкальная платформа TEHNOCELL. В РАЗРАБОТКЕ S TEHNOCELLSOFT Программные продукты и инструменты. ОТКРЫТЬ ↗ G TEHNOCELLGAME Игры и интерактивные проекты. ОТКРЫТЬ ↗ ПУБЛИКАЦИИ УЧАСТНИКОВ Лента Последние публикации из открытых сообществ. TEHNOCELL MOMENTS Истории ＋ Добавить Загружаем истории… T Поделитесь тем, что у вас нового… Загружаем публикации… Создать публикацию Выберите сообщество, участником которого вы являетесь, и поделитесь своей мыслью. Написать запись Правила общения Уважайте других участников. Не публикуйте личные данные, оскорбления и опасный контент. ЛЮДИ И ИНТЕРЕСЫ Сообщества Создавайте пространства по интересам, вступайте в сообщества и общайтесь с участниками. Все Мои ＋ Создать Загружаем сообщества… TEHNOCELL COMMUNICATION Чаты Личные переписки с друзьями и участниками TEHNOCELL. Всё общение — внутри вашей платформы. Переписки Загружаем… T Выберите переписку Ваши личные сообщения ← ⋮ ⌕ Поиск по переписке ⌫ Очистить мои сообщения Выберите переписку слева или откройте профиль друга и нажмите «Написать». Ответ на сообщение × Enter — отправить · Shift + Enter — новая строка ❤️ 👍 😂 🔥 😮 😢 ↩ Ответить ▢ Копировать ✎ Изменить ⌫ Удалить ВАЖНЫЕ СОБЫТИЯ Уведомления Здесь собраны реакции, комментарии, заявки в друзья и новые сообщения. Отметить всё просмотренным Загружаем уведомления… ← Назад TEHNOCELL IDENTITY Публичный профиль участника Выберите пользователя ВАШ TEHNOCELL ID Профиль Единый аккаунт для сервисов и общения внутри экосистемы. T Загружаем профиль… Настройки ID ↗ Социальный профиль ЛЮДИ TEHNOCELL Входящие заявки Загрузка… Отправленные Загрузка… Мои друзья Загрузка… Аккаунт Имя, описание профиля, фотография и настройки безопасности управляются через TEHNOCELL ID. Открыть личный кабинет → ⌂ Главная ▤ Лента ◫ Группы ✉ Чаты ♧ События ◎ Профиль Профиль участника × Загрузка… Сообщество × Новое сообщество × Название Категория Общее Технологии Игры Музыка Творчество Образование Общение Описание Отмена Создать сообщество Новая публикация × Сообщество Текст публикации Фотографии · до 4 файлов, JPG / PNG / WEBP Каждая фотография — до 5 МБ. Можно опубликовать и без текста. Отмена Опубликовать TEHNOCELL MOMENTS Новая история × Фото или видео · до 50 МБ Фото будет показано 7 секунд. Видео — до 60 секунд. Подпись Кто увидит историю Все участники Только друзья Музыка из MIVO Не выбрана Выбрать трек ФРАГМЕНТ КОМПОЗИЦИИ 0:00 — 0:15 ОТ 0:00 ДО 0:15 Выберите нужный момент песни · до 15 секунд ▶ Прослушать Выберите композицию и настройте, какой именно 15-секундный отрывок услышат зрители. Отмена Опубликовать историю × ‹ › TEHNOCELL / MOMENTS Поделиться историей × ⌕ Выбрать всех Выберите получателей Загружаем список друзей… ⧉ Скопировать ссылку ➤ Отправить 0 АКТИВНОСТЬ MOMENTS × Обсуждение × Ваш комментарий Отправить ×\n\nПОДТВЕРЖДЁННОЕ ОПИСАНИЕ ФУНКЦИЙ ПЛАТФОРМЫ:\nTEHNOCELL PLATFORM — социальная веб-платформа экосистемы TEHNOCELL INDOSTRI. Основные разделы: Главная, Лента, Сообщества, Чаты, Уведомления, Профиль и TEHNOCELL ID. Пользователь может публиковать записи, прикреплять до четырёх фотографий (JPG/PNG/WEBP, до 5 МБ каждая), создавать и просматривать сообщества, общаться в личных переписках, отправлять реакции, отвечать на сообщения, копировать, редактировать и удалять собственные сообщения в предусмотренных интерфейсом случаях, управлять друзьями и заявками, видеть уведомления и онлайн-статусы. TEHNOCELL Moments позволяет публиковать истории: фото показывается 7 секунд, видео — до 60 секунд, размер файла до 50 МБ; доступны настройки аудитории «Все участники» и «Только друзья». Для истории можно выбрать музыкальный фрагмент из MIVO длительностью до 15 секунд. TEHNOCELL ID управляет единой учётной записью и публичным профилем. На платформе размещена карточка специального события VICE CITY с расследованием из пяти этапов и наградной рамкой аватара; не утверждай, что событие ещё открыто, не проверив таймер/состояние в самой платформе.",
       "structure": {
         "headings": [
           {
@@ -1616,6 +2075,10 @@
           {
             "level": "h2",
             "text": "Всё начинается с вашего пространства."
+          },
+          {
+            "level": "h3",
+            "text": "У тебя есть одно незавершённое приключение."
           },
           {
             "level": "h2",
@@ -1722,20 +2185,16 @@
             "text": "Новая история"
           },
           {
-            "level": "h2",
-            "text": "Обсуждение"
-          },
-          {
-            "level": "h2",
-            "text": "'+escapeHtml(name)+verifiedBadge(data.id)+onlineBadge(data.id)+'"
+            "level": "h3",
+            "text": "Поделиться историей"
           },
           {
             "level": "h3",
-            "text": "'+escapeHtml(c.name)+'"
+            "text": "АКТИВНОСТЬ MOMENTS"
           },
           {
             "level": "h2",
-            "text": "Публикации"
+            "text": "Обсуждение"
           }
         ],
         "links": [
@@ -1930,30 +2389,6 @@
             "href": "#profile",
             "aria": "",
             "title": ""
-          },
-          {
-            "text": "Настроить музыку ↗",
-            "href": "account.html",
-            "aria": "",
-            "title": ""
-          },
-          {
-            "text": "Настройки профиля",
-            "href": "",
-            "aria": "",
-            "title": ""
-          },
-          {
-            "text": "↗",
-            "href": "mivo.html",
-            "aria": "Открыть трек в MIVO",
-            "title": ""
-          },
-          {
-            "text": "▤ '+escapeHtml(m.attachment_name||\"Файл\")+'",
-            "href": "",
-            "aria": "",
-            "title": ""
           }
         ],
         "controls": [
@@ -1961,6 +2396,11 @@
             "tag": "input",
             "type": "search",
             "label": "Поиск по платформе"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "Свернуть событие"
           },
           {
             "tag": "button",
@@ -1981,6 +2421,16 @@
             "tag": "input",
             "type": "",
             "label": "Найти сообщество…"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
           },
           {
             "tag": "button",
@@ -2108,6 +2558,21 @@
             "label": "personBack"
           },
           {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
             "tag": "input",
             "type": "",
             "label": "Например, Мир технологий"
@@ -2131,6 +2596,11 @@
             "tag": "button",
             "type": "",
             "label": "communitySubmit"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
           },
           {
             "tag": "select",
@@ -2158,6 +2628,11 @@
             "label": "postSubmit"
           },
           {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
             "tag": "input",
             "type": "file",
             "label": "storyMedia"
@@ -2181,6 +2656,21 @@
             "tag": "input",
             "type": "",
             "label": "Найти композицию MIVO…"
+          },
+          {
+            "tag": "input",
+            "type": "range",
+            "label": "storyTrimStart"
+          },
+          {
+            "tag": "input",
+            "type": "range",
+            "label": "storyTrimEnd"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "storyTrimPreview"
           },
           {
             "tag": "button",
@@ -2208,6 +2698,41 @@
             "label": "Следующая история"
           },
           {
+            "tag": "button",
+            "type": "button",
+            "label": "Закрыть"
+          },
+          {
+            "tag": "input",
+            "type": "search",
+            "label": "Найти друга…"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "tcMomentSelectAll"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "tcMomentCopyLink"
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "label": "tcMomentSend"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": "Закрыть"
+          },
+          {
+            "tag": "button",
+            "type": "",
+            "label": ""
+          },
+          {
             "tag": "textarea",
             "type": "",
             "label": "Напишите комментарий…"
@@ -2220,92 +2745,185 @@
           {
             "tag": "button",
             "type": "button",
-            "label": ""
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": ""
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": ""
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": "Воспроизвести"
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": "Слушать фрагмент"
-          },
-          {
-            "tag": "button",
-            "type": "",
-            "label": "deleteCurrentStory"
-          },
-          {
-            "tag": "button",
-            "type": "",
-            "label": "detailLeave"
-          },
-          {
-            "tag": "button",
-            "type": "",
-            "label": "detailJoin"
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": ""
-          },
-          {
-            "tag": "button",
-            "type": "button",
-            "label": ""
+            "label": "Закрыть"
           }
         ],
         "sections": [
           {
             "tag": "main",
             "id": "",
-            "text": "TEHNOCELL / ПЛАТФОРМА Сайт компании ↗ Истории TEHNOCELL ID TEHNOCELL / PERSONAL SPACE Добро пожаловать, ... Ваше пространство для общения, музыки, идей и сервисов компании. ВЫ В СЕТИ TEHNOCELL PLATFORM · ВАШ ЦИФРОВОЙ ЦЕНТР Всё начинается с вашего пространства. Люди, публикации, музыка и продукты TEHNOCELL — собраны в одном месте. Открыть ленту ↗ Мой профиль T . INNOVATION IN MOTION МОИ СООБЩЕСТВА — Открыть сообщества ↗ УВЕДОМЛЕНИЯ — Непрочитанные события ↗ ВАШ СТАТУС Онлайн Статус обновляется автоматически TEHNOCELL IDENTITY SOUND ♫ Ваша музыка — часть профиля Добавьте композицию в TEHNOCELL ID, и она появится здесь. Настроить музыку ↗ LIVE C"
+            "text": "TEHNOCELL / ПЛАТФОРМА Сайт компании ↗ Истории TEHNOCELL ID TEHNOCELL / PERSONAL SPACE Добро пожаловать, ... Ваше пространство для общения, музыки, идей и сервисов компании. ВЫ В СЕТИ TEHNOCELL PLATFORM · ВАШ ЦИФРОВОЙ ЦЕНТР Всё начинается с вашего пространства. Люди, публикации, музыка и продукты TEHNOCELL — собраны в одном месте. Открыть ленту ↗ Мой профиль T . INNOVATION IN MOTION × TEHNOCELL / SPECIAL EVENT У тебя есть одно незавершённое приключение. Город не спит. И кое-что ждёт именно тебя. ДО ЗАКРЫТИЯ РАССЛЕДОВАНИЯ ЗАГРУЗКА… ↗ МОИ СООБЩЕСТВА — Открыть сообщества ↗ УВЕДОМЛЕНИЯ — Непрочитан"
           },
           {
             "tag": "section",
             "id": "",
-            "text": "TEHNOCELL IDENTITY SOUND '+(data.profile_sound_cover_path?' ':' ♫ ')+' '+escapeHtml(data.profile_sound_title||\"Без названия\")+' '+escapeHtml(data.profile_sound_artist||name)+' Ваш браузер не поддерживает аудио. Музыка профиля · воспроизведение по нажатию"
+            "text": "TEHNOCELL / MOMENTS Поделиться историей × ⌕ Выбрать всех Выберите получателей Загружаем список друзей… ⧉ Скопировать ссылку ➤ Отправить 0"
           },
           {
             "tag": "section",
             "id": "",
-            "text": "Публикации Загружаем публикации…"
-          },
-          {
-            "tag": "article",
-            "id": "",
-            "text": "'+new Date(p.created_at).toLocaleString(\"ru-RU\")+' '+escapeHtml(p.body)+' '+gallery+' ♡ Нравится · '+(rc.get(p.id)||0)+' Комментарии · '+(cc.get(p.id)||0)+' '+(p.author_id===currentUser.id?' Удалить ':\"\")+'"
-          },
-          {
-            "tag": "article",
-            "id": "",
-            "text": "'+escapeHtml(c.name.charAt(0).toUpperCase())+' '+escapeHtml(c.name)+' '+escapeHtml(c.category)+' · '+(memberCounts.get(c.id)||0)+' участн. · '+new Date(c.created_at).toLocaleDateString(\"ru-RU\")+' '+escapeHtml(c.description||\"У этого сообщества пока нет описания.\")+' '+(owner?\"ВАШЕ СООБЩЕСТВО\":joined?\"ВЫ УЧАСТНИК\":\"ОТКРЫТОЕ СООБЩЕСТВО\")+' '+(owner?' Владелец ':joined?' Выйти ':' Вступить ')+'"
-          },
-          {
-            "tag": "article",
-            "id": "",
-            "text": "'+escapeHtml(x.body)+' '+new Date(x.created_at).toLocaleString(\"ru-RU\")+'"
-          },
-          {
-            "tag": "article",
-            "id": "",
-            "text": "'+avatarMarkup(author,authorProfile.avatar_path)+' '+escapeHtml(author)+verifiedBadge(p.author_id)+' '+escapeHtml(cm.get(p.community_id)||\"Сообщество\")+' · '+new Date(p.created_at).toLocaleString(\"ru-RU\",{day:\"numeric\",month:\"short\",hour:\"2-digit\",minute:\"2-digit\"})+' '+escapeHtml(p.body)+' '+gallery+' ♡ Нравится · '+(rc.get(p.id)||0)+' Комментарии · '+(cc.get(p.id)||0)+' '+(p.author_id===currentUser.id?' Удалить ':'')+'"
+            "text": "×"
           }
         ]
-      }
+      },
+      "source_sha": "15dbed52e23d5affcc14902ea0e90d8e2559c908"
+    },
+    {
+      "slug": "platform-app.html",
+      "title": "TEHNOCELL PLATFORM — TEHNOCELLSOFT",
+      "url": "https://technosotrudnik.github.io/tehnocell-indostri/platform-app.html",
+      "description": "Официальная страница приложения TEHNOCELL PLATFORM: описание, возможности, сведения о версии APK и ссылка на скачивание Android-приложения.",
+      "content": "TEHNOCELL PLATFORM — TEHNOCELLSOFT TEHNOCELL . О ПРОЕКТЕ ОБЗОР ВОЗМОЖНОСТИ СКАЧАТЬ ПРОДУКТ TEHNOCELLSOFT TEHNOCELL PLATFORM Единое цифровое пространство TEHNOCELL для общения, публикаций, сообществ и личного профиля. Всё необходимое для взаимодействия с экосистемой — в одном приложении. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ 01 / О ПРОЕКТЕ Общение. В одном пространстве. TEHNOCELL PLATFORM — социальная платформа, разработанная TEHNOCELL INDOSTRI. Здесь можно делиться публикациями, общаться, находить сообщества и управлять собственной цифровой идентичностью через TEHNOCELL ID. Мы создаём единое пространство с собственным стилем, инструментами и сервисами, которое развивается вместе с экосистемой TEHNOCELL. TP. 02 / ОБЗОР Внутри платформы Основные пространства TEHNOCELL PLATFORM — от публикаций и общения до личного профиля. 01 / FEED TC. Лента публикаций Новости, фотографии, идеи и обновления участников в едином потоке. 02 / CONNECT ↔ Общение Контакты, личные сообщения и информация о присутствии участников. 03 / IDENTITY ID. TEHNOCELL ID Личный профиль, настройки аккаунта и единая цифровая идентичность. 03 / ВОЗМОЖНОСТИ Больше возможностей. Одно пространство. Инструменты платформы объединяют повседневное общение и взаимодействие с экосистемой TEHNOCELL. 01 Публикации и лента Делитесь новостями, фотографиями и своими идеями. 02 Личные сообщения Общайтесь с другими участниками платформы. 03 Контакты и онлайн Находите участников и следите за их присутствием. 04 Сообщества Объединяйтесь вокруг интересов и общих тем. 05 Истории Делитесь короткими фото- и видеоматериалами. 06 TEHNOCELL ID Управляйте личным профилем и настройками аккаунта. 04 / ЗАГРУЗКА Откройте TEHNOCELL PLATFORM. Приложение доступно для устройств Android. Загрузите официальный установочный файл APK, откройте его на устройстве и завершите установку. ↓   СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.16 ANDROID 8.0+ · APK · 2.48 MB © 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL PLATFORM\n\nПОДТВЕРЖДЁННЫЕ ДАННЫЕ СТРАНИЦЫ ЗАГРУЗКИ: Android APK версии 1.0.16, минимальная версия Android 8.0+, размер около 2.48 МБ. APK открывает текущую веб-платформу TEHNOCELL PLATFORM; для загрузки актуального содержимого платформы требуется интернет. Официальная ссылка на APK: https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk. Не обещай автономную работу без сети.",
+      "structure": {
+        "headings": [
+          {
+            "level": "h1",
+            "text": "TEHNOCELL PLATFORM"
+          },
+          {
+            "level": "h2",
+            "text": "Общение. В одном пространстве."
+          },
+          {
+            "level": "h2",
+            "text": "Внутри платформы"
+          },
+          {
+            "level": "h3",
+            "text": "Лента публикаций"
+          },
+          {
+            "level": "h3",
+            "text": "Общение"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL ID"
+          },
+          {
+            "level": "h2",
+            "text": "Больше возможностей. Одно пространство."
+          },
+          {
+            "level": "h3",
+            "text": "Публикации и лента"
+          },
+          {
+            "level": "h3",
+            "text": "Личные сообщения"
+          },
+          {
+            "level": "h3",
+            "text": "Контакты и онлайн"
+          },
+          {
+            "level": "h3",
+            "text": "Сообщества"
+          },
+          {
+            "level": "h3",
+            "text": "Истории"
+          },
+          {
+            "level": "h3",
+            "text": "TEHNOCELL ID"
+          },
+          {
+            "level": "h2",
+            "text": "Откройте TEHNOCELL PLATFORM."
+          }
+        ],
+        "links": [
+          {
+            "text": "TEHNOCELL .",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "О ПРОЕКТЕ",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ОБЗОР",
+            "href": "#preview",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "ВОЗМОЖНОСТИ",
+            "href": "#features",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "СКАЧАТЬ",
+            "href": "#download",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "СКАЧАТЬ ПРИЛОЖЕНИЕ",
+            "href": "#download",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "УЗНАТЬ БОЛЬШЕ",
+            "href": "#about",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "↓   СКАЧАТЬ APK",
+            "href": "https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk",
+            "aria": "",
+            "title": ""
+          },
+          {
+            "text": "TEHNOCELL INDOSTRI",
+            "href": "index.html",
+            "aria": "",
+            "title": ""
+          }
+        ],
+        "controls": [],
+        "sections": [
+          {
+            "tag": "header",
+            "id": "",
+            "text": "ПРОДУКТ TEHNOCELLSOFT TEHNOCELL PLATFORM Единое цифровое пространство TEHNOCELL для общения, публикаций, сообществ и личного профиля. Всё необходимое для взаимодействия с экосистемой — в одном приложении. СКАЧАТЬ ПРИЛОЖЕНИЕ УЗНАТЬ БОЛЬШЕ"
+          },
+          {
+            "tag": "section",
+            "id": "about",
+            "text": "01 / О ПРОЕКТЕ Общение. В одном пространстве. TEHNOCELL PLATFORM — социальная платформа, разработанная TEHNOCELL INDOSTRI. Здесь можно делиться публикациями, общаться, находить сообщества и управлять собственной цифровой идентичностью через TEHNOCELL ID. Мы создаём единое пространство с собственным стилем, инструментами и сервисами, которое развивается вместе с экосистемой TEHNOCELL. TP."
+          },
+          {
+            "tag": "section",
+            "id": "preview",
+            "text": "02 / ОБЗОР Внутри платформы Основные пространства TEHNOCELL PLATFORM — от публикаций и общения до личного профиля. 01 / FEED TC. Лента публикаций Новости, фотографии, идеи и обновления участников в едином потоке. 02 / CONNECT ↔ Общение Контакты, личные сообщения и информация о присутствии участников. 03 / IDENTITY ID. TEHNOCELL ID Личный профиль, настройки аккаунта и единая цифровая идентичность."
+          },
+          {
+            "tag": "section",
+            "id": "features",
+            "text": "03 / ВОЗМОЖНОСТИ Больше возможностей. Одно пространство. Инструменты платформы объединяют повседневное общение и взаимодействие с экосистемой TEHNOCELL. 01 Публикации и лента Делитесь новостями, фотографиями и своими идеями. 02 Личные сообщения Общайтесь с другими участниками платформы. 03 Контакты и онлайн Находите участников и следите за их присутствием. 04 Сообщества Объединяйтесь вокруг интересов и общих тем. 05 Истории Делитесь короткими фото- и видеоматериалами. 06 TEHNOCELL ID Управляйте личным профилем и настройками аккаунта."
+          },
+          {
+            "tag": "section",
+            "id": "download",
+            "text": "04 / ЗАГРУЗКА Откройте TEHNOCELL PLATFORM. Приложение доступно для устройств Android. Загрузите официальный установочный файл APK, откройте его на устройстве и завершите установку. ↓   СКАЧАТЬ APK ANDROID APPLICATION · VERSION 1.0.16 ANDROID 8.0+ · APK · 2.48 MB"
+          },
+          {
+            "tag": "footer",
+            "id": "",
+            "text": "© 2026 TEHNOCELLSOFT TEHNOCELL INDOSTRI TEHNOCELL PLATFORM"
+          }
+        ]
+      },
+      "source_sha": "1ffbbbfb3906f9f87d3b648a21993505b289cc6d"
     }
   ]
 }
