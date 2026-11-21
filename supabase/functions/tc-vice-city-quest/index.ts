@@ -134,7 +134,7 @@ Deno.serve(async (req) => {
   }
 
   if (stage <= Number(progress.stage)) {
-    if (stage === 3 && progress.completed_at) {
+    if (stage === 5 && progress.completed_at) {
       const { data: frame } = await admin.from("tc_avatar_frames")
         .select("id,code,name").eq("code", "vice-city-limited").single();
       if (!frame) return reply({ error: "Награда временно недоступна." }, 500);
@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
   if (!validStage(stage, answers)) return reply({ error: "Пока не всё совпало. Проверьте ответы и источники — Энни подскажет, если нужна помощь." }, 422);
 
   const allAnswers = { ...(progress.answers || {}), [String(stage)]: answers };
-  const finished = stage === 3;
+  const finished = stage === 5;
   const update = await admin.from("tc_event_progress").update({
     stage,
     answers: allAnswers,
