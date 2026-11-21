@@ -1802,10 +1802,49 @@ $("chatRecordButton").addEventListener("click",async()=>{
  }catch(err){chatRecorderStream?.getTracks().forEach(t=>t.stop());chatRecorderStream=null;showNotice("Не удалось начать запись. Проверьте разрешение на микрофон.");}
 });
 window.addEventListener("pagehide",()=>{if(chatRecorder?.state==="recording")chatRecorder.stop();});
+async function appendRealtimeChatMessage(message){
+ if(!message||!activeChatId)return;
+ const other=message.sender_id===currentUser.id?message.receiver_id:message.sender_id;
+ if(other!==activeChatId)return;
+ if(chatMessagesCache.some(x=>x.id===message.id))return;
+ const box=$("chatThread"),wasNearBottom=box.scrollHeight-box.clientHeight-box.scrollTop<120;
+ let attachmentUrls=new Map(),momentMap=new Map(),replyMap=new Map();
+ if(message.reply_to_id){
+  const cached=chatMessagesCache.find(x=>x.id===message.reply_to_id);
+  if(cached)replyMap.set(cached.id,cached);
+  else{
+   const {data}=await db.from("tc_direct_messages").select("id,body,deleted_at").eq("id",message.reply_to_id).maybeSingle();
+   if(data)replyMap.set(data.id,data);
+  }
+ }
+ if(message.attachment_path&&!message.deleted_at){
+  const {data}=await db.storage.from("tc-chat-media").createSignedUrl(message.attachment_path,3600);
+  if(data?.signedUrl)attachmentUrls.set(message.id,data.signedUrl);
+ }
+ const momentId=tcMomentMessageId(message.body);
+ if(momentId){await loadChatThread({preserveScroll:true});return;}
+ chatMessagesCache.push(message);
+ const lastDivider=[...box.querySelectorAll(".chat-day-divider")].at(-1);
+ const lastDay=lastDivider?.querySelector("span")?.textContent||"";
+ const day=new Date(message.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+ if(day!==lastDay){const divider=document.createElement("div");divider.className="chat-day-divider";const span=document.createElement("span");span.textContent=day;divider.appendChild(span);box.appendChild(divider);}
+ const wrap=document.createElement("div");
+ wrap.innerHTML=renderChatMessage(message,[],replyMap,attachmentUrls,momentMap);
+ if(wrap.firstElementChild)box.appendChild(wrap.firstElementChild);
+ if(wasNearBottom)box.scrollTop=box.scrollHeight;
+ updateChatContactPreview(message);
+ if(message.receiver_id===currentUser.id){
+  const now=new Date().toISOString();
+  db.from("tc_direct_messages").update({delivered_at:now,read_at:now}).eq("id",message.id).is("read_at",null).then(()=>{});
+  const contact=$("chatContacts").querySelector('[data-chat="'+other+'"]');
+  const badge=contact?.querySelector(".chat-contact-unread");
+  if(badge)badge.remove();
+ }
+}
 function startMessengerRealtime(){
  if(messengerRealtimeChannel||!currentUser)return;
  messengerRealtimeChannel=db.channel("tehnocell-messenger-"+currentUser.id)
- .on("postgres_changes",{event:"*",schema:"public",table:"tc_direct_messages"},payload=>{const m=payload.new||payload.old;if(!m||!(m.sender_id===currentUser.id||m.receiver_id===currentUser.id))return;if(m.sender_id===currentUser.id)return;clearTimeout(chatRefreshTimer);chatRefreshTimer=setTimeout(()=>{if(activeChatId&&(m.sender_id===activeChatId||m.receiver_id===activeChatId))loadChatThread({preserveScroll:true});loadConversations({skipActiveThread:true});},220);})
+ .on("postgres_changes",{event:"*",schema:"public",table:"tc_direct_messages"},payload=>{const m=payload.new||payload.old;if(!m||!(m.sender_id===currentUser.id||m.receiver_id===currentUser.id))return;if(m.sender_id===currentUser.id)return;if(payload.eventType==="INSERT"){appendRealtimeChatMessage(m);return;}if(payload.eventType==="UPDATE"){const index=chatMessagesCache.findIndex(x=>x.id===m.id);if(index>=0)chatMessagesCache[index]={...chatMessagesCache[index],...m};if(activeChatId&&(m.sender_id===activeChatId||m.receiver_id===activeChatId))loadChatThread({preserveScroll:true});loadConversations({skipActiveThread:true});}})
  .on("postgres_changes",{event:"*",schema:"public",table:"tc_message_reactions"},payload=>{const r=payload.new||payload.old;if(r&&chatMessagesCache.some(m=>m.id===r.message_id))refreshChatMessageReactions(r.message_id);}).subscribe();
 }
 document.getElementById("markAllNotifications").addEventListener("click",async()=>{const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).is("read_at",null);if(error){showNotice("Не удалось отметить уведомления: "+error.message);return;}await loadNotifications();await loadHomeCounts();});
