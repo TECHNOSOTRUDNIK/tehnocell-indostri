@@ -1546,7 +1546,7 @@ async function removeFriend(id,profileId){
 
 
 let messengerRealtimeChannel=null,chatMessagesCache=[],chatReplyingTo=null,chatSearchValue="",chatRefreshTimer=null;
-async function loadConversations(){
+async function loadConversations(options={}){
  const box=$("chatContacts");box.innerHTML='<div class="chat-empty">Загружаем переписки…</div>';
  const [messageResult,friendResult]=await Promise.all([
   db.from("tc_direct_messages").select("id,sender_id,receiver_id,body,created_at,read_at,delivered_at,edited_at,deleted_at,reply_to_id,message_type,attachment_path,attachment_name,attachment_mime,attachment_size").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id).order("created_at",{ascending:false}).limit(500),
@@ -1567,7 +1567,7 @@ async function loadConversations(){
  filterChatContacts();
  const notDelivered=messages.filter(m=>m.receiver_id===currentUser.id&&!m.delivered_at&&!m.read_at);
  if(notDelivered.length)await db.from("tc_direct_messages").update({delivered_at:new Date().toISOString()}).in("id",notDelivered.map(m=>m.id));
- if(activeChatId&&pm.has(activeChatId))await loadChatThread();
+ if(!options.skipActiveThread&&activeChatId&&pm.has(activeChatId))await loadChatThread();
 }
 function filterChatContacts(){const term=String(chatSearchValue||"").trim().toLocaleLowerCase("ru");$("chatContacts").querySelectorAll("[data-chat]").forEach(b=>{b.hidden=!!term&&!b.textContent.toLocaleLowerCase("ru").includes(term);});}
 async function openChat(id,name,avatarPath=null){
@@ -1805,7 +1805,7 @@ window.addEventListener("pagehide",()=>{if(chatRecorder?.state==="recording")cha
 function startMessengerRealtime(){
  if(messengerRealtimeChannel||!currentUser)return;
  messengerRealtimeChannel=db.channel("tehnocell-messenger-"+currentUser.id)
- .on("postgres_changes",{event:"*",schema:"public",table:"tc_direct_messages"},payload=>{const m=payload.new||payload.old;if(!m||!(m.sender_id===currentUser.id||m.receiver_id===currentUser.id))return;if(m.sender_id===currentUser.id)return;clearTimeout(chatRefreshTimer);chatRefreshTimer=setTimeout(()=>{if(activeChatId&&(m.sender_id===activeChatId||m.receiver_id===activeChatId))loadChatThread({preserveScroll:true});loadConversations();},220);})
+ .on("postgres_changes",{event:"*",schema:"public",table:"tc_direct_messages"},payload=>{const m=payload.new||payload.old;if(!m||!(m.sender_id===currentUser.id||m.receiver_id===currentUser.id))return;if(m.sender_id===currentUser.id)return;clearTimeout(chatRefreshTimer);chatRefreshTimer=setTimeout(()=>{if(activeChatId&&(m.sender_id===activeChatId||m.receiver_id===activeChatId))loadChatThread({preserveScroll:true});loadConversations({skipActiveThread:true});},220);})
  .on("postgres_changes",{event:"*",schema:"public",table:"tc_message_reactions"},payload=>{const r=payload.new||payload.old;if(r&&chatMessagesCache.some(m=>m.id===r.message_id))refreshChatMessageReactions(r.message_id);}).subscribe();
 }
 document.getElementById("markAllNotifications").addEventListener("click",async()=>{const {error}=await db.from("tc_notifications").update({read_at:new Date().toISOString()}).eq("user_id",currentUser.id).is("read_at",null);if(error){showNotice("Не удалось отметить уведомления: "+error.message);return;}await loadNotifications();await loadHomeCounts();});
