@@ -1644,7 +1644,7 @@ function updateChatContactPreview(message){
  const contact=$("chatContacts").querySelector('[data-chat="'+message.receiver_id+'"],[data-chat="'+message.sender_id+'"]');
  if(!contact)return;
  const preview=contact.querySelector(".chat-contact-preview"),time=contact.querySelector(".chat-contact-time");
- if(preview)preview.textContent="Вы: "+String(message.body||"").slice(0,58);
+ if(preview)preview.textContent=(message.sender_id===currentUser.id?"Вы: ":"")+String(message.deleted_at?"Сообщение удалено":message.body||"").slice(0,58);
  if(time)time.textContent=new Date(message.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
 }
 function setChatReply(id){const m=chatMessagesCache.find(x=>x.id===id);if(!m)return;chatReplyingTo=id;$("chatReplyText").textContent=m.deleted_at?"Сообщение удалено":m.body.slice(0,160);$("chatReplyPreview").hidden=false;$("chatInput").focus();}
