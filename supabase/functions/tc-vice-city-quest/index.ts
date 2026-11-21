@@ -70,7 +70,7 @@ function validStage(stage: number, a: Record<string, unknown>) {
   // Этап 5 — название игры, разработчик и издатель.
   if (stage === 5) {
     return oneOf(a.game_title, ["Grand Theft Auto VI","Grand Theft Auto 6","GTA VI","GTA 6","ГТА 6","ГТА VI","Гранд Тефт Авто 6","Гранд Тефт Авто VI"])
-      && oneOf(a.developer, ["Rockstar North","Рокстар Норт"])
+      && oneOf(a.developer, ["Rockstar Games","Rockstar Game","Рокстар Геймс","Рокстар Гейм"])
       && oneOf(a.publisher, ["Take-Two","Take Two","TakeTwo","Take-Two Interactive","Take Two Interactive","TakeTwo Interactive","Take-Two Interactive Software","Take Two Interactive Software","TakeTwo Interactive Software","Тейк Ту","Тейк-Ту","Тейк ту интерактив"]);
   }
   return false;
