@@ -2024,10 +2024,8 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
   const host=$vc("vcTrailerWrap");if(!host)return;
   const src="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/vice-city-media-v1/GTAVI_Out_Now.mp4?v=2";
   host.innerHTML='<div class="tc-native-player" data-tc-player><video class="tc-native-video" playsinline webkit-playsinline preload="auto" poster="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" aria-label="Официальный ролик GTA VI"><source src="'+src+'" type="video/mp4"></video></div>';
-  const player=host.querySelector("[data-tc-player]"),video=player?.querySelector("video"),full=player?.querySelector(".tc-player-full");
-  if(!player||!video||!full)return;
-  const enterFull=()=>{if(player.requestFullscreen)player.requestFullscreen().catch(()=>{});else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen();};
-  full.addEventListener("click",enterFull);
+  const player=host.querySelector("[data-tc-player]"),video=player?.querySelector("video");
+  if(!player||!video)return;
   // Сначала пробуем автоматический запуск со звуком. Если браузер запрещает его,
   // запускаем без звука; касание самого видео включает звук без дополнительных кнопок.
   video.muted=false;
