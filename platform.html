@@ -452,11 +452,9 @@
 .vc-trailer-fallback{display:block;padding:9px 11px;color:#e7d5b5;text-align:center;text-decoration:none;font-size:8px;letter-spacing:.7px;border-top:1px solid #ffffff16}
 @media(max-width:520px){.vc-trailer-topline{top:8px;left:9px;right:9px;font-size:7px}.vc-trailer-bottom{font-size:6px;left:9px}.vc-trailer-play{padding:9px 13px;font-size:8px}}
 
-/* Minimal VICE CITY video: only fullscreen control remains visible */
+/* Clean VICE CITY trailer: no visible player controls */
 .tc-native-player{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#000;border-radius:13px;isolation:isolate}
 .tc-native-video{display:block;width:100%;height:100%;object-fit:contain;background:#000;cursor:pointer}
-.tc-player-full{position:absolute;right:9px;top:50%;transform:translateY(-50%);width:34px;height:42px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:9px;background:#08080a99;color:#fff;font-size:20px;line-height:1;z-index:4;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:0}
-.tc-player-full:active{background:#8e52bacc}
 /* VICE CITY reward: premium collectible presentation */
 .vc-award-cinematic{position:relative;overflow:hidden;padding:13px 15px 16px;border:1px solid #8b5c9c88;border-radius:20px;background:radial-gradient(ellipse at 50% 5%,#9c52d522,transparent 42%),linear-gradient(155deg,#17121d,#080a10 78%);box-shadow:inset 0 1px #ffffff13,inset 0 0 42px #b55ce50d,0 18px 48px #0009;animation:vc-award-arrive .9s both}
 .vc-award-cinematic:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 18%,#ffffff0b 43%,transparent 65%);transform:translateX(-130%);animation:vc-award-sweep 5.8s 1.2s ease-in-out infinite}
@@ -1960,7 +1958,8 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  const endpoint="tc-vice-city-quest";
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  function open(){overlay.classList.add("open");document.body.style.overflow="hidden";render();}
- function close(){overlay.classList.remove("open");document.body.style.overflow="";if(state)renderTeaser();}
+ function stopRewardTrailer(){const video=$vc("vcTrailerWrap")?.querySelector("video");if(video){video.pause();try{video.currentTime=0;}catch(e){}video.muted=true;}}
+  function close(){stopRewardTrailer();overlay.classList.remove("open");document.body.style.overflow="";if(state)renderTeaser();}
  $vc("vcClose").addEventListener("click",close);
  overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
  teaser.addEventListener("click",e=>{if(e.target.closest("#vcTeaserDismiss"))return;open();});teaser.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});$vc("vcTeaserDismiss").addEventListener("click",e=>{e.stopPropagation();localStorage.setItem("tc_vc_teaser_collapsed_v1","1");teaser.classList.add("is-collapsed");});
@@ -2024,7 +2023,7 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
  function initRewardTrailer(){
   const host=$vc("vcTrailerWrap");if(!host)return;
   const src="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/vice-city-media-v1/GTAVI_Out_Now.mp4?v=2";
-  host.innerHTML='<div class="tc-native-player" data-tc-player><video class="tc-native-video" playsinline webkit-playsinline preload="auto" poster="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" aria-label="Официальный ролик GTA VI"><source src="'+src+'" type="video/mp4"></video><button type="button" class="tc-player-full" aria-label="Полный экран">⛶</button></div>';
+  host.innerHTML='<div class="tc-native-player" data-tc-player><video class="tc-native-video" playsinline webkit-playsinline preload="auto" poster="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" aria-label="Официальный ролик GTA VI"><source src="'+src+'" type="video/mp4"></video></div>';
   const player=host.querySelector("[data-tc-player]"),video=player?.querySelector("video"),full=player?.querySelector(".tc-player-full");
   if(!player||!video||!full)return;
   const enterFull=()=>{if(player.requestFullscreen)player.requestFullscreen().catch(()=>{});else if(video.webkitEnterFullscreen)video.webkitEnterFullscreen();};
