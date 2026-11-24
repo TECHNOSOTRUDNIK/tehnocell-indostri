@@ -702,7 +702,6 @@
 .tc-story-like-btn.liked .tc-story-like-heart{color:#fff;animation:tcStoryHeart .38s ease}
 @keyframes tcStoryHeart{0%{transform:scale(.65)}55%{transform:scale(1.35)}100%{transform:scale(1)}}
 .tc-story-owner-stats{font-variant-numeric:tabular-nums}
-.tc-story-stats-inline{position:relative;z-index:8;max-height:34dvh;overflow:auto;margin-top:10px;padding:12px;border:1px solid #444;border-radius:14px;background:rgba(8,8,8,.96);backdrop-filter:blur(14px);color:#fff}.tc-story-stats-inline[hidden]{display:none!important}.tc-story-stats-inline .tc-story-stats-head{position:sticky;top:0;background:#080808;padding:2px 0 9px;z-index:2}.tc-story-stats-inline .tc-story-stats-section{margin-top:10px}.tc-story-stats-inline .tc-story-person{padding:7px 0}
 #tcStoryStatsModal{position:fixed;inset:0;z-index:99999;display:none;align-items:flex-end;justify-content:center;background:#000b;padding:12px}
 #tcStoryStatsModal.open{display:flex}
 .tc-story-stats-card{width:min(100%,480px);max-height:min(78dvh,680px);overflow:auto;border:1px solid #3b3b3b;border-radius:20px;background:#101010;padding:17px;color:#fff}
@@ -1095,10 +1094,12 @@ async function loadStories(){
  }));
  strip.innerHTML="";
  const ownGroup=storyGroups.find(g=>g.userId===currentUser.id);const own=document.createElement("button");own.type="button";own.className="tc-story-bubble"+(ownGroup?.stories.length?"":" add");const ownName=ownGroup?.profile?.display_name||"Ваша история";const ownAvatarPath=ownGroup?.profile?.avatar_path;const ownAvatarUrl=ownAvatarPath?db.storage.from("profile-avatars").getPublicUrl(ownAvatarPath).data.publicUrl:null;own.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(ownAvatarUrl?'<img src="'+escapeHtml(ownAvatarUrl)+'" alt="">':(ownGroup?.stories.length?escapeHtml((ownName||"Я").charAt(0).toUpperCase()):"＋"))+'</span></span><span class="tc-story-name">'+(ownGroup?.stories.length?"Моя история":"Ваша история")+'</span>';own.addEventListener("click",()=>ownGroup?.stories.length?openStoryGroup(currentUser.id):$("openStoryModal").click());strip.appendChild(own);
+  if(ownGroup?.profile?.selected_avatar_frame_id)own.querySelector(".tc-story-ring")?.classList.add("tc-avatar-vice-city");
  storyGroups.filter(g=>g.userId!==currentUser.id).forEach(g=>{
   const b=document.createElement("button");b.type="button";b.className="tc-story-bubble";
   const name=g.profile.display_name||"Участник",path=g.profile.avatar_path,avatar=path?db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl:null;
   b.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':escapeHtml(name.charAt(0).toUpperCase()))+'</span></span><span class="tc-story-name">'+escapeHtml(name)+'</span>';
+   if(g.profile.selected_avatar_frame_id)b.querySelector(".tc-story-ring")?.classList.add("tc-avatar-vice-city");
   b.addEventListener("click",()=>openStoryGroup(g.userId));strip.appendChild(b);
  });
 }
@@ -1241,23 +1242,18 @@ $("tcMomentSend").addEventListener("click",async()=>{
  closeMomentShare();showNotice(ids.length===1?"История отправлена другу.":"История отправлена друзьям: "+ids.length);
 });
 async function openStoryStats(story){
- const panel=$("tcStoryStatsInline");if(!panel)return;
- if(!panel.hidden){panel.hidden=true;resumeMomentAfterShare();return;}
- panel.hidden=false;const closeButton='<button type="button" class="tc-story-stats-close" id="tcStoryStatsInlineClose" aria-label="Закрыть">×</button>';
- panel.innerHTML='<div class="tc-story-stats-head"><h3>АКТИВНОСТЬ ИСТОРИИ</h3>'+closeButton+'</div><div class="tc-story-stats-empty">Загружаем лайки и просмотры…</div>';
- pauseMomentForShare();panel.querySelector("#tcStoryStatsInlineClose").addEventListener("click",()=>{panel.hidden=true;resumeMomentAfterShare();});
+ const box=$("tcStoryStatsBody");box.innerHTML='<div class="tc-story-stats-empty">Загружаем активность…</div>';
+ $("tcStoryStatsModal").classList.add("open");$("tcStoryStatsModal").setAttribute("aria-hidden","false");
  const [likes,views]=await Promise.all([
   db.from("tc_story_likes").select("user_id,created_at").eq("story_id",story.id).order("created_at",{ascending:false}),
   db.from("tc_story_views").select("viewer_id,viewed_at").eq("story_id",story.id).order("viewed_at",{ascending:false})
  ]);
- if(panel.hidden)return;
- if(likes.error||views.error){panel.innerHTML='<div class="tc-story-stats-head"><h3>АКТИВНОСТЬ ИСТОРИИ</h3>'+closeButton+'</div><div class="tc-story-stats-empty">Не удалось загрузить список. '+escapeHtml(likes.error?.message||views.error?.message||"")+'</div>';panel.querySelector("#tcStoryStatsInlineClose").addEventListener("click",()=>{panel.hidden=true;resumeMomentAfterShare();});return;}
+ if(likes.error||views.error){box.innerHTML='<div class="tc-story-stats-empty">Не удалось загрузить список. '+escapeHtml(likes.error?.message||views.error?.message||"")+'</div>';return;}
  const likeRows=likes.data||[],viewRows=views.data||[],ids=[...new Set([...likeRows.map(x=>x.user_id),...viewRows.map(x=>x.viewer_id)])];
- const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path").in("id",ids):{data:[]};if(panel.hidden)return;
+ const {data:profiles}=ids.length?await db.from("profiles").select("id,display_name,avatar_path,selected_avatar_frame_id").in("id",ids):{data:[]};
  const map=new Map((profiles||[]).map(p=>[p.id,p]));
  const person=(id,time)=>{const p=map.get(id)||{display_name:"Участник"},avatar=p.avatar_path?db.storage.from("profile-avatars").getPublicUrl(p.avatar_path).data.publicUrl:null;return '<div class="tc-story-person">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':'<span class="tc-story-person-avatar">'+escapeHtml((p.display_name||"У").charAt(0).toUpperCase())+'</span>')+'<span class="tc-story-person-copy"><strong>'+escapeHtml(p.display_name||"Участник")+'</strong><small>'+storyFormatTime(time)+'</small></span></div>';};
- panel.innerHTML='<div class="tc-story-stats-head"><h3>АКТИВНОСТЬ ИСТОРИИ</h3>'+closeButton+'</div><section class="tc-story-stats-section"><h4>♥ ЛАЙКИ · '+likeRows.length+'</h4>'+(likeRows.length?likeRows.map(x=>person(x.user_id,x.created_at)).join(""):'<div class="tc-story-stats-empty">Пока никто не поставил отметку.</div>')+'</section><section class="tc-story-stats-section"><h4>◉ ПРОСМОТРЫ · '+viewRows.length+'</h4>'+(viewRows.length?viewRows.map(x=>person(x.viewer_id,x.viewed_at)).join(""):'<div class="tc-story-stats-empty">Пока нет просмотров.</div>')+'</section>';
- panel.querySelector("#tcStoryStatsInlineClose").addEventListener("click",()=>{panel.hidden=true;resumeMomentAfterShare();});
+ box.innerHTML='<section class="tc-story-stats-section"><h4>♥ ПОНРАВИЛАСЬ · '+likeRows.length+'</h4>'+(likeRows.length?likeRows.map(x=>person(x.user_id,x.created_at)).join(""):'<div class="tc-story-stats-empty">Пока никто не поставил отметку.</div>')+'</section><section class="tc-story-stats-section"><h4>◉ ПОСМОТРЕЛИ · '+viewRows.length+'</h4>'+(viewRows.length?viewRows.map(x=>person(x.viewer_id,x.viewed_at)).join(""):'<div class="tc-story-stats-empty">Пока нет просмотров.</div>')+'</section>';
 }
 $("tcStoryStatsClose").addEventListener("click",()=>{$("tcStoryStatsModal").classList.remove("open");$("tcStoryStatsModal").setAttribute("aria-hidden","true");});
 $("tcStoryStatsModal").addEventListener("click",e=>{if(e.target.id==="tcStoryStatsModal")$("tcStoryStatsClose").click();});
@@ -1288,7 +1284,7 @@ function renderStoryViewer(){
  const progress='<div class="tc-story-progress">'+storyViewerItems.map((_,i)=>'<span class="tc-story-progress-segment"><i class="tc-story-progress-fill" data-story-progress="'+i+'"></i></span>').join("")+'</div>';
  const music=s.music?'<div class="tc-story-viewer-music"><div class="tc-story-music-disc">'+(s.music.cover?'<img src="'+escapeHtml(s.music.cover)+'" alt="">':'♫')+'</div><span><small>СЕЙЧАС ЗВУЧИТ</small><strong>'+escapeHtml(s.music.title)+'</strong><em>'+escapeHtml(s.music.artist)+'</em></span><button type="button" id="storyPlayMusic" aria-label="Слушать фрагмент">Ⅱ</button><a href="mivo.html" id="storyOpenMivo" aria-label="Открыть трек в MIVO">↗</a></div>':"";
  const avatarPath=s.profile?.avatar_path;const avatarUrl=avatarPath?db.storage.from("profile-avatars").getPublicUrl(avatarPath).data.publicUrl:null;
- root.innerHTML=media+progress+'<div class="tc-story-topline"><span>TEHNOCELL <i>/</i> MOMENTS</span><b>'+String(storyViewerIndex+1).padStart(2,"0")+' <i>/</i> '+String(storyViewerItems.length).padStart(2,"0")+'</b></div><div class="tc-story-viewer-gradient"><div class="tc-story-meta"><span class="tc-story-user-avatar">'+(avatarUrl?'<img src="'+escapeHtml(avatarUrl)+'" alt="">':escapeHtml((name||"У").charAt(0).toUpperCase()))+'</span><span><strong>'+escapeHtml(name)+verifiedBadge(s.user_id)+'</strong><small>'+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+' · ИСТОРИЯ</small></span><span class="tc-story-live-mark">MOMENTS</span></div>'+(s.caption?'<div class="tc-story-viewer-caption">'+escapeHtml(s.caption)+'</div>':'<div class="tc-story-caption-empty">Момент, которым хочется поделиться.</div>')+music+'<div class="tc-story-engagement">'+(s.user_id===currentUser.id?'<button type="button" class="tc-story-owner-stats" id="tcStoryOwnerStats">Просмотры · Лайки</button>':'<button type="button" class="tc-story-like-btn" id="tcStoryLikeBtn" aria-pressed="false"><span class="tc-story-like-heart">♡</span><span class="tc-story-like-label">Нравится</span></button>')+'<button type="button" id="tcStoryShareBtn">Поделиться ↗</button></div><div id="tcStoryStatsInline" class="tc-story-stats-inline" hidden></div>'+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div><div class="tc-story-bottom-mark">TEHNOCELL INDOSTRI <span>·</span> DIGITAL MOMENTS</div>';
+ root.innerHTML=media+progress+'<div class="tc-story-topline"><span>TEHNOCELL <i>/</i> MOMENTS</span><b>'+String(storyViewerIndex+1).padStart(2,"0")+' <i>/</i> '+String(storyViewerItems.length).padStart(2,"0")+'</b></div><div class="tc-story-viewer-gradient"><div class="tc-story-meta"><span class="tc-story-user-avatar">'+(avatarUrl?'<img src="'+escapeHtml(avatarUrl)+'" alt="">':escapeHtml((name||"У").charAt(0).toUpperCase()))+'</span><span><strong>'+escapeHtml(name)+verifiedBadge(s.user_id)+'</strong><small>'+new Date(s.created_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+' · ИСТОРИЯ</small></span><span class="tc-story-live-mark">MOMENTS</span></div>'+(s.caption?'<div class="tc-story-viewer-caption">'+escapeHtml(s.caption)+'</div>':'<div class="tc-story-caption-empty">Момент, которым хочется поделиться.</div>')+music+'<div class="tc-story-engagement">'+(s.user_id===currentUser.id?'<button type="button" class="tc-story-owner-stats" id="tcStoryOwnerStats">Просмотры · Лайки</button>':'<button type="button" class="tc-story-like-btn" id="tcStoryLikeBtn" aria-pressed="false"><span class="tc-story-like-heart">♡</span><span class="tc-story-like-label">Нравится</span></button>')+'<button type="button" id="tcStoryShareBtn">Поделиться ↗</button></div>'+(s.user_id===currentUser.id?'<button class="tc-story-viewer-delete" id="deleteCurrentStory">Удалить историю</button>':"")+'</div><div class="tc-story-bottom-mark">TEHNOCELL INDOSTRI <span>·</span> DIGITAL MOMENTS</div>';
  $("storyPrev").disabled=storyViewerIndex===0;$("storyNext").disabled=storyViewerIndex===storyViewerItems.length-1;
  const fill=root.querySelector('[data-story-progress="'+storyViewerIndex+'"]');
  storyViewerItems.forEach((_,i)=>{const f=root.querySelector('[data-story-progress="'+i+'"]');if(f&&i<storyViewerIndex)f.style.transform="scaleX(1)";});
