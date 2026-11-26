@@ -2315,10 +2315,10 @@ async function initializeEnnie() {
 ========================================== */
 
 async function loadChats() {
-  if (!currentUser) return;
+  const ownerId = currentUser?.id;
+  if (!ownerId) return;
 
   const history = $("#chatHistory");
-
   history.innerHTML =
     '<div class="history-empty">Загружаю диалоги...</div>';
 
@@ -2326,10 +2326,12 @@ async function loadChats() {
     const { data, error } = await supabaseClient
       .from("ennie_chats")
       .select("*")
-      .eq("user_id", currentUser.id)
+      .eq("user_id", ownerId)
       .order("updated_at", { ascending: false });
 
     if (error) throw error;
+    // A late response from the previous account must not repaint this account's history.
+    if (currentUser?.id !== ownerId) return;
 
     history.replaceChildren();
 
@@ -2424,7 +2426,8 @@ async function createChat(firstMessage) {
 ========================================== */
 
 async function openChat(chatId) {
-  if (!currentUser) return;
+  const ownerId = currentUser?.id;
+  if (!ownerId) return;
 
   try {
     const { data: chat, error: chatError } =
@@ -2432,10 +2435,11 @@ async function openChat(chatId) {
         .from("ennie_chats")
         .select("*")
         .eq("id", chatId)
-        .eq("user_id", currentUser.id)
+        .eq("user_id", ownerId)
         .single();
 
     if (chatError) throw chatError;
+    if (currentUser?.id !== ownerId) return;
 
     const { data, error } = await supabaseClient
       .from("ennie_messages")
@@ -2444,6 +2448,7 @@ async function openChat(chatId) {
       .order("created_at", { ascending: true });
 
     if (error) throw error;
+    if (currentUser?.id !== ownerId) return;
 
     currentChatId = chatId;
     currentChatTitle = chat.title || "Диалог";
@@ -2794,12 +2799,14 @@ async function sendMessage() {
 
   if (!text && !attachedImage && !attachedTextFile) return;
 
+  const requestUserId = currentUser.id;
   isSending = true;
   document.body.classList.add("ennie-thinking");
   sendBtn.disabled = true;
 
   try {
     const imageData = await getImageForMessage();
+    if (currentUser?.id !== requestUserId) throw new Error("Аккаунт изменился. Повтори отправку сообщения.");
     const textFileToSend = attachedTextFile ? { ...attachedTextFile } : null;
 
     const visibleText = text ||
@@ -2896,6 +2903,7 @@ async function sendMessage() {
       );
     }
 
+    if (currentUser?.id !== requestUserId) return;
     if (!result) {
       throw new Error("Сервер ENNIE вернул пустой ответ.");
     }
