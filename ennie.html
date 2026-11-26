@@ -2036,14 +2036,52 @@ function renderEnnieVision(contentElement, rawText) {
   const heading=document.createElement("div");heading.className="vision-heading";heading.textContent="ENNIE VISION";root.append(heading);
   const intro=document.createElement("div");intro.className="vision-intro";intro.textContent=safe(data.intro,500);if(intro.textContent)root.append(intro);
   const compare=document.createElement("div");compare.className="vision-compare";
-  data.items.slice(0,2).forEach((item,index)=>{const card=document.createElement("article");card.className="vision-device";const top=document.createElement("div");top.className="vision-device-top";const body=document.createElement("div");body.className="vision-device-body";const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=index===0?"УЧАСТНИК 01":"УЧАСТНИК 02";const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);body.append(kicker,name,detail);if(Array.isArray(item.specs)){const specs=document.createElement("div");specs.className="vision-specs";item.specs.slice(0,5).forEach(spec=>{const row=document.createElement("div");row.className="vision-spec";const label=document.createElement("span"),value=document.createElement("span");label.textContent=safe(spec.label,35);value.textContent=safe(spec.value,65);row.append(label,value);specs.append(row)});body.append(specs)}card.append(top,body);compare.append(card)});root.append(compare);
-  if(Array.isArray(data.scores)&&data.scores.length){const section=document.createElement("section");section.className="vision-scores";const title=document.createElement("div");title.className="vision-section-title";title.textContent="СРАВНЕНИЕ";section.append(title);data.scores.slice(0,6).forEach(score=>{const row=document.createElement("div");row.className="vision-score";const head=document.createElement("div");head.className="vision-score-head";const label=document.createElement("span");label.textContent=safe(score.label,70);const result=document.createElement("span");result.textContent=safe(score.result,100);head.append(label,result);const track=document.createElement("div");track.className="vision-score-track";const fill=document.createElement("div");fill.className="vision-score-fill";fill.style.width=Math.max(0,Math.min(100,Number(score.value)||0))+"%";track.append(fill);row.append(head,track);section.append(row)});root.append(section)}
-  if(data.verdict&&typeof data.verdict==="object"){const verdict=document.createElement("div");verdict.className="vision-verdict";const label=document.createElement("div");label.className="vision-verdict-label";label.textContent="ВЕРДИКТ ENNIE";const winner=document.createElement("div");winner.className="vision-winner";winner.textContent=safe(data.verdict.winner,100);const why=document.createElement("div");why.className="vision-reason";why.textContent=safe(data.verdict.reason,500);verdict.append(label,winner,why);root.append(verdict)}
-  if(data.text){const p=document.createElement("div");p.textContent=safe(data.text,3000);p.style.cssText="white-space:pre-wrap;font-size:13px;line-height:1.7;margin-top:12px";root.append(p)}
+  data.items.slice(0,2).forEach((item,index)=>{
+    const card=document.createElement("article");card.className="vision-device";
+    const top=document.createElement("div");top.className="vision-device-top";
+    const body=document.createElement("div");body.className="vision-device-body";
+    const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=index===0?"УЧАСТНИК 01":"УЧАСТНИК 02";
+    const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);
+    const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);
+    body.append(kicker,name,detail);
+    if(Array.isArray(item.specs)&&item.specs.length){
+      const specs=document.createElement("div");specs.className="vision-specs";
+      item.specs.slice(0,5).forEach(spec=>{
+        const row=document.createElement("div");row.className="vision-spec";
+        const label=document.createElement("span"),value=document.createElement("span");
+        label.textContent=safe(spec.label,35);value.textContent=safe(spec.value,75);
+        row.append(label,value);specs.append(row);
+      });body.append(specs);
+    }
+    card.append(top,body);compare.append(card);
+  });root.append(compare);
+  if(Array.isArray(data.scores)&&data.scores.length){
+    const section=document.createElement("section");section.className="vision-section";
+    const title=document.createElement("div");title.className="vision-section-title";title.textContent="СРАВНЕНИЕ";section.append(title);
+    data.scores.slice(0,6).forEach(score=>{
+      const row=document.createElement("div");row.className="vision-score-row";
+      const label=document.createElement("div");label.className="vision-score-label";label.textContent=safe(score.label,70);
+      const track=document.createElement("div");track.className="vision-score-track";
+      const fill=document.createElement("div");fill.className="vision-score-fill";
+      const value=Math.max(0,Math.min(100,Number(score.value)||0));fill.style.setProperty("--score",value+"%");
+      track.append(fill);
+      const result=document.createElement("div");result.className="vision-score-value";result.textContent=safe(score.result,100);
+      row.append(label,track,result);section.append(row);
+    });root.append(section);
+  }
+  if(data.verdict&&typeof data.verdict==="object"){
+    const verdict=document.createElement("div");verdict.className="vision-verdict";
+    const label=document.createElement("div");label.className="vision-verdict-label";label.textContent="ВЕРДИКТ ENNIE";
+    const winner=document.createElement("strong");winner.textContent=safe(data.verdict.winner,100);
+    const why=document.createElement("p");why.textContent=safe(data.verdict.reason,500);
+    verdict.append(label,winner,why);root.append(verdict);
+  }
+  if(data.text){
+    const p=document.createElement("div");p.className="vision-closing";p.textContent=safe(data.text,900);root.append(p);
+  }
   if(data.disclaimer){const note=document.createElement("div");note.className="vision-note";note.textContent=safe(data.disclaimer,350);root.append(note)}
   contentElement.replaceChildren(root);
 }
-
 function addMessage(role, text, imageUrl = null) {
   const wrapper = document.createElement("div");
   wrapper.className = "message message-" + role;
@@ -3655,6 +3693,32 @@ button {
 .vision-note{font-size:9px;line-height:1.5;color:#777}
 @media(max-width:420px){.vision-device-body{padding:11px}.vision-device-name{font-size:13px}.vision-score-row{grid-template-columns:66px 1fr 68px;gap:6px}}
 @media(prefers-reduced-motion:reduce){.ennie-vision,.vision-score-fill{animation:none}.vision-score-fill{width:var(--score)}}
+
+/* ENNIE VISION — readable phone layout */
+.ennie-vision{display:grid;gap:16px;min-width:0}
+.vision-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.vision-device-body{padding:14px;min-width:0}
+.vision-spec{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);align-items:start;gap:9px;font-size:11px;line-height:1.45}
+.vision-spec span{min-width:0;overflow-wrap:anywhere}
+.vision-spec span:last-child{text-align:right}
+.vision-section{display:grid;gap:13px}
+.vision-score-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(55px,.8fr);gap:6px 10px;align-items:center;font-size:11px}
+.vision-score-label{grid-column:1;line-height:1.4}
+.vision-score-value{grid-column:2;grid-row:1;text-align:right;line-height:1.4;overflow-wrap:anywhere}
+.vision-score-track{grid-column:1/-1;grid-row:2}
+.vision-verdict{display:grid;gap:7px}
+.vision-verdict strong{margin:0}
+.vision-verdict p{margin:0}
+.vision-closing{font-size:13px;line-height:1.7;color:#e4e4e4;padding:2px 1px 0;white-space:pre-wrap}
+.vision-note{padding-top:9px;border-top:1px solid #ffffff12}
+@media(max-width:560px){
+ .vision-compare{grid-template-columns:minmax(0,1fr);gap:12px}
+ .vision-device-body{padding:15px}
+ .vision-device-name{font-size:16px}
+ .vision-device-detail{font-size:12px}
+ .vision-spec{font-size:12px;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+ .vision-score-row{font-size:12px}
+}
 
 /* ПЕРЕПИСКА */
 
