@@ -4894,18 +4894,16 @@ async function speakText(text, messageElement = null, force = false) {
     const accessToken = sessionData.session?.access_token;
     if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
 
-    // Короткие фрагменты надёжнее генерируются и воспроизводятся на Android WebView.
+    // Генерируем следующий фрагмент, пока текущий звучит: пауза между частями
+    // теперь зависит только от остатка генерации, а не от полного запроса.
     const chunks = splitVoiceText(cleanText, 360);
-    for (let index = 0; index < chunks.length; index++) {
-      if (token !== voiceRunToken) return;
-      if (!(await waitForVoiceResume(token))) return;
-      let played = false;
+    const requestChunkAudio = async (chunkIndex) => {
       let lastError = null;
-
-      for (let attempt = 0; attempt < 2 && !played; attempt++) {
-        if (token !== voiceRunToken) return;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        if (token !== voiceRunToken) return { blob: null, error: null };
         try {
-          voiceAbortController = new AbortController();
+          const controller = new AbortController();
+          voiceAbortController = controller;
           const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
             method: "POST",
             headers: {
@@ -4913,11 +4911,11 @@ async function speakText(text, messageElement = null, force = false) {
               "apikey": SUPABASE_ANON_KEY,
               "Authorization": "Bearer " + accessToken
             },
-            body: JSON.stringify({ text: chunks[index] }),
-            signal: voiceAbortController.signal
+            body: JSON.stringify({ text: chunks[chunkIndex] }),
+            signal: controller.signal
           });
-          voiceAbortController = null;
-          if (token !== voiceRunToken) return;
+          if (voiceAbortController === controller) voiceAbortController = null;
+          if (token !== voiceRunToken) return { blob: null, error: null };
           if (!response.ok) {
             let message = "Голосовой сервер вернул ошибку " + response.status;
             try {
@@ -4926,23 +4924,49 @@ async function speakText(text, messageElement = null, force = false) {
             } catch (_) {}
             throw new Error(message);
           }
-          const audioBlob = await response.blob();
-          if (!audioBlob.size) throw new Error("Голосовой сервер вернул пустое аудио.");
+          const blob = await response.blob();
+          if (!blob.size) throw new Error("Голосовой сервер вернул пустое аудио.");
+          return { blob, error: null };
+        } catch (error) {
+          if (voiceAbortController) voiceAbortController = null;
+          if (token !== voiceRunToken || error?.name === "AbortError") return { blob: null, error };
+          lastError = error;
+          if (attempt === 0) await new Promise(resolve => setTimeout(resolve, 250));
+        }
+      }
+      return { blob: null, error: lastError };
+    };
+
+    let audioPromise = chunks.length ? requestChunkAudio(0) : null;
+    for (let index = 0; index < chunks.length; index++) {
+      if (token !== voiceRunToken) return;
+      if (!(await waitForVoiceResume(token))) return;
+
+      const audioResult = await audioPromise;
+      if (token !== voiceRunToken) return;
+
+      // Запускаем синтез следующей части сразу после получения текущей.
+      // Пока ENNIE произносит эту часть, сервер уже готовит следующую.
+      audioPromise = index + 1 < chunks.length
+        ? requestChunkAudio(index + 1)
+        : null;
+
+      let played = false;
+      if (audioResult?.blob) {
+        try {
           if (!(await waitForVoiceResume(token))) return;
-          await playEnnieAudio(audioBlob, token);
+          await playEnnieAudio(audioResult.blob, token);
           played = true;
         } catch (error) {
-          voiceAbortController = null;
           if (token !== voiceRunToken || error?.name === "AbortError") return;
-          lastError = error;
-          if (attempt === 0) await new Promise(resolve => setTimeout(resolve, 350));
+          console.warn("ENNIE voice playback fallback:", error);
         }
       }
 
-      // Если один фрагмент не сгенерировался, озвучиваем только его системным голосом
-      // и продолжаем очередь, а не теряем оставшуюся часть сообщения.
+      // Если генерация или воспроизведение части не удались — озвучиваем её
+      // системным голосом и не прерываем остальные части ответа.
       if (!played) {
-        console.warn("ENNIE voice chunk fallback:", lastError);
+        console.warn("ENNIE voice chunk fallback:", audioResult?.error);
         try {
           await speakWithBrowser(chunks[index], token);
         } catch (fallbackError) {
