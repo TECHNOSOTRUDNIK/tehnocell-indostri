@@ -4708,35 +4708,113 @@ function splitVoiceText(text, maxLength = 240) {
 function playEnnieAudio(blob, token) {
   return new Promise((resolve, reject) => {
     if (token !== voiceRunToken) return resolve();
+
     const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.playsInline = true;
+    audio.setAttribute("playsinline", "");
+    audio.src = url;
+
     activeEnnieAudio = audio;
     activeEnnieAudioUrl = url;
+
     let finished = false;
+    let lastProgressAt = Date.now();
+    let lastTime = 0;
+    let progressTimer = null;
+    let hardTimer = null;
+
     const finish = (error) => {
       if (finished) return;
       finished = true;
+      if (progressTimer) clearInterval(progressTimer);
+      if (hardTimer) clearTimeout(hardTimer);
+
+      audio.onplay = null;
+      audio.onplaying = null;
+      audio.ontimeupdate = null;
       audio.onended = null;
       audio.onerror = null;
+      audio.onstalled = null;
+      audio.onabort = null;
+
       if (activeEnnieAudio === audio) {
         activeEnnieAudio = null;
         activeEnnieAudioUrl = null;
         activeEnnieAudioResolve = null;
       }
+
+      try { audio.pause(); } catch (_) {}
+      audio.removeAttribute("src");
+      try { audio.load(); } catch (_) {}
       URL.revokeObjectURL(url);
       document.body.classList.remove("speaking");
+
       if (error) reject(error);
       else resolve();
     };
+
     activeEnnieAudioResolve = () => finish();
+
+    const markProgress = () => {
+      const current = Number(audio.currentTime) || 0;
+      if (current > lastTime + 0.06) {
+        lastTime = current;
+        lastProgressAt = Date.now();
+      }
+    };
+
     audio.onplay = () => {
       if (token === voiceRunToken) document.body.classList.add("speaking");
     };
-    audio.onended = () => finish();
+    audio.onplaying = () => {
+      lastProgressAt = Date.now();
+      lastTime = Number(audio.currentTime) || 0;
+      if (token === voiceRunToken) document.body.classList.add("speaking");
+    };
+    audio.ontimeupdate = markProgress;
+    audio.onended = () => {
+      const duration = Number(audio.duration);
+      const current = Number(audio.currentTime) || 0;
+      const tolerance = Math.max(0.65, Number.isFinite(duration) ? duration * 0.035 : 0.65);
+      if (Number.isFinite(duration) && duration > 1 && current < duration - tolerance) {
+        finish(new Error("Воспроизведение аудио оборвалось раньше конца фрагмента."));
+      } else {
+        finish();
+      }
+    };
     audio.onerror = () => finish(new Error("Не удалось воспроизвести голос ENNIE."));
+    audio.onabort = () => {
+      if (token === voiceRunToken) finish(new Error("Воспроизведение голоса было прервано."));
+      else finish();
+    };
+    audio.onstalled = () => {
+      // Не завершаем сразу: Android WebView иногда кратковременно сообщает stalled.
+      markProgress();
+    };
+
+    progressTimer = setInterval(() => {
+      if (finished || token !== voiceRunToken) return finish();
+      if (voicePaused || audio.paused) {
+        lastProgressAt = Date.now();
+        lastTime = Number(audio.currentTime) || 0;
+        return;
+      }
+      markProgress();
+      if (Date.now() - lastProgressAt > 9000) {
+        finish(new Error("Голос ENNIE перестал воспроизводиться до конца фрагмента."));
+      }
+    }, 1200);
+
+    // Не даём очереди зависнуть, если WebView не прислал ended/error.
+    hardTimer = setTimeout(() => {
+      finish(new Error("Истекло время воспроизведения фрагмента ENNIE."));
+    }, 90000);
+
     audio.play().then(() => {
       if (voicePaused) audio.pause();
-    }).catch(finish);
+    }).catch(error => finish(error));
   });
 }
 
