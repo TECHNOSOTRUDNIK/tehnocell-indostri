@@ -837,7 +837,6 @@ button,a,[role="button"],input,select,textarea,label,[tabindex]{-webkit-tap-high
 <section class="page active" id="page-home">
 <div class="home-heading"><div><div class="eyebrow">TEHNOCELL / PERSONAL SPACE</div><h1 class="page-title">Добро пожаловать, <span id="greetingName">...</span></h1><p class="page-subtitle">Ваше пространство для общения, музыки, идей и сервисов компании.</p></div><div class="home-live-pill"><i></i><span>ВЫ В СЕТИ</span></div></div>
 <section class="home-hero"><div class="home-hero-copy"><div class="welcome-tag">TEHNOCELL PLATFORM · ВАШ ЦИФРОВОЙ ЦЕНТР</div><h2>Всё начинается<br>с вашего пространства.</h2><p>Люди, публикации, музыка и продукты TEHNOCELL — собраны в одном месте.</p><div class="home-hero-actions"><a href="#feed" data-page="feed" class="primary-btn">Открыть ленту <b>↗</b></a><a href="account.html" id="homeAccountLink" class="secondary-btn">Мой профиль</a></div></div><div class="home-hero-art" aria-hidden="true"><div class="home-orbit orbit-one"></div><div class="home-orbit orbit-two"></div><div class="home-monogram">T<span>.</span></div><div class="home-art-caption">INNOVATION<br>IN MOTION</div></div></section>
-<section class="vc-teaser" id="vcTeaser" role="button" tabindex="0" aria-label="Открыть специальное приключение"><button class="vc-dismiss" id="vcTeaserDismiss" type="button" aria-label="Свернуть событие">×</button><div class="vc-teaser-row"><div class="vc-teaser-copy"><div class="vc-kicker">TEHNOCELL / SPECIAL EVENT</div><h3>У тебя есть одно незавершённое приключение.</h3><p>Город не спит. И кое-что ждёт именно тебя.</p><div class="vc-teaser-time">ДО ЗАКРЫТИЯ РАССЛЕДОВАНИЯ <b id="vcTeaserTimer">ЗАГРУЗКА…</b></div></div><div class="vc-teaser-go" aria-hidden="true">↗</div></div></section>
 <div class="home-metrics"><a class="home-metric" href="#communities" data-page="communities"><span>МОИ СООБЩЕСТВА</span><strong id="homeCommunityCount">—</strong><small>Открыть сообщества ↗</small></a><a class="home-metric" href="#notifications" data-page="notifications"><span>УВЕДОМЛЕНИЯ</span><strong id="homeNotificationCount">—</strong><small>Непрочитанные события ↗</small></a><div class="home-metric"><span>ВАШ СТАТУС</span><strong class="home-status-value"><i></i> Онлайн</strong><small>Статус обновляется автоматически</small></div></div>
 <div class="home-main-grid"><div class="home-main-column">
 <section class="home-sound-card" id="homeSoundCard"><div class="home-card-kicker">TEHNOCELL IDENTITY SOUND</div><div class="home-sound-empty"><div class="home-sound-note">♫</div><div><strong>Ваша музыка — часть профиля</strong><p>Добавьте композицию в TEHNOCELL ID, и она появится здесь.</p><a href="account.html" class="panel-link">Настроить музыку ↗</a></div></div></section>
@@ -2054,129 +2053,6 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 })();
 </script>
 
-<div class="vc-overlay" id="vcOverlay" role="dialog" aria-modal="true" aria-label="VICE CITY — специальное событие">
- <section class="vc-window"><button class="vc-close" id="vcClose" type="button" aria-label="Закрыть">×</button><div class="vc-content" id="vcContent"></div></section>
-</div>
-
-<script>
-(function(){
- const $vc=id=>document.getElementById(id);
- const overlay=$vc("vcOverlay"),content=$vc("vcContent"),teaser=$vc("vcTeaser");
- if(!overlay||!teaser)return;
- let state=null,timer=null,booted=false;
- const endpoint="tc-vice-city-quest";
- const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
- function open(){overlay.classList.add("open");document.body.style.overflow="hidden";render();}
- function stopRewardTrailer(){const video=$vc("vcTrailerWrap")?.querySelector("video");if(video){video.pause();try{video.currentTime=0;}catch(e){}video.muted=true;}}
-  function close(){stopRewardTrailer();overlay.classList.remove("open");document.body.style.overflow="";if(state)renderTeaser();}
- $vc("vcClose").addEventListener("click",close);
- overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
- teaser.addEventListener("click",e=>{if(e.target.closest("#vcTeaserDismiss"))return;open();});teaser.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});$vc("vcTeaserDismiss").addEventListener("click",e=>{e.stopPropagation();localStorage.setItem("tc_vc_teaser_collapsed_v1","1");teaser.classList.add("is-collapsed");});
- async function call(body){
-  const {data,error}=await window.__tcPlatformDb.functions.invoke(endpoint,{body});
-  if(error){let detail=error.message||"Не удалось связаться с сервером события.";try{const response=error.context;if(response&&typeof response.json==="function"){const payload=await response.clone().json();if(payload?.error)detail=payload.error;}}catch{}throw new Error(detail);}
-  if(data?.error)throw new Error(data.error);
-  return data;
- }
- async function load(){
-  if(!window.__tcPlatformDb||!window.__tcPlatformDb.auth)return false;
-  try{const {data}=await window.__tcPlatformDb.auth.getSession();if(!data?.session)return false;
-   state=await call({action:"status"});renderTeaser();if(overlay.classList.contains("open"))render();return true;
-  }catch(e){console.warn("VICE CITY event:",e);return false;}
- }
- function remaining(){if(!state?.event?.ends_at)return 0;return Math.max(0,new Date(state.event.ends_at).getTime()-Date.now());}
- function format(ms){const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),sec=s%60;return d+"д "+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(sec).padStart(2,"0");}
- function renderTeaser(){
-  if(!state)return;
-  const done=!!state.progress?.completed_at,active=state.active&&remaining()>0;
-  $vc("vcTeaserTimer").textContent=active?format(remaining()):done?"ПРОЙДЕНО":"СОБЫТИЕ ЗАВЕРШЕНО";
-  teaser.classList.toggle("is-collapsed",localStorage.getItem("tc_vc_teaser_collapsed_v1")==="1");
-  teaser.querySelector("h3").textContent=done?"Ты раскрыл тайну Vice City.": "У тебя есть одно незавершённое приключение.";
-  teaser.querySelector("p").textContent=done?"Твоя награда уже ждёт в коллекции рамок.":"Город не спит. И кое-что ждёт именно тебя.";
-  teaser.querySelector(".vc-kicker").textContent=done?"TEHNOCELL / НАГРАДА ПОЛУЧЕНА":"TEHNOCELL / SPECIAL EVENT";
- }
- function intro(){
-  return '<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT · LIMITED TIME</div><h1 class="vc-title">VICE<br>CITY</h1><div class="vc-subtitle">THE CITY NEVER TELLS THE WHOLE STORY</div><div class="vc-intro-art"><img src="https://www.rockstargames.com/VI/_next/static/media/Vice_City_27.0d2e~w_r93hmh.jpg?akim=1&imdensity=1&imwidth=1280" alt="Официальный арт Rockstar Games — Vice City" loading="eager" referrerpolicy="no-referrer"></div><div class="vc-case-board"><div class="vc-case-board-head"><span>МАРШРУТ РАССЛЕДОВАНИЯ</span><b>05 ГЛАВ</b></div><div class="vc-case-route"><div class="vc-case-step"><i>01</i><span><b>Досье героев</b><small>Имена и город</small></span></div><div class="vc-case-step"><i>02</i><span><b>Хронология</b><small>Дата и платформы</small></span></div><div class="vc-case-step"><i>03</i><span><b>Карта Леониды</b><small>Три географические улики</small></span></div><div class="vc-case-step"><i>04</i><span><b>Реальный след</b><small>Город и штат</small></span></div><div class="vc-case-step"><i>05</i><span><b>Последнее досье</b><small>Финальная проверка</small></span></div></div></div><p class="vc-intro-copy">Есть города, которые невозможно забыть. Неон, пальмы, ночные улицы и история, которую нужно собрать по частям. Тебя ждут пять глав расследования: поиск улик, проверка источников, изучение карты, реальные прототипы города и финальное досье. Каждый этап открывает следующую часть истории. Это фан-событие TEHNOCELL, не связанное с Rockstar Games.</p><div class="vc-ennie"><div class="vc-ennie-orb"></div><div><strong>ENNIE · QUEST GUIDE</strong><p>Я буду рядом на каждом этапе. Подскажу направление, объясню задание и проверю результат. Но ответы придётся найти тебе самому. Готов?</p></div></div><div class="vc-countdown">ДО ЗАКРЫТИЯ: <b id="vcModalTimer">—</b></div><div class="vc-actions"><button class="vc-primary" id="vcStart">НАЧАТЬ ПРИКЛЮЧЕНИЕ ↗</button><button class="vc-secondary" id="vcLater">ПОЗЖЕ</button></div>';
- }
- const stages=[
-  {title:"ДОСЬЕ / ДВА ГЕРОЯ",tag:"ПЕРВАЯ УЛИКА",desc:"Открой официальный сайт Rockstar и собери базовое досье. Здесь важна точность: имена, штат и город.",fields:[["jason","Имя первого главного героя"],["lucia","Имя второй главной героини"],["state","Название вымышленного штата"],["city","Главный город игры"]],links:[["Официальная страница Rockstar","https://www.rockstargames.com/VI"]],hint:"Подсказка Энни: ответы спрятаны в официальном описании игры. Проверь написание каждого имени."},
-  {title:"ХРОНОЛОГИЯ ЗАПУСКА",tag:"ВТОРАЯ УЛИКА",desc:"Восстанови хронологию запуска. Сверь дату и платформы по официальной публикации, а затем приложи обе ссылки.",fields:[["date","Дата выхода игры"],["platforms","Платформы запуска"],["yandex_link","Ссылка на результат поиска Яндекса"],["official_link","Ссылка на новость Rockstar"]],links:[["Найти через Яндекс","https://yandex.ru/search/?text=Rockstar+Games+GTA+VI+release+date+platforms"],["Официальная новость Rockstar","https://www.rockstargames.com/newswire/article/39akk424a9oo53/grand-theft-auto-vi-now-available"]],hint:"Энни советует: не доверяй одному сниппету поисковика — открой первоисточник Rockstar."},
-  {title:"КАРТА ЛЕОНИДЫ",tag:"ТРЕТЬЯ УЛИКА",desc:"Перейди от героев к миру игры. Найди три названия мест, которые Rockstar раскрыла в материалах о Леониде.",fields:[["location_one","Первое место: Port …"],["location_two","Второе место: Amb…"],["location_three","Третье место: Grass…"]],links:[["Официальная страница GTA VI","https://www.rockstargames.com/VI"],["Поиск по карте Леониды","https://yandex.ru/search/?text=GTA+VI+Leonida+locations+map+regions"]],hint:"Энни: изучи карту Леониды и сопоставь три разных района. Обрати внимание на подписи к местам и проверь написание в первоисточнике."},
-  {title:"СЛЕД РЕАЛЬНОГО ГОРОДА",tag:"ЧЕТВЁРТАЯ УЛИКА",desc:"Теперь отдели вымысел от реальности. Найди, какой настоящий город и штат стали главным вдохновением для Vice City и Леониды.",fields:[["real_city","Реальный город — вдохновение для Vice City"],["real_state","Реальный штат — вдохновение для Leonida"]],links:[["Поиск в Яндексе","https://yandex.ru/search/?text=Vice+City+real+world+inspiration+Rockstar+setting"],["Официальная страница Rockstar","https://www.rockstargames.com/VI"]],hint:"Подсказка Энни: вымышленный город и штат имеют реальные прототипы во Флориде."},
-  {title:"ПОСЛЕДНЕЕ ДОСЬЕ",tag:"ФИНАЛЬНАЯ УЛИКА",desc:"Финальная проверка. Исследуй официальные материалы Rockstar Games и самостоятельно установи полное название игры, студию-разработчика и издателя.",fields:[["game_title","Полное название игры"],["developer","Студия-разработчик"],["publisher","Издатель игры"]],links:[["Официальная страница GTA VI","https://www.rockstargames.com/VI"],["Rockstar Games Newswire","https://www.rockstargames.com/newswire"]],hint:"Энни не раскроет ответы на этом этапе. Сверь официальные публикации Rockstar и не путай разработчика с издателем."}
- ];
- function render(){
-  if(!state){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">VICE CITY</h2><p class="vc-intro-copy">Подключаю расследование…</p>';return;}
-  const progress=state.progress||{stage:0};
-  if(progress.completed_at){
-   content.innerHTML='<div class="vc-eyebrow">ПУТЬ ЗАВЕРШЁН · НАГРАДА ТВОЯ</div><h2 class="vc-title">ТЫ ПРОШЁЛ<br>ВСЕ ПЯТЬ ЭТАПОВ.</h2><div class="vc-award vc-award-cinematic"><div class="vc-award-header"><span>TEHNOCELL · ОСОБОЕ СОБЫТИЕ</span><b>№ 001 · НАВСЕГДА</b></div><div class="vc-trailer-player" id="vcTrailerWrap"><div class="vc-trailer-poster"><img src="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" alt="Кадр официального ролика GTA VI" loading="lazy"><div class="vc-trailer-shade"></div><div class="vc-trailer-topline"><span>ОФИЦИАЛЬНЫЙ РОЛИК ROCKSTAR</span><b>00:30</b></div><div class="vc-trailer-autoplay-note">РОЛИК ЗАПУСКАЕТСЯ АВТОМАТИЧЕСКИ</div><div class="vc-trailer-bottom">ПОСЛЕДНИЙ ВЫПУЩЕННЫЙ РОЛИК · 30 СЕКУНД</div></div></div><div class="vc-reward-identity"><div><small>ТВОЯ НАГРАДА</small><strong>VICE CITY</strong><span>ОГРАНИЧЕННЫЙ ВЫПУСК · РАМКА АВАТАРА</span></div><b class="vc-reward-seal">ПОЛУЧЕНО</b></div><div class="vc-frame-pedestal"><div class="vc-frame-demo" id="vcFrameDemo"><span class="vc-frame-fallback">TC</span><i class="vc-frame-orbit"></i><i class="vc-frame-orbit second"></i></div><div class="vc-frame-meta"><strong>РАМКА ДОБАВЛЕНА</strong><span>ТВОЙ АВАТАР · ТВОЙ ЗНАК</span><small>Предмет навсегда закреплён за твоим TEHNOCELL ID</small></div></div><div class="vc-award-confirm"><i>✓</i><span>НАГРАДА ПОЛУЧЕНА И ПРИМЕНЕНА К ПРОФИЛЮ</span></div></div><div class="vc-actions"><button class="vc-primary" id="vcCloseAward">ЗАМЕЧАТЕЛЬНО</button></div>';
-   loadRewardAvatar();initRewardTrailer();$vc("vcCloseAward").onclick=close;return;
-  }
-  if(!state.active||remaining()<=0){content.innerHTML='<div class="vc-eyebrow">TEHNOCELL SPECIAL EVENT</div><h2 class="vc-title">ВРЕМЯ<br>ВЫШЛО</h2><p class="vc-intro-copy">Расследование VICE CITY завершено. Если ты успел получить рамку, она останется в твоей коллекции навсегда.</p><div class="vc-actions"><button class="vc-secondary" id="vcCloseExpired">ЗАКРЫТЬ</button></div>';$vc("vcCloseExpired").onclick=close;return;}
-  if(progress.stage===0){content.innerHTML=intro();$vc("vcStart").onclick=()=>{content.dataset.started="1";renderStage(1);};$vc("vcLater").onclick=close;updateModalTimer();return;}
-  renderStage(Math.min(5,Number(progress.stage)+1));
- }
-
- async function loadRewardAvatar(){
-  try{
-   const db=window.__tcPlatformDb;if(!db)return;
-   const {data:{user}}=await db.auth.getUser();if(!user)return;
-   const {data,error}=await db.from("profiles").select("avatar_path,display_name").eq("id",user.id).maybeSingle();
-   if(error||!data?.avatar_path)return;
-   const url=db.storage.from("profile-avatars").getPublicUrl(data.avatar_path).data.publicUrl;
-   const box=$vc("vcFrameDemo");if(!box)return;
-   box.innerHTML='<img src="'+esc(url)+'" alt="Твой аватар">';
-  }catch(e){console.warn("VICE CITY reward avatar:",e);}
- }
-
- function initRewardTrailer(){
-  const host=$vc("vcTrailerWrap");if(!host)return;
-  const src="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/download/vice-city-media-v1/GTAVI_Out_Now.mp4?v=2";
-  host.innerHTML='<div class="tc-native-player" data-tc-player><video class="tc-native-video" playsinline webkit-playsinline preload="auto" poster="https://i.ytimg.com/vi/_yl5ELcmugI/hqdefault.jpg" aria-label="Официальный ролик GTA VI"><source src="'+src+'" type="video/mp4"></video></div>';
-  const player=host.querySelector("[data-tc-player]"),video=player?.querySelector("video");
-  if(!player||!video)return;
-  // Сначала пробуем автоматический запуск со звуком. Если браузер запрещает его,
-  // запускаем без звука; касание самого видео включает звук без дополнительных кнопок.
-  video.muted=false;
-  video.play().catch(async()=>{
-   video.muted=true;
-   try{await video.play();}catch(e){}
-  });
-  video.addEventListener("click",()=>{
-   if(video.muted){video.muted=false;video.play().catch(()=>{});}
-   else if(video.paused)video.play().catch(()=>{});
-  });
-  video.addEventListener("ended",()=>{video.currentTime=0;});
- }
- function updateModalTimer(){const el=$vc("vcModalTimer");if(el)el.textContent=format(remaining());}
- function renderStage(n,errorText=""){
-  const s=stages[n-1],completed=Number(state.progress?.stage||0);
-  const progressDots=[1,2,3,4,5].map(i=>'<span class="'+(i<=completed?'done':'')+(i===n?' current':'')+'"><i></i></span>').join("");
-  content.innerHTML='<section class="vc-mission vc-enter"><div class="vc-mission-top"><div><div class="vc-eyebrow">VICE CITY / ДЕЛО № 006</div><div class="vc-mission-tag">'+esc(s.tag)+'</div></div><div class="vc-mission-count"><strong>'+String(n).padStart(2,"0")+'</strong><span>/ 05</span></div></div><div class="vc-mission-track">'+progressDots+'</div><div class="vc-mission-body"><div class="vc-mission-watermark">'+String(n).padStart(2,"0")+'</div><h2 class="vc-stage-title">'+s.title+'</h2><p class="vc-stage-desc">'+s.desc+'</p><div class="vc-mission-scan"></div>'+(n===4?"<section class=\"vc-clue-scene\" aria-label=\"Интерактивные улики о реальном прототипе\"><div class=\"vc-clue-head\"><b>АРХИВ / ТРИ ЗАПЕЧАТАННЫЕ УЛИКИ</b><span>НАЖМИ, ЧТОБЫ ИЗУЧИТЬ</span></div><div class=\"vc-clue-grid\"><button type=\"button\" class=\"vc-clue-card\"><i>01</i><b>ПРИБРЕЖНЫЙ ГОРОД</b><small class=\"vc-clue-tap\">Открыть улику ↗</small><small class=\"vc-clue-secret\">Южная Флорида. Атлантическое побережье.</small></button><button type=\"button\" class=\"vc-clue-card\"><i>02</i><b>АРХИТЕКТУРНЫЙ СЛЕД</b><small class=\"vc-clue-tap\">Открыть улику ↗</small><small class=\"vc-clue-secret\">Пастельные фасады и знаменитый район Art Deco.</small></button><button type=\"button\" class=\"vc-clue-card\"><i>03</i><b>ГОРОДСКОЙ ПЕЙЗАЖ</b><small class=\"vc-clue-tap\">Открыть улику ↗</small><small class=\"vc-clue-secret\">Пальмы, заливы, пляжи и длинные набережные.</small></button></div><div class=\"vc-clue-status\"><span>УЛИКИ ИЗУЧЕНЫ</span><strong data-clue-count>0 / 3</strong></div></section>":'')+'<div class="vc-source-row">'+s.links.map((x,i)=>'<div class="vc-source-item"><a class="vc-source" href="'+esc(x[1])+'" target="_blank" rel="noopener noreferrer">'+esc(x[0])+' ↗</a><button type="button" class="vc-copy-source" data-copy-source="'+i+'" aria-label="Скопировать ссылку">КОПИРОВАТЬ</button></div>').join("")+'</div><form class="vc-form" id="vcForm">'+s.fields.map(f=>'<div class="vc-field"><label for="vc_'+f[0]+'">'+esc(f[1])+'</label><input id="vc_'+f[0]+'" name="'+f[0]+'" '+(f[0].includes("link")?'type="url"':'type="text"')+' placeholder="ВВЕДИ НАЙДЕННУЮ УЛИКУ" autocomplete="off" autocapitalize="off" spellcheck="false" required></div>').join("")+'<div class="vc-hint"><b>ENNIE / ПОДСКАЗКА</b><span>'+esc(s.hint)+'</span></div><div class="vc-error" id="vcError">'+esc(errorText)+'</div><div class="vc-actions"><button class="vc-primary vc-submit" type="submit"><span>ПРОВЕРИТЬ УЛИКИ</span><i>↗</i></button><button class="vc-secondary" type="button" id="vcCloseStage">ЗАКРЫТЬ ДЕЛО</button></div></form></div></section>';
-  if(n===4){const cards=[...content.querySelectorAll(".vc-clue-card")],count=content.querySelector("[data-clue-count]");cards.forEach(card=>card.addEventListener("click",()=>{card.classList.add("is-open");count.textContent=cards.filter(x=>x.classList.contains("is-open")).length+" / 3";}));}
-  content.querySelectorAll("[data-copy-source]").forEach(btn=>btn.addEventListener("click",async()=>{const value=s.links[Number(btn.dataset.copySource)][1];try{await navigator.clipboard.writeText(value);btn.textContent="ГОТОВО";}catch{const area=document.createElement("textarea");area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();try{document.execCommand("copy");btn.textContent="ГОТОВО";}catch{btn.textContent="ОШИБКА";}area.remove();}setTimeout(()=>btn.textContent="КОПИРОВАТЬ",1800);}));
-  $vc("vcCloseStage").onclick=close;
-  $vc("vcForm").addEventListener("submit",async e=>{
-   e.preventDefault();const btn=e.submitter;btn.disabled=true;btn.innerHTML="<span>ЭННИ ПРОВЕРЯЕТ…</span><i>◌</i>";
-   const answers=Object.fromEntries(new FormData(e.currentTarget).entries());
-   try{
-    const result=await call({action:"submit",stage:n,answers});
-    state.progress={...(state.progress||{}),stage:result.stage,completed_at:result.completed?new Date().toISOString():null,awarded_at:result.awarded?new Date().toISOString():null};
-    if(result.completed){state.progress.completed_at=new Date().toISOString();state.progress.awarded_at=new Date().toISOString();renderTeaser();render();}
-    else{const refreshed=await call({action:"status"});state=refreshed;renderStage(Math.min(5,Number(state.progress.stage)+1));}
-   }catch(err){const box=$vc("vcError");if(box)box.textContent=err.message||"Не удалось проверить ответы.";btn.disabled=false;btn.innerHTML="<span>ПРОВЕРИТЬ УЛИКИ</span><i>↗</i>";}
-  });
- }
- function tick(){if(state){renderTeaser();updateModalTimer();if(overlay.classList.contains("open")&&state.active&&remaining()<=0)render();}}
- async function boot(){
-  if(booted)return;booted=true;
-  for(let i=0;i<60;i++){if(window.__tcPlatformDb&&window.__tcPlatformDb.auth){const ok=await load();if(ok)break;}await new Promise(r=>setTimeout(r,500));}
-  timer=setInterval(tick,1000);
-  window.addEventListener("focus",load);
- }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
-})();
-</script>
 <script>
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
