@@ -4815,7 +4815,7 @@ async function speakText(text, messageElement = null, force = false) {
     if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
 
     // Короткие фрагменты надёжнее генерируются и воспроизводятся на Android WebView.
-    const chunks = splitVoiceText(cleanText, 620);
+    const chunks = splitVoiceText(cleanText, 360);
     for (let index = 0; index < chunks.length; index++) {
       if (token !== voiceRunToken) return;
       if (!(await waitForVoiceResume(token))) return;
