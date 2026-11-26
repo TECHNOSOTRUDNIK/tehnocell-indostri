@@ -2858,7 +2858,12 @@ async function sendMessage() {
     }}
 
     if (!currentChatId) {
-      await createChat(visibleText);
+      try {
+        await createChat(visibleText);
+      } catch (chatError) {
+        console.warn("ENNIE chat creation failed; continuing without history:", chatError);
+        currentChatId = null;
+      }
     }
 
     hideWelcome();
@@ -2895,7 +2900,13 @@ async function sendMessage() {
     // Показываем индикатор сразу, не заставляя ждать сохранения сообщения.
     setTyping(true);
 
-    const savedUserMessage = await saveMessage("user", userContent);
+    let savedUserMessage = null;
+    try {
+      savedUserMessage = await saveMessage("user", userContent);
+    } catch (saveError) {
+      // A history/RLS failure must not prevent the actual assistant request.
+      console.warn("ENNIE user message was not saved; continuing request:", saveError);
+    }
 
     const { data: sessionData } =
       await supabaseClient.auth.getSession();
@@ -2989,7 +3000,11 @@ async function sendMessage() {
       void speakText(answer, assistantMessageElement, false);
     }
 
-    await saveMessage("assistant", answer);
+    try {
+      await saveMessage("assistant", answer);
+    } catch (saveError) {
+      console.warn("ENNIE answer was not saved to history:", saveError);
+    }
     await loadChats();
 
   } catch (error) {
