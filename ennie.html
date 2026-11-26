@@ -5805,6 +5805,13 @@ body.light-theme .message-more-menu button:hover{background:#f0f0f0}
 .ennie-weather-open{border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:7px 10px;background:rgba(255,255,255,.07);color:#fff;font-size:10px;text-decoration:none}
 /* ENNIE glass text selection */
 ::selection{background:rgba(255,255,255,.22);color:#fff}::-moz-selection{background:rgba(255,255,255,.24);color:#fff}.ennie-selection-bubble{position:fixed;z-index:2147483000;display:flex;gap:5px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(25,25,27,.8);color:#fff;backdrop-filter:blur(22px);box-shadow:0 8px 32px #0008,0 0 22px #fff2;opacity:0;transform:none;pointer-events:none;transition:opacity .12s ease}.ennie-selection-bubble.visible{opacity:1;transform:none;pointer-events:auto}.ennie-selection-action{min-height:38px;padding:0 12px;border:1px solid #ffffff19;border-radius:15px;background:#ffffff0d;color:#fff;font:500 12px Inter,Arial,sans-serif}
+
+/* Final mobile override: comparison cards always stay side by side */
+.ennie-vision .vision-compare{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.ennie-vision .vision-device{min-width:0!important}
+.ennie-vision .vision-device-photo{height:clamp(104px,29vw,132px)}
+.ennie-vision .vision-spec{grid-template-columns:minmax(0,.68fr) minmax(0,1.32fr)!important}
+@media(max-width:370px){.ennie-vision .vision-compare{gap:6px!important}.ennie-vision .vision-device-body{padding:7px!important}.ennie-vision .vision-device-photo{height:100px}.ennie-vision .vision-spec{font-size:8px!important}}
 </style>
 <script src="account-access.js?v=3"></script>
 </body>
