@@ -2007,23 +2007,41 @@ document.addEventListener("click", (event) => {
 ========================================== */
 
 
+function extractEnnieVision(rawText) {
+  const source = String(rawText || "");
+  const match = source.match(/<ENNIE_VISION>\s*([\s\S]*?)\s*<\/ENNIE_VISION>/i);
+  if (!match) return { data: null, visibleText: source.replace(/<ENNIE_VISION>[\s\S]*$/i, "").replace(/<ENNIE_STATE>[\s\S]*$/i, "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim(), hasVision: /<ENNIE_VISION>/i.test(source) };
+  let data = null;
+  try {
+    const payload = match[1].trim().replace(/^`{3}(?:json)?\s*/i, "").replace(/\s*`{3}$/i, "");
+    data = JSON.parse(payload);
+    if (!data || typeof data !== "object" || !Array.isArray(data.items) || data.items.length < 2) data = null;
+  } catch (_) {}
+  const visibleText = source.replace(match[0], "").replace(/<ENNIE_STATE>[\s\S]*$/i, "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
+  return { data, visibleText, hasVision: true };
+}
+function getEnnieVisibleText(rawText) {
+  const parsed = extractEnnieVision(rawText);
+  if (!parsed.hasVision || !parsed.data) return parsed.visibleText || (parsed.hasVision ? "Не удалось отобразить визуальный ответ. Попробуй повторить запрос." : "");
+  const d = parsed.data;
+  return [parsed.visibleText,d.intro,d.text,d.verdict?.reason].filter(v=>typeof v==="string"&&v.trim()).map(v=>v.trim()).join("\n\n").slice(0,5000);
+}
 function renderEnnieVision(contentElement, rawText) {
-  const match = String(rawText || "").match(/<ENNIE_VISION>\\s*([\\s\\S]*?)\\s*<\\/ENNIE_VISION>/i);
-  if (!match) { contentElement.textContent = String(rawText || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim(); return; }
-  let data;
-  try { data = JSON.parse(match[1]); } catch { contentElement.textContent = String(rawText).replace(match[0], "").trim(); return; }
-  const safe = (v, max=140) => typeof v === "string" ? v.slice(0,max) : "";
-  const root = document.createElement("div"); root.className = "ennie-vision";
-  const heading = document.createElement("div"); heading.className="vision-heading"; heading.textContent="ENNIE VISION"; root.append(heading);
-  const intro = document.createElement("div"); intro.className="vision-intro"; intro.textContent=safe(data.intro,500); if(intro.textContent)root.append(intro);
-  if(Array.isArray(data.items) && data.items.length>=2){
-    const compare=document.createElement("div");compare.className="vision-compare";
-    data.items.slice(0,2).forEach((item,index)=>{const card=document.createElement("article");card.className="vision-device";const top=document.createElement("div");top.className="vision-device-top";const body=document.createElement("div");body.className="vision-device-body";const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=index===0?"УЧАСТНИК 01":"УЧАСТНИК 02";const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);body.append(kicker,name,detail);if(Array.isArray(item.specs)){const specs=document.createElement("div");specs.className="vision-specs";item.specs.slice(0,5).forEach(spec=>{const row=document.createElement("div");row.className="vision-spec";const label=document.createElement("span"),value=document.createElement("span");label.textContent=safe(spec.label,35);value.textContent=safe(spec.value,65);row.append(label,value);specs.append(row)});body.append(specs)}card.append(top,body);compare.append(card)});root.append(compare);
-  }
-  if(Array.isArray(data.scores)&&data.scores.length){const section=document.createElement("section");section.className="vision-section";const title=document.createElement("div");title.className="vision-section-title";title.textContent="СРАВНЕНИЕ ПО КАТЕГОРИЯМ";const list=document.createElement("div");list.className="vision-score";data.scores.slice(0,6).forEach(score=>{const row=document.createElement("div");row.className="vision-score-row";const label=document.createElement("span");label.className="vision-score-label";label.textContent=safe(score.label,35);const track=document.createElement("div");track.className="vision-score-track";const fill=document.createElement("div");fill.className="vision-score-fill";const n=Math.max(0,Math.min(100,Number(score.value)||0));fill.style.setProperty("--score",n+"%");track.append(fill);const value=document.createElement("span");value.className="vision-score-value";value.textContent=safe(score.result,40);row.append(label,track,value);list.append(row)});section.append(title,list);root.append(section)}
-  if(data.verdict&&typeof data.verdict==="object"){const verdict=document.createElement("section");verdict.className="vision-verdict";const label=document.createElement("div");label.className="vision-verdict-label";label.textContent="ВЕРДИКТ ENNIE";const winner=document.createElement("strong");winner.textContent=safe(data.verdict.winner,100);const why=document.createElement("p");why.textContent=safe(data.verdict.reason,500);verdict.append(label,winner,why);root.append(verdict)}
-  if(data.disclaimer){const note=document.createElement("div");note.className="vision-note";note.textContent=safe(data.disclaimer,250);root.append(note)}
-  contentElement.replaceChildren();const text=safe(data.text,3000);if(text){const p=document.createElement("div");p.textContent=text;p.style.cssText="white-space:pre-wrap;font-size:13px;line-height:1.7;margin-bottom:8px";contentElement.append(p)}contentElement.append(root);
+  const parsed=extractEnnieVision(rawText);
+  if(!parsed.hasVision){contentElement.textContent=parsed.visibleText;return}
+  const data=parsed.data;
+  if(!data){contentElement.textContent=parsed.visibleText||"Не удалось отобразить визуальный ответ. Попробуй повторить запрос.";return}
+  const safe=(v,max=140)=>typeof v==="string"?v.slice(0,max):"";
+  const root=document.createElement("div");root.className="ennie-vision";
+  const heading=document.createElement("div");heading.className="vision-heading";heading.textContent="ENNIE VISION";root.append(heading);
+  const intro=document.createElement("div");intro.className="vision-intro";intro.textContent=safe(data.intro,500);if(intro.textContent)root.append(intro);
+  const compare=document.createElement("div");compare.className="vision-compare";
+  data.items.slice(0,2).forEach((item,index)=>{const card=document.createElement("article");card.className="vision-device";const top=document.createElement("div");top.className="vision-device-top";const body=document.createElement("div");body.className="vision-device-body";const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=index===0?"УЧАСТНИК 01":"УЧАСТНИК 02";const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);body.append(kicker,name,detail);if(Array.isArray(item.specs)){const specs=document.createElement("div");specs.className="vision-specs";item.specs.slice(0,5).forEach(spec=>{const row=document.createElement("div");row.className="vision-spec";const label=document.createElement("span"),value=document.createElement("span");label.textContent=safe(spec.label,35);value.textContent=safe(spec.value,65);row.append(label,value);specs.append(row)});body.append(specs)}card.append(top,body);compare.append(card)});root.append(compare);
+  if(Array.isArray(data.scores)&&data.scores.length){const section=document.createElement("section");section.className="vision-scores";const title=document.createElement("div");title.className="vision-section-title";title.textContent="СРАВНЕНИЕ";section.append(title);data.scores.slice(0,6).forEach(score=>{const row=document.createElement("div");row.className="vision-score";const head=document.createElement("div");head.className="vision-score-head";const label=document.createElement("span");label.textContent=safe(score.label,70);const result=document.createElement("span");result.textContent=safe(score.result,100);head.append(label,result);const track=document.createElement("div");track.className="vision-score-track";const fill=document.createElement("div");fill.className="vision-score-fill";fill.style.width=Math.max(0,Math.min(100,Number(score.value)||0))+"%";track.append(fill);row.append(head,track);section.append(row)});root.append(section)}
+  if(data.verdict&&typeof data.verdict==="object"){const verdict=document.createElement("div");verdict.className="vision-verdict";const label=document.createElement("div");label.className="vision-verdict-label";label.textContent="ВЕРДИКТ ENNIE";const winner=document.createElement("div");winner.className="vision-winner";winner.textContent=safe(data.verdict.winner,100);const why=document.createElement("div");why.className="vision-reason";why.textContent=safe(data.verdict.reason,500);verdict.append(label,winner,why);root.append(verdict)}
+  if(data.text){const p=document.createElement("div");p.textContent=safe(data.text,3000);p.style.cssText="white-space:pre-wrap;font-size:13px;line-height:1.7;margin-top:12px";root.append(p)}
+  if(data.disclaimer){const note=document.createElement("div");note.className="vision-note";note.textContent=safe(data.disclaimer,350);root.append(note)}
+  contentElement.replaceChildren(root);
 }
 
 function addMessage(role, text, imageUrl = null) {
@@ -2043,7 +2061,7 @@ function addMessage(role, text, imageUrl = null) {
 
   const content = document.createElement("div");
   content.className = "message-text";
-  const visibleText = String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
+  const visibleText = role === "assistant" ? getEnnieVisibleText(text) : String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
   if (role === "assistant") renderEnnieVision(content, text); else content.textContent = visibleText;
 
   if (role === "assistant") body.append(author);
@@ -4670,7 +4688,7 @@ function speakWithBrowser(text, token) {
 
 async function speakText(text, messageElement = null, force = false) {
   if (!force && !voiceEnabled) return;
-  const cleanText = String(text || "")
+  const cleanText = getEnnieVisibleText(text)
     .replace(/\x60{3}[\s\S]*?\x60{3}/g, " ")
     .replace(/https?:\/\/\S+/g, "ссылка")
     .replace(/[*_#\x60]/g, " ")
@@ -4691,7 +4709,7 @@ async function speakText(text, messageElement = null, force = false) {
     if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
 
     // Короткие фрагменты надёжнее генерируются и воспроизводятся на Android WebView.
-    const chunks = splitVoiceText(cleanText, 240);
+    const chunks = splitVoiceText(cleanText, 620);
     for (let index = 0; index < chunks.length; index++) {
       if (token !== voiceRunToken) return;
       if (!(await waitForVoiceResume(token))) return;
