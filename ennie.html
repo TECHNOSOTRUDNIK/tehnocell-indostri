@@ -2043,6 +2043,9 @@ function renderEnnieVision(contentElement, rawText) {
     const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=index===0?"УЧАСТНИК 01":"УЧАСТНИК 02";
     const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);
     const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);
+    const photoUrl=typeof item.image?.url==="string"&&/^https:\/\/upload\.wikimedia\.org\//.test(item.image.url)?item.image.url:"";
+    if(photoUrl){const photo=document.createElement("div");photo.className="vision-device-photo";const img=document.createElement("img");img.src=photoUrl;img.alt=safe(item.name,90);img.loading="lazy";img.decoding="async";img.referrerPolicy="no-referrer";img.onerror=()=>photo.remove();photo.append(img);body.append(photo);if(typeof item.image.source==="string"&&item.image.source.startsWith("https://commons.wikimedia.org/")){const credit=document.createElement("div");credit.className="vision-photo-credit";const link=document.createElement("a");link.href=item.image.source;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Фото · Wikimedia Commons";credit.append(link);body.append(credit)}}
+
     body.append(kicker,name,detail);
     if(Array.isArray(item.specs)&&item.specs.length){
       const specs=document.createElement("div");specs.className="vision-specs";
@@ -3695,6 +3698,30 @@ button {
 @media(prefers-reduced-motion:reduce){.ennie-vision,.vision-score-fill{animation:none}.vision-score-fill{width:var(--score)}}
 
 /* ENNIE VISION — readable phone layout */
+
+/* ENNIE VISION: compact side-by-side product gallery */
+.vision-compare{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;align-items:stretch}
+.vision-device{min-width:0!important;width:100%;overflow:hidden}
+.vision-device-body{padding:10px!important;min-width:0}
+.vision-device-photo{height:132px;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:11px;background:radial-gradient(ellipse at 50% 30%,#343434,#111 72%);margin-bottom:10px;position:relative}
+.vision-device-photo img{width:100%;height:100%;object-fit:contain;padding:7px;filter:drop-shadow(0 10px 12px #000b);animation:visionPhoneFloat 6s ease-in-out infinite alternate;transform-origin:50% 55%}
+@keyframes visionPhoneFloat{from{transform:translateY(2px) scale(1)}to{transform:translateY(-3px) scale(1.025)}}
+.vision-photo-credit{font-size:8px;line-height:1.3;color:#777;margin:-5px 0 9px}
+.vision-photo-credit a{color:#aaa;text-decoration:underline}
+.vision-device-kicker{font-size:7px!important;letter-spacing:1.1px}
+.vision-device-name{font-size:clamp(12px,3.4vw,15px)!important;line-height:1.22}
+.vision-device-detail{font-size:9px!important;line-height:1.45}
+.vision-specs{gap:6px!important}
+.vision-spec{display:grid!important;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr)!important;gap:5px!important;font-size:9px!important;line-height:1.35;padding-top:6px!important}
+.vision-spec span{min-width:0;overflow-wrap:anywhere;word-break:normal}
+.vision-spec span:last-child{text-align:right}
+.vision-score-row{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)!important;gap:5px 8px!important;font-size:10px!important}
+.vision-score-label{grid-column:1;grid-row:1}
+.vision-score-value{grid-column:2;grid-row:1;text-align:right;overflow-wrap:anywhere}
+.vision-score-track{grid-column:1/-1;grid-row:2}
+.vision-closing{font-size:13px;line-height:1.65}
+@media(max-width:370px){.vision-compare{gap:6px!important}.vision-device-body{padding:8px!important}.vision-device-photo{height:112px}.vision-spec{font-size:8px!important}.vision-device-detail{font-size:8px!important}}
+
 .ennie-vision{display:grid;gap:16px;min-width:0}
 .vision-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
 .vision-device-body{padding:14px;min-width:0}
