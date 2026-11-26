@@ -2006,6 +2006,26 @@ document.addEventListener("click", (event) => {
    ОТОБРАЖЕНИЕ СООБЩЕНИЙ
 ========================================== */
 
+
+function renderEnnieVision(contentElement, rawText) {
+  const match = String(rawText || "").match(/<ENNIE_VISION>\\s*([\\s\\S]*?)\\s*<\\/ENNIE_VISION>/i);
+  if (!match) { contentElement.textContent = String(rawText || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim(); return; }
+  let data;
+  try { data = JSON.parse(match[1]); } catch { contentElement.textContent = String(rawText).replace(match[0], "").trim(); return; }
+  const safe = (v, max=140) => typeof v === "string" ? v.slice(0,max) : "";
+  const root = document.createElement("div"); root.className = "ennie-vision";
+  const heading = document.createElement("div"); heading.className="vision-heading"; heading.textContent="ENNIE VISION"; root.append(heading);
+  const intro = document.createElement("div"); intro.className="vision-intro"; intro.textContent=safe(data.intro,500); if(intro.textContent)root.append(intro);
+  if(Array.isArray(data.items) && data.items.length>=2){
+    const compare=document.createElement("div");compare.className="vision-compare";
+    data.items.slice(0,2).forEach((item,index)=>{const card=document.createElement("article");card.className="vision-device";const top=document.createElement("div");top.className="vision-device-top";const body=document.createElement("div");body.className="vision-device-body";const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=index===0?"УЧАСТНИК 01":"УЧАСТНИК 02";const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);body.append(kicker,name,detail);if(Array.isArray(item.specs)){const specs=document.createElement("div");specs.className="vision-specs";item.specs.slice(0,5).forEach(spec=>{const row=document.createElement("div");row.className="vision-spec";const label=document.createElement("span"),value=document.createElement("span");label.textContent=safe(spec.label,35);value.textContent=safe(spec.value,65);row.append(label,value);specs.append(row)});body.append(specs)}card.append(top,body);compare.append(card)});root.append(compare);
+  }
+  if(Array.isArray(data.scores)&&data.scores.length){const section=document.createElement("section");section.className="vision-section";const title=document.createElement("div");title.className="vision-section-title";title.textContent="СРАВНЕНИЕ ПО КАТЕГОРИЯМ";const list=document.createElement("div");list.className="vision-score";data.scores.slice(0,6).forEach(score=>{const row=document.createElement("div");row.className="vision-score-row";const label=document.createElement("span");label.className="vision-score-label";label.textContent=safe(score.label,35);const track=document.createElement("div");track.className="vision-score-track";const fill=document.createElement("div");fill.className="vision-score-fill";const n=Math.max(0,Math.min(100,Number(score.value)||0));fill.style.setProperty("--score",n+"%");track.append(fill);const value=document.createElement("span");value.className="vision-score-value";value.textContent=safe(score.result,40);row.append(label,track,value);list.append(row)});section.append(title,list);root.append(section)}
+  if(data.verdict&&typeof data.verdict==="object"){const verdict=document.createElement("section");verdict.className="vision-verdict";const label=document.createElement("div");label.className="vision-verdict-label";label.textContent="ВЕРДИКТ ENNIE";const winner=document.createElement("strong");winner.textContent=safe(data.verdict.winner,100);const why=document.createElement("p");why.textContent=safe(data.verdict.reason,500);verdict.append(label,winner,why);root.append(verdict)}
+  if(data.disclaimer){const note=document.createElement("div");note.className="vision-note";note.textContent=safe(data.disclaimer,250);root.append(note)}
+  contentElement.replaceChildren();const text=safe(data.text,3000);if(text){const p=document.createElement("div");p.textContent=text;p.style.cssText="white-space:pre-wrap;font-size:13px;line-height:1.7;margin-bottom:8px";contentElement.append(p)}contentElement.append(root);
+}
+
 function addMessage(role, text, imageUrl = null) {
   const wrapper = document.createElement("div");
   wrapper.className = "message message-" + role;
@@ -2024,7 +2044,7 @@ function addMessage(role, text, imageUrl = null) {
   const content = document.createElement("div");
   content.className = "message-text";
   const visibleText = String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
-  content.textContent = visibleText;
+  if (role === "assistant") renderEnnieVision(content, text); else content.textContent = visibleText;
 
   if (role === "assistant") body.append(author);
 
@@ -3569,6 +3589,39 @@ button {
   font-size: 14px;
 }
 
+
+
+/* ENNIE VISION — premium monochrome cards */
+.ennie-vision{width:min(100%,720px);margin:14px 0 4px;display:grid;gap:12px;animation:visionIn .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes visionIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.vision-heading{display:flex;align-items:center;gap:9px;color:#aaa;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.vision-heading:before{content:"";width:18px;height:1px;background:#fff;opacity:.8}
+.vision-intro{font-size:13px;line-height:1.65;color:#ddd}
+.vision-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.vision-device{min-width:0;overflow:hidden;border:1px solid rgba(255,255,255,.13);border-radius:17px;background:linear-gradient(145deg,#202020,#0d0d0d 72%);box-shadow:0 12px 34px #0008}
+.vision-device-top{height:5px;background:linear-gradient(90deg,#fff,#777 55%,#222)}
+.vision-device-body{padding:14px}
+.vision-device-kicker{font-size:8px;letter-spacing:1.5px;color:#888;text-transform:uppercase}
+.vision-device-name{font-size:15px;font-weight:700;line-height:1.25;margin:7px 0 12px;overflow-wrap:anywhere}
+.vision-device-detail{font-size:10px;line-height:1.55;color:#aaa}
+.vision-specs{display:grid;gap:8px;margin-top:12px}
+.vision-spec{display:flex;justify-content:space-between;gap:8px;font-size:10px;border-top:1px solid #ffffff12;padding-top:7px}
+.vision-spec span:first-child{color:#888}.vision-spec span:last-child{text-align:right;color:#eee;font-weight:600}
+.vision-section{padding:14px;border:1px solid #ffffff14;border-radius:15px;background:linear-gradient(145deg,#171717,#0c0c0c)}
+.vision-section-title{font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:11px}
+.vision-score{display:grid;gap:10px}
+.vision-score-row{display:grid;grid-template-columns:82px 1fr 82px;align-items:center;gap:8px;font-size:9px}
+.vision-score-label{color:#999}.vision-score-value{text-align:right;color:#ddd;font-variant-numeric:tabular-nums}
+.vision-score-track{height:5px;border-radius:8px;background:#ffffff15;overflow:hidden}
+.vision-score-fill{height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#777,#fff);animation:visionBar .8s .15s ease-out forwards}
+@keyframes visionBar{to{width:var(--score)}}
+.vision-verdict{padding:15px;border:1px solid #ffffff28;border-radius:16px;background:radial-gradient(ellipse at 0 0,#ffffff16,transparent 65%),#111}
+.vision-verdict-label{font-size:8px;letter-spacing:2px;color:#999;text-transform:uppercase}
+.vision-verdict strong{display:block;font-size:15px;margin:7px 0}
+.vision-verdict p{font-size:11px;line-height:1.65;color:#bbb}
+.vision-note{font-size:9px;line-height:1.5;color:#777}
+@media(max-width:420px){.vision-device-body{padding:11px}.vision-device-name{font-size:13px}.vision-score-row{grid-template-columns:66px 1fr 68px;gap:6px}}
+@media(prefers-reduced-motion:reduce){.ennie-vision,.vision-score-fill{animation:none}.vision-score-fill{width:var(--score)}}
 
 /* ПЕРЕПИСКА */
 
