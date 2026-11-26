@@ -1,0 +1,49 @@
+/* TEHNOCELL INDOSTRI — New Year 2027 visual layer
+   Decorative-only: does not change page layout, controls, navigation or app logic. */
+.tc-ny-overlay{
+  --tc-ny-opacity:.42;
+  --tc-ny-speed:26s;
+  position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden;
+  opacity:var(--tc-ny-opacity);
+  background-image:
+    radial-gradient(2px 2px at 18px 28px,rgba(255,255,255,.92) 98%,transparent),
+    radial-gradient(1.5px 1.5px at 86px 112px,rgba(255,255,255,.8) 98%,transparent),
+    radial-gradient(2px 2px at 164px 64px,rgba(255,255,255,.75) 98%,transparent),
+    radial-gradient(1px 1px at 204px 174px,rgba(255,255,255,.8) 98%,transparent);
+  background-size:230px 230px;
+  animation:tc-ny-fall var(--tc-ny-speed) linear infinite;
+}
+.tc-ny-overlay::before{
+  content:"";position:absolute;inset:-230px 0 0;
+  background-image:
+    radial-gradient(2px 2px at 42px 70px,rgba(255,255,255,.8) 98%,transparent),
+    radial-gradient(1px 1px at 132px 152px,rgba(255,255,255,.75) 98%,transparent),
+    radial-gradient(2.5px 2.5px at 198px 24px,rgba(255,255,255,.65) 98%,transparent);
+  background-size:270px 270px;
+  animation:tc-ny-fall-reverse calc(var(--tc-ny-speed) * 1.35) linear infinite;
+}
+.tc-ny-overlay::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:4px;
+  background:repeating-linear-gradient(115deg,transparent 0 13px,rgba(255,255,255,.62) 13px 15px,transparent 15px 29px);
+  box-shadow:0 1px 12px rgba(255,255,255,.13);
+}
+@keyframes tc-ny-fall{from{background-position:0 -230px}to{background-position:0 690px}}
+@keyframes tc-ny-fall-reverse{from{background-position:0 0}to{background-position:0 810px}}
+@media(prefers-reduced-motion:reduce){.tc-ny-overlay,.tc-ny-overlay::before{animation:none}}
+/* Individual page moods — all remain within TEHNOCELL's monochrome identity. */
+.tc-ny-index{--tc-ny-opacity:.55;--tc-ny-speed:22s}
+.tc-ny-platform{--tc-ny-opacity:.46;--tc-ny-speed:19s}
+.tc-ny-platform-app{--tc-ny-opacity:.34;--tc-ny-speed:24s}
+.tc-ny-account{--tc-ny-opacity:.28;--tc-ny-speed:32s}
+.tc-ny-account-user{--tc-ny-opacity:.32;--tc-ny-speed:29s}
+.tc-ny-login{--tc-ny-opacity:.30;--tc-ny-speed:31s}
+.tc-ny-register{--tc-ny-opacity:.34;--tc-ny-speed:28s}
+.tc-ny-mivo{--tc-ny-opacity:.50;--tc-ny-speed:17s}
+.tc-ny-weather{--tc-ny-opacity:.22;--tc-ny-speed:38s}
+.tc-ny-weather-app{--tc-ny-opacity:.30;--tc-ny-speed:34s}
+.tc-ny-game{--tc-ny-opacity:.42;--tc-ny-speed:20s}
+.tc-ny-soft{--tc-ny-opacity:.38;--tc-ny-speed:25s}
+.tc-ny-soft-info{--tc-ny-opacity:.32;--tc-ny-speed:30s}
+.tc-ny-stand{--tc-ny-opacity:.40;--tc-ny-speed:21s}
+.tc-ny-ennie{--tc-ny-opacity:.34;--tc-ny-speed:27s}
+.tc-ny-support{--tc-ny-opacity:.24;--tc-ny-speed:33s}
