@@ -866,6 +866,30 @@ footer {
   50%{box-shadow:0 0 0 1px rgba(231,211,174,.92),0 0 16px 4px rgba(231,211,174,.36),0 0 31px 8px rgba(219,195,151,.19)}
 }
 @media(prefers-reduced-motion:reduce){.profile-link.birthday-account-glow{animation:none}}
+
+/* HOME PAGE REFINEMENT */
+.hero { min-height: 610px; }
+.hero-content { max-width: 790px; }
+.hero h1 { letter-spacing: -4px; }
+.hero-description { max-width: 510px; color:#c2c2c2; }
+.eyebrow { color:#c8c8c8; }
+.hero-bottom { max-width: 690px; gap: clamp(22px,5vw,58px); }
+.hero-bottom strong { font-size:11px; }
+.divisions { background:#f2f2f2; }
+.division-card { border-color:#dedede; min-height:245px; }
+.division-card:hover { box-shadow:0 12px 28px rgba(0,0,0,.08); }
+.projects { background:#151515; }
+.project-feature { border-color:#454545; background:linear-gradient(110deg,rgba(255,255,255,.075),rgba(255,255,255,.015)); }
+.about-visual { background:linear-gradient(145deg,#171717,#050505); }
+.contact { background:#f0f0f0; }
+@media(max-width:650px){
+ .hero { min-height:0; }
+ .hero-content { padding:82px 0 62px; }
+ .hero h1 { font-size:clamp(42px,12vw,66px); letter-spacing:-2.8px; }
+ .hero-bottom { flex-wrap:wrap; row-gap:22px; }
+ .hero-bottom > div { min-width:calc(50% - 15px); }
+}
+
 </style>
 <link rel="stylesheet" href="new-year-2026.css?v=2026-11-26">
 </head>
@@ -912,7 +936,7 @@ footer {
       <div class="hero-content">
 
         <div class="eyebrow">
-          Independent Technology Company
+          ТЕХНОЛОГИЧЕСКАЯ КОМПАНИЯ
         </div>
 
         <h1>
@@ -921,35 +945,35 @@ footer {
         </h1>
 
         <p class="hero-description">
-          Мы создаём собственную цифровую экосистему:
-          общение, сообщества, полезные сервисы, игры
-          и технологии — в едином пространстве TEHNOCELL.
+          Разрабатываем программные продукты и цифровые сервисы.
+          На этой странице — направления TEHNOCELL INDOSTRI,
+          доступные проекты и информация о компании.
         </p>
 
         <div class="hero-buttons">
           <a href="https://github.com/TECHNOSOTRUDNIK/tehnocell-indostri/releases/latest/download/app-debug.apk" class="button button-white">
-            СКАЧАТЬ PLATFORM APK ↓
+            TEHNOCELL PLATFORM ↓
           </a>
 
           <a href="#about" class="button button-outline">
-            О TEHNOCELL
+            О КОМПАНИИ
           </a>
         </div>
 
         <div class="hero-bottom">
           <div>
-            <strong>ЕДИНСТВО</strong>
-            <span>ОДИН АККАУНТ</span>
+            <strong>ПРОДУКТЫ</strong>
+            <span>СЕРВИСЫ TEHNOCELL</span>
           </div>
 
           <div>
-            <strong>ОБЩЕНИЕ</strong>
-            <span>ЛЮДИ И СООБЩЕСТВА</span>
+            <strong>РАЗРАБОТКА</strong>
+            <span>ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ</span>
           </div>
 
           <div>
-            <strong>РАЗВИТИЕ</strong>
-            <span>ШАГ ЗА ШАГОМ</span>
+            <strong>НАПРАВЛЕНИЯ</strong>
+            <span>СОБСТВЕННЫЕ ПРОЕКТЫ</span>
           </div>
         </div>
 
@@ -964,12 +988,12 @@ footer {
     <div class="container">
       <div class="platform-heading">
         <div>
-          <div class="section-label">01 / THE TEHNOCELL PLATFORM</div>
-          <h2 class="section-title">Не просто сайт.<br><span>Целый цифровой мир.</span></h2>
+          <div class="section-label">01 / ПЛАТФОРМА</div>
+          <h2 class="section-title">TEHNOCELL<br><span>Platform</span></h2>
           <p class="section-description">
-            Мы постепенно создаём единую платформу, в которой можно
-            находить людей, общаться, делиться идеями, открывать сообщества
-            и пользоваться сервисами TEHNOCELL.
+            Единая точка доступа к сервисам TEHNOCELL. Здесь размещаются
+            профиль пользователя, инструменты платформы и ссылки
+            на отдельные продукты компании.
           </p>
         </div>
         <div class="platform-mark" aria-hidden="true">
@@ -980,31 +1004,31 @@ footer {
       <div class="platform-grid">
         <article class="platform-feature">
           <div class="platform-feature-icon">S</div>
-          <div class="platform-feature-meta">01 / COMMUNITY</div>
+          <div class="platform-feature-meta">01 / СООБЩЕСТВА</div>
           <h3>Сообщества</h3>
-          <p>Публикации, обсуждения и люди с общими интересами.</p>
-          <span class="feature-state">ПЕРВЫЙ ЭТАП</span>
+          <p>Раздел для публикаций и тематических сообществ.</p>
+          <span class="feature-state">В РАЗРАБОТКЕ</span>
         </article>
         <article class="platform-feature">
           <div class="platform-feature-icon">M</div>
-          <div class="platform-feature-meta">02 / MESSAGING</div>
+          <div class="platform-feature-meta">02 / СООБЩЕНИЯ</div>
           <h3>Общение</h3>
-          <p>Личные сообщения и групповые чаты в одном месте.</p>
-          <span class="feature-state">СЛЕДУЮЩИЙ ЭТАП</span>
+          <p>Личные и групповые сообщения внутри платформы.</p>
+          <span class="feature-state">В ПЛАНАХ</span>
         </article>
         <article class="platform-feature">
           <div class="platform-feature-icon">ID</div>
-          <div class="platform-feature-meta">03 / IDENTITY</div>
+          <div class="platform-feature-meta">03 / УЧЁТНАЯ ЗАПИСЬ</div>
           <h3>Один аккаунт</h3>
-          <p>Единый профиль для сервисов TEHNOCELL.</p>
-          <span class="feature-state">ОСНОВА ЭКОСИСТЕМЫ</span>
+          <p>Профиль для авторизации в сервисах TEHNOCELL.</p>
+          <span class="feature-state">ДОСТУПНО</span>
         </article>
         <article class="platform-feature">
           <div class="platform-feature-icon">+</div>
-          <div class="platform-feature-meta">04 / MORE</div>
+          <div class="platform-feature-meta">04 / РАЗВИТИЕ</div>
           <h3>Новые возможности</h3>
-          <p>Сервисы и функции будут появляться постепенно.</p>
-          <span class="feature-state">ПОЭТАПНО</span>
+          <p>Новые функции добавляются по мере готовности.</p>
+          <span class="feature-state">ПО МЕРЕ ГОТОВНОСТИ</span>
         </article>
       </div>
 
@@ -1014,8 +1038,8 @@ footer {
       </div>
 
       <div class="platform-footnote">
-        <span>НАША ФИЛОСОФИЯ</span>
-        <p>Мы не копируем существующие платформы. Мы объединяем удачные идеи и создаём собственный опыт TEHNOCELL.</p>
+        <span>О ПЛАТФОРМЕ</span>
+        <p>Платформа развивается отдельно от других продуктов TEHNOCELL. Состав функций и доступность разделов могут меняться.</p>
       </div>
     </div>
   </section>
@@ -1028,11 +1052,10 @@ footer {
 
       <div class="divisions-header">
         <div>
-          <div class="section-label">02 / OUR STRUCTURE</div>
+          <div class="section-label">02 / НАПРАВЛЕНИЯ</div>
           <h2 class="section-title">Наши подразделения</h2>
           <p class="section-description">
-            Различные направления разработки, объединённые
-            одной технологической экосистемой.
+            Программное обеспечение, игры и цифровые сервисы TEHNOCELL.
           </p>
         </div>
       </div>
@@ -1169,26 +1192,24 @@ footer {
   <section class="projects" id="projects">
     <div class="container">
 
-      <div class="section-label">03 / PROJECTS</div>
+      <div class="section-label">03 / ПРОЕКТЫ</div>
 
       <h2 class="section-title">
-        Создаём собственные<br>
-        цифровые продукты.
+        Продукты<br>
+        TEHNOCELL.
       </h2>
 
       <p class="section-description">
-        Каждое направление развивается как часть
-        единой технологической экосистемы.
+        Отдельные проекты компании и их текущий статус.
       </p>
 
       <div class="project-feature">
         <div>
-          <div class="project-tag">TEHNOCELL ECOSYSTEM</div>
-          <h3>Будущее начинается<br>с разработки.</h3>
+          <div class="project-tag">ПРОЕКТЫ TEHNOCELL</div>
+          <h3>Разработка<br>и продукты.</h3>
           <p>
-            Мы постепенно создаём собственные приложения,
-            сервисы и игровые проекты. Это только начало
-            развития TEHNOCELL INDOSTRI.
+            На сайте представлены действующие и планируемые направления.
+            Статусы карточек отражают текущее состояние проектов.
           </p>
         </div>
 
@@ -1214,25 +1235,23 @@ footer {
 
         <div class="about-text">
 
-          <div class="section-label">04 / ABOUT US</div>
+          <div class="section-label">04 / О КОМПАНИИ</div>
 
           <h2 class="section-title">
-            Больше, чем<br>
-            просто разработка.
+            О компании<br>
+            TEHNOCELL.
           </h2>
 
           <p>
-            TEHNOCELL INDOSTRI — независимая технологическая
-            компания, ориентированная на создание собственных
-            цифровых продуктов и развитие различных
-            технологических направлений.
+            TEHNOCELL INDOSTRI — технологический проект, объединяющий
+            разработку программного обеспечения, цифровых сервисов
+            и игровых продуктов.
           </p>
 
           <p>
-            Наша цель — постепенно сформировать единую
-            экосистему, в которой программное обеспечение,
-            игровые проекты и другие технологии будут
-            дополнять друг друга.
+            Каждое направление развивается самостоятельно. Информация
+            о продуктах и доступных функциях публикуется
+            на соответствующих страницах сайта.
           </p>
 
           <div class="about-line"></div>
@@ -1252,12 +1271,11 @@ footer {
       <div class="contact-box">
 
         <div>
-          <div class="section-label">05 / CONTACT</div>
+          <div class="section-label">05 / КОНТАКТЫ</div>
           <h2>Есть идея?</h2>
 
           <p>
-            Свяжитесь с нами. Мы открыты к общению,
-            предложениям и новым возможностям.
+            Для вопросов и предложений по проектам TEHNOCELL INDOSTRI.
           </p>
 
           <a href="mailto:tehnocellindostri@gmail.com"
@@ -1285,7 +1303,7 @@ footer {
 
     <div class="footer-brand">
       TEHNOCELL INDOSTRI
-      <span>INDEPENDENT TECHNOLOGY COMPANY</span>
+      <span>ТЕХНОЛОГИЧЕСКАЯ КОМПАНИЯ</span>
     </div>
 
     <div class="footer-links">
