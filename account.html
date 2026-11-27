@@ -1876,8 +1876,10 @@ $("saveCustomization").addEventListener("click",async()=>{
  if(coverFile&&!removeSoundRequested){const ext=coverFile.name.split(".").pop().toLowerCase();coverPath=currentUser.id+"/identity-cover-"+Date.now()+"."+ext;const {error:e}=await db.storage.from(AVATAR_BUCKET).upload(coverPath,coverFile,{upsert:false,contentType:coverFile.type});if(e){await db.storage.from(AVATAR_BUCKET).remove(uploaded);msg.textContent="Ошибка загрузки обложки: "+e.message;btn.disabled=false;return;}uploaded.push(coverPath);}
  const patch={profile_status:$("profileStatusInput").value.trim(),profile_theme:$("profileThemeSelect").value,profile_game:$("profileGameInput").value.trim()||null,profile_sound_path:removeSoundRequested?null:soundPath,profile_sound_title:removeSoundRequested?null:(soundPath?title:null),profile_sound_artist:removeSoundRequested?null:(soundPath?artist:null),profile_sound_cover_path:removeSoundRequested?null:coverPath};
  if(bannerPath)patch.profile_banner_path=bannerPath;else if(!currentBannerPath)patch.profile_banner_path=null;
- const {error}=await db.from("profiles").update(patch).eq("id",currentUser.id);btn.disabled=false;
- if(error){if(uploaded.length)await db.storage.from(AVATAR_BUCKET).remove(uploaded);msg.textContent="Не удалось сохранить: "+error.message;return;}
+ const {data:savedCustomization,error}=await db.from("profiles").upsert({id:currentUser.id,...patch},{onConflict:"id"}).select("id,profile_theme").single();btn.disabled=false;
+ if(error||!savedCustomization){if(uploaded.length)await db.storage.from(AVATAR_BUCKET).remove(uploaded);msg.textContent="Не удалось сохранить оформление: "+(error?.message||"профиль не был записан в базу данных.");return;}
+ if(savedCustomization.profile_theme!==patch.profile_theme){msg.textContent="Тема не подтвердилась в базе данных. Повторите сохранение.";return;}
+ $("profileThemeSelect").value=savedCustomization.profile_theme;
  const oldPaths=[...(audioFile&&currentSoundPath?[currentSoundPath]:[]),...(coverFile&&currentSoundCoverPath?[currentSoundCoverPath]:[]),...(removeSoundRequested?[currentSoundPath,currentSoundCoverPath].filter(Boolean):[])];
  if(oldPaths.length)await db.storage.from(AVATAR_BUCKET).remove(oldPaths);
  currentSoundPath=patch.profile_sound_path;currentSoundCoverPath=patch.profile_sound_cover_path;removeSoundRequested=false;$("profileSoundInput").value="";$("profileSoundCoverInput").value="";$("profileSoundCurrent").textContent=currentSoundPath?"Музыка загружена и будет показана в публичном профиле.":"Музыка профиля не установлена.";
