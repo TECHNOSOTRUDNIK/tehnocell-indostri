@@ -707,6 +707,25 @@ html body #page-person .person-page-card:has(#publicProfileContent[data-theme="r
  box-shadow:none!important;
  animation:none!important;
 }
+
+/* Один-единственный контур: person-page-card становится прозрачной обёрткой,
+   а единственный фон и рамка остаются на #publicProfileContent. */
+html body #page-person .person-page-card,
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme]){
+  background:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  border-radius:0!important;
+  animation:none!important;
+}
+html body #page-person #publicProfileContent[data-theme]{
+  display:block;
+  box-sizing:border-box;
+  width:100%;
+}
 </style>
 
 <style id="tc-chat-list-layout-fix">
