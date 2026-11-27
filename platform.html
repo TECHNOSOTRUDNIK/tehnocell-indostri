@@ -690,6 +690,23 @@
 /* Внешняя оболочка профиля всегда чёрная: цветная тема не дублируется вторым фоном. */
 #page-person .person-page-card{background:#090909!important;border:1px solid #292929!important;box-shadow:none!important}
 #page-person .person-page-card:has(#publicProfileContent[data-theme]){background:#090909!important;border:1px solid #292929!important;box-shadow:none!important;animation:none!important}
+/* Жёстко отключаем внешний цветной слой: тема должна оставаться только внутри профиля. */
+html body #page-person .person-page-card,
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="emerald-aura"]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="forest"]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="crimson-glow"]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="neon-violet"]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="electric-blue"]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="golden-pulse"]),
+html body #page-person .person-page-card:has(#publicProfileContent[data-theme="rose-nebula"]){
+ background:#090909!important;
+ background-image:none!important;
+ border:1px solid #292929!important;
+ outline:0!important;
+ box-shadow:none!important;
+ animation:none!important;
+}
 </style>
 
 <style id="tc-chat-list-layout-fix">
