@@ -1669,6 +1669,8 @@ async function loadAccount() {
 
     }
 
+    window.dispatchEvent(new Event("tc-account-ready"));
+
     const metadata = currentUser.user_metadata || {};
 
     // Профильная таблица — основной источник актуальных имени и аватара.
@@ -2344,8 +2346,11 @@ startAccount();
   box.innerHTML=ownedResult.data.map(row=>{const f=row.tc_avatar_frames||{},active=f.id===equipped;const name=String(f.name||"Рамка").replace(/[&<>"]/g,"");return '<div class="tc-frame-item"><div class="tc-frame-preview '+(f.code==="vice-city-limited"?"vc":"")+'">T</div><div class="tc-frame-copy"><strong>'+name+'</strong><small>'+(active?"Сейчас используется":"В коллекции")+' · '+new Date(row.acquired_at).toLocaleDateString("ru-RU")+'</small></div><button type="button" data-frame-toggle="'+f.id+'" data-active="'+(active?"1":"0")+'">'+(active?"Снять":"Применить")+'</button></div>';}).join("");
   box.querySelectorAll("[data-frame-toggle]").forEach(btn=>btn.addEventListener("click",async()=>{btn.disabled=true;const id=btn.dataset.active==="1"?null:btn.dataset.frameToggle;const {error}=await db.from("profiles").update({selected_avatar_frame_id:id}).eq("id",currentUser.id);btn.disabled=false;if(error){showTcToast("Не удалось изменить рамку: "+error.message);return;}showTcToast(id?"Рамка применена":"Рамка снята");loadFrames();}));
  }
- function wait(){if(typeof currentUser!=="undefined"&&currentUser){loadFrames();return;}setTimeout(wait,450);}
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",wait,{once:true});else wait();
+ let framesLoaded=false;
+ function startFrames(){if(framesLoaded)return;framesLoaded=true;loadFrames();}
+ window.addEventListener("tc-account-ready",startFrames,{once:true});
+ if(typeof currentUser!=="undefined"&&currentUser)startFrames();
+ else if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{if(!currentUser)box.textContent="Загружаем коллекцию…";},{once:true});
 })();
 </script></body>
 </html>
