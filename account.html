@@ -1041,9 +1041,9 @@ body.dark-theme.birthday-mode .card,body.dark-theme.birthday-mode .panel{border-
  <label for="profileGameInput">Во что играете</label><input type="text" id="profileGameInput" maxlength="80" placeholder="Название игры">
  <label>Баннер профиля</label>
  <div class="tc-banner-preview" id="profileBannerPreview"><span>Баннер ещё не установлен</span></div>
- <input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp" hidden>
- <div class="tc-banner-actions"><button class="action" type="button" id="chooseProfileBanner">Выбрать изображение</button><button class="tc-secondary" type="button" id="removeProfileBanner">Убрать баннер</button></div>
- <p class="photo-note">Баннер: JPG, PNG или WEBP до 5 МБ. Музыка загружается в хранилище TEHNOCELL и становится публично доступной вместе с профилем. Загружайте только аудио, на которое у вас есть права или разрешение.</p>
+ <input type="file" id="profileBannerInput" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+ <div class="tc-banner-actions"><button class="action" type="button" id="chooseProfileBanner">Выбрать баннер</button><button class="tc-secondary" type="button" id="removeProfileBanner">Убрать баннер</button></div>
+ <p class="photo-note">Баннер: JPG, PNG, WEBP или анимированный GIF до 8 МБ. GIF будет воспроизводиться автоматически в вашем профиле. Музыка загружается в хранилище TEHNOCELL и становится публично доступной вместе с профилем. Загружайте только аудио, на которое у вас есть права или разрешение.</p>
  <button class="action" id="saveCustomization" type="button">Сохранить оформление</button><p class="message" id="customizationMessage"></p>
  </div>
 <div class="panel" id="tcFrameInventoryPanel" style="margin:16px 0">
@@ -1807,13 +1807,13 @@ $("profileSoundInput").addEventListener("change",async()=>{
 });
 $("profileSoundCoverInput").addEventListener("change",()=>{if($("profileSoundCoverInput").files[0])removeSoundRequested=false;});
 $("chooseProfileBanner").addEventListener("click",()=>$("profileBannerInput").click());
-$("profileBannerInput").addEventListener("change",()=>{const file=$("profileBannerInput").files[0];if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){$("customizationMessage").textContent="Выберите JPG, PNG или WEBP до 5 МБ."; $("profileBannerInput").value="";return;}if(bannerPreviewObjectUrl)URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=URL.createObjectURL(file);setBannerPreview(bannerPreviewObjectUrl);$("customizationMessage").textContent="Предпросмотр готов. Нажмите «Сохранить оформление».";});
+$("profileBannerInput").addEventListener("change",()=>{const file=$("profileBannerInput").files[0];if(!file)return;if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type)||file.size>8*1024*1024){$("customizationMessage").textContent="Выберите JPG, PNG, WEBP или GIF до 8 МБ."; $("profileBannerInput").value="";return;}if(bannerPreviewObjectUrl)URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=URL.createObjectURL(file);setBannerPreview(bannerPreviewObjectUrl);$("customizationMessage").textContent="Предпросмотр готов. Нажмите «Сохранить оформление».";});
 $("removeProfileBanner").addEventListener("click",()=>{currentBannerPath=null;$("profileBannerInput").value="";if(bannerPreviewObjectUrl){URL.revokeObjectURL(bannerPreviewObjectUrl);bannerPreviewObjectUrl=null;}setBannerPreview(null);$("customizationMessage").textContent="Баннер будет удалён после сохранения.";});
 $("saveCustomization").addEventListener("click",async()=>{
  if(!currentUser)return;const msg=$("customizationMessage"),btn=$("saveCustomization");btn.disabled=true;msg.textContent="Сохраняем…";
  let bannerPath=null;const file=$("profileBannerInput").files[0];
- if(file){if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024){msg.textContent="Выберите JPG, PNG или WEBP до 5 МБ.";btn.disabled=false;return;}
- const ext=file.name.split(".").pop().toLowerCase();bannerPath=currentUser.id+"/banner-"+Date.now()+"."+ext;
+ if(file){if(!["image/jpeg","image/png","image/webp","image/gif"].includes(file.type)||file.size>8*1024*1024){msg.textContent="Выберите JPG, PNG, WEBP или GIF до 8 МБ.";btn.disabled=false;return;}
+ const ext=file.type==="image/gif"?"gif":file.name.split(".").pop().toLowerCase();bannerPath=currentUser.id+"/banner-"+Date.now()+"."+ext;
  const {error:uploadError}=await db.storage.from(AVATAR_BUCKET).upload(bannerPath,file,{upsert:false,contentType:file.type});
  if(uploadError){msg.textContent="Ошибка загрузки баннера: "+uploadError.message;btn.disabled=false;return;}}
  const audioFile=$("profileSoundInput").files[0];let coverFile=$("profileSoundCoverInput").files[0]||detectedSoundCoverFile;
