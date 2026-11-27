@@ -1,1 +1,1882 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate"><meta name="theme-color" content="#050505"><title>TEHNOCELL — технические работы</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#050505;color:#f5f5f5;font-family:Inter,Arial,sans-serif}body{min-height:100svh;display:grid;place-items:center;padding:28px}main{width:min(100%,560px);text-align:center;padding:44px 28px;border:1px solid #292929;border-radius:26px;background:linear-gradient(145deg,#111,#080808);box-shadow:0 24px 90px #000}.mark{width:54px;height:54px;margin:0 auto 28px;border:1px solid #777;border-radius:17px;display:grid;place-items:center;font-size:22px;font-weight:800;letter-spacing:-2px}h1{font-size:clamp(25px,7vw,38px);letter-spacing:.12em;margin:0 0 18px;font-weight:750}p{color:#b8b8b8;font-size:16px;line-height:1.65;margin:0}.status{display:inline-flex;align-items:center;gap:9px;margin-top:30px;padding:10px 15px;border:1px solid #333;border-radius:999px;color:#ddd;font-size:12px;letter-spacing:.12em;text-transform:uppercase}.dot{width:7px;height:7px;border-radius:50%;background:#eee;box-shadow:0 0 12px #fff}</style></head><body><main><div class="mark">T</div><h1>TEHNOCELL</h1><p>Сайт временно приостановлен в связи с обновлением систем.<br>Пожалуйста, попробуйте зайти позднее.</p><div class="status"><span class="dot"></span>Техническое обслуживание</div></main></body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050609">
+<title>TEHNOCELL WEATHER</title>
+
+<style>
+:root {
+  --bg:#050609;
+  --card:rgba(255,255,255,.035);
+  --card2:rgba(255,255,255,.065);
+  --text:#ffffff;
+  --muted:#92949e;
+  --line:rgba(255,255,255,.075);
+}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html {
+  scroll-behavior:smooth;
+}
+
+body {
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  overflow-x:hidden;
+}
+
+button,input {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+/* BACKGROUND */
+
+#weatherEffects {
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:2;
+  clip-path:inset(0);
+  contain:strict;
+}
+#weatherEffects .light-orb{z-index:0}
+#weatherEffects .rain-drop,#weatherEffects .fog-layer{z-index:1}
+
+.light-orb {
+  position:absolute;
+  width:350px;
+  height:350px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  filter:blur(65px);
+  opacity:.38;
+  animation:none;
+}
+
+.light-orb:nth-child(2) {
+  width:280px;
+  height:280px;
+  opacity:.28;
+  animation:none;
+}
+
+.light-orb:nth-child(3) {
+  width:400px;
+  height:400px;
+  opacity:.20;
+  animation:none;
+}
+
+@keyframes floatLight {
+  0% {
+    transform:translate(-10vw,-5vh);
+  }
+  50% {
+    transform:translate(45vw,25vh);
+  }
+  100% {
+    transform:translate(5vw,65vh);
+  }
+}
+
+/* MAIN APP */
+
+.app {
+  position:relative;
+  z-index:1;
+  max-width:700px;
+  margin:auto;
+  padding:25px 18px 45px;
+}
+
+/* ANIMATIONS */
+
+@keyframes pageAppear {
+  from {
+    opacity:0;
+    transform:translateY(18px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes cardAppear {
+  from {
+    opacity:0;
+    transform:translateY(24px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes contentAppear {
+  from {
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to {
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.app {
+  animation:pageAppear 1.1s cubic-bezier(.2,.7,.2,1) both;
+}
+
+.card {
+  animation:cardAppear 1s cubic-bezier(.2,.7,.2,1) both;
+}
+
+.card:nth-of-type(1) {animation-delay:.08s;}
+.card:nth-of-type(2) {animation-delay:.18s;}
+.card:nth-of-type(3) {animation-delay:.28s;}
+
+/* HEADER */
+
+header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:28px;
+}
+
+.logo {
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:2.5px;
+}
+
+.logo span {
+  display:block;
+  font-size:9px;
+  font-weight:500;
+  color:var(--muted);
+  letter-spacing:4px;
+  margin-top:5px;
+}
+
+.header-right {
+  text-align:right;
+}
+
+.header-time {
+  font-size:14px;
+  font-weight:600;
+}
+
+.header-date {
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+/* SEARCH */
+
+.search {
+  display:flex;
+  gap:9px;
+  margin-bottom:18px;
+}
+
+.search input {
+  flex:1;
+  min-width:0;
+  padding:15px 17px;
+  color:white;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  outline:none;
+  /* Backdrop blur removed for smoother mobile scrolling */
+}
+
+.search input::placeholder {
+  color:#777b84;
+}
+
+.search input:focus {
+  border-color:rgba(255,255,255,.25);
+}
+
+.search button {
+  border:1px solid var(--line);
+  background:var(--card2);
+  color:white;
+  border-radius:15px;
+  padding:0 16px;
+  transition:background .3s,transform .3s;
+}
+
+.search button:active {
+  transform:scale(.95);
+  background:rgba(255,255,255,.13);
+}
+
+.location {
+  width:49px;
+  font-size:20px;
+}
+
+/* GLASS CARDS */
+
+.card {
+  position:relative;
+  overflow:hidden;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:25px;
+  padding:21px;
+  margin-bottom:14px;
+  /* Backdrop blur removed for smoother mobile scrolling */
+  box-shadow:
+    0 10px 45px rgba(0,0,0,.12),
+    inset 0 1px 0 rgba(255,255,255,.035);
+  transition:
+    background .4s,
+    border-color .4s,
+    transform .4s;
+}
+
+.section-title {
+  font-size:14px;
+  font-weight:650;
+  margin-bottom:18px;
+  letter-spacing:.2px;
+}
+
+.muted {
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* CURRENT WEATHER */
+
+.place {
+  font-size:14px;
+  color:#b6b9c1;
+  font-weight:500;
+}
+
+.current {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  min-height:190px;
+  gap:8px;
+}
+
+.temperature {
+  font-size:82px;
+  font-weight:650;
+  letter-spacing:-5px;
+  line-height:1;
+  color:#fff;
+  animation:contentAppear .8s ease both;
+}
+
+.description {
+  font-size:16px;
+  font-weight:500;
+  margin-top:12px;
+}
+
+.feels {
+  color:var(--muted);
+  font-size:12px;
+  margin-top:7px;
+}
+
+.weather-art {
+  width:135px;
+  height:135px;
+  flex-shrink:0;
+}
+
+.updated {
+  color:#777b84;
+  font-size:10px;
+  margin-top:4px;
+}
+
+/* HOURLY */
+
+.hourly {
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding:3px 0 9px;
+  scrollbar-width:none;
+}
+
+.hourly::-webkit-scrollbar {
+  display:none;
+}
+
+.hour {
+  min-width:48px;
+  text-align:center;
+}
+
+.hour-time {
+  color:var(--muted);
+  font-size:11px;
+}
+
+.hour-icon {
+  width:37px;
+  height:37px;
+  margin:11px auto;
+}
+
+.hour-temp {
+  font-size:14px;
+  font-weight:600;
+}
+
+.hour-rain {
+  color:#8caec8;
+  font-size:10px;
+  margin-top:7px;
+}
+
+.weather-map{height:390px;width:100%;border-radius:15px;overflow:hidden;background:#080808;border:1px solid rgba(255,255,255,.14);position:relative;isolation:isolate;contain:layout paint}
+#weatherMapCanvas{position:absolute;inset:0;width:100%;height:100%;background:#080808}
+.tc-weather-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.tc-location-marker{position:relative;z-index:2}
+.maplibregl-ctrl-top-right,.maplibregl-ctrl-bottom-left{z-index:4!important}
+.tc-weather-legend{position:absolute;z-index:3;left:10px;top:10px;max-width:190px;padding:9px 11px;border:1px solid rgba(0,0,0,.12);border-radius:10px;background:rgba(255,255,255,.92);color:#17191d;font:10px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;box-shadow:0 2px 9px #0002;pointer-events:none}
+.tc-weather-legend strong{display:block;font-size:11px;margin-bottom:6px}.tc-weather-legend{min-width:160px;backdrop-filter:blur(8px)}.tc-weather-legend .tc-legend-note{display:block;margin-top:6px;color:#68717d;font-size:9px;line-height:1.35}
+.tc-legend-gradient{height:7px;border-radius:8px;margin:5px 0 3px}
+.tc-legend-labels{display:flex;justify-content:space-between;color:#4e535c;font-size:9px}
+.tc-weather-loading{opacity:.75}
+.map-hint{font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5}
+.weather-map{margin-top:4px}
+.tc-map-home{position:absolute;z-index:5;right:12px;top:12px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.94);color:#111;border-radius:12px;padding:10px 13px;font-size:11px;font-weight:650;box-shadow:0 2px 10px #0002}
+.tc-atmosphere{margin-top:14px;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))}
+.tc-atmo-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.tc-atmo-kicker{font-size:9px;letter-spacing:1.5px;color:#aeb2bd;text-transform:uppercase}
+.tc-atmo-time{font-size:13px;font-weight:650;margin-top:5px}
+.tc-atmo-temp{font-size:27px;font-weight:700;letter-spacing:-1px}
+.tc-atmo-track{width:100%;margin:16px 0 5px;accent-color:#fff;cursor:pointer}
+.tc-atmo-range{display:flex;justify-content:space-between;color:#858995;font-size:9px}
+.tc-atmo-event{margin-top:15px;padding-top:13px;border-top:1px solid var(--line);display:flex;gap:11px;align-items:flex-start}
+.tc-atmo-symbol{width:29px;height:29px;flex:0 0 29px;border:1px solid rgba(255,255,255,.18);border-radius:10px;display:grid;place-items:center;font-size:14px}
+.tc-atmo-copy strong{display:block;font-size:12px;margin-bottom:4px}
+.tc-atmo-copy span{font-size:10px;line-height:1.5;color:var(--muted);display:block}
+.tc-atmo-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;color:#b8bbc4;font-size:10px}
+.tc-atmo-stats b{color:#fff;font-weight:650}
+@media(max-width:420px){.tc-atmosphere{padding:13px}.tc-atmo-temp{font-size:24px}}
+.tc-location-marker{width:30px;height:30px;display:grid;place-items:center;background:transparent;filter:drop-shadow(0 2px 4px #0005)}
+.tc-location-marker svg{width:30px;height:30px;display:block}
+.maplibregl-ctrl-attrib{font-size:9px!important;line-height:1.35!important;background:rgba(12,12,12,.88)!important;color:#f2f2f2!important;border:1px solid rgba(255,255,255,.14)!important;border-radius:6px!important;padding:3px 6px!important;box-shadow:0 1px 5px #0008!important}
+.maplibregl-ctrl-attrib a{color:#fff!important;text-decoration:underline!important}
+.maplibregl-ctrl-attrib-button{display:none!important}
+.maplibregl-ctrl-group{border-radius:9px!important;overflow:hidden;background:#171717!important;border:1px solid #333!important;box-shadow:0 2px 8px #0008!important}
+.maplibregl-ctrl-group button{width:30px!important;height:30px!important;background-color:#171717!important;filter:invert(1)}
+.maplibregl-ctrl-group button+button{border-top:1px solid #333!important}
+.tc-map-home{background:rgba(18,18,18,.94)!important;color:#fff!important;border-color:rgba(255,255,255,.2)!important}
+@media(max-width:480px){.weather-map{height:330px}}
+/* WEEK FORECAST */
+
+.days {
+  display:flex;
+  flex-direction:column;
+  gap:17px;
+}
+
+.day {
+  display:grid;
+  grid-template-columns:1fr 38px 45px 45px;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+}
+
+.day-name {
+  font-weight:550;
+}
+
+.day-icon {
+  width:30px;
+  height:30px;
+}
+
+.day-low {
+  text-align:right;
+  color:var(--muted);
+}
+
+.day-high {
+  text-align:right;
+  font-weight:650;
+}
+
+/* WEATHER METRICS */
+
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.metric {
+  min-height:112px;
+  margin:0;
+}
+
+.metric-label {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.metric-value {
+  font-size:25px;
+  font-weight:650;
+  margin-top:14px;
+  letter-spacing:-.5px;
+}
+
+.metric-extra {
+  color:#777b84;
+  font-size:10px;
+  margin-top:6px;
+}
+  /* SUN TIMES */
+
+.sun-times {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.sun-item {
+  padding:15px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+}
+
+.sun-label {
+  color:var(--muted);
+  font-size:11px;
+}
+
+.sun-value {
+  font-size:21px;
+  font-weight:650;
+  margin-top:9px;
+}
+
+/* AIR QUALITY */
+
+.air-value {
+  font-size:32px;
+  font-weight:700;
+  margin:8px 0;
+}
+
+.air-status {
+  color:#b5b8c1;
+  font-size:12px;
+}
+
+.air-bar {
+  height:5px;
+  border-radius:10px;
+  background:rgba(255,255,255,.1);
+  margin-top:17px;
+  overflow:hidden;
+}
+
+.air-progress {
+  height:100%;
+  width:0;
+    background:#d9dde5;
+  border-radius:10px;
+  transition:width 1s ease;
+}
+
+/* INTELLIGENCE */
+
+.advice {
+  display:flex;
+  gap:13px;
+  align-items:flex-start;
+  padding:14px;
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+  margin-top:10px;
+}
+
+.advice-icon {
+  font-size:19px;
+}
+
+.advice-text {
+  color:#c5c7ce;
+  font-size:12px;
+  line-height:1.6;
+}
+
+/* WEATHER EFFECTS */
+
+.rain-drop {
+  position:absolute;
+  top:-18vh;
+  width:1.5px;
+  height:15px;
+  border-radius:2px;
+  background:linear-gradient(to bottom,rgba(210,225,255,0),rgba(210,225,255,.34) 35%,rgba(210,225,255,.58));
+  opacity:.55;
+  transform:rotate(11deg);
+  transform-origin:center;
+  will-change:transform;
+  animation:rainfall 1.45s linear infinite;
+}
+
+@keyframes rainfall {
+  from {transform:translate3d(0,0,0) rotate(11deg);}
+  to {transform:translate3d(-24px,138vh,0) rotate(11deg);}
+}
+
+.snow-flake {
+  position:absolute;
+  top:-8vh;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:rgba(245,249,255,.88);
+  box-shadow:0 0 5px rgba(225,238,255,.28);
+  will-change:transform;
+  animation:snowfall 5s linear infinite;
+}
+@keyframes snowfall {
+  0% { transform:translate3d(0,-8vh,0); }
+  50% { transform:translate3d(22px,52vh,0); }
+  100% { transform:translate3d(-8px,112vh,0); }
+}
+
+.fog-layer {
+  position:absolute;
+  width:150%;
+  height:220px;
+  left:-25%;
+  background:rgba(210,215,225,.045);
+  filter:blur(25px);
+  border-radius:50%;
+  animation:none;
+}
+
+@keyframes fogmove {
+  from {transform:translateX(-10%);}
+  to {transform:translateX(10%);}
+}
+
+/* FOOTER */
+
+footer {
+  text-align:center;
+  color:#656873;
+  font-size:10px;
+  letter-spacing:2px;
+  padding:22px 0 5px;
+}
+
+.status {
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  margin:15px 0;
+  min-height:15px;
+}
+
+
+
+/* FAVORITE CITIES */
+.favorites {
+  margin-bottom:18px;
+}
+.favorites-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.favorite-title {
+  font-size:13px;
+  font-weight:650;
+}
+.favorite-add {
+  border:1px solid var(--line);
+  background:var(--card2);
+  color:white;
+  padding:9px 13px;
+  border-radius:12px;
+  font-size:11px;
+}
+.favorite-list {
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding-bottom:3px;
+}
+.favorite-list::-webkit-scrollbar {
+  display:none;
+}
+.favorite-city {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  flex-shrink:0;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  background:var(--card);
+  border-radius:13px;
+  color:white;
+}
+.favorite-city.active {
+  border-color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.09);
+}
+.favorite-city-name {
+  font-size:12px;
+  max-width:150px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.favorite-city button {
+  border:0;
+  background:transparent;
+  color:#aeb2bd;
+  font-size:15px;
+  padding:3px;
+  min-width:24px;
+  min-height:24px;
+}
+.favorite-empty {
+  color:var(--muted);
+  font-size:11px;
+  padding:8px 2px;
+}
+
+/* MOBILE */
+
+@media(max-width:480px) {
+  .app {
+    padding:20px 13px 35px;
+  }
+
+  .temperature {
+    font-size:72px;
+  }
+
+  .weather-art {
+    width:115px;
+    height:115px;
+  }
+
+  .card {
+    padding:18px;
+    border-radius:22px;
+  }
+
+  .metric-value {
+    font-size:23px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  /* Keep live weather particles moving; reduce only non-essential page motion. */
+  .app, .card, .temperature, .description {
+    animation-duration:.35s !important;
+  }
+  html { scroll-behavior:auto !important; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="new-year-2026.css?v=2026-11-26">
+</head>
+
+<body>
+<div class="tc-ny-overlay tc-ny-weather" aria-hidden="true"></div>
+
+<div id="weatherEffects">
+  <div class="light-orb"></div>
+  <div class="light-orb"></div>
+  <div class="light-orb"></div>
+</div>
+
+<main class="app">
+
+<header>
+  <div class="logo">
+    TEHNOCELL
+    <span>WEATHER</span>
+  </div>
+
+  <div class="header-right">
+    <div class="header-time" id="clock">--:--</div>
+    <div class="header-date" id="date">Загрузка...</div>
+  </div>
+</header>
+
+<div class="search">
+  <input id="cityInput" type="text" placeholder="Введите город..." />
+  <button onclick="searchCity()">Найти</button>
+  <button class="location" onclick="useLocation()" title="Моё местоположение">⌖</button>
+</div>
+
+<section class="favorites">
+  <div class="favorites-header">
+    <div class="favorite-title">Избранные города</div>
+    <button class="favorite-add" id="favoriteAdd" type="button">
+      + В избранное
+    </button>
+  </div>
+  <div class="favorite-list" id="favoriteList">
+    <div class="favorite-empty">Пока нет сохранённых городов</div>
+  </div>
+</section>
+
+<div class="status" id="status">Загрузка погоды...</div>
+
+<section class="card">
+  <div class="place" id="cityName">Москва</div>
+
+  <div class="current">
+    <div>
+      <div class="temperature" id="temperature">--°</div>
+      <div class="description" id="description">Загрузка...</div>
+      <div class="feels" id="feels">Ощущается как --°</div>
+    </div>
+
+    <div class="weather-art" id="weatherIcon"></div>
+  </div>
+
+  <div class="updated" id="updated">Ожидание данных...</div>
+</section>
+
+<section class="card">
+  <div class="section-title">Почасовой прогноз</div>
+  <div class="hourly" id="hourly"></div>
+</section>
+
+<section class="card">
+  <div class="section-title">Интерактивная карта погоды</div>
+  <div class="weather-map" id="weatherMap">
+    <div id="weatherMapCanvas" role="application" aria-label="Интерактивная карта TEHNOCELL WEATHER. Перемещай карту и выбирай точку."></div>
+    <button class="tc-map-home" id="mapCenterBtn" type="button">◎ Моё место</button>
+  </div>
+  <div class="tc-atmosphere" id="tcAtmosphere">
+    <div class="tc-atmo-top">
+      <div><div class="tc-atmo-kicker">TEHNOCELL · ATMOSPHERE</div><div class="tc-atmo-time" id="tcAtmoTime">Сейчас</div></div>
+      <div class="tc-atmo-temp" id="tcAtmoTemp">--°</div>
+    </div>
+    <input class="tc-atmo-track" id="tcAtmoRange" type="range" min="0" max="12" value="0" step="1" aria-label="Изменение погоды в ближайшие 12 часов">
+    <div class="tc-atmo-range"><span>Сейчас</span><span>+6 часов</span><span>+12 часов</span></div>
+    <div class="tc-atmo-event">
+      <div class="tc-atmo-symbol" id="tcAtmoSymbol">◌</div>
+      <div class="tc-atmo-copy"><strong id="tcAtmoTitle">Анализируем атмосферу</strong><span id="tcAtmoText">Здесь появится краткая картина погодных изменений.</span></div>
+    </div>
+    <div class="tc-atmo-stats" id="tcAtmoStats"><span>Осадки <b>—</b></span><span>Ветер <b>—</b></span><span>Ощущается <b>—</b></span></div>
+  </div>
+  <div class="map-hint" id="tcMapHint">Выбери место на карте. Атмосфера покажет, как изменится погода в ближайшие часы.</div>
+</section>
+
+<section class="card">
+  <div class="section-title">Прогноз на 7 дней</div>
+  <div class="days" id="days"></div>
+</section>
+
+<div class="grid">
+
+  <section class="card metric">
+    <div class="metric-label">Влажность</div>
+    <div class="metric-value" id="humidity">--%</div>
+    <div class="metric-extra">Относительная влажность</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Ветер</div>
+    <div class="metric-value" id="wind">--</div>
+    <div class="metric-extra" id="windDirection">Скорость ветра</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Давление</div>
+    <div class="metric-value" id="pressure">--</div>
+    <div class="metric-extra">Гектопаскали</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Видимость</div>
+    <div class="metric-value" id="visibility">--</div>
+    <div class="metric-extra">Километры</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">УФ-индекс</div>
+    <div class="metric-value" id="uv">--</div>
+    <div class="metric-extra" id="uvText">Ультрафиолет</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Вероятность осадков</div>
+    <div class="metric-value" id="precip">--%</div>
+    <div class="metric-extra">В ближайший час</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Точка росы</div>
+    <div class="metric-value" id="dew">--°</div>
+    <div class="metric-extra">Температура точки росы</div>
+  </section>
+
+  <section class="card metric">
+    <div class="metric-label">Осадки</div>
+    <div class="metric-value" id="rainAmount">--</div>
+    <div class="metric-extra">Миллиметры в час</div>
+  </section>
+
+</div>
+
+<section class="card">
+  <div class="section-title">Солнце</div>
+
+  <div class="sun-times">
+    <div class="sun-item">
+      <div class="sun-label">Восход</div>
+      <div class="sun-value" id="sunrise">--:--</div>
+    </div>
+
+    <div class="sun-item">
+      <div class="sun-label">Закат</div>
+      <div class="sun-value" id="sunset">--:--</div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">Качество воздуха</div>
+
+  <div class="air-value" id="airValue">--</div>
+  <div class="air-status" id="airStatus">Загрузка данных...</div>
+
+  <div class="air-bar">
+    <div class="air-progress" id="airProgress"></div>
+  </div>
+
+  <div class="muted" style="margin-top:15px" id="airDetails">
+    PM2.5: -- · PM10: --
+  </div>
+</section>
+
+<section class="card">
+  <div class="section-title">TEHNOCELL INTELLIGENCE</div>
+  <div id="advice"></div>
+</section>
+
+<footer>
+  TEHNOCELL INDOSTRI · WEATHER
+</footer>
+
+</main>
+<script>
+
+const $ = id => document.getElementById(id);
+
+let latitude = 55.7558;
+let longitude = 37.6173;
+let currentCity = "Москва";
+
+const forecastURL = "https://api.open-meteo.com/v1/forecast";
+const geoURL = "https://geocoding-api.open-meteo.com/v1/search";
+const airURL = "https://air-quality-api.open-meteo.com/v1/air-quality";
+let rainLayer=null;
+
+async function fetchJSON(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+  let response;
+  try { response = await fetch(url, { signal: controller.signal }); }
+  finally { clearTimeout(timer); }
+
+  if (!response.ok) {
+    throw new Error("Ошибка загрузки данных");
+  }
+
+  return response.json();
+}
+
+function weatherName(code) {
+  if (code === 0) return "Ясно";
+  if (code <= 2) return "Переменная облачность";
+  if (code === 3) return "Пасмурно";
+  if ([45,48].includes(code)) return "Туман";
+  if ([51,53,55,56,57].includes(code)) return "Морось";
+  if ([61,63,65,66,67,80,81,82].includes(code)) return "Дождь";
+  if ([71,73,75,77,85,86].includes(code)) return "Снег";
+  if ([95,96,99].includes(code)) return "Гроза";
+  return "Переменная погода";
+}
+
+function weatherType(code) {
+  if (code === 0) return "sun";
+  if (code <= 2) return "cloud";
+  if (code === 3) return "overcast";
+  if ([45,48].includes(code)) return "fog";
+  if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) return "rain";
+  if ([71,73,75,77,85,86].includes(code)) return "snow";
+  if ([95,96,99].includes(code)) return "storm";
+  return "cloud";
+}
+
+function icon(type) {
+  const icons = {
+    sun: `
+      <circle cx="50" cy="50" r="18" fill="#f4f1e8"/>
+      <g stroke="#f4f1e8" stroke-width="4" stroke-linecap="round">
+        <path d="M50 8V20 M50 80V92 M8 50H20 M80 50H92
+        M20 20L28 28 M72 72L80 80 M80 20L72 28 M28 72L20 80"/>
+      </g>`,
+
+    cloud: `
+      <path d="M25 69H75C91 69 94 45 78 39C75 20 49 16 39 33
+      C19 27 8 47 17 61C19 66 22 69 25 69Z"
+      fill="#d9dce3"/>`,
+
+    overcast: `
+      <path d="M23 57H70C86 57 89 35 73 30
+      C69 13 44 12 35 27C17 23 7 41 15 52Z"
+      fill="#aeb3bf"/>
+      <path d="M35 78H82C98 78 100 56 84 51"
+      fill="none" stroke="#e0e3e9" stroke-width="8" stroke-linecap="round"/>`,
+
+    rain: `
+      <path d="M23 57H75C91 57 94 34 77 29
+      C73 12 47 12 37 27C18 22 7 42 16 53Z"
+      fill="#aeb7c7"/>
+      <g stroke="#b8d4f1" stroke-width="4" stroke-linecap="round">
+        <path d="M31 67L25 82 M53 67L47 82 M75 67L69 82"/>
+      </g>`,
+
+    snow: `
+      <path d="M23 55H75C91 55 94 33 77 28
+      C73 11 47 11 37 26C18 21 7 40 16 51Z"
+      fill="#cbd2df"/>
+      <g fill="#fff">
+        <circle cx="29" cy="75" r="4"/>
+        <circle cx="51" cy="81" r="4"/>
+        <circle cx="74" cy="73" r="4"/>
+      </g>`,
+
+    fog: `
+      <path d="M25 47H75C91 47 94 25 77 20
+      C73 3 47 3 37 18C18 13 7 32 16 43Z"
+      fill="#c0c4ce"/>
+      <g stroke="#c0c4ce" stroke-width="5" stroke-linecap="round">
+        <path d="M15 62H83 M25 75H73 M35 88H65"/>
+      </g>`,
+
+    storm: `
+      <path d="M23 53H75C91 53 94 30 77 25
+      C73 8 47 8 37 23C18 18 7 38 16 49Z"
+      fill="#9da6b7"/>
+      <path d="M55 55L39 78H52L45 96L68 68H54Z"
+      fill="#f3e4a6"/>`
+  };
+
+  return `
+    <svg viewBox="0 0 100 100" width="100%" height="100%"
+    xmlns="http://www.w3.org/2000/svg">
+      ${icons[type] || icons.cloud}
+    </svg>`;
+}
+
+function formatTime(value) {
+  if (!value) return "--:--";
+  return value.slice(11,16);
+}
+
+function windDirection(degrees) {
+  const directions = ["С","СВ","В","ЮВ","Ю","ЮЗ","З","СЗ"];
+  return directions[Math.round(degrees / 45) % 8];
+  }
+  function effects(type) {
+  const box = $("weatherEffects");
+
+  box.querySelectorAll(".rain-drop,.snow-flake,.fog-layer").forEach(el => el.remove());
+
+  if (type === "rain" || type === "storm") {
+    const count = Math.min(34, Math.max(22, Math.round(window.innerWidth / 13)));
+    for (let i = 0; i < count; i++) {
+      const drop = document.createElement("div");
+      const duration = 1.15 + Math.random() * 1.05;
+      drop.className = "rain-drop";
+      drop.style.left = Math.random() * 105 - 2 + "%";
+      drop.style.opacity = (0.22 + Math.random() * 0.32).toFixed(2);
+      drop.style.height = (11 + Math.random() * 10) + "px";
+      drop.style.animationDuration = duration.toFixed(2) + "s";
+      // Start each drop at a different point in its fall, never as a fresh row at the top.
+      drop.style.animationDelay = (-Math.random() * duration).toFixed(2) + "s";
+      box.appendChild(drop);
+    }
+  }
+
+  if (type === "snow") {
+    const count = Math.min(42, Math.max(26, Math.round(window.innerWidth / 10)));
+    for (let i = 0; i < count; i++) {
+      const flake = document.createElement("div");
+      const duration = 4.2 + Math.random() * 3.8;
+      flake.className = "snow-flake";
+      const size = 2 + Math.random() * 3.5;
+      flake.style.left = Math.random() * 100 + "%";
+      flake.style.width = size.toFixed(1) + "px";
+      flake.style.height = size.toFixed(1) + "px";
+      flake.style.opacity = (0.35 + Math.random() * 0.55).toFixed(2);
+      flake.style.animationDuration = duration.toFixed(2) + "s";
+      flake.style.animationDelay = (-Math.random() * duration).toFixed(2) + "s";
+      box.appendChild(flake);
+    }
+  }
+
+  if (type === "fog") {
+    for (let i = 0; i < 2; i++) {
+      const fog = document.createElement("div");
+      fog.className = "fog-layer";
+      fog.style.top = (35 + i * 25) + "%";
+      box.appendChild(fog);
+    }
+  }
+}
+
+async function loadWeather() {
+  try {
+    localStorage.setItem("tehnocell_weather_current_location", JSON.stringify({
+      latitude:Number(latitude), longitude:Number(longitude),
+      name:String(currentCity || "Выбранное место"), updatedAt:new Date().toISOString()
+    }));
+  } catch (storageError) { console.warn("Weather location share unavailable:", storageError); }
+  $("status").textContent = "Обновляем погоду...";
+
+  try {
+    const url = forecastURL +
+      `?latitude=${latitude}&longitude=${longitude}` +
+      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,showers,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,visibility,uv_index,dew_point_2m" +
+      "&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl,visibility,dew_point_2m" +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max" +
+      "&forecast_days=7&timezone=auto";
+
+    const data = await fetchJSON(url);
+
+    showWeather(data);
+    loadAirQuality();
+
+    $("status").textContent = "Погода успешно обновлена";
+    $("updated").textContent = "Последнее обновление: " +
+      new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+
+  } catch (error) {
+    console.error("WEATHER forecast error:", error);
+    $("status").textContent = error.name === "AbortError" ? "Сервер погоды отвечает слишком долго. Попробуй ещё раз." : "Не удалось загрузить погоду. Проверь интернет и попробуй ещё раз.";
+  }
+}
+
+
+function publishWeatherSnapshot(data) {
+  try {
+    const c = data?.current, h = data?.hourly, d = data?.daily;
+    if (!c || !h || !d || !Array.isArray(h.time) || !Array.isArray(d.time)) return;
+    const now = new Date(c.time || Date.now()).getTime();
+    let index = h.time.findIndex(t => new Date(t).getTime() >= now);
+    if (index < 0) index = 0;
+    const hours = [];
+    for (let n = index; n < Math.min(index + 6, h.time.length); n++) {
+      hours.push({
+        time: String(h.time[n]).slice(11, 16),
+        temperature: Math.round(Number(h.temperature_2m?.[n])),
+        precipitationProbability: Number(h.precipitation_probability?.[n] ?? 0)
+      });
+    }
+    const snapshot = {
+      available: true,
+      source: "TEHNOCELL WEATHER · live",
+      city: String(currentCity || "Выбранное место"),
+      latitude: Number(latitude),
+      longitude: Number(longitude),
+      updatedAt: new Date().toISOString(),
+      weatherTime: c.time || null,
+      current: {
+        temperature: Math.round(Number(c.temperature_2m)),
+        apparentTemperature: Math.round(Number(c.apparent_temperature)),
+        condition: weatherName(Number(c.weather_code)),
+        humidity: Number(c.relative_humidity_2m),
+        windSpeed: Math.round(Number(c.wind_speed_10m)),
+        windDirection: Math.round(Number(c.wind_direction_10m)),
+        precipitation: Number(c.precipitation || 0),
+        uv: Number(c.uv_index || 0),
+        pressure: Number(c.pressure_msl || 0),
+        visibility: Number(c.visibility || 0)
+      },
+      today: {
+        high: Math.round(Number(d.temperature_2m_max?.[0])),
+        low: Math.round(Number(d.temperature_2m_min?.[0])),
+        precipitationProbability: Number(d.precipitation_probability_max?.[0] ?? 0),
+        sunrise: d.sunrise?.[0] || null,
+        sunset: d.sunset?.[0] || null
+      },
+      hours
+    };
+    if (!Number.isFinite(snapshot.current.temperature)) return;
+    localStorage.setItem("tehnocell_weather_current_snapshot", JSON.stringify(snapshot));
+    window.TEHNOCELL_WEATHER = {
+      getSnapshot: () => JSON.parse(localStorage.getItem("tehnocell_weather_current_snapshot") || "null")
+    };
+    window.dispatchEvent(new CustomEvent("tehnocell-weather-updated", { detail: snapshot }));
+  } catch (error) {
+    console.warn("TEHNOCELL WEATHER snapshot publish failed:", error);
+  }
+}
+
+function showWeather(data) {
+  publishWeatherSnapshot(data);
+  const c = data.current;
+  window.lastWeatherCurrent=c;
+  const h = data.hourly;
+  const d = data.daily;
+
+  const type = weatherType(c.weather_code);
+
+  $("cityName").textContent = currentCity;
+  $("temperature").textContent = Math.round(c.temperature_2m) + "°";
+  $("description").textContent = weatherName(c.weather_code);
+  $("feels").textContent = "Ощущается как " + Math.round(c.apparent_temperature) + "°";
+  $("weatherIcon").innerHTML = icon(type);
+
+  $("humidity").textContent = c.relative_humidity_2m + "%";
+  $("wind").textContent = Math.round(c.wind_speed_10m) + " км/ч";
+  $("windDirection").textContent = windDirection(c.wind_direction_10m);
+
+  $("pressure").textContent = Math.round(c.pressure_msl);
+  $("visibility").textContent = (c.visibility / 1000).toFixed(1);
+  $("uv").textContent = Number(c.uv_index).toFixed(1);
+  $("uvText").textContent = uvDescription(c.uv_index);
+  $("dew").textContent = Math.round(c.dew_point_2m) + "°";
+
+  $("rainAmount").textContent = Number(c.precipitation).toFixed(1);
+  
+  const now = new Date(c.time).getTime();
+  let nextHour = h.time.findIndex(t => new Date(t).getTime() >= now);
+
+  if (nextHour < 0) nextHour = 0;
+
+  $("precip").textContent =
+    (h.precipitation_probability[nextHour] ?? 0) + "%";
+
+  $("sunrise").textContent = formatTime(d.sunrise[0]);
+  $("sunset").textContent = formatTime(d.sunset[0]);
+
+  window.lastWeatherHourly=h;
+  showHourly(h,nextHour);
+  renderAtmosphereTimeline(0,nextHour);
+  showDays(d);
+  try { updateWeatherMap(); } catch (mapError) { console.warn("Weather map unavailable:", mapError); }
+  showAdvice(c,d);
+
+  effects(type);
+}
+
+function uvDescription(value) {
+  if (value < 3) return "Низкий уровень";
+  if (value < 6) return "Умеренный уровень";
+  if (value < 8) return "Высокий уровень";
+  if (value < 11) return "Очень высокий уровень";
+  return "Экстремальный уровень";
+}
+
+function renderAtmosphereTimeline(offset,baseIndex){
+ const slider=$("tcAtmoRange"),h=window.lastWeatherHourly;
+ if(!slider||!h||!h.time||!h.time.length)return;
+ const start=Number.isFinite(baseIndex)?baseIndex:(window.tcAtmoBaseIndex||0);
+ window.tcAtmoBaseIndex=start;
+ const maxOffset=Math.max(0,Math.min(12,h.time.length-1-start));
+ slider.max=maxOffset;slider.value=Math.max(0,Math.min(maxOffset,Number(offset)||0));
+ const i=start+Number(slider.value),temp=Math.round(h.temperature_2m[i]);
+ const rain=Number(h.precipitation_probability?.[i]??0),wind=Math.round(h.wind_speed_10m?.[i]??0);
+ const code=Number(h.weather_code?.[i]??0),label=weatherName(code);
+ const time=new Date(h.time[i]);
+ const now=new Date(h.time[start]);
+ const delta=Math.round((time-now)/3600000);
+ $("tcAtmoTime").textContent=delta===0?"Сейчас":delta===1?"Через час:"+" "+time.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"Через "+delta+" ч · "+time.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+ $("tcAtmoTemp").textContent=temp+"°";
+ let title="Атмосфера спокойна",detail=label+". Существенных погодных сигналов на выбранное время не обнаружено.",symbol="◌";
+ if(rain>=65){title="Высокая вероятность осадков";detail="Вероятность осадков около "+rain+"%. Лучше предусмотреть защиту от дождя.";symbol="〰";}
+ else if(rain>=30){title="Возможны осадки";detail="Вероятность осадков около "+rain+"%. Погодная обстановка может измениться.";symbol="≈";}
+ else if(wind>=35){title="Усиление ветра";detail="Ожидается ветер около "+wind+" км/ч. На открытых участках может быть некомфортно.";symbol="↗";}
+ else if(code>=95){title="Грозовая активность";detail="Прогноз указывает на грозу. Следи за обновлениями и избегай открытых пространств.";symbol="⚡";}
+ else if(code>=71&&code<=77){title="Снежные осадки";detail="Ожидается снег. Учитывай возможное ухудшение видимости.";symbol="✳";}
+ else if(code>=45&&code<=48){title="Снижение видимости";detail="Прогнозируется туман или изморозь. Будь внимателен в дороге.";symbol="≋";}
+ $("tcAtmoSymbol").textContent=symbol;$("tcAtmoTitle").textContent=title;$("tcAtmoText").textContent=detail;
+ $("tcAtmoStats").innerHTML="<span>Осадки <b>"+rain+"%</b></span><span>Ветер <b>"+wind+" км/ч</b></span><span>Ощущается <b>"+Math.round(h.apparent_temperature?.[i]??temp)+"°</b></span>";
+}
+function showHourly(data,start) {
+  const box = $("hourly");
+  box.innerHTML = "";
+
+  for (let i = start; i < Math.min(start + 24,data.time.length); i++) {
+    const time = data.time[i].slice(11,16);
+    const type = weatherType(data.weather_code[i]);
+
+    box.innerHTML += `
+      <div class="hour">
+        <div class="hour-time">${time}</div>
+        <div class="hour-icon">${icon(type)}</div>
+        <div class="hour-temp">${Math.round(data.temperature_2m[i])}°</div>
+        <div class="hour-rain">${data.precipitation_probability[i] ?? 0}% осадки</div>
+        <div class="hour-rain">${Math.round(data.wind_speed_10m?.[i] ?? 0)} км/ч ветер</div>
+      </div>`;
+  }
+}
+
+function showDays(data) {
+  const box = $("days");
+  box.innerHTML = "";
+
+  const names = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
+
+  for (let i = 0; i < data.time.length; i++) {
+    const date = new Date(data.time[i] + "T12:00:00");
+    const name = i === 0 ? "Сегодня" : names[date.getDay()];
+
+    box.innerHTML += `
+      <div class="day">
+        <div class="day-name">${name}</div>
+        <div class="day-icon">${icon(weatherType(data.weather_code[i]))}</div>
+        <div class="day-low">${Math.round(data.temperature_2m_min[i])}°</div>
+        <div class="day-high">${Math.round(data.temperature_2m_max[i])}°</div>
+      </div>`;
+  }
+}
+  async function loadAirQuality() {
+  $("airStatus").textContent = "Загрузка данных...";
+  $("airValue").textContent = "--";
+  $("airDetails").textContent = "PM2.5: -- · PM10: --";
+  try {
+    const url = airURL +
+      `?latitude=${latitude}&longitude=${longitude}` +
+      "&current=european_aqi,pm2_5,pm10";
+
+    const data = await fetchJSON(url);
+    const air = data.current;
+
+    const aqi = Math.round(air.european_aqi ?? 0);
+
+    $("airValue").textContent = aqi;
+    $("airStatus").textContent = airDescription(aqi);
+
+    $("airProgress").style.width = Math.min(aqi / 200 * 100,100) + "%";
+
+    $("airDetails").textContent =
+      "PM2.5: " + Number(air.pm2_5).toFixed(1) +
+      " · PM10: " + Number(air.pm10).toFixed(1) + " мкг/м³";
+    $("airDetails").textContent += " · концентрации частиц";
+
+  } catch (error) {
+    console.warn("WEATHER air-quality error:", error);
+    $("airStatus").textContent = "Данные о качестве воздуха временно недоступны";
+    $("airDetails").textContent = "Попробуй обновить прогноз позже.";
+  }
+}
+
+function airDescription(aqi) {
+  if (aqi <= 20) return "Очень хорошее качество воздуха";
+  if (aqi <= 40) return "Хорошее качество воздуха";
+  if (aqi <= 60) return "Умеренное качество воздуха";
+  if (aqi <= 80) return "Плохое качество воздуха";
+  if (aqi <= 100) return "Очень плохое качество воздуха";
+  return "Крайне плохое качество воздуха";
+}
+
+function showAdvice(c,d) {
+  const box = $("advice");
+  box.innerHTML = "";
+
+  const temp = c.temperature_2m;
+  const feels = Number.isFinite(c.apparent_temperature) ? c.apparent_temperature : temp;
+  const wind = c.wind_speed_10m;
+  const code = c.weather_code;
+  const rain = c.precipitation;
+
+  const messages = [];
+
+  if (rain > 0 || [51,53,55,61,63,65,80,81,82].includes(code)) {
+    messages.push({
+      icon:"☂",
+      text:"Возможны осадки. Возьми с собой зонт или дождевик."
+    });
+  }
+
+  if ([71,73,75,77,85,86].includes(code)) {
+    messages.push({
+      icon:"❄",
+      text:"Ожидается снег. Будь осторожнее на скользких дорогах."
+    });
+  }
+
+  if (wind >= 30) {
+    messages.push({
+      icon:"↗",
+      text:"Сильный ветер. На улице лучше быть внимательнее."
+    });
+  }
+
+  if (temp >= 28) {
+    messages.push({
+      icon:"☀",
+      text:"На улице жарко. Не забывай пить воду."
+    });
+  }
+
+  if (temp <= 0) {
+    messages.push({
+      icon:"❄",
+      text:"Температура ниже нуля. Одевайся теплее."
+    });
+  }
+
+  if (c.uv_index >= 6) {
+    messages.push({
+      icon:"☀",
+      text:"Высокий УФ-индекс. Рекомендуется защита от солнца."
+    });
+  }
+
+  if (messages.length === 0) {
+    messages.push({
+      icon:"✓",
+      text:"Серьёзных погодных предупреждений сейчас нет. Хорошего дня!"
+    });
+  }
+
+  let clothing;
+  if (feels <= 0) clothing = "Ощущается холодно: тёплая куртка, шапка и перчатки.";
+  else if (feels < 8) clothing = "Холодно: выбирай утеплённую куртку и тёплый слой.";
+  else if (feels < 14) clothing = "Прохладно: подойдут куртка и закрытая обувь.";
+  else if (feels < 19) clothing = "При " + Math.round(feels) + "°C лучше надеть кофту или лёгкую куртку. Если ветрено — выбирай верхний слой потеплее.";
+  else if (feels < 24) clothing = "Умеренно тепло: подойдёт лёгкая одежда, но захвати тонкую кофту на вечер.";
+  else clothing = "Тепло: выбирай лёгкую дышащую одежду и пей достаточно воды.";
+  if (wind >= 20 && feels < 20) clothing += " Ветер усилит ощущение прохлады.";
+  if (rain > 0 || [51,53,55,61,63,65,80,81,82].includes(code)) clothing += " Из-за осадков пригодится непромокаемый верхний слой.";
+  messages.push({icon:"Одежда",text:clothing});
+  if(c.relative_humidity_2m>=80) messages.push({icon:"Влажность",text:"Высокая влажность может усиливать ощущение духоты или прохлады."});
+  const future=(window.lastWeatherHourly?.time||[]).map((t,i)=>({t,i})).filter(x=>new Date(x.t).getTime()>=Date.now() && (window.lastWeatherHourly.precipitation_probability[x.i]??100)<25).slice(0,8);
+  if(future.length) messages.push({icon:"Прогулка",text:"Ближайшее окно с небольшой вероятностью осадков — около "+future[0].t.slice(11,16)+". Это ориентир по прогнозу."});
+  messages.forEach(item => {
+    box.innerHTML += `
+      <div class="advice">
+        <div class="advice-icon">${item.icon}</div>
+        <div class="advice-text">${item.text}</div>
+      </div>`;
+  });
+}
+
+
+let weatherMap=null;
+let weatherMarker=null;
+let mapLoadPromise=null;
+let tcMapLayer="base";
+function loadMapLibrary(){
+ if(window.maplibregl)return Promise.resolve();
+ if(mapLoadPromise)return mapLoadPromise;
+ mapLoadPromise=new Promise(function(resolve,reject){
+  var css=document.createElement("link");css.rel="stylesheet";css.href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css";document.head.appendChild(css);
+  var script=document.createElement("script");script.src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js";script.onload=resolve;script.onerror=function(){mapLoadPromise=null;reject(new Error("Map library unavailable"));};document.head.appendChild(script);
+ });
+ return mapLoadPromise;
+}
+function tcMapSetMarker(lat,lon){
+ if(!weatherMap||!window.maplibregl)return;
+ var point=[Number(lon),Number(lat)];
+ if(!weatherMarker){var el=document.createElement("div");el.className="tc-location-marker";el.setAttribute("aria-label","Выбранное местоположение");el.innerHTML='<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2.8 35 11.4v17.2L20 37.2 5 28.6V11.4Z" fill="#fff" stroke="#111" stroke-width="2.6" stroke-linejoin="round"/><path d="M20 9.5 24.2 18l8.3 2-8.3 2L20 30.5 15.8 22l-8.3-2 8.3-2Z" fill="#111"/><circle cx="20" cy="20" r="2.4" fill="#fff"/></svg>';weatherMarker=new maplibregl.Marker({element:el,anchor:"center"}).setLngLat(point).addTo(weatherMap);}
+ else weatherMarker.setLngLat(point);
+}
+let tcWeatherOverlayCanvas=null,tcWeatherOverlayContext=null,tcWeatherLegend=null;
+let tcWeatherGrid=[],tcWeatherGridTimer=null,tcWeatherGridRequest=0,tcWindParticles=[],tcWindAnimation=null,tcWeatherGridUpdated=0,tcWeatherGridError=false;
+function tcEnsureWeatherOverlay(){
+ if(!weatherMap||tcWeatherOverlayCanvas)return;
+ tcWeatherOverlayCanvas=document.createElement("canvas");
+ tcWeatherOverlayCanvas.className="tc-weather-overlay";
+ tcWeatherOverlayCanvas.setAttribute("aria-hidden","true");
+ $("weatherMap").appendChild(tcWeatherOverlayCanvas);
+ tcWeatherOverlayContext=tcWeatherOverlayCanvas.getContext("2d",{alpha:true});
+ tcWeatherLegend=document.createElement("div");
+ tcWeatherLegend.className="tc-weather-legend";tcWeatherLegend.hidden=true;
+ $("weatherMap").appendChild(tcWeatherLegend);tcResizeWeatherOverlay();
+}
+function tcResizeWeatherOverlay(){
+ if(!tcWeatherOverlayCanvas)return;
+ var rect=$("weatherMap").getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,1);
+ tcWeatherOverlayCanvas.width=Math.max(1,Math.round(rect.width*ratio));
+ tcWeatherOverlayCanvas.height=Math.max(1,Math.round(rect.height*ratio));
+ tcWeatherOverlayCanvas.style.width=rect.width+"px";tcWeatherOverlayCanvas.style.height=rect.height+"px";
+ tcWeatherOverlayContext.setTransform(ratio,0,0,ratio,0,0);tcDrawWeatherOverlay();
+}
+function tcGridBounds(){
+ var b=weatherMap.getBounds(),west=Math.max(-179,Math.min(179,b.getWest())),east=Math.max(-179,Math.min(179,b.getEast()));
+ var north=Math.max(-80,Math.min(80,b.getNorth())),south=Math.max(-80,Math.min(80,b.getSouth()));
+ if(east<=west){west=-179;east=179;}if(north<=south){north=80;south=-80;}
+ return {west:west,east:east,north:north,south:south};
+}
+async function tcLoadWeatherGrid(force){
+ if(!weatherMap||tcMapLayer==="base")return;
+ if(!force&&Date.now()-tcWeatherGridUpdated<8*60*1000&&tcWeatherGrid.length)return;
+ var requestId=++tcWeatherGridRequest,bounds=tcGridBounds(),columns=7,rows=5,points=[];
+ for(var y=0;y<rows;y++)for(var x=0;x<columns;x++)points.push({latitude:bounds.north+(bounds.south-bounds.north)*(y/(rows-1)),longitude:bounds.west+(bounds.east-bounds.west)*(x/(columns-1))});
+ var latitudes=points.map(p=>p.latitude.toFixed(3)).join(","),longitudes=points.map(p=>p.longitude.toFixed(3)).join(",");
+ var url=forecastURL+"?latitude="+latitudes+"&longitude="+longitudes+"&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m&wind_speed_unit=kmh&timezone=auto";
+ try{
+  var result=await fetchJSON(url);if(requestId!==tcWeatherGridRequest)return;
+  var locations=Array.isArray(result)?result:[result];
+  tcWeatherGrid=locations.map(function(item,index){var c=item.current||{};return {latitude:Number(item.latitude??points[index]?.latitude),longitude:Number(item.longitude??points[index]?.longitude),temperature:Number(c.temperature_2m),humidity:Number(c.relative_humidity_2m),precipitation:Number(c.precipitation),windSpeed:Number(c.wind_speed_10m),windDirection:Number(c.wind_direction_10m)};}).filter(p=>Number.isFinite(p.latitude)&&Number.isFinite(p.longitude));
+  tcWeatherGridUpdated=Date.now();tcWeatherGridError=false;tcDrawWeatherOverlay();
+ }catch(error){if(requestId===tcWeatherGridRequest){tcWeatherGridError=true;console.warn("WEATHER map overlay data error:",error);tcDrawWeatherOverlay();}}
+}
+function tcScheduleWeatherGrid(){clearTimeout(tcWeatherGridTimer);tcWeatherGridTimer=setTimeout(function(){tcLoadWeatherGrid(true);},950);}
+function tcProjectWeatherPoints(){
+ if(!weatherMap)return [];
+ return tcWeatherGrid.map(function(p){var point=weatherMap.project([p.longitude,p.latitude]);return {x:point.x,y:point.y,temperature:p.temperature,humidity:p.humidity,precipitation:p.precipitation,windSpeed:p.windSpeed,windDirection:p.windDirection};});
+}
+function tcTempColor(value){
+ var stops=[[-25,[42,87,190]],[-10,[65,166,220]],[0,[105,190,180]],[12,[119,178,95]],[22,[238,190,73]],[32,[226,105,65]],[42,[174,48,64]]];
+ for(var i=0;i<stops.length-1;i++)if(value<=stops[i+1][0]){var t=Math.max(0,Math.min(1,(value-stops[i][0])/(stops[i+1][0]-stops[i][0]))),a=stops[i][1],b=stops[i+1][1];return "rgba("+a.map((v,j)=>Math.round(v+(b[j]-v)*t)).join(",")+",0.56)";}
+ return "rgba(174,48,64,.56)";
+}
+function tcDrawRainField(ctx,points,w,h){
+ /* Low-resolution raster: calculated once after map movement, never per animation frame. */
+ var scale=.14,rw=Math.max(1,Math.ceil(w*scale)),rh=Math.max(1,Math.ceil(h*scale));
+ var image=ctx.createImageData(rw,rh),data=image.data;
+ var valid=points.filter(function(p){return Number.isFinite(p.precipitation);});
+ if(!valid.length)return;
+ var sigmaX=Math.max(28,w/7),sigmaY=Math.max(28,h/5),weights=valid.map(function(p){return {p:p,x:p.x,y:p.y};});
+ for(var py=0;py<rh;py++)for(var px=0;px<rw;px++){
+  var x=px/scale,y=py/scale,total=0,weighted=0;
+  for(var i=0;i<weights.length;i++){
+   var q=weights[i],dx=(x-q.x)/sigmaX,dy=(y-q.y)/sigmaY,d2=dx*dx+dy*dy;
+   if(d2>8)continue;
+   var wt=Math.exp(-d2*1.35);total+=wt;weighted+=Math.max(0,q.p.precipitation)*wt;
+  }
+  var value=total?weighted/total:0;if(value<.12)continue;
+  var intensity=Math.min(1,Math.pow(value/3.5,.65)),idx=(py*rw+px)*4;
+  data[idx]=Math.round(35+intensity*15);data[idx+1]=Math.round(145+intensity*80);data[idx+2]=255;
+  data[idx+3]=Math.round((.12+intensity*.58)*255);
+ }
+ var raster=document.createElement("canvas");raster.width=rw;raster.height=rh;
+ var rctx=raster.getContext("2d");rctx.putImageData(image,0,0);
+ ctx.save();ctx.globalCompositeOperation="source-over";ctx.imageSmoothingEnabled=true;
+ ctx.globalAlpha=.88;ctx.drawImage(raster,0,0,w,h);ctx.restore();
+}
+function tcDrawWeatherOverlay(){
+ if(!tcWeatherOverlayCanvas||!tcWeatherOverlayContext||!weatherMap)return;
+ var ctx=tcWeatherOverlayContext,rect=$("weatherMap").getBoundingClientRect(),w=rect.width,h=rect.height;
+ ctx.clearRect(0,0,w,h);
+ if(tcMapLayer==="base"){tcWeatherLegend.hidden=true;tcStopWindAnimation();return;}
+ var points=tcProjectWeatherPoints();
+ if(tcMapLayer==="temp"||tcMapLayer==="rain"||tcMapLayer==="humidity"){
+  tcStopWindAnimation();var spacing=Math.max(48,Math.min(125,Math.min(w/6,h/4)*1.12));
+  if(tcMapLayer==="rain"){
+   tcDrawRainField(ctx,points,w,h);
+  }else{
+   points.forEach(function(p){
+    var value=tcMapLayer==="humidity"?p.humidity:p.temperature;
+    if(tcMapLayer==="humidity"&&!Number.isFinite(value))return;
+    if(!Number.isFinite(value))return;
+    var radius=spacing*1.28,gradient=ctx.createRadialGradient(p.x,p.y,1,p.x,p.y,radius);
+    if(tcMapLayer==="humidity"){
+     var alpha=.18+Math.min(1,Math.max(0,value)/100)*.48;
+     gradient.addColorStop(0,"rgba(20,112,210,"+alpha+")");gradient.addColorStop(.55,"rgba(35,170,220,"+(alpha*.62)+")");
+    }else gradient.addColorStop(0,tcTempColor(value));
+    gradient.addColorStop(1,"rgba(255,255,255,0)");
+    ctx.fillStyle=gradient;ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fill();
+   });
+  }
+ }else if(tcMapLayer==="wind")tcStartWindAnimation();
+ tcWeatherLegend.hidden=false;
+ var title=tcMapLayer==="temp"?"Температура воздуха":tcMapLayer==="rain"?"Осадки":tcMapLayer==="humidity"?"Относительная влажность":"Ветер · направление и скорость";
+ if(tcWeatherGridError&&!tcWeatherGrid.length)tcWeatherLegend.innerHTML="<strong>"+title+"</strong>Не удалось загрузить погодные данные";
+ else if(!tcWeatherGrid.length)tcWeatherLegend.innerHTML="<strong>"+title+"</strong>Загружаем данные…";
+ else if(tcMapLayer==="temp")tcWeatherLegend.innerHTML="<strong>"+title+"</strong><div class='tc-legend-gradient' style='background:linear-gradient(90deg,#2a57be,#41a6dc,#69beb4,#77b25f,#eebe49,#e26941,#ae3040)'></div><div class='tc-legend-labels'><span>−20°C</span><span>0°C</span><span>20°C</span><span>35°C+</span></div>";
+ else if(tcMapLayer==="rain")tcWeatherLegend.innerHTML="<strong>"+title+"</strong><div class='tc-legend-gradient' style='background:linear-gradient(90deg,rgba(45,175,220,.15),#2dafe0,#1e87eb,#123e91)'></div><div class='tc-legend-labels'><span>Слабые</span><span>Умеренные</span><span>Сильные</span></div><span class='tc-legend-note'>Модельные текущие осадки, не радар.</span>";
+ else if(tcMapLayer==="humidity")tcWeatherLegend.innerHTML="<strong>"+title+"</strong><div class='tc-legend-gradient' style='background:linear-gradient(90deg,#dceefa,#64b9e8,#1765c2,#173b78)'></div><div class='tc-legend-labels'><span>0%</span><span>50%</span><span>100%</span></div>";
+ else{var avg=tcWeatherGrid.reduce((sum,p)=>sum+(Number.isFinite(p.windSpeed)?p.windSpeed:0),0)/tcWeatherGrid.length;tcWeatherLegend.innerHTML="<strong>"+title+"</strong>Средняя скорость в видимой области: "+Math.round(avg)+" км/ч";}
+}
+function tcStopWindAnimation(){if(tcWindAnimation){cancelAnimationFrame(tcWindAnimation);tcWindAnimation=null;}tcWindParticles=[];}
+function tcStartWindAnimation(){
+ /* Lightweight geographic streamlines: static between map moves, no requestAnimationFrame loop. */
+ if(!tcWeatherOverlayContext||!weatherMap)return;
+ var ctx=tcWeatherOverlayContext,w=$("weatherMap").clientWidth,h=$("weatherMap").clientHeight;
+ var points=tcProjectWeatherPoints().filter(function(p){return Number.isFinite(p.windSpeed)&&Number.isFinite(p.windDirection);});
+ if(!points.length)return;
+ function nearestAt(x,y){var best=null,dist=Infinity;for(var i=0;i<points.length;i++){var dx=points[i].x-x,dy=points[i].y-y,d=dx*dx+dy*dy;if(d<dist){dist=d;best=points[i];}}return best;}
+ ctx.save();ctx.lineCap="round";ctx.lineJoin="round";
+ var count=Math.min(34,Math.max(16,Math.round(w/13)));
+ for(var n=0;n<count;n++){
+  var sx=((n*73+31)%997)/997*w,sy=((n*137+17)%991)/991*h,x=sx,y=sy;
+  ctx.beginPath();ctx.moveTo(x,y);
+  for(var step=0;step<9;step++){
+   var q=nearestAt(x,y);if(!q||q.windSpeed<1)break;
+   var a=(q.windDirection+180)*Math.PI/180,stepLen=4+Math.min(5,q.windSpeed*.12);
+   x+=Math.sin(a)*stepLen;y-=Math.cos(a)*stepLen;
+   if(x<-5||x>w+5||y<-5||y>h+5)break;ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle="rgba(24,48,70,.42)";ctx.lineWidth=1.25;ctx.stroke();
+  if(x>=0&&x<=w&&y>=0&&y<=h){ctx.beginPath();ctx.arc(x,y,1.6,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.9)";ctx.fill();}
+ }
+ ctx.restore();
+}
+function tcMapRenderOverlay(){
+ if(!weatherMap)return;
+ var labels={base:"Подробная карта: страны, населённые пункты, дороги и географические объекты. Приближай для детализации улиц.",rain:"Осадки: плавная модельная визуализация текущих осадков. Это не метеорадар.",temp:"Температура воздуха в °C по погодной сетке Open-Meteo.",humidity:"Относительная влажность воздуха в процентах.",wind:"Поток ветра движется по географическому направлению, независимо от поворота карты."};
+ $("tcMapHint").textContent=labels[tcMapLayer]||labels.base;tcEnsureWeatherOverlay();tcDrawWeatherOverlay();
+ if(tcMapLayer!=="base"&&(!tcWeatherGrid.length||Date.now()-tcWeatherGridUpdated>8*60*1000))tcLoadWeatherGrid(false);
+}
+function tcMapSelectLayer(layer){
+ tcMapLayer=layer;
+ ["Base","Rain","Temp","Humidity","Wind"].forEach(function(name){var button=$("map"+name+"Btn");if(button)button.classList.toggle("active",name.toLowerCase()===layer);});
+ tcMapRenderOverlay();
+}
+function initWeatherMap(){
+ if(weatherMap)return Promise.resolve(weatherMap);
+ var canvas=$("weatherMapCanvas");
+ if(!canvas||canvas.dataset.loading==="1")return Promise.resolve(null);
+ canvas.dataset.loading="1";
+ return loadMapLibrary().then(function(){
+  weatherMap=new maplibregl.Map({
+   container:canvas,style:"https://tiles.openfreemap.org/styles/dark",
+   center:[longitude,latitude],zoom:1.6,minZoom:1,maxZoom:19,
+   attributionControl:false,cooperativeGestures:false,dragPan:true,touchZoomRotate:true,renderWorldCopies:false,
+   fadeDuration:140,refreshExpiredTiles:false,antialias:false
+  });
+  weatherMap.addControl(new maplibregl.NavigationControl({showCompass:false,visualizePitch:false}),"top-right");
+  weatherMap.addControl(new maplibregl.AttributionControl({compact:false,customAttribution:"OpenFreeMap © OpenMapTiles · Data from OpenStreetMap"}),"bottom-left");
+  weatherMap.on("load",function(){
+    try{
+     var styleLayers=weatherMap.getStyle().layers||[];
+     styleLayers.forEach(function(layer){
+      var sourceLayer=layer["source-layer"]||"",id=String(layer.id||"").toLowerCase();
+      var filterText=JSON.stringify(layer.filter||[]).toLowerCase();
+      if(layer.type==="background")weatherMap.setPaintProperty(layer.id,"background-color","#080a0d");
+      if(layer.type==="fill"&&/water/.test(sourceLayer)){
+       weatherMap.setPaintProperty(layer.id,"fill-color","#0d1116");
+       if(layer.paint&&layer.paint["fill-outline-color"]!==undefined)weatherMap.setPaintProperty(layer.id,"fill-outline-color","#171d24");
+      }
+      if(layer.type==="fill"&&/landcover|landuse|park|land\.use/.test(sourceLayer))weatherMap.setPaintProperty(layer.id,"fill-color","#0b0e12");
+      if(layer.type==="line"&&sourceLayer==="transportation"){
+       var casing=/case|casing|outline/.test(id);
+       var path=/path|pedestrian|track/.test(id)||/path|pedestrian|track/.test(filterText);
+       var major=/motorway|trunk/.test(id)||/motorway|trunk/.test(filterText);
+       var primary=/primary/.test(id)||/primary/.test(filterText);
+       var secondary=/secondary|tertiary/.test(id)||/secondary|tertiary/.test(filterText);
+       var roadColor=casing?"#171b20":path?"#3d454f":major?"#aeb6c1":primary?"#929ca8":secondary?"#737e8a":"#59636f";
+       var roadOpacity=casing?0.88:path?0.42:major?0.76:primary?0.66:secondary?0.54:0.46;
+       weatherMap.setPaintProperty(layer.id,"line-color",roadColor);
+       weatherMap.setPaintProperty(layer.id,"line-opacity",roadOpacity);
+      }
+      if(layer.type==="line"&&sourceLayer==="boundary"){
+       weatherMap.setPaintProperty(layer.id,"line-color","#343b44");
+       weatherMap.setPaintProperty(layer.id,"line-opacity",0.58);
+      }
+      if(layer.type==="line"&&/waterway/.test(sourceLayer)){
+       weatherMap.setPaintProperty(layer.id,"line-color","#1a222c");
+       weatherMap.setPaintProperty(layer.id,"line-opacity",0.82);
+      }
+      if(layer.type==="symbol"&&layer.layout&&layer.layout["text-field"]!==undefined){
+       weatherMap.setPaintProperty(layer.id,"text-color","#c5cad2");
+       weatherMap.setPaintProperty(layer.id,"text-halo-color","#080a0d");
+       weatherMap.setPaintProperty(layer.id,"text-halo-width",1.15);
+       weatherMap.setPaintProperty(layer.id,"text-halo-blur",0.25);
+      }
+     });
+    }catch(styleError){console.warn("TEHNOCELL map styling:",styleError);}
+    tcMapSetMarker(latitude,longitude);weatherMap.resize();
+   });
+  weatherMap.on("moveend",function(){});
+  weatherMap.on("resize",function(){tcResizeWeatherOverlay();});
+  weatherMap.on("click",async function(event){
+   latitude=event.lngLat.lat;longitude=event.lngLat.lng;currentCity="Выбранная точка";
+   tcMapSetMarker(latitude,longitude);$("cityName").textContent=currentCity;renderFavorites();
+   $("status").textContent="Загружаем погоду для выбранной точки…";
+   await loadWeather();
+  });
+  weatherMap.on("error",function(event){if(event&&event.error)console.warn("WEATHER map tile error:",event.error);});
+  return weatherMap;
+ }).catch(function(error){
+  canvas.dataset.loading="0";$("tcMapHint").textContent="Карта временно недоступна. Проверь интернет и попробуй обновить страницу.";
+  console.error("WEATHER map init error:",error);return null;
+ });
+}
+function focusWeatherMap(zoom){
+ if(!weatherMap)return;
+ weatherMap.flyTo({center:[longitude,latitude],zoom:zoom||8,duration:650,essential:false});tcMapSetMarker(latitude,longitude);
+}
+function updateWeatherMap(){if(weatherMap)tcMapSetMarker(latitude,longitude);}
+function setupWeatherMap(){
+ var section=$("weatherMap");if(!section||section.dataset.observerReady==="1")return;section.dataset.observerReady="1";
+ if("IntersectionObserver" in window){
+  var observer=new IntersectionObserver(function(entries){if(entries.some(function(entry){return entry.isIntersecting;})){initWeatherMap().then(function(map){if(map)map.resize();});observer.disconnect();}},{rootMargin:"220px 0px"});
+  observer.observe(section);
+ }else initWeatherMap();
+ $("mapCenterBtn").addEventListener("click",function(){if(weatherMap)weatherMap.flyTo({center:[longitude,latitude],zoom:Math.max(weatherMap.getZoom(),8),duration:500});tcMapSetMarker(latitude,longitude);});
+ $("tcAtmoRange").addEventListener("input",function(){renderAtmosphereTimeline(Number(this.value));});
+}
+setupWeatherMap();
+
+/* FAVORITE CITIES */
+
+const FAVORITES_KEY = "tehnocell_weather_favorite_cities";
+const MAX_FAVORITES = 10;
+let favoriteCities = [];
+
+function readFavorites() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    if (!Array.isArray(saved)) return [];
+    return saved.filter(city =>
+      city &&
+      typeof city.name === "string" &&
+      Number.isFinite(Number(city.latitude)) &&
+      Number.isFinite(Number(city.longitude))
+    ).slice(0, MAX_FAVORITES);
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveFavorites() {
+  try {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favoriteCities));
+    return true;
+  } catch (error) {
+    $("status").textContent = "Не удалось сохранить избранное на этом устройстве";
+    return false;
+  }
+}
+
+function renderFavorites() {
+  const box = $("favoriteList");
+  box.innerHTML = "";
+
+  if (favoriteCities.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "favorite-empty";
+    empty.textContent = "Пока нет сохранённых городов";
+    box.appendChild(empty);
+    return;
+  }
+
+  favoriteCities.forEach((city, index) => {
+    const item = document.createElement("div");
+    item.className = "favorite-city";
+
+    if (
+      Math.abs(Number(city.latitude) - latitude) < 0.0001 &&
+      Math.abs(Number(city.longitude) - longitude) < 0.0001
+    ) {
+      item.classList.add("active");
+    }
+
+    const name = document.createElement("span");
+    name.className = "favorite-city-name";
+    name.textContent = city.name;
+
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.textContent = "↗";
+    openButton.title = "Показать погоду";
+    openButton.setAttribute("aria-label", "Показать погоду: " + city.name);
+    openButton.addEventListener("click", async () => {
+      latitude = Number(city.latitude);
+      longitude = Number(city.longitude);
+      currentCity = city.name;
+      renderFavorites();
+      await loadWeather();
+    });
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.textContent = "×";
+    removeButton.title = "Удалить из избранного";
+    removeButton.setAttribute("aria-label", "Удалить " + city.name);
+    removeButton.addEventListener("click", () => {
+      favoriteCities.splice(index, 1);
+      saveFavorites();
+      renderFavorites();
+    });
+
+    item.appendChild(name);
+    item.appendChild(openButton);
+    item.appendChild(removeButton);
+    box.appendChild(item);
+  });
+}
+
+function addFavoriteCity() {
+  const alreadySaved = favoriteCities.some(city =>
+    Math.abs(Number(city.latitude) - latitude) < 0.0001 &&
+    Math.abs(Number(city.longitude) - longitude) < 0.0001
+  );
+
+  if (alreadySaved) {
+    $("status").textContent = "Этот город уже есть в избранном";
+    return;
+  }
+
+  if (favoriteCities.length >= MAX_FAVORITES) {
+    $("status").textContent = "Можно сохранить не больше " + MAX_FAVORITES + " городов";
+    return;
+  }
+
+  favoriteCities.push({
+    name: currentCity,
+    latitude: Number(latitude),
+    longitude: Number(longitude)
+  });
+
+  if (saveFavorites()) {
+    renderFavorites();
+    $("status").textContent = "Город добавлен в избранное";
+  }
+}
+
+favoriteCities = readFavorites();
+renderFavorites();
+
+$("favoriteAdd").addEventListener("click", addFavoriteCity);
+
+async function searchCity() {
+  const input = $("cityInput").value.trim();
+
+  if (!input) {
+    $("status").textContent = "Введите название города";
+    return;
+  }
+
+  $("status").textContent = "Ищем город...";
+
+  try {
+    const url = geoURL +
+      `?name=${encodeURIComponent(input)}&count=1&language=ru&format=json`;
+
+    const data = await fetchJSON(url);
+
+    if (!data.results || !data.results.length) {
+      $("status").textContent = "Город не найден";
+      return;
+    }
+
+    const city = data.results[0];
+
+    latitude = city.latitude;
+    longitude = city.longitude;
+    currentCity = city.name;
+
+    if (city.country) {
+      currentCity += ", " + city.country;
+    }
+
+    renderFavorites();
+    $("cityInput").blur();
+
+    await loadWeather();
+    if(weatherMap)focusWeatherMap(9);
+
+  } catch (error) {
+    $("status").textContent = "Ошибка поиска города";
+  }
+}
+
+$("cityInput").addEventListener("keydown",event => {
+  if (event.key === "Enter") searchCity();
+});
+
+function useLocation() {
+  if (!navigator.geolocation) {
+    $("status").textContent = "Геолокация не поддерживается";
+    return;
+  }
+
+  $("status").textContent = "Определяем местоположение...";
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+      currentCity = "Моё местоположение";
+      renderFavorites();
+
+      await loadWeather();
+      if(weatherMap)focusWeatherMap(9);
+    },
+    () => {
+      $("status").textContent =
+        "Не удалось определить местоположение. Разреши доступ к геолокации.";
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:10000
+    }
+  );
+}
+
+/* CLOCK */
+
+function updateClock() {
+  const now = new Date();
+
+  $("clock").textContent = now.toLocaleTimeString("ru-RU",{
+    hour:"2-digit",
+    minute:"2-digit"
+  });
+
+  $("date").textContent = now.toLocaleDateString("ru-RU",{
+    weekday:"long",
+    day:"numeric",
+    month:"long"
+  });
+}
+
+updateClock();
+setInterval(updateClock,1000);
+
+/* START */
+
+loadWeather();
+
+setInterval(loadWeather,15 * 60 * 1000);
+
+</script>
+<!-- ENNIE MINI: общая помощница сайта, голос может продолжаться при переходах -->
+<!-- ENNIE MINI intentionally disabled on TEHNOCELL WEATHER -->
+<script src="account-access.js?v=3"></script>
+</body>
+</html>
