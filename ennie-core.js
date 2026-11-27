@@ -1,2 +1,2 @@
-/* TEHNOCELL maintenance mode: ENNIE client functionality is temporarily disabled. */
+/* ENNIE client is temporarily disabled during TEHNOCELL maintenance. */
 throw new Error("ENNIE временно приостановлена в связи с обновлением систем.");
