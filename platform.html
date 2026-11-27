@@ -2313,4 +2313,40 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-</body></html></html>
+
+<style id="tc-profile-mobile-final">
+/* Публичный профиль: компактная мобильная компоновка без квадратного баннера */
+@media(max-width:600px){
+  #page-person{width:100%;min-width:0}
+  #page-person .person-page-top{gap:9px;margin:0 0 13px}
+  #page-person .person-page-card{width:100%;max-width:none;margin:0;padding:8px;border-radius:15px}
+  #publicProfileContent{width:100%;min-width:0;max-width:100%;overflow:hidden;border-radius:12px}
+  #publicProfileContent .tc-profile-hero{width:100%;height:178px!important;min-height:178px;max-height:178px;border-radius:11px;overflow:hidden;aspect-ratio:1.9/1}
+  #publicProfileContent .tc-profile-banner-image,#publicProfileContent .tc-profile-banner-empty{inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
+  #publicProfileContent .tc-profile-hero-identity{left:12px;right:10px;bottom:12px;gap:10px;align-items:flex-end;min-width:0}
+  #publicProfileContent .tc-profile-hero-identity .search-person-avatar{width:68px!important;height:68px!important;min-width:68px;flex:0 0 68px!important;border-radius:17px!important;border-width:2px;box-shadow:0 7px 20px #0009}
+  #publicProfileContent .tc-profile-hero-copy{min-width:0;max-width:calc(100% - 78px);padding:0 0 2px}
+  #publicProfileContent .tc-profile-hero-copy h2{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0 0 5px;font-size:clamp(17px,5vw,21px);line-height:1.12;letter-spacing:-.45px;overflow-wrap:anywhere}
+  #publicProfileContent .tc-profile-hero-copy>div{font-size:10px;line-height:1.35;overflow-wrap:anywhere}
+  #publicProfileContent .tc-profile-name-media{width:23px;height:23px;flex:0 0 23px;border-radius:7px}
+  #publicProfileContent .person-profile-body{padding:16px 13px}
+  #publicProfileContent .person-profile-status{padding:11px 12px;border-radius:11px;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+  #publicProfileContent .person-profile-bio{margin-top:14px;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+  #publicProfileContent .person-profile-date{margin-top:15px;padding-top:12px;font-size:10px}
+  #publicProfileContent .person-profile-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:16px}
+  #publicProfileContent .person-profile-actions button,#publicProfileContent .person-profile-actions a{width:100%;min-width:0;min-height:43px;padding:10px 8px;font-size:11px;text-align:center}
+  #publicProfileContent .tc-identity-sound{margin-top:14px;min-width:0}
+  #publicProfileContent .tc-sound-row{min-width:0}
+  #publicProfileContent audio{width:100%;max-width:100%}
+  #publicProfileContent .profile-posts{margin-top:16px;padding-top:13px}
+}
+@media(max-width:380px){
+  #publicProfileContent .tc-profile-hero{height:168px!important;min-height:168px;max-height:168px}
+  #publicProfileContent .tc-profile-hero-identity .search-person-avatar{width:62px!important;height:62px!important;min-width:62px;flex-basis:62px!important;border-radius:15px!important}
+  #publicProfileContent .tc-profile-hero-copy{max-width:calc(100% - 70px)}
+  #publicProfileContent .tc-profile-hero-copy h2{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){#publicProfileContent[data-flow]{animation:none!important}}
+</style>
+
+</body></html>
