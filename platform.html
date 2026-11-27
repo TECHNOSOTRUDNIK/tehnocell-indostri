@@ -2184,6 +2184,16 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 #publicProfileContent .tc-public-banner::after{
   content:none!important;display:none!important;animation:none!important;
 }
+
+/* Публичный профиль: полностью убираем цветные кольца выбранной рамки вокруг аватара. */
+html body #publicProfileContent .person-profile-head .search-person-avatar,
+html body #publicProfileContent .person-profile-head .search-person-avatar.tc-avatar-vice-city{
+  border:0!important;outline:0!important;box-shadow:none!important;filter:none!important;
+}
+html body #publicProfileContent .person-profile-head .search-person-avatar.tc-avatar-vice-city::before,
+html body #publicProfileContent .person-profile-head .search-person-avatar.tc-avatar-vice-city::after{
+  content:none!important;display:none!important;border:0!important;outline:0!important;box-shadow:none!important;filter:none!important;
+}
 </style>
 <script id="tc-glass-selection">
 (()=>{
