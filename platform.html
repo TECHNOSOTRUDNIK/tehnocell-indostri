@@ -2155,6 +2155,35 @@ input,textarea,select,[contenteditable="true"],[role="textbox"]{-webkit-touch-ca
 .vc-frame-orbit{border-color:#ffd36acc!important;box-shadow:0 0 10px #ffd36a55!important}
 .vc-frame-orbit.second{border-color:#b84cffcc!important;box-shadow:0 0 10px #b84cff66!important}
 
+
+/* Neon profile: do not add a second green frame to the selected avatar frame. */
+#publicProfileContent[data-theme="crimson-glow"] .search-person-avatar.tc-avatar-vice-city,
+#publicProfileContent[data-theme="neon-violet"] .search-person-avatar.tc-avatar-vice-city,
+#publicProfileContent[data-theme="electric-blue"] .search-person-avatar.tc-avatar-vice-city,
+#publicProfileContent[data-theme="emerald-aura"] .search-person-avatar.tc-avatar-vice-city,
+#publicProfileContent[data-theme="golden-pulse"] .search-person-avatar.tc-avatar-vice-city,
+#publicProfileContent[data-theme="rose-nebula"] .search-person-avatar.tc-avatar-vice-city{
+  border:0!important;outline:0!important;box-shadow:none!important;
+}
+#publicProfileContent .search-person-avatar.tc-avatar-vice-city::after{
+  outline:0!important;outline-offset:0!important;
+  border-color:#ff62c7!important;
+  box-shadow:0 0 9px #ff55bd55!important;
+}
+/* The banner stays clean: no neon halo, extra border or light sweep. */
+#publicProfileContent[data-theme="crimson-glow"] .tc-public-banner,
+#publicProfileContent[data-theme="neon-violet"] .tc-public-banner,
+#publicProfileContent[data-theme="electric-blue"] .tc-public-banner,
+#publicProfileContent[data-theme="emerald-aura"] .tc-public-banner,
+#publicProfileContent[data-theme="golden-pulse"] .tc-public-banner,
+#publicProfileContent[data-theme="rose-nebula"] .tc-public-banner{
+  border-color:#ffffff12!important;
+  box-shadow:none!important;
+}
+#publicProfileContent .tc-public-banner::before,
+#publicProfileContent .tc-public-banner::after{
+  content:none!important;display:none!important;animation:none!important;
+}
 </style>
 <script id="tc-glass-selection">
 (()=>{
