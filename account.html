@@ -1609,7 +1609,7 @@ function renderPublicProfilePreview(profile,user){
  const theme=profile?.profile_theme||"mono";
  $("tcPublicPreview").dataset.theme=theme;
  $("tcPreviewName").textContent=name;
- $("tcPreviewName").innerHTML=name.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))+tcStickerMarkup(profile?.profile_nickname_sticker)+(VERIFIED_USERS.includes(user.id)?'<span class="tc-preview-badge" aria-label="Подтверждённый аккаунт">✓</span>':'');
+ $("tcPreviewName").innerHTML=name.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))+(VERIFIED_USERS.includes(user.id)?'<span class="tc-preview-badge" aria-label="Подтверждённый аккаунт">✓</span>':'');
  const username=String(profile?.username??"").trim();
  const hasUsername=username!==""&&username.toLowerCase()!=="null"&&username.toLowerCase()!=="undefined";
  $("tcPreviewHandle").textContent=hasUsername?"@"+username:"Участник TEHNOCELL";
@@ -1665,7 +1665,7 @@ async function loadAccount() {
     // Метаданные Auth остаются резервным вариантом для старых аккаунтов.
     const { data: savedProfile, error: profileLoadError } = await db
         .from("profiles")
-        .select("id,display_name,username,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,selected_avatar_frame_id,profile_nickname_sticker,created_at")
+        .select("id,display_name,username,bio,status_text,avatar_path,profile_banner_path,profile_theme,profile_music_url,profile_sound_path,profile_sound_title,profile_sound_artist,profile_sound_cover_path,profile_game,profile_status,selected_avatar_frame_id,created_at")
         .eq("id", currentUser.id)
         .maybeSingle();
 
