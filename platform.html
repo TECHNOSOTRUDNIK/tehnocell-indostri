@@ -1100,7 +1100,7 @@ async function loadStories(){
   const b=document.createElement("button");b.type="button";b.className="tc-story-bubble";
   const name=g.profile.display_name||"Участник",path=g.profile.avatar_path,avatar=path?db.storage.from("profile-avatars").getPublicUrl(path).data.publicUrl:null;
   b.innerHTML='<span class="tc-story-ring"><span class="tc-story-avatar">'+(avatar?'<img src="'+escapeHtml(avatar)+'" alt="">':escapeHtml(name.charAt(0).toUpperCase()))+'</span></span><span class="tc-story-name">'+escapeHtml(name)+'</span>';
-   if(g.profile.selected_avatar_frame_id)b.querySelector(".tc-story-ring")?.classList.add("tc-avatar-vice-city");
+   /* Старую рамку Vice City в историях других участников больше не применяем. */
   b.addEventListener("click",()=>openStoryGroup(g.userId));strip.appendChild(b);
  });
 }
