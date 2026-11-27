@@ -1,20 +1,5821 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex,nofollow">
-<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-<meta name="theme-color" content="#050505">
-<title>TEHNOCELL — технические работы</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#080808">
+
+<title>ENNIE — TEHNOCELL AI</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#050505;color:#f5f5f5;font-family:Inter,Arial,sans-serif}
-body{min-height:100svh;display:grid;place-items:center;padding:28px}
-main{width:min(100%,560px);text-align:center;padding:44px 28px;border:1px solid #292929;border-radius:26px;background:linear-gradient(145deg,#111,#080808);box-shadow:0 24px 90px #000}
-.mark{width:54px;height:54px;margin:0 auto 28px;border:1px solid #777;border-radius:17px;display:grid;place-items:center;font-size:22px;font-weight:800;letter-spacing:-2px}
-h1{font-size:clamp(25px,7vw,38px);letter-spacing:.12em;margin:0 0 18px;font-weight:750}
-p{color:#b8b8b8;font-size:16px;line-height:1.65;margin:0}
-.status{display:inline-flex;align-items:center;gap:9px;margin-top:30px;padding:10px 15px;border:1px solid #333;border-radius:999px;color:#ddd;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
-.dot{width:7px;height:7px;border-radius:50%;background:#eee;box-shadow:0 0 12px #fff}
-</style></head>
-<body><main><div class="mark">T</div><h1>TEHNOCELL</h1><p>Сайт временно приостановлен в связи с обновлением систем.<br>Пожалуйста, попробуйте зайти позднее.</p><div class="status"><span class="dot"></span>Техническое обслуживание</div></main></body></html>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg:#080808;
+    --panel:#101010;
+    --panel2:#171717;
+    --text:#f5f5f5;
+    --muted:#777;
+    --border:rgba(255,255,255,.09);
+    --white:#fff;
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+    background:var(--bg);
+    color:var(--text);
+    font-family:Inter,Arial,sans-serif;
+    height:100dvh;
+    overflow:hidden;
+}
+
+button,input,textarea {
+    font:inherit;
+}
+
+button {
+    color:inherit;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
+
+button:focus-visible {
+    outline:1px solid white;
+    outline-offset:3px;
+}
+
+.app {
+    display:flex;
+    height:100dvh;
+    width:100%;
+    overflow:hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width:275px;
+    background:#0d0d0d;
+    border-right:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    padding:20px 15px;
+    flex-shrink:0;
+    z-index:30;
+}
+
+.brand {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:8px 7px 25px;
+}
+
+.brand-logo {
+    width:36px;
+    height:36px;
+    border:1px solid rgba(255,255,255,.7);
+    border-radius:50%;
+    position:relative;
+    box-shadow:0 0 18px rgba(255,255,255,.15);
+}
+
+.brand-logo:after {
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    background:white;
+    box-shadow:0 0 13px white;
+}
+
+.brand-name {
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:3px;
+}
+
+.brand-sub {
+    font-size:9px;
+    color:#777;
+    letter-spacing:2px;
+    margin-top:4px;
+}
+
+.new-chat {
+    height:47px;
+    border:1px solid var(--border);
+    background:#171717;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    transition:background .25s,transform .25s,border-color .25s;
+}
+
+.new-chat:active {
+    transform:scale(.96);
+}
+
+.new-chat:hover {
+    background:#222;
+    border-color:rgba(255,255,255,.22);
+}
+
+.side-label {
+    color:#666;
+    font-size:10px;
+    letter-spacing:2px;
+    margin:28px 8px 12px;
+}
+
+.history {
+    flex:1;
+    overflow-y:auto;
+}
+
+.history-item {
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 10px;
+    border-radius:10px;
+    color:#aaa;
+    font-size:13px;
+    cursor:pointer;
+    margin-bottom:3px;
+    transition:background .2s,color .2s;
+}
+
+.history-item:hover,
+.history-item.active {
+    background:#1b1b1b;
+    color:white;
+}
+
+.history-title {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    flex:1;
+}
+
+.delete-chat {
+    opacity:.65;
+    border:0;
+    background:transparent;
+    color:#888;
+    font-size:17px;
+}
+
+.profile {
+    border-top:1px solid var(--border);
+    padding:17px 5px 3px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar {
+    width:37px;
+    height:37px;
+    border-radius:50%;
+    background:#222;
+    display:grid;
+    place-items:center;
+    font-size:14px;
+    overflow:hidden;
+}
+
+.avatar img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-info {
+    flex:1;
+    min-width:0;
+}
+
+.profile-name {
+    font-size:13px;
+    font-weight:600;
+}
+
+.profile-status {
+    font-size:10px;
+    color:#777;
+    margin-top:4px;
+}
+
+.icon-button {
+    border:0;
+    background:transparent;
+    color:#888;
+    padding:9px;
+    border-radius:10px;
+    transition:.2s;
+}
+
+.icon-button:active {
+    background:#252525;
+    transform:scale(.9);
+}
+
+/* MAIN */
+
+.main {
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+}
+
+.topbar {
+    height:65px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px;
+    flex-shrink:0;
+}
+
+.top-title {
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:1.5px;
+}
+
+.top-actions {
+    display:flex;
+    gap:8px;
+}
+
+.top-button {
+    border:1px solid var(--border);
+    background:transparent;
+    border-radius:11px;
+    width:39px;
+    height:39px;
+    display:grid;
+    place-items:center;
+    color:#aaa;
+    font-size:17px;
+    transition:background .2s,transform .2s,color .2s;
+}
+
+.top-button:hover {
+    background:#202020;
+    color:white;
+}
+
+.top-button:active {
+    transform:scale(.9);
+}
+
+/* WELCOME */
+
+.welcome {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    overflow-y:auto;
+    position:relative;
+}
+
+.core-wrap {
+    width:280px;
+    height:280px;
+    position:relative;
+    display:grid;
+    place-items:center;
+    margin:0 auto 12px;
+    overflow:visible;
+    isolation:isolate;
+}
+
+#ennieCoreCanvas {
+    position:absolute;
+    width:100%;
+    height:100%;
+    inset:0;
+    display:block;
+    pointer-events:none;
+}
+
+.welcome-title {
+    font-size:27px;
+    font-weight:700;
+    letter-spacing:8px;
+    margin-top:0;
+    text-shadow:0 0 25px rgba(255,255,255,.18);
+}
+
+.welcome-sub {
+    margin-top:12px;
+    color:#888;
+    font-size:13px;
+    line-height:1.8;
+}
+
+.welcome-greeting {
+    margin-top:15px;
+    color:#eee;
+    font-size:14px;
+    font-weight:500;
+    min-height:22px;
+    animation:greetingAppear .7s ease both;
+}
+
+@keyframes greetingAppear {
+    from {opacity:0;transform:translateY(9px)}
+    to {opacity:1;transform:translateY(0)}
+}
+
+/* ENNIE WIDGETS */
+
+.widget-section {
+    width:min(760px,100%);
+    margin:30px auto 0;
+    text-align:left;
+}
+
+.widget-heading {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:14px;
+}
+
+.widget-heading h2 {
+    font-size:12px;
+    letter-spacing:2px;
+    color:#aaa;
+    font-weight:600;
+}
+
+.widget-heading span {
+    color:#555;
+    font-size:10px;
+}
+
+.widget-grid {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:11px;
+}
+
+.widget-card {
+    min-height:112px;
+    padding:16px;
+    background:linear-gradient(145deg,#171717,#101010);
+    border:1px solid var(--border);
+    border-radius:17px;
+    text-align:left;
+    position:relative;
+    overflow:hidden;
+    transition:transform .25s,border-color .25s,background .25s;
+    animation:widgetAppear .65s ease both;
+}
+
+.widget-card:nth-child(2) {animation-delay:.06s}
+.widget-card:nth-child(3) {animation-delay:.12s}
+.widget-card:nth-child(4) {animation-delay:.18s}
+.widget-card:nth-child(5) {animation-delay:.24s}
+.widget-card:nth-child(6) {animation-delay:.30s}
+
+@keyframes widgetAppear {
+    from {opacity:0;transform:translateY(12px)}
+    to {opacity:1;transform:translateY(0)}
+}
+
+.widget-card:hover {
+    transform:translateY(-3px);
+    border-color:rgba(255,255,255,.25);
+    background:linear-gradient(145deg,#202020,#121212);
+}
+
+.widget-card:active {
+    transform:scale(.97);
+}
+
+.widget-icon {
+    font-size:21px;
+    margin-bottom:14px;
+    display:block;
+    color:#eee;
+}
+
+.widget-card h3 {
+    font-size:12px;
+    font-weight:600;
+    margin-bottom:6px;
+}
+
+.widget-card p {
+    font-size:10px;
+    line-height:1.5;
+    color:#777;
+}
+
+/* MESSAGES */
+
+.messages {
+    flex:1;
+    overflow-y:auto;
+    padding:25px max(20px,calc((100% - 760px)/2));
+    display:none;
+    flex-direction:column;
+    gap:22px;
+    scroll-behavior:smooth;
+}
+
+.message {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    max-width:100%;
+    animation:messageIn .3s ease both;
+}
+
+@keyframes messageIn {
+    from {opacity:0;transform:translateY(7px)}
+    to {opacity:1;transform:translateY(0)}
+}
+
+.message.user {
+    flex-direction:row-reverse;
+}
+
+.message-avatar {
+    width:30px;
+    height:30px;
+    min-width:30px;
+    border-radius:50%;
+    background:#202020;
+    display:grid;
+    place-items:center;
+    font-size:10px;
+    border:1px solid var(--border);
+}
+
+.message-content {
+    max-width:min(85%,650px);
+    font-size:14px;
+    line-height:1.75;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+}
+
+.message.user .message-content {
+    background:#1c1c1c;
+    border:1px solid var(--border);
+    padding:12px 15px;
+    border-radius:15px 4px 15px 15px;
+}
+
+.message.assistant .message-content {
+    padding:5px 0;
+}
+
+/* THINKING */
+
+.typing {
+    display:flex;
+    gap:5px;
+    padding:12px 0;
+}
+
+.typing span {
+    width:5px;
+    height:5px;
+    background:#ddd;
+    border-radius:50%;
+    animation:typing 1s infinite alternate;
+}
+
+.typing span:nth-child(2) {animation-delay:.2s}
+.typing span:nth-child(3) {animation-delay:.4s}
+
+@keyframes typing {
+    to {opacity:.2;transform:translateY(-4px)}
+}
+
+/* COMPOSER */
+
+.composer-area {
+    position:relative;
+    padding:15px 20px 22px;
+    width:100%;
+    max-width:820px;
+    margin:0 auto;
+}
+
+.composer {
+    min-height:57px;
+    border:1px solid rgba(255,255,255,.15);
+    background:#131313;
+    border-radius:18px;
+    display:flex;
+    align-items:flex-end;
+    padding:9px 10px;
+    gap:8px;
+    transition:border .25s,box-shadow .25s;
+}
+
+.composer:focus-within {
+    border-color:rgba(255,255,255,.4);
+    box-shadow:0 0 25px rgba(255,255,255,.05);
+}
+
+#messageInput {
+    flex:1;
+    min-width:0;
+    max-height:130px;
+    resize:none;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:white;
+    padding:9px 5px;
+    font-size:14px;
+    line-height:1.5;
+}
+
+#messageInput::placeholder {
+    color:#686868;
+}
+
+.send-button,.tool-button {
+    width:39px;
+    height:39px;
+    border:0;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    flex-shrink:0;
+    transition:transform .2s,background .2s;
+}
+
+.send-button {
+    background:white;
+    color:black;
+    font-size:18px;
+}
+
+.send-button:active,.tool-button:active {
+    transform:scale(.9);
+}
+
+.tool-button {
+    background:transparent;
+    color:#aaa;
+    font-size:18px;
+}
+
+.tool-button:hover {
+    background:#252525;
+    color:white;
+}
+
+.disclaimer {
+    text-align:center;
+    color:#555;
+    font-size:10px;
+    margin-top:12px;
+    letter-spacing:.5px;
+    animation:footerBreath 4s ease-in-out infinite;
+}
+
+@keyframes footerBreath {
+    0%,100% {opacity:.55}
+    50% {opacity:1}
+}
+
+/* MOBILE */
+
+.menu-toggle {
+    display:none;
+}
+
+@media(max-width:700px) {
+    .sidebar {
+        position:fixed;
+        left:-290px;
+        top:0;
+        bottom:0;
+        width:275px;
+        transition:left .28s ease;
+        box-shadow:10px 0 40px rgba(0,0,0,.4);
+    }
+
+    body.menu-open .sidebar {
+        left:0;
+    }
+
+    .menu-toggle {
+        display:grid;
+    }
+
+    .topbar {
+        padding:0 13px;
+        height:58px;
+    }
+
+    .messages {
+        padding:20px 14px;
+    }
+
+    .composer-area {
+        padding:10px 10px 15px;
+    }
+
+    .core-wrap {
+        width:210px;
+        height:210px;
+        margin-bottom:4px;
+    }
+
+    .welcome-title {
+        font-size:23px;
+    }
+
+    .welcome-sub {
+        font-size:12px;
+    }
+
+    .welcome-greeting {
+        font-size:13px;
+    }
+
+    .widget-section {
+        margin-top:22px;
+    }
+
+    .widget-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:9px;
+    }
+
+    .widget-card {
+        min-height:105px;
+        padding:13px;
+    }
+
+    .widget-card p {
+        font-size:9px;
+    }
+
+    .message-content {
+        font-size:13px;
+    }
+}
+
+
+/* ENNIE — MOBILE POLISH + SETTINGS */
+@media (max-width: 700px) {
+  .welcome {
+    padding: 16px 14px 26px;
+  }
+  .core-wrap {
+    width: min( min(66vw, 220px), 220px);
+    height: min( min(66vw, 220px), 220px);
+    margin: 4px auto 12px;
+  }
+  .welcome-title {
+    font-size: clamp(23px, 7vw, 28px);
+    letter-spacing: 5px;
+  }
+  .welcome-sub, .welcome-description {
+    max-width: 290px;
+    line-height: 1.65;
+  }
+  .settings-modal {
+    width: calc(100vw - 24px);
+    max-width: 440px;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    padding: 20px 17px;
+    border-radius: 20px;
+  }
+  .settings-profile {
+    display: grid;
+    grid-template-columns: 48px minmax(0,1fr);
+    gap: 10px 12px;
+    padding: 14px;
+    border-radius: 17px;
+  }
+  .settings-avatar {
+    grid-row: span 2;
+    width: 48px;
+    height: 48px;
+  }
+  .settings-profile-info { min-width: 0; }
+  .settings-profile-name {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  .settings-profile-status, .settings-profile-id {
+    font-size: 10px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  .settings-account-link {
+    grid-column: 2;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 380px) {
+  .core-wrap {
+    width: 190px;
+    height: 190px;
+  }
+  .welcome { padding-top: 10px; }
+}
+.icon-btn svg {
+  width: 19px;
+  height: 19px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#settingsBtn svg, #topSettingsBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* FINAL MOBILE OVERRIDES — applied after all legacy media rules */
+@media (max-width: 700px) {
+  .welcome {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px 24px !important;
+    justify-content: flex-start;
+    overflow-x: hidden;
+  }
+  .welcome-content {
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .core-wrap {
+    box-sizing: border-box;
+    width: min(58vw, 184px) !important;
+    height: min(58vw, 184px) !important;
+    min-width: 150px;
+    min-height: 150px;
+    flex: 0 0 auto;
+    margin: 4px auto 10px !important;
+    overflow: visible;
+  }
+  #ennieCoreCanvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+  }
+  .welcome-title { margin-top: 2px; }
+  .widget-section { width: 100%; margin-top: 22px !important; }
+  .widget-grid { width: 100%; }
+}
+@media (max-width: 380px) {
+  .core-wrap {
+    width: 158px !important;
+    height: 158px !important;
+    min-width: 158px;
+    min-height: 158px;
+  }
+}
+/* Clean, symmetric settings glyph */
+#settingsBtn svg, #topSettingsBtn svg {
+  width: 21px !important;
+  height: 21px !important;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* ENNIE MOBILE HOTFIX — final cascade */
+@media (max-width: 700px) {
+  .welcome {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    padding: 12px 14px 24px !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  .welcome-content {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+  }
+  .core-wrap {
+    display: block !important;
+    position: relative !important;
+    width: 196px !important;
+    height: 196px !important;
+    min-width: 196px !important;
+    min-height: 196px !important;
+    max-width: calc(100vw - 48px) !important;
+    max-height: calc(100vw - 48px) !important;
+    flex: 0 0 196px !important;
+    margin: 0 auto 8px !important;
+    overflow: visible !important;
+  }
+  #ennieCoreCanvas {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+  }
+  .settings-profile {
+    display: grid !important;
+    grid-template-columns: 52px minmax(0,1fr) !important;
+    align-items: center !important;
+    gap: 9px 12px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 15px !important;
+  }
+  .settings-avatar {
+    grid-row: 1 / span 2 !important;
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background-position: center !important;
+    background-size: cover !important;
+  }
+  .settings-profile-info { min-width: 0 !important; }
+  .settings-profile-name,.settings-profile-status,.settings-profile-id {
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+  .settings-account-link { grid-column: 2 !important; justify-self: start !important; }
+}
+@media (max-width: 380px) {
+  .core-wrap {
+    width: 174px !important;
+    height: 174px !important;
+    min-width: 174px !important;
+    min-height: 174px !important;
+    flex-basis: 174px !important;
+  }
+}
+/* centered minimal gear mark */
+#settingsBtn, #topSettingsBtn {
+  display: inline-grid !important;
+  place-items: center !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+}
+#settingsBtn svg, #topSettingsBtn svg {
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: auto !important;
+  transform: none !important;
+  overflow: visible !important;
+  stroke: currentColor !important;
+  stroke-width: 1.65 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  fill: none !important;
+}
+
+
+.settings-account-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
+.settings-account-copy{min-height:34px;padding:0 12px;border:1px solid var(--border);border-radius:9px;background:transparent;color:var(--text);font:inherit;font-size:11px;cursor:pointer}
+.settings-account-copy:active{transform:scale(.97)}
+.settings-account-link{min-height:34px;padding:0 12px;border:1px solid var(--border);border-radius:9px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text);font-size:11px}
+.settings-profile{box-sizing:border-box;min-width:0}
+
+
+/* ENNIE reactive screen vignette — voice activity */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0;
+  border: 0 solid rgba(255,255,255,0);
+  background:
+    radial-gradient(ellipse at center,
+      rgba(255,255,255,0) 56%,
+      rgba(255,255,255,.012) 72%,
+      rgba(255,255,255,.075) 100%);
+  box-shadow: inset 0 0 0 0 rgba(255,255,255,0);
+  transition: opacity .35s ease, box-shadow .45s ease;
+}
+body.ennie-thinking::after {
+  opacity: .72;
+  box-shadow:
+    inset 0 0 16px 1px rgba(255,255,255,.07),
+    inset 0 0 48px 4px rgba(255,255,255,.05);
+  animation: ennieVignetteListen 2.6s ease-in-out infinite;
+}
+body.light-theme.ennie-thinking::after {
+  box-shadow:
+    inset 0 0 16px 1px rgba(70,70,70,.06),
+    inset 0 0 48px 4px rgba(70,70,70,.04);
+}
+body.speaking::after {
+  opacity: 1;
+  box-shadow:
+    inset 0 0 22px 2px rgba(255,255,255,.10),
+    inset 0 0 58px 5px rgba(255,255,255,.075),
+    inset 0 0 110px 10px rgba(255,255,255,.045);
+  animation: ennieVignettePulse 2.4s ease-in-out infinite;
+}
+body.listening::after {
+  opacity: 1;
+  box-shadow:
+    inset 0 0 18px 2px rgba(255,255,255,.09),
+    inset 0 0 48px 5px rgba(255,255,255,.065);
+  animation: ennieVignetteListen 1.8s ease-in-out infinite;
+}
+body.light-theme::after {
+  background:
+    radial-gradient(ellipse at center,
+      rgba(255,255,255,0) 56%,
+      rgba(80,80,80,.012) 72%,
+      rgba(80,80,80,.045) 100%);
+}
+body.light-theme.speaking::after {
+  box-shadow:
+    inset 0 0 22px 2px rgba(70,70,70,.09),
+    inset 0 0 58px 5px rgba(70,70,70,.06),
+    inset 0 0 110px 10px rgba(70,70,70,.035);
+}
+body.light-theme.listening::after {
+  box-shadow:
+    inset 0 0 18px 2px rgba(70,70,70,.08),
+    inset 0 0 48px 5px rgba(70,70,70,.05);
+}
+@keyframes ennieVignettePulse {
+  0%,100% { filter: brightness(1); }
+  50% { filter: brightness(1.22); }
+}
+@keyframes ennieVignetteListen {
+  0%,100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.speaking::after, body.listening::after { animation: none; }
+}
+
+
+/* ENNIE selection: suppress native long-press callouts without disabling text selection. */
+html, body, body * {
+  -webkit-touch-callout:none;
+}
+input, textarea, [contenteditable="true"], [role="textbox"] {
+  -webkit-touch-callout:default;
+  caret-color:#fff;
+  accent-color:#fff;
+}
+/* White selection highlight and white caret/accent where the browser permits it. */
+:root { color-scheme:dark; accent-color:#fff; }
+::selection { background:rgba(255,255,255,.38) !important; color:#fff !important; text-shadow:none; }
+::-moz-selection { background:rgba(255,255,255,.38) !important; color:#fff !important; }
+.message, .message *, .welcome, .welcome *, .widget-section, .widget-section * {
+  -webkit-user-select:text;
+  user-select:text;
+}
+.ennie-selection-bubble {
+  position:fixed; z-index:2147483000; display:flex; align-items:center; gap:5px;
+  padding:7px; border:1px solid rgba(255,255,255,.22); border-radius:22px;
+  background:rgba(25,25,27,.72); color:#fff;
+  -webkit-backdrop-filter:blur(22px) saturate(135%); backdrop-filter:blur(22px) saturate(135%);
+  box-shadow:0 8px 32px rgba(0,0,0,.48),0 0 22px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.13);
+  opacity:0; transform:none; pointer-events:none;
+  transition:opacity .12s ease;
+}
+.ennie-selection-bubble.visible { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+.ennie-selection-action {
+  min-height:39px; display:flex; align-items:center; justify-content:center; gap:7px;
+  padding:0 12px; border:1px solid rgba(255,255,255,.10); border-radius:15px;
+  color:rgba(255,255,255,.94); background:rgba(255,255,255,.055);
+  font:500 12px/1.1 Inter,Arial,sans-serif; white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+.ennie-selection-action.primary { background:rgba(255,255,255,.16); border-color:rgba(255,255,255,.25); box-shadow:0 0 14px rgba(255,255,255,.08); }
+.ennie-selection-action svg { width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+@media (prefers-reduced-motion:reduce) { .ennie-selection-bubble {transition:none;} }
+
+</style>
+
+<style id="ennie-touch-styles">
+/* ENNIE orb: prevent Yandex Browser from selecting nearby page text */
+#coreWrap {
+  cursor:pointer;
+  touch-action:none;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-user-select:none;
+  user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-user-drag:none;
+}
+#coreWrap * { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+#coreWrap::before {
+  content:""; position:absolute; inset:4%; border-radius:50%;
+  pointer-events:none; z-index:0; opacity:.34;
+  background:radial-gradient(circle,rgba(255,255,255,.22) 0%,rgba(255,255,255,.09) 42%,rgba(255,255,255,0) 72%);
+  filter:blur(15px); transition:opacity .25s,filter .25s;
+}
+#coreWrap #ennieCoreCanvas { position:relative; z-index:1; }
+#coreWrap::after {
+  content:""; position:absolute; inset:12%; border:1px solid rgba(255,255,255,0);
+  border-radius:50%; pointer-events:none; transform:scale(.78); opacity:0; z-index:2;
+}
+#coreWrap.touching::before {
+  opacity:1; filter:blur(21px) brightness(1.8);
+  animation:ennieTouchGlow 1.8s ease-out;
+}
+#coreWrap.touching::after { animation:ennieTouchRipple .85s ease-out; }
+#coreWrap.touching { animation:ennieTouchPress .62s cubic-bezier(.2,.8,.2,1); }
+#coreWrap.cooldown::before { opacity:.48; }
+@keyframes ennieTouchGlow {
+  0% { opacity:.35; filter:blur(12px) brightness(1); }
+  22% { opacity:1; filter:blur(24px) brightness(2.2); }
+  100% { opacity:.34; filter:blur(15px) brightness(1); }
+}
+@keyframes ennieTouchRipple {
+  0% { transform:scale(.72); opacity:.8; border-color:rgba(255,255,255,.8); box-shadow:0 0 24px rgba(255,255,255,.5); }
+  100% { transform:scale(1.48); opacity:0; border-color:rgba(255,255,255,0); box-shadow:0 0 42px rgba(255,255,255,0); }
+}
+@keyframes ennieTouchPress {
+  0%,100% { transform:scale(1); }
+  28% { transform:scale(.965); }
+  58% { transform:scale(1.035); }
+}
+#coreWrap:focus-visible { outline:1px solid rgba(255,255,255,.65); outline-offset:8px; border-radius:50%; }
+@media (prefers-reduced-motion: reduce) {
+  #coreWrap.touching, #coreWrap.touching::after { animation-duration:.01ms; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- БОКОВОЕ МЕНЮ -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+      <div class="brand">
+        <div class="brand-mark">E</div>
+        <div class="brand-text">
+          <span class="brand-name">ENNIE</span>
+          <span class="brand-subtitle">TEHNOCELL AI</span>
+        </div>
+      </div>
+
+      <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Закрыть меню">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <button class="new-chat-btn" id="newChatBtn">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>Новый диалог</span>
+    </button>
+
+    <div class="history-heading">ТВОИ ДИАЛОГИ</div>
+
+    <div class="chat-history" id="chatHistory">
+      <div class="history-empty">
+        Здесь пока пусто
+      </div>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="profile" id="profileCard">
+        <div class="profile-avatar" id="profileAvatar">E</div>
+
+        <div class="profile-info">
+          <div class="profile-name" id="profileName">TEHNOCELL ID</div>
+          <div class="profile-status" id="profileStatus">Проверка аккаунта...</div>
+        </div>
+
+        <button class="icon-btn" id="settingsBtn" aria-label="Настройки">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3.2"/>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.09-.03a1.7 1.7 0 0 0-1.82.34 1.7 1.7 0 0 0-.63 1.34V22h-3.4v-.47a1.7 1.7 0 0 0-1.1-1.59 1.7 1.7 0 0 0-1.82.34l-.06.06-2.94-1.7.03-.09a1.7 1.7 0 0 0-.34-1.82 1.7 1.7 0 0 0-1.34-.63H4v-3.4h.47a1.7 1.7 0 0 0 1.59-1.1 1.7 1.7 0 0 0-.34-1.82l-.06-.06 1.7-2.94.09.03a1.7 1.7 0 0 0 1.82-.34 1.7 1.7 0 0 0 .63-1.34V5h3.4v.47a1.7 1.7 0 0 0 1.1 1.59 1.7 1.7 0 0 0 1.82-.34l.06-.06 2.94 1.7-.03.09a1.7 1.7 0 0 0 .34 1.82 1.7 1.7 0 0 0 1.34.63H21v3.4h-.47A1.7 1.7 0 0 0 19.4 15Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+
+  <!-- ОСНОВНАЯ ОБЛАСТЬ -->
+  <main class="main">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+        <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Открыть меню">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 7h16M4 12h16M4 17h16"/>
+          </svg>
+        </button>
+
+        <div class="mobile-brand">
+          <span>ENNIE</span>
+          <small>TEHNOCELL AI</small>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="connection-indicator">
+          <span class="connection-dot"></span>
+          <span>ENNIE ONLINE</span>
+        </div>
+
+        <button class="icon-btn" id="topSettingsBtn" aria-label="Настройки">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3.2"/>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.09-.03a1.7 1.7 0 0 0-1.82.34 1.7 1.7 0 0 0-.63 1.34V22h-3.4v-.47a1.7 1.7 0 0 0-1.1-1.59 1.7 1.7 0 0 0-1.82.34l-.06.06-2.94-1.7.03-.09a1.7 1.7 0 0 0-.34-1.82 1.7 1.7 0 0 0-1.34-.63H4v-3.4h.47a1.7 1.7 0 0 0 1.59-1.1 1.7 1.7 0 0 0-.34-1.82l-.06-.06 1.7-2.94.09.03a1.7 1.7 0 0 0 1.82-.34 1.7 1.7 0 0 0 .63-1.34V5h3.4v.47a1.7 1.7 0 0 0 1.1 1.59 1.7 1.7 0 0 0 1.82-.34l.06-.06 2.94 1.7-.03.09a1.7 1.7 0 0 0 .34 1.82 1.7 1.7 0 0 0 1.34.63H21v3.4h-.47A1.7 1.7 0 0 0 19.4 15Z"/>
+          </svg>
+        </button>
+      </div>
+
+    </header>
+
+
+    <!-- ЭКРАН ПРИВЕТСТВИЯ -->
+    <section class="welcome" id="welcome">
+
+      <div class="welcome-content">
+
+        <div class="welcome-eyebrow">
+          <span class="eyebrow-line"></span>
+          YOUR PERSONAL AI ASSISTANT
+          <span class="eyebrow-line"></span>
+        </div>
+
+        <div class="core-wrap" id="coreWrap">
+          <canvas id="ennieCoreCanvas"></canvas>
+        </div>
+
+        <h1 class="welcome-title">
+          Привет. Я <span>ENNIE</span>.
+        </h1>
+
+        <p class="welcome-greeting" id="welcomeGreeting">
+          Ну что, мой хороший, какие сегодня планы?
+        </p>
+
+        <p class="welcome-description">
+          Я рядом. Можем поговорить, разобраться с задачами
+          или просто провести немного времени вместе.
+        </p>
+
+      </div>
+
+
+      <!-- ВИДЖЕТЫ -->
+      <div class="widget-section">
+
+        <div class="widget-heading">
+          <div>
+            <span class="section-label">ТВОЁ ПРОСТРАНСТВО</span>
+            <h2>Что будем делать?</h2>
+          </div>
+        </div>
+
+        <div class="widget-grid">
+
+          <button class="widget-card" data-action="day">
+            <div class="widget-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="5" width="18" height="16" rx="3"/>
+                <path d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h7"/>
+              </svg>
+            </div>
+            <span class="widget-title">Мой день</span>
+            <span class="widget-description">Планы и задачи</span>
+            <span class="widget-arrow">↗</span>
+          </button>
+
+          <button class="widget-card" data-action="memory">
+            <div class="widget-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3a7 7 0 0 0-4 12.7V19h8v-3.3A7 7 0 0 0 12 3Z"/>
+                <path d="M9 22h6M9 16h6"/>
+              </svg>
+            </div>
+            <span class="widget-title">Моя память</span>
+            <span class="widget-description">Идеи и заметки</span>
+            <span class="widget-arrow">↗</span>
+          </button>
+
+          <button class="widget-card" data-action="hub">
+            <div class="widget-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="3" width="8" height="8" rx="2"/>
+                <rect x="13" y="3" width="8" height="8" rx="2"/>
+                <rect x="3" y="13" width="8" height="8" rx="2"/>
+                <rect x="13" y="13" width="8" height="8" rx="2"/>
+              </svg>
+            </div>
+            <span class="widget-title">TC HUB</span>
+            <span class="widget-description">Экосистема TEHNOCELL</span>
+            <span class="widget-arrow">↗</span>
+          </button>
+
+          <button class="widget-card" data-action="news">
+            <div class="widget-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 4h16v16H4z"/>
+                <path d="M8 8h8M8 12h8M8 16h5"/>
+              </svg>
+            </div>
+            <span class="widget-title">TC NEWS</span>
+            <span class="widget-description">Новости компании</span>
+            <span class="widget-arrow">↗</span>
+          </button>
+
+          <button class="widget-card" data-action="status">
+            <div class="widget-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 12h4l3-8 4 16 3-8h4"/>
+              </svg>
+            </div>
+            <span class="widget-title">TC STATUS</span>
+            <span class="widget-description">Состояние сервисов</span>
+            <span class="widget-arrow">↗</span>
+          </button>
+
+          <button class="widget-card" data-action="quick">
+            <div class="widget-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3v18M3 12h18"/>
+                <circle cx="12" cy="12" r="9"/>
+              </svg>
+            </div>
+            <span class="widget-title">Быстрые действия</span>
+            <span class="widget-description">Создать что-нибудь</span>
+            <span class="widget-arrow">↗</span>
+          </button>
+
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ПЕРЕПИСКА -->
+    <section class="chat-area" id="chatArea">
+
+      <div class="messages" id="messages"></div>
+
+      <div class="typing-indicator" id="typingIndicator" role="status" aria-live="polite" aria-label="ENNIE готовит ответ">
+        <div class="typing-keys" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <span class="typing-label">ENNIE думает…</span>
+        
+      </div>
+
+    </section>
+
+
+    <!-- ПОЛЕ ВВОДА -->
+    <div class="composer-area" id="composerArea">
+
+      <div class="attachment-preview" id="attachmentPreview"></div>
+
+      <div class="composer">
+
+        <button class="composer-btn" id="attachBtn" aria-label="Прикрепить файл или фотографию">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </button>
+
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/jpeg,image/png,image/webp,.txt,.md,.csv,.json,.pdf,.docx,text/plain,text/markdown,text/csv,application/json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          hidden
+        >
+
+        <textarea
+          id="messageInput"
+          placeholder="Напиши мне что-нибудь..."
+          rows="1"
+          autocomplete="off"
+        ></textarea>
+
+        <button type="button" class="composer-btn mic-btn" id="micBtn" aria-label="Голосовой ввод">
+          <svg viewBox="0 0 24 24">
+            <rect x="9" y="2" width="6" height="13" rx="3"/>
+            <path d="M5 11a7 7 0 0 0 14 0M12 18v4M9 22h6"/>
+          </svg>
+        </button>
+
+        <button type="button" class="send-btn" id="sendBtn" aria-label="Отправить">
+          <svg viewBox="0 0 24 24">
+            <path d="m5 12 14-7-5 14-2-6-7-1Z"/>
+            <path d="m12 13 7-8"/>
+          </svg>
+        </button>
+
+      </div>
+
+      <div class="composer-bottom">
+        <span id="disclaimer">
+          ENNIE может ошибаться. Проверяй важную информацию.
+        </span>
+      </div>
+
+    </div>
+
+
+    <!-- ПОДВАЛ -->
+    <footer class="app-footer">
+      <span>ENNIE</span>
+      <span class="footer-divider">—</span>
+      <span>TEHNOCELL AI</span>
+    </footer>
+
+  </main>
+
+</div>
+
+
+<!-- ЗАТЕМНЕНИЕ ПРИ ОТКРЫТОМ МЕНЮ -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+<!-- УВЕДОМЛЕНИЯ -->
+<div class="toast-container" id="toastContainer"></div>
+<button id="voiceTrashZone" type="button" aria-label="Перетащить сюда, чтобы удалить" title="Удалить голосовое сообщение"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg></button>
+
+
+<!-- ОКНО НАСТРОЕК -->
+<div class="modal-overlay" id="settingsModal">
+
+  <div class="modal settings-modal">
+
+    <div class="modal-header">
+      <div>
+        <span class="section-label">ENNIE CONTROL</span>
+        <h2>Настройки</h2>
+      </div>
+
+      <button class="icon-btn" id="closeSettings" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+
+    <!-- TEHNOCELL ID — ACCOUNT CARD -->
+    <section class="settings-profile" aria-label="TEHNOCELL ID">
+      <div class="settings-avatar" id="settingsAvatar">E</div>
+      <div class="settings-profile-info">
+        <div class="settings-profile-name" id="settingsProfileName">TEHNOCELL ID</div>
+        <div class="settings-profile-status" id="settingsProfileStatus">Аккаунт не подключён</div>
+        <div class="settings-profile-id" id="settingsProfileId">TC-ID: проверка...</div>
+      </div>
+      <div class="settings-account-actions">
+        <a href="https://technosotrudnik.github.io/tehnocell-indostri/account.html" class="settings-account-link">Открыть профиль</a>
+        <button type="button" class="settings-account-copy" id="copyAccountEmail">Копировать email</button>
+      </div>
+    </section>
+
+    <div class="settings-group">
+
+      <div class="settings-group-title">ВНЕШНИЙ ВИД</div>
+
+      <div class="setting-row">
+        <div>
+          <div class="setting-name">Тёмная тема</div>
+          <div class="setting-description">Оформление интерфейса</div>
+        </div>
+
+        <label class="switch">
+          <input type="checkbox" id="themeToggle" checked>
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+    </div>
+
+
+    <div class="settings-group">
+
+      <div class="settings-group-title">ГОЛОС ENNIE</div>
+
+      <div class="setting-row">
+        <div>
+          <div class="setting-name">Голосовые ответы</div>
+          <div class="setting-description">ENNIE сможет отвечать голосом</div>
+        </div>
+
+        <label class="switch">
+          <input type="checkbox" id="voiceOutputToggle" checked>
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-name">Фоновое пробуждение</div>
+          <div class="setting-description" id="wakeWordDescription">Скажи «Энни, помоги» — ENNIE услышит тебя и примет команду, даже если открыт другой экран.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="wakeWordToggle">
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+
+    </div>
+
+
+    <div class="settings-group">
+
+      <div class="settings-group-title">БЕЗОПАСНОСТЬ</div>
+
+      <button class="settings-action" id="clearHistoryBtn">
+        <span>Очистить историю диалогов</span>
+        <span class="settings-action-arrow">→</span>
+      </button>
+
+      <button class="settings-action danger" id="logoutBtn">
+        <span>Выйти из аккаунта</span>
+        <span class="settings-action-arrow">→</span>
+      </button>
+
+    </div>
+
+
+    <div class="settings-version">
+      ENNIE — TEHNOCELL AI
+      <span>PERSONAL ASSISTANT</span>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ОКНО ПОДТВЕРЖДЕНИЯ -->
+<div class="modal-overlay" id="confirmModal">
+
+  <div class="modal confirm-modal">
+
+    <div class="confirm-mark">!</div>
+
+    <h2 id="confirmTitle">Ты уверена?</h2>
+
+    <p id="confirmText">
+      Это действие нельзя будет отменить.
+    </p>
+
+    <div class="confirm-buttons">
+      <button class="secondary-btn" id="confirmCancel">Отмена</button>
+      <button class="primary-btn" id="confirmAccept">Продолжить</button>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ВСПОМОГАТЕЛЬНОЕ ОКНО ДЛЯ ВИДЖЕТОВ -->
+<div class="modal-overlay" id="widgetModal">
+
+  <div class="modal widget-modal">
+
+    <div class="modal-header">
+      <div>
+        <span class="section-label" id="widgetModalLabel">ENNIE SPACE</span>
+        <h2 id="widgetModalTitle">Мой день</h2>
+      </div>
+
+      <button class="icon-btn" id="closeWidgetModal" aria-label="Закрыть">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="widget-modal-content" id="widgetModalContent"></div>
+
+  </div>
+
+</div>
+<script>
+/* ==========================================
+   ENNIE V11 — INTERFACE CORE
+========================================== */
+
+const $ = (selector) => document.querySelector(selector);
+
+const sidebar = $("#sidebar");
+const sidebarOverlay = $("#sidebarOverlay");
+const welcome = $("#welcome");
+const chatArea = $("#chatArea");
+const messages = $("#messages");
+const messageInput = $("#messageInput");
+const sendBtn = $("#sendBtn");
+const typingIndicator = $("#typingIndicator");
+
+let currentUser = null;
+let currentChatId = null;
+let currentChatTitle = "Новый диалог";
+let currentMessages = [];
+let attachedImage = null;
+let attachedTextFile = null;
+let isSending = false;
+let voiceEnabled = true;
+let greetingSelected = false;
+let confirmCallback = null;
+
+
+/* ==========================================
+   УВЕДОМЛЕНИЯ
+========================================== */
+
+function showToast(message, type = "info") {
+  const container = $("#toastContainer");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className = "toast toast-" + type;
+
+  const mark = document.createElement("span");
+  mark.className = "toast-mark";
+  mark.textContent =
+    type === "success" ? "✓" :
+    type === "error" ? "!" : "i";
+
+  const text = document.createElement("span");
+  text.textContent = message;
+
+  toast.append(mark, text);
+  container.appendChild(toast);
+
+  requestAnimationFrame(() => toast.classList.add("toast-visible"));
+
+  setTimeout(() => {
+    toast.classList.remove("toast-visible");
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+function showError(message) {
+  showToast(message, "error");
+}
+
+
+/* ==========================================
+   ПРИВЕТСТВИЯ
+========================================== */
+
+const welcomeGreetings = [
+  "Ну что, мой хороший, какие сегодня планы?",
+  "Я здесь. Расскажешь, чем займёмся?",
+  "Как хорошо, что ты заглянул. Что у нас сегодня?",
+  "Ну привет. Что интересного произошло?",
+  "Я уже здесь. С чего начнём?",
+  "Давай немного поболтаем. Как ты?",
+  "Ну что, готова помочь тебе с чем-нибудь.",
+  "Рада тебя видеть. Какие планы на сегодня?",
+  "Я слушаю тебя. Рассказывай.",
+  "Может, сегодня сделаем что-нибудь классное?"
+];
+
+function showWelcome() {
+  welcome.style.display = "flex";
+  chatArea.style.display = "none";
+
+  requestAnimationFrame(() => {
+    const core = document.getElementById("coreWrap");
+    if (core) {
+      const rect = core.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        window.dispatchEvent(new Event("resize"));
+      }
+    }
+  });
+
+  if (!greetingSelected) {
+    const greeting =
+      welcomeGreetings[Math.floor(Math.random() * welcomeGreetings.length)];
+
+    $("#welcomeGreeting").textContent = greeting;
+    greetingSelected = true;
+  }
+}
+
+function hideWelcome() {
+  welcome.style.display = "none";
+  chatArea.style.display = "flex";
+}
+
+
+/* ==========================================
+   БОКОВОЕ МЕНЮ
+========================================== */
+
+function openSidebar() {
+  sidebar.classList.add("sidebar-open");
+  sidebarOverlay.classList.add("overlay-visible");
+}
+
+function closeSidebar() {
+  sidebar.classList.remove("sidebar-open");
+  sidebarOverlay.classList.remove("overlay-visible");
+}
+
+$("#menuToggle").addEventListener("click", openSidebar);
+$("#sidebarClose").addEventListener("click", closeSidebar);
+sidebarOverlay.addEventListener("click", closeSidebar);
+
+
+/* ==========================================
+   НАСТРОЙКИ
+========================================== */
+
+function openSettings() {
+  $("#settingsModal").classList.add("modal-visible");
+  closeSidebar();
+}
+
+function closeSettings() {
+  $("#settingsModal").classList.remove("modal-visible");
+}
+
+$("#settingsBtn").addEventListener("click", openSettings);
+$("#topSettingsBtn").addEventListener("click", openSettings);
+
+const copyAccountEmailButton = document.getElementById("copyAccountEmail");
+if (copyAccountEmailButton) {
+  copyAccountEmailButton.addEventListener("click", async () => {
+    const email = currentUser?.email;
+    if (!email) { showError("Сначала войди в TEHNOCELL ID."); return; }
+    try {
+      await navigator.clipboard.writeText(email);
+      showToast("Email скопирован");
+    } catch (error) {
+      showError("Не удалось скопировать email. Проверь разрешение браузера.");
+    }
+  });
+}
+
+$("#closeSettings").addEventListener("click", closeSettings);
+
+$("#settingsModal").addEventListener("click", (event) => {
+  if (event.target === $("#settingsModal")) {
+    closeSettings();
+  }
+});
+
+
+/* ==========================================
+   ПОДТВЕРЖДЕНИЯ
+========================================== */
+
+function askConfirm(title, text, callback, danger = false) {
+  $("#confirmTitle").textContent = title;
+  $("#confirmText").textContent = text;
+
+  confirmCallback = callback;
+
+  const accept = $("#confirmAccept");
+  accept.classList.toggle("danger-btn", danger);
+
+  $("#confirmModal").classList.add("modal-visible");
+}
+
+function closeConfirm() {
+  $("#confirmModal").classList.remove("modal-visible");
+  confirmCallback = null;
+}
+
+$("#confirmCancel").addEventListener("click", closeConfirm);
+
+$("#confirmAccept").addEventListener("click", async () => {
+  const callback = confirmCallback;
+  closeConfirm();
+
+  if (typeof callback === "function") {
+    await callback();
+  }
+});
+
+$("#confirmModal").addEventListener("click", (event) => {
+  if (event.target === $("#confirmModal")) closeConfirm();
+});
+
+
+/* ==========================================
+   ТЁМНАЯ И СВЕТЛАЯ ТЕМА
+========================================== */
+
+function applyTheme(dark) {
+  document.body.classList.toggle("light-theme", !dark);
+
+  localStorage.setItem("ennie-theme", dark ? "dark" : "light");
+
+  $("#themeToggle").checked = dark;
+}
+
+const savedTheme = localStorage.getItem("ennie-theme");
+applyTheme(savedTheme !== "light");
+
+$("#themeToggle").addEventListener("change", (event) => {
+  applyTheme(event.target.checked);
+});
+
+
+/* ==========================================
+   НАСТРОЙКИ ГОЛОСА
+========================================== */
+
+voiceEnabled = localStorage.getItem("ennie_voice_output") !== null
+  ? localStorage.getItem("ennie_voice_output") === "true"
+  : localStorage.getItem("ennie-voice") !== "false";
+
+$("#voiceOutputToggle").checked = voiceEnabled;
+localStorage.setItem("ennie_voice_output", String(voiceEnabled));
+window.addEventListener("storage", (event) => {
+  if (event.key !== "ennie_voice_output") return;
+  voiceEnabled = event.newValue === "true";
+  $("#voiceOutputToggle").checked = voiceEnabled;
+  if (!voiceEnabled) stopEnnieVoice();
+});
+
+$("#voiceOutputToggle").addEventListener("change", (event) => {
+  voiceEnabled = event.target.checked;
+  if (!voiceEnabled) stopEnnieVoice();
+  localStorage.setItem("ennie-voice", String(voiceEnabled));
+  localStorage.setItem("ennie_voice_output", String(voiceEnabled));
+
+  showToast(
+    voiceEnabled ? "Голосовые ответы включены" : "Голосовые ответы выключены",
+    "success"
+  );
+});
+
+
+const wakeWordToggle = $("#wakeWordToggle");
+const wakeWordDescription = $("#wakeWordDescription");
+const nativeWakeAvailable = !!(window.EnnieNative &&
+  typeof window.EnnieNative.setWakeWordEnabled === "function" &&
+  typeof window.EnnieNative.isWakeWordEnabled === "function");
+if (wakeWordToggle) {
+  wakeWordToggle.disabled = !nativeWakeAvailable;
+  if (nativeWakeAvailable) {
+    try { wakeWordToggle.checked = window.EnnieNative.isWakeWordEnabled(); } catch (_) {}
+  } else if (wakeWordDescription) {
+    wakeWordDescription.textContent = "Фоновое пробуждение доступно в приложении ENNIE для Android.";
+  }
+  wakeWordToggle.addEventListener("change", event => {
+    if (!nativeWakeAvailable) { event.target.checked = false; return; }
+    try {
+      window.EnnieNative.setWakeWordEnabled(event.target.checked);
+      showToast(event.target.checked
+        ? "Запрашиваю разрешения для фонового пробуждения…"
+        : "Фоновое пробуждение выключено.", "success");
+    } catch (error) {
+      event.target.checked = false;
+      showError("Не удалось изменить режим пробуждения. Открой ENNIE ещё раз.");
+    }
+  });
+}
+
+
+/* ==========================================
+   ОКНО ВИДЖЕТОВ
+========================================== */
+
+const widgetData = {
+  day: {
+    label: "ENNIE PERSONAL",
+    title: "Мой день",
+    description: "Давай вместе организуем твой день.",
+    action: "Помоги мне составить план на сегодня."
+  },
+
+  memory: {
+    label: "ENNIE MEMORY",
+    title: "Моя память",
+    description: "Здесь будут храниться твои заметки и важные идеи.",
+    action: "Помоги мне организовать мои идеи и заметки."
+  },
+
+  hub: {
+    label: "TEHNOCELL ECOSYSTEM",
+    title: "TC HUB",
+    description: "Центр экосистемы TEHNOCELL.",
+    action: "Расскажи мне о проектах TEHNOCELL."
+  },
+
+  news: {
+    label: "TEHNOCELL UPDATES",
+    title: "TC NEWS",
+    description: "Новости и обновления экосистемы.",
+    action: "Расскажи последние новости TEHNOCELL."
+  },
+
+  status: {
+    label: "SYSTEM MONITOR",
+    title: "TC STATUS",
+    description: "Центр состояния сервисов TEHNOCELL.",
+    action: "Помоги проверить состояние сервисов TEHNOCELL."
+  },
+
+  quick: {
+    label: "ENNIE QUICK ACTIONS",
+    title: "Быстрые действия",
+    description: "Быстро начнём с нужного дела.",
+    action: "Предложи мне несколько полезных действий."
+  }
+};
+
+function openWidget(key) {
+  const data = widgetData[key];
+  if (!data) return;
+
+  $("#widgetModalLabel").textContent = data.label;
+  $("#widgetModalTitle").textContent = data.title;
+
+  const content = $("#widgetModalContent");
+  content.replaceChildren();
+
+  const description = document.createElement("p");
+  description.className = "widget-modal-description";
+  description.textContent = data.description;
+
+  const button = document.createElement("button");
+  button.className = "primary-btn widget-start-btn";
+  button.textContent = "Начать";
+
+  button.addEventListener("click", () => {
+    closeWidgetModal();
+    startNewChat();
+    messageInput.value = data.action;
+    sendMessage();
+  });
+
+  content.append(description, button);
+
+  $("#widgetModal").classList.add("modal-visible");
+}
+
+function closeWidgetModal() {
+  $("#widgetModal").classList.remove("modal-visible");
+}
+
+document.querySelectorAll(".widget-card").forEach((card) => {
+  card.addEventListener("click", () => {
+    openWidget(card.dataset.action);
+  });
+});
+
+$("#closeWidgetModal").addEventListener("click", closeWidgetModal);
+
+$("#widgetModal").addEventListener("click", (event) => {
+  if (event.target === $("#widgetModal")) closeWidgetModal();
+});
+
+
+/* ==========================================
+   НОВЫЙ ДИАЛОГ
+========================================== */
+
+function startNewChat() {
+  currentChatId = null;
+  currentChatTitle = "Новый диалог";
+  currentMessages = [];
+  attachedImage = null;
+  attachedTextFile = null;
+
+  messages.replaceChildren();
+  $("#attachmentPreview").replaceChildren();
+
+  showWelcome();
+  closeSidebar();
+}
+
+$("#newChatBtn").addEventListener("click", startNewChat);
+
+
+/* ==========================================
+   АДАПТАЦИЯ ПОЛЯ ВВОДА
+========================================== */
+
+messageInput.addEventListener("input", () => {
+  messageInput.style.height = "auto";
+  messageInput.style.height =
+    Math.min(messageInput.scrollHeight, 150) + "px";
+});
+
+messageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+});
+
+sendBtn.type = "button";
+
+/* Надёжная обработка нажатий на кнопки чата.
+   Capture-режим не зависит от вложенных обработчиков интерфейса. */
+document.addEventListener("click", (event) => {
+  const sendButton = event.target.closest && event.target.closest("#sendBtn");
+  if (sendButton) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (!sendButton.disabled) sendMessage();
+    return;
+  }
+
+  const microphoneButton = event.target.closest && event.target.closest("#micBtn");
+  if (microphoneButton) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (voiceRecorder && voiceRecorder.state === "recording") {
+      finishVoiceRecording(true);
+      return;
+    }
+    if (voiceDraftElement) {
+      showToast("Подожди завершения или удали распознанный текст.", "info");
+      return;
+    }
+    startVoiceRecording();
+  }
+}, true);
+
+
+/* ==========================================
+   ОТОБРАЖЕНИЕ СООБЩЕНИЙ
+========================================== */
+
+
+function extractEnnieVision(rawText) {
+  const source = String(rawText || "");
+  const match = source.match(/<ENNIE_VISION>\s*([\s\S]*?)\s*<\/ENNIE_VISION>/i);
+  if (!match) return { data: null, visibleText: source.replace(/<ENNIE_VISION>[\s\S]*$/i, "").replace(/<ENNIE_STATE>[\s\S]*$/i, "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim(), hasVision: /<ENNIE_VISION>/i.test(source) };
+  let data = null;
+  try {
+    const payload = match[1].trim().replace(/^`{3}(?:json)?\s*/i, "").replace(/\s*`{3}$/i, "");
+    data = JSON.parse(payload);
+    if (!data || typeof data !== "object" || !Array.isArray(data.items) || data.items.length < 1) data = null;
+  } catch (_) {}
+  const visibleText = source.replace(match[0], "").replace(/<ENNIE_STATE>[\s\S]*$/i, "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
+  return { data, visibleText, hasVision: true };
+}
+function getEnnieVisibleText(rawText) {
+  const parsed = extractEnnieVision(rawText);
+  if (!parsed.hasVision || !parsed.data) return parsed.visibleText || (parsed.hasVision ? "Не удалось отобразить визуальный ответ. Попробуй повторить запрос." : "");
+  const d = parsed.data;
+  return [parsed.visibleText,d.intro,d.text,d.verdict?.reason].filter(v=>typeof v==="string"&&v.trim()).map(v=>v.trim()).join("\n\n").slice(0,5000);
+}
+function renderEnnieVision(contentElement, rawText) {
+  const parsed=extractEnnieVision(rawText);
+  if(!parsed.hasVision){contentElement.textContent=parsed.visibleText;return}
+  const data=parsed.data;
+  if(!data){contentElement.textContent=parsed.visibleText||"Не удалось отобразить визуальный ответ. Попробуй повторить запрос.";return}
+  const safe=(v,max=140)=>typeof v==="string"?v.slice(0,max):"";
+  const root=document.createElement("div");root.className="ennie-vision";
+  const heading=document.createElement("div");heading.className="vision-heading";heading.textContent="ENNIE VISION";root.append(heading);
+  const intro=document.createElement("div");intro.className="vision-intro";intro.textContent=safe(data.intro,500);if(intro.textContent)root.append(intro);
+  const compare=document.createElement("div");compare.className="vision-compare"+(data.items.length===1?" vision-single":"");
+  data.items.slice(0,2).forEach((item,index)=>{
+    const card=document.createElement("article");card.className="vision-device";
+    const top=document.createElement("div");top.className="vision-device-top";
+    const body=document.createElement("div");body.className="vision-device-body";
+    const kicker=document.createElement("div");kicker.className="vision-device-kicker";kicker.textContent=data.items.length===1?"ОБЪЕКТ":(index===0?"УЧАСТНИК 01":"УЧАСТНИК 02");
+    const name=document.createElement("div");name.className="vision-device-name";name.textContent=safe(item.name,90);
+    const detail=document.createElement("div");detail.className="vision-device-detail";detail.textContent=safe(item.summary,180);
+    const photoUrl=typeof item.image?.url==="string"&&/^https:\/\/upload\.wikimedia\.org\//.test(item.image.url)?item.image.url:"";
+    if(photoUrl){const photo=document.createElement("div");photo.className="vision-device-photo";const img=document.createElement("img");img.src=photoUrl;img.alt=safe(item.name,90);img.loading="lazy";img.decoding="async";img.referrerPolicy="no-referrer";img.onerror=()=>photo.remove();photo.append(img);body.append(photo);if(typeof item.image.source==="string"&&item.image.source.startsWith("https://commons.wikimedia.org/")){const credit=document.createElement("div");credit.className="vision-photo-credit";const link=document.createElement("a");link.href=item.image.source;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Фото · Wikimedia Commons";credit.append(link);body.append(credit)}}
+
+    body.append(kicker,name,detail);
+    if(Array.isArray(item.specs)&&item.specs.length){
+      const specs=document.createElement("div");specs.className="vision-specs";
+      item.specs.slice(0,5).forEach(spec=>{
+        const row=document.createElement("div");row.className="vision-spec";
+        const label=document.createElement("span"),value=document.createElement("span");
+        label.textContent=safe(spec.label,35);value.textContent=safe(spec.value,75);
+        row.append(label,value);specs.append(row);
+      });body.append(specs);
+    }
+    card.append(top,body);compare.append(card);
+  });root.append(compare);
+  if(Array.isArray(data.scores)&&data.scores.length){
+    const section=document.createElement("section");section.className="vision-section";
+    const title=document.createElement("div");title.className="vision-section-title";title.textContent="СРАВНЕНИЕ";section.append(title);
+    data.scores.slice(0,6).forEach(score=>{
+      const row=document.createElement("div");row.className="vision-score-row";
+      const label=document.createElement("div");label.className="vision-score-label";label.textContent=safe(score.label,70);
+      const track=document.createElement("div");track.className="vision-score-track";
+      const fill=document.createElement("div");fill.className="vision-score-fill";
+      const value=Math.max(0,Math.min(100,Number(score.value)||0));fill.style.setProperty("--score",value+"%");
+      track.append(fill);
+      const result=document.createElement("div");result.className="vision-score-value";result.textContent=safe(score.result,100);
+      row.append(label,track,result);section.append(row);
+    });root.append(section);
+  }
+  if(data.verdict&&typeof data.verdict==="object"){
+    const verdict=document.createElement("div");verdict.className="vision-verdict";
+    const label=document.createElement("div");label.className="vision-verdict-label";label.textContent="ВЕРДИКТ ENNIE";
+    const winner=document.createElement("strong");winner.textContent=safe(data.verdict.winner,100);
+    const why=document.createElement("p");why.textContent=safe(data.verdict.reason,500);
+    verdict.append(label,winner,why);root.append(verdict);
+  }
+  if(data.text){
+    const p=document.createElement("div");p.className="vision-closing";p.textContent=safe(data.text,900);root.append(p);
+  }
+  if(data.disclaimer){const note=document.createElement("div");note.className="vision-note";note.textContent=safe(data.disclaimer,350);root.append(note)}
+  contentElement.replaceChildren(root);
+}
+function addMessage(role, text, imageUrl = null) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "message message-" + role;
+
+  const avatar = document.createElement("div");
+  avatar.className = "message-avatar";
+  avatar.textContent = role === "assistant" ? "E" : "Я";
+
+  const body = document.createElement("div");
+  body.className = "message-body";
+
+  const author = document.createElement("div");
+  author.className = "message-author";
+  author.textContent = "ENNIE";
+
+  const content = document.createElement("div");
+  content.className = "message-text";
+  const visibleText = role === "assistant" ? getEnnieVisibleText(text) : String(text || "").split("[ENNIE_IMAGE_CONTEXT]")[0].trim();
+  if (role === "assistant") renderEnnieVision(content, text); else content.textContent = visibleText;
+
+  if (role === "assistant") body.append(author);
+
+  if (imageUrl) {
+    const image = document.createElement("img");
+    image.className = "message-image";
+    image.src = imageUrl;
+    image.alt = "Прикреплённое изображение";
+    body.append(image);
+  }
+
+  body.append(content);
+
+  if (role === "assistant" && visibleText) {
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
+    actions.setAttribute("role", "toolbar");
+    actions.setAttribute("aria-label", "Действия с ответом ENNIE");
+    actions.innerHTML = `
+      <button class="message-action-btn" type="button" data-message-action="play" aria-label="Прослушать сообщение" title="Прослушать">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="message-action-btn" type="button" data-message-action="repeat" aria-label="Повторить сообщение" title="Повторить">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M5.6 9a7 7 0 0 1 11.7-2L20 12M4 12l2.7 5a7 7 0 0 0 11.7-2"/></svg>
+      </button>
+      <button class="message-action-btn" type="button" data-message-action="copy" aria-label="Копировать сообщение" title="Копировать">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg>
+      </button>
+      <button class="message-action-btn" type="button" data-message-action="more" aria-label="Дополнительные действия" title="Ещё">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+      </button>`;
+    const more = document.createElement("div");
+    more.className = "message-more-menu";
+    more.hidden = true;
+    more.innerHTML = `
+      <button type="button" data-message-action="select">Выделить текст</button>
+      <button type="button" data-message-action="ask">Спросить ENNIE об этом</button>`;
+    actions.appendChild(more);
+    actions.addEventListener("click", async (event) => {
+      event.stopPropagation();
+      const button = event.target.closest("[data-message-action]");
+      if (!button) return;
+      const action = button.dataset.messageAction;
+      if (action === "play" || action === "repeat") {
+        if (action === "play" && activeVoiceMessageElement === wrapper && !voicePaused) {
+          pauseEnnieVoice();
+        } else if (action === "play" && activeVoiceMessageElement === wrapper && voicePaused) {
+          resumeEnnieVoice();
+        } else {
+          void speakText(visibleText, wrapper, true);
+        }
+      } else if (action === "copy") {
+        try {
+          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(visibleText);
+          else {
+            const area = document.createElement("textarea");
+            area.value = visibleText;
+            area.style.position = "fixed";
+            area.style.opacity = "0";
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand("copy");
+            area.remove();
+          }
+          button.classList.add("action-done");
+          button.title = "Скопировано";
+          showToast("Сообщение скопировано", "success");
+          setTimeout(() => { button.classList.remove("action-done"); button.title = "Копировать"; }, 1300);
+        } catch (_) {
+          showError("Не удалось скопировать сообщение.");
+        }
+      } else if (action === "more") {
+        more.hidden = !more.hidden;
+      } else if (action === "select") {
+        const range = document.createRange();
+        range.selectNodeContents(content);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        more.hidden = true;
+      } else if (action === "ask") {
+        messageInput.value = "Помоги разобраться с этим ответом:\n\n" + visibleText;
+        messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+        more.hidden = true;
+        sendMessage();
+      }
+    });
+    body.append(actions);
+  }
+
+  wrapper.append(avatar, body);
+  messages.appendChild(wrapper);
+
+  requestAnimationFrame(() => {
+    wrapper.classList.add("message-visible");
+    chatArea.scrollTop = chatArea.scrollHeight;
+  });
+
+  return wrapper;
+}
+
+
+/* ==========================================
+   ИНДИКАТОР ПЕЧАТИ
+========================================== */
+
+function setTyping(active) {
+  if (!typingIndicator) return;
+  typingIndicator.style.display = active ? "flex" : "none";
+
+  if (active) {
+    requestAnimationFrame(() => {
+      if (typingIndicator.style.display !== "none") {
+        chatArea.scrollTop = chatArea.scrollHeight;
+      }
+    });
+  }
+}
+
+
+
+/* ==========================================
+   ПОДКЛЮЧЕНИЕ К SUPABASE
+========================================== */
+
+/*
+  ВАЖНО:
+  В следующей части будут подключены:
+  - Supabase Auth
+  - история диалогов
+  - отправка сообщений
+  - загрузка изображений
+  - голосовой ввод и ответы
+
+  Здесь пока только интерфейсная часть.
+*/
+
+
+/* ==========================================
+   ГОРЯЧИЕ КЛАВИШИ И ЗАКРЫТИЕ ОКОН
+========================================== */
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closeSidebar();
+    closeSettings();
+    closeConfirm();
+    closeWidgetModal();
+  }
+});
+
+
+/* ==========================================
+   ПЕРВЫЙ ЗАПУСК
+========================================== */
+
+showWelcome();
+
+console.log("ENNIE V11 interface initialized.");
+</script>
+<script>
+/* ==========================================
+   ENNIE V11 — SUPABASE & CHAT ENGINE
+========================================== */
+
+
+/* ==========================================
+   SUPABASE CONFIGURATION
+========================================== */
+
+/*
+  Используем существующие данные проекта
+  из предыдущей версии ENNIE.
+
+  Вставь сюда URL и ANON KEY своего проекта,
+  если в первой части они ещё не объявлены.
+*/
+
+const SUPABASE_URL = "https://jvagiuiregvlrfooxdao.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_BIv_yX4jprXgeEpauZyjtA_lr0Weo8X";
+
+const CHAT_FUNCTION = "ennie-core-v10";
+const IMAGE_BUCKET = "ennie-attachments";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+/* ==========================================
+   ПОЛУЧЕНИЕ ПОЛЬЗОВАТЕЛЯ
+========================================== */
+
+async function initializeEnnie() {
+  try {
+    const { data, error } =
+      await supabaseClient.auth.getSession();
+
+    if (error) throw error;
+
+    if (!data.session) {
+      currentUser = null;
+
+      $("#profileName").textContent = "TEHNOCELL ID";
+      $("#profileStatus").textContent = "Не выполнен вход";
+
+      $("#settingsProfileName").textContent = "TEHNOCELL ID";
+      $("#settingsProfileStatus").textContent = "Аккаунт не подключён";
+      $("#settingsProfileId").textContent = "TC-ID: недоступен";
+
+      showError("Сначала войди в TEHNOCELL ID.");
+      return;
+    }
+
+    currentUser = data.session.user;
+
+    const displayName =
+      currentUser.user_metadata?.display_name ||
+      currentUser.email?.split("@")[0] ||
+      "Пользователь";
+
+    $("#profileName").textContent = displayName;
+    $("#profileStatus").textContent = "Подключено";
+
+    $("#settingsProfileName").textContent = displayName;
+    $("#settingsProfileStatus").textContent = "Аккаунт подключён";
+
+    $("#profileAvatar").textContent =
+      displayName.charAt(0).toUpperCase();
+
+    $("#settingsAvatar").textContent =
+      displayName.charAt(0).toUpperCase();
+
+    const avatarUrl = currentUser.user_metadata?.avatar_url;
+
+    if (avatarUrl) {
+      $("#profileAvatar").style.backgroundImage =
+        `url("${avatarUrl}")`;
+
+      $("#profileAvatar").style.backgroundSize = "cover";
+      $("#profileAvatar").textContent = "";
+
+      $("#settingsAvatar").style.backgroundImage =
+        `url("${avatarUrl}")`;
+
+      $("#settingsAvatar").style.backgroundSize = "cover";
+      $("#settingsAvatar").textContent = "";
+    }
+
+    /*
+      TC-ID пока не генерируем самостоятельно.
+      Его нужно получить из реальной системы
+      TEHNOCELL ID, а не придумывать.
+    */
+
+    $("#settingsProfileId").textContent =
+      "TC-ID: данные аккаунта";
+
+
+    await loadChats();
+
+    // Если пользователь пришёл из выделения на платформе, сразу отправляем вопрос в ENNIE.
+    const handoffParams = new URLSearchParams(location.search);
+    const handoffQuestion = handoffParams.get("ask_text");
+    if (handoffQuestion && !window.__ennieSelectionQuestionSent) {
+      window.__ennieSelectionQuestionSent = true;
+      handoffParams.delete("ask_text");
+      const cleanUrl = location.pathname + (handoffParams.toString() ? "?" + handoffParams.toString() : "") + location.hash;
+      history.replaceState({}, "", cleanUrl);
+      startNewChat();
+      messageInput.value = handoffQuestion;
+      messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+      await sendMessage();
+    }
+
+
+  } catch (error) {
+    console.error("ENNIE initialization error:", error);
+
+    showError("Не удалось подключиться к аккаунту.");
+  }
+}
+
+
+/* ==========================================
+   ЗАГРУЗКА ДИАЛОГОВ
+========================================== */
+
+async function loadChats() {
+  const ownerId = currentUser?.id;
+  if (!ownerId) return;
+
+  const history = $("#chatHistory");
+  history.innerHTML =
+    '<div class="history-empty">Загружаю диалоги...</div>';
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("ennie_chats")
+      .select("*")
+      .eq("user_id", ownerId)
+      .order("updated_at", { ascending: false });
+
+    if (error) throw error;
+    // A late response from the previous account must not repaint this account's history.
+    if (currentUser?.id !== ownerId) return;
+
+    history.replaceChildren();
+
+    if (!data || data.length === 0) {
+      history.innerHTML =
+        '<div class="history-empty">Здесь пока пусто</div>';
+      return;
+    }
+
+    data.forEach((chat) => {
+      const item = document.createElement("div");
+      item.className = "history-item";
+
+      if (chat.id === currentChatId) {
+        item.classList.add("history-active");
+      }
+
+      const title = document.createElement("button");
+      title.className = "history-title";
+      title.textContent = chat.title || "Новый диалог";
+
+      title.addEventListener("click", () => {
+        openChat(chat.id);
+      });
+
+      const remove = document.createElement("button");
+      remove.className = "history-delete";
+      remove.textContent = "×";
+      remove.setAttribute("aria-label", "Удалить диалог");
+
+      remove.addEventListener("click", (event) => {
+        event.stopPropagation();
+
+        askConfirm(
+          "Удалить диалог?",
+          "Переписка будет удалена без возможности восстановления.",
+          () => deleteChat(chat.id),
+          true
+        );
+      });
+
+      item.append(title, remove);
+      history.appendChild(item);
+    });
+
+  } catch (error) {
+    console.error("Chat history error:", error);
+
+    history.innerHTML =
+      '<div class="history-empty">Не удалось загрузить историю</div>';
+  }
+}
+
+
+/* ==========================================
+   СОЗДАНИЕ ДИАЛОГА
+========================================== */
+
+async function createChat(firstMessage) {
+  if (!currentUser) {
+    showError("Сначала войди в TEHNOCELL ID.");
+    return null;
+  }
+
+  const title =
+    firstMessage.length > 35
+      ? firstMessage.slice(0, 35) + "..."
+      : firstMessage;
+
+  const { data, error } = await supabaseClient
+    .from("ennie_chats")
+    .insert({
+      user_id: currentUser.id,
+      title: title
+    })
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  currentChatId = data.id;
+  currentChatTitle = data.title;
+
+  await loadChats();
+
+  return data.id;
+}
+
+
+/* ==========================================
+   ОТКРЫТИЕ ДИАЛОГА
+========================================== */
+
+async function openChat(chatId) {
+  const ownerId = currentUser?.id;
+  if (!ownerId) return;
+
+  try {
+    const { data: chat, error: chatError } =
+      await supabaseClient
+        .from("ennie_chats")
+        .select("*")
+        .eq("id", chatId)
+        .eq("user_id", ownerId)
+        .single();
+
+    if (chatError) throw chatError;
+    if (currentUser?.id !== ownerId) return;
+
+    const { data, error } = await supabaseClient
+      .from("ennie_messages")
+      .select("*")
+      .eq("chat_id", chatId)
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+    if (currentUser?.id !== ownerId) return;
+
+    currentChatId = chatId;
+    currentChatTitle = chat.title || "Диалог";
+    currentMessages = [];
+
+    messages.replaceChildren();
+
+    for (const message of data || []) {
+      const role =
+        message.role === "assistant" ? "assistant" : "user";
+
+      addMessage(role, message.content || "");
+      
+      currentMessages.push({
+        role: role,
+        content: message.content || ""
+      });
+    }
+
+    hideWelcome();
+    closeSidebar();
+
+    await loadChats();
+
+  } catch (error) {
+    console.error("Open chat error:", error);
+
+    showError("Не удалось открыть диалог.");
+  }
+}
+
+
+/* ==========================================
+   СОХРАНЕНИЕ СООБЩЕНИЯ
+========================================== */
+
+async function saveMessage(role, content) {
+  if (!currentUser || !currentChatId) return;
+
+  const { data: saved, error } = await supabaseClient
+    .from("ennie_messages")
+    .insert({
+      chat_id: currentChatId,
+      user_id: currentUser.id,
+      role: role,
+      content: content
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    console.error("Message save error:", error);
+    throw error;
+  }
+
+  await supabaseClient
+    .from("ennie_chats")
+    .update({
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", currentChatId)
+    .eq("user_id", currentUser.id);
+  return saved;
+}
+
+
+/* ==========================================
+   ЗАГРУЗКА ИЗОБРАЖЕНИЯ
+========================================== */
+
+/* ==========================================
+   ИЗВЛЕЧЕНИЕ ТЕКСТА ИЗ ДОКУМЕНТОВ
+========================================== */
+function loadExternalScript(src, globalName) {
+  return new Promise((resolve, reject) => {
+    if (window[globalName]) return resolve(window[globalName]);
+    const existing = document.querySelector('script[data-ennie-lib="' + globalName + '"]');
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window[globalName]), { once: true });
+      existing.addEventListener("error", reject, { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.dataset.ennieLib = globalName;
+    script.onload = () => window[globalName] ? resolve(window[globalName]) : reject(new Error("Библиотека документа не загрузилась."));
+    script.onerror = () => reject(new Error("Не удалось загрузить модуль чтения документов. Проверь интернет."));
+    document.head.appendChild(script);
+  });
+}
+
+async function extractDocumentText(file, kind) {
+  if (kind.isPdf) {
+    await loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js", "pdfjsLib");
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
+    const pages = [];
+    const pageLimit = Math.min(pdf.numPages, 25);
+    for (let pageNumber = 1; pageNumber <= pageLimit; pageNumber++) {
+      const page = await pdf.getPage(pageNumber);
+      const content = await page.getTextContent();
+      pages.push("[Страница " + pageNumber + "]\n" + content.items.map(item => item.str || "").join(" "));
+      if (pages.join("\n").length > 12000) break;
+    }
+    return pages.join("\n\n").slice(0, 12000);
+  }
+  if (kind.isDocx) {
+    await loadExternalScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js", "mammoth");
+    const result = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+    return String(result.value || "").slice(0, 12000);
+  }
+  return await file.text();
+}
+
+async function uploadImage(file) {
+  if (!currentUser) {
+    throw new Error("Необходимо войти в аккаунт.");
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error("Поддерживаются JPG, PNG и WEBP.");
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error("Максимальный размер изображения — 5 МБ.");
+  }
+
+  const extension = file.name.split(".").pop().toLowerCase();
+
+  const path =
+    currentUser.id + "/" +
+    Date.now() + "." + extension;
+
+  const { error } = await supabaseClient
+    .storage
+    .from(IMAGE_BUCKET)
+    .upload(path, file, {
+      cacheControl: "3600",
+      upsert: false
+    });
+
+  if (error) throw error;
+
+  const { data, error: urlError } =
+    await supabaseClient
+      .storage
+      .from(IMAGE_BUCKET)
+      .createSignedUrl(path, 60 * 60 * 24 * 7);
+
+  if (urlError) throw urlError;
+
+  return {
+    path: path,
+    url: data.signedUrl,
+    name: file.name
+  };
+}
+
+
+/* ==========================================
+   ПРИКРЕПЛЕНИЕ ФОТО
+========================================== */
+
+$("#attachBtn").addEventListener("click", () => {
+  $("#imageInput").click();
+});
+
+$("#imageInput").addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+
+  if (!file) return;
+
+  try {
+    const preview = $("#attachmentPreview");
+    preview.replaceChildren();
+    attachedImage = null;
+    attachedTextFile = null;
+
+    const isImage = ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+    const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+    const isDocx = file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || /\.docx$/i.test(file.name);
+    const allowedText = /\.(txt|md|csv|json)$/i.test(file.name) ||
+      ["text/plain", "text/markdown", "text/csv", "application/json"].includes(file.type);
+
+    if (file.size > 5 * 1024 * 1024) throw new Error("Максимальный размер файла — 5 МБ.");
+
+    if (isImage) {
+      attachedImage = await uploadImage(file);
+      const image = document.createElement("img");
+      image.src = attachedImage.url;
+      image.alt = "Предпросмотр изображения";
+      preview.append(image);
+    } else if (allowedText || isPdf || isDocx) {
+      const content = await extractDocumentText(file, { isPdf, isDocx });
+      if (!content.trim()) throw new Error("Не удалось извлечь текст. Возможно, документ пустой или состоит из сканов.");
+      if (content.length > 12000) throw new Error("Из документа извлечено слишком много текста. Пока ограничение — 12 000 символов.");
+      attachedTextFile = { name: file.name, content };
+    } else {
+      throw new Error("Поддерживаются фото JPG, PNG, WEBP и документы TXT, MD, CSV, JSON, PDF, DOCX.");
+    }
+
+    const selected = document.createElement("span");
+    selected.textContent = isImage ? attachedImage.name : attachedTextFile.name;
+    const remove = document.createElement("button");
+    remove.textContent = "×";
+    remove.setAttribute("aria-label", "Убрать вложение");
+    remove.addEventListener("click", () => {
+      attachedImage = null;
+      attachedTextFile = null;
+      preview.replaceChildren();
+      $("#imageInput").value = "";
+    });
+    preview.append(selected, remove);
+    showToast("Файл прикреплён", "success");
+  } catch (error) {
+    attachedImage = null;
+    attachedTextFile = null;
+    $("#attachmentPreview").replaceChildren();
+    showError(error.message || "Не удалось прикрепить файл.");
+  }
+  event.target.value = "";
+});
+
+
+/* ==========================================
+   ПОДГОТОВКА СООБЩЕНИЯ ДЛЯ ENNIE
+========================================== */
+
+async function getImageForMessage() {
+  if (!attachedImage) return null;
+
+  return {
+    path: attachedImage.path,
+    name: attachedImage.name
+  };
+}
+
+
+/* ==========================================
+   ОТПРАВКА СООБЩЕНИЯ
+========================================== */
+
+
+/* TEHNOCELL WEATHER live bridge */
+const ENNIE_WEATHER_LOCATION_KEY="tehnocell_weather_current_location";
+function isWeatherQuestion(text){return /погод|температур|дожд|снег|ветер|осадк|прогноз|зонт|weather|temperature|rain|snow|wind|forecast/i.test(String(text||""));}
+function ennieWeatherName(code){
+ if(code===0)return "Ясно";if(code===1)return "Преимущественно ясно";if(code===2)return "Переменная облачность";if(code===3)return "Пасмурно";
+ if([45,48].includes(code))return "Туман";if([51,53,55,56,57].includes(code))return "Морось";
+ if([61,63,65,66,67,80,81,82].includes(code))return "Дождь";if([71,73,75,77,85,86].includes(code))return "Снег";
+ if([95,96,99].includes(code))return "Гроза";return "Переменная погода";
+}
+async function getEnnieWeatherData(){
+ // 1) Native Android bridge, when the WEATHER app exposes one.
+ const nativeCandidates=[window.TEHNOCELL_WEATHER_BRIDGE,window.TEHNOCELL_WEATHER];
+ for(const bridge of nativeCandidates){
+  if(!bridge||typeof bridge.getSnapshot!=="function")continue;
+  try{
+   let snapshot=await Promise.race([
+    Promise.resolve(bridge.getSnapshot()),
+    new Promise((_,reject)=>setTimeout(()=>reject(new Error("Native WEATHER timeout")),1800))
+   ]);
+   if(typeof snapshot==="string")snapshot=JSON.parse(snapshot);
+   if(snapshot&&snapshot.available===true&&snapshot.current&&snapshot.city){
+    return {...snapshot,source:"TEHNOCELL WEATHER · Android"};
+   }
+  }catch(error){console.warn("Native TEHNOCELL WEATHER bridge unavailable:",error);}
+ }
+
+ // 2) Exact live snapshot published by weather.html on the same web origin.
+ let snapshot=null;
+ try{snapshot=JSON.parse(localStorage.getItem("tehnocell_weather_current_snapshot")||"null");}catch(_){}
+ if(snapshot?.available&&snapshot.current&&snapshot.city){
+  const age=Date.now()-new Date(snapshot.updatedAt||0).getTime();
+  if(Number.isFinite(age)&&age>=0&&age<=45*60*1000){
+   return {...snapshot,source:"TEHNOCELL WEATHER · live"};
+  }
+ }
+
+ // 3) Web reserve: refresh forecast using the last location selected in WEATHER.
+ let loc=null;
+ try{loc=JSON.parse(localStorage.getItem(ENNIE_WEATHER_LOCATION_KEY)||"null");}catch(_){}
+ if(!loc||!Number.isFinite(Number(loc.latitude))||!Number.isFinite(Number(loc.longitude))){
+  return {available:false,reason:"Не удалось получить данные TEHNOCELL WEATHER: нет свежего погодного снимка и сохранённого местоположения. Открой WEATHER, дождись обновления прогноза и повтори вопрос."};
+ }
+ const url="https://api.open-meteo.com/v1/forecast?latitude="+encodeURIComponent(loc.latitude)+"&longitude="+encodeURIComponent(loc.longitude)
+ +"&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,uv_index"
+ +"&hourly=temperature_2m,precipitation_probability,weather_code"
+ +"&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,sunrise,sunset&forecast_days=2&timezone=auto";
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);let response;
+ try{response=await fetch(url,{signal:controller.signal});}finally{clearTimeout(timer);}
+ if(!response.ok)throw new Error("Веб-резерв TEHNOCELL WEATHER временно не отвечает ("+response.status+").");
+ const raw=await response.json(),c=raw.current,h=raw.hourly,d=raw.daily;
+ if(!c||!h||!d)throw new Error("Веб-резерв TEHNOCELL WEATHER вернул неполные данные.");
+ let index=h.time.findIndex(t=>new Date(t).getTime()>=new Date(c.time).getTime());if(index<0)index=0;
+ const hours=[];for(let n=index;n<Math.min(index+6,h.time.length);n++)hours.push({
+  time:String(h.time[n]).slice(11,16),
+  temperature:Math.round(h.temperature_2m[n]),precipitationProbability:h.precipitation_probability?.[n]??0
+ });
+ return {available:true,source:"TEHNOCELL WEATHER · веб-резерв",city:String(loc.name||"Выбранное место"),
+  current:{temperature:Math.round(c.temperature_2m),apparentTemperature:Math.round(c.apparent_temperature),
+   condition:ennieWeatherName(c.weather_code),humidity:c.relative_humidity_2m,windSpeed:Math.round(c.wind_speed_10m),
+   windDirection:Math.round(c.wind_direction_10m),precipitation:Number(c.precipitation||0),uv:Number(c.uv_index||0)},
+  today:{high:Math.round(d.temperature_2m_max[0]),low:Math.round(d.temperature_2m_min[0]),
+   precipitationProbability:d.precipitation_probability_max[0]??0,sunrise:d.sunrise?.[0]||null,sunset:d.sunset?.[0]||null},hours};
+}
+function renderEnnieWeatherCard(messageElement,data){
+ if(!messageElement||!data?.available)return;
+ const card=document.createElement("section");card.className="ennie-weather-card";
+ const head=document.createElement("div");head.className="ennie-weather-head";
+ head.innerHTML='<span class="ennie-weather-brand"><i class="ennie-weather-dot"></i> TEHNOCELL WEATHER</span><span>АКТУАЛЬНО</span>';
+ const place=document.createElement("div");place.className="ennie-weather-place";place.textContent=data.city;
+ const main=document.createElement("div");main.className="ennie-weather-main";
+ const temp=document.createElement("div");temp.className="ennie-weather-temp";temp.textContent=data.current.temperature+"°";
+ const summary=document.createElement("div");summary.innerHTML='<div class="ennie-weather-condition"></div><div class="ennie-weather-feels"></div>';
+ summary.querySelector(".ennie-weather-condition").textContent=data.current.condition;
+ summary.querySelector(".ennie-weather-feels").textContent="Ощущается как "+data.current.apparentTemperature+"°";main.append(temp,summary);
+ const grid=document.createElement("div");grid.className="ennie-weather-grid";
+ [["Ветер",data.current.windSpeed+" км/ч"],["Влажность",data.current.humidity+"%"],["Вероятность осадков",data.today.precipitationProbability+"%"],["Максимум",data.today.high+"°"],["Минимум",data.today.low+"°"],["УФ-индекс",data.current.uv]].forEach(([label,value])=>{
+  const item=document.createElement("div");item.className="ennie-weather-stat";const l=document.createElement("span"),v=document.createElement("strong");
+  l.textContent=label;v.textContent=value;item.append(l,v);grid.append(item);
+ });
+ const hours=document.createElement("div");hours.className="ennie-weather-hours";
+ (data.hours||[]).forEach(hour=>{const item=document.createElement("div");item.className="ennie-weather-hour";const t=document.createElement("span"),v=document.createElement("strong"),p=document.createElement("span");
+  t.textContent=hour.time;v.textContent=hour.temperature+"°";p.textContent="Осадки "+hour.precipitationProbability+"%";item.append(t,v,p);hours.append(item);});
+ const foot=document.createElement("div");foot.className="ennie-weather-foot";const source=document.createElement("span");source.className="ennie-weather-source";source.textContent=data.source||"Данные TEHNOCELL WEATHER";
+ const link=document.createElement("a");link.className="ennie-weather-open";link.href="https://technosotrudnik.github.io/tehnocell-indostri/weather.html";link.target="_self";link.rel="noopener";link.textContent="Открыть Weather";
+ foot.append(source,link);card.append(head,place,main,grid,hours,foot);
+ const body=messageElement.querySelector(".message-body"),actions=body?.querySelector(".message-actions");if(actions)body.insertBefore(card,actions);else body?.append(card);
+}
+
+async function sendMessage() {
+  if (isSending) return;
+
+  if (!currentUser) {
+    showError("Войди в TEHNOCELL ID, чтобы общаться с ENNIE.");
+    return;
+  }
+
+  const text = messageInput.value.trim();
+
+  if (!text && !attachedImage && !attachedTextFile) return;
+
+  const requestUserId = currentUser.id;
+  isSending = true;
+  document.body.classList.add("ennie-thinking");
+  sendBtn.disabled = true;
+
+  try {
+    const imageData = await getImageForMessage();
+    if (currentUser?.id !== requestUserId) throw new Error("Аккаунт изменился. Повтори отправку сообщения.");
+    const textFileToSend = attachedTextFile ? { ...attachedTextFile } : null;
+
+    const visibleText = text ||
+      (imageData ? "Посмотри на это изображение." :
+      textFileToSend ? "Посмотри, пожалуйста, этот файл." : "");
+    const weatherQuestion=!imageData&&!textFileToSend&&isWeatherQuestion(visibleText);
+    let weatherContext=null;
+    if(weatherQuestion){try{weatherContext=await getEnnieWeatherData();}catch(weatherError){
+      console.warn("TEHNOCELL WEATHER request failed:",weatherError);
+      weatherContext={available:false,reason:weatherError.message||"Не удалось получить данные TEHNOCELL WEATHER."};
+    }}
+
+    if (!currentChatId) {
+      try {
+        await createChat(visibleText);
+      } catch (chatError) {
+        console.warn("ENNIE chat creation failed; continuing without history:", chatError);
+        currentChatId = null;
+      }
+    }
+
+    hideWelcome();
+
+    addMessage(
+      "user",
+      visibleText + (textFileToSend ? "\n\nФайл: " + textFileToSend.name : ""),
+      attachedImage?.url || null
+    );
+
+    const imageToSend = imageData;
+
+    messageInput.value = "";
+    messageInput.style.height = "auto";
+
+    attachedImage = null;
+    attachedTextFile = null;
+    $("#attachmentPreview").replaceChildren();
+
+    let userContent = imageToSend
+      ? visibleText + "\n[IMAGE: " + JSON.stringify(imageToSend) + "]"
+      : visibleText;
+
+    if (textFileToSend) {
+      userContent += "\n\n[СОДЕРЖИМОЕ ФАЙЛА: " +
+        textFileToSend.name + "]\n" + textFileToSend.content;
+    }
+
+    currentMessages.push({
+      role: "user",
+      content: userContent
+    });
+
+    // Показываем индикатор сразу, не заставляя ждать сохранения сообщения.
+    setTyping(true);
+
+    let savedUserMessage = null;
+    try {
+      savedUserMessage = await saveMessage("user", userContent);
+    } catch (saveError) {
+      // A history/RLS failure must not prevent the actual assistant request.
+      console.warn("ENNIE user message was not saved; continuing request:", saveError);
+    }
+
+    const { data: sessionData } =
+      await supabaseClient.auth.getSession();
+
+    const accessToken = sessionData.session?.access_token;
+
+    if (!accessToken) {
+      throw new Error("Сессия аккаунта завершилась. Войди снова.");
+    }
+
+    // Отправляем запрос через Supabase SDK:
+    // он сам подставляет актуальный JWT и стандартные заголовки.
+    const { data: result, error: functionError } =
+      await supabaseClient.functions.invoke(CHAT_FUNCTION, {
+        body: {
+          messages: currentMessages,
+          weather_context: weatherContext
+        }
+      });
+
+    if (functionError) {
+      console.error("ENNIE function invoke error:", functionError);
+
+      let serverMessage = "";
+
+      try {
+        const context = functionError.context;
+        if (context && typeof context.json === "function") {
+          const payload = await context.json();
+          serverMessage =
+            payload?.error ||
+            payload?.message ||
+            "";
+        }
+      } catch {
+        // Если ответ не JSON, используем сообщение SDK.
+      }
+
+      throw new Error(
+        serverMessage ||
+        functionError.message ||
+        "Не удалось связаться с сервером ENNIE."
+      );
+    }
+
+    if (currentUser?.id !== requestUserId) return;
+    if (!result) {
+      throw new Error("Сервер ENNIE вернул пустой ответ.");
+    }
+
+    if (result.mood_state && typeof window.ennieSetMood === "function") {
+      window.ennieSetMood(result.mood_state);
+    }
+
+    const answer =
+      result.answer ||
+      result.message ||
+      result.response ||
+      result.output ||
+      "";
+
+    if (!answer) {
+      throw new Error("ENNIE получила пустой ответ.");
+    }
+
+    if (result.contextualized_message && savedUserMessage?.id) {
+      currentMessages[currentMessages.length - 1].content =
+        result.contextualized_message;
+
+      const { error: contextSaveError } = await supabaseClient
+        .from("ennie_messages")
+        .update({ content: result.contextualized_message })
+        .eq("id", savedUserMessage.id)
+        .eq("user_id", currentUser.id);
+
+      if (contextSaveError) {
+        console.warn("ENNIE image context persistence failed:", contextSaveError);
+      }
+    }
+
+    currentMessages.push({
+      role: "assistant",
+      content: answer
+    });
+
+    const assistantMessageElement = addMessage("assistant", answer);
+    if(weatherContext?.available)renderEnnieWeatherCard(assistantMessageElement,weatherContext);
+
+    // Озвучивание стартует сразу; кнопки под сообщением управляют тем же полным чтением.
+    if (voiceEnabled) {
+      void speakText(answer, assistantMessageElement, false);
+    }
+
+    try {
+      await saveMessage("assistant", answer);
+    } catch (saveError) {
+      console.warn("ENNIE answer was not saved to history:", saveError);
+    }
+    await loadChats();
+
+  } catch (error) {
+    console.error("ENNIE send error:", error);
+
+    showError(
+      error.message ||
+      "Мне не удалось получить ответ. Попробуй ещё раз."
+    );
+
+  } finally {
+    setTyping(false);
+    document.body.classList.remove("ennie-thinking");
+    isSending = false;
+    sendBtn.disabled = false;
+  }
+}
+
+
+/* Native Android wake-word bridge: keep the WebView UI and phone actions in sync. */
+window.onEnnieWakeDetected = function () {
+  document.body.classList.remove("ennie-thinking");
+  document.body.classList.add("listening");
+  showToast("Я слушаю. Говори, что нужно.");
+  if (window.__ennieWakeUiTimer) clearTimeout(window.__ennieWakeUiTimer);
+  window.__ennieWakeUiTimer = setTimeout(() => document.body.classList.remove("listening"), 35000);
+};
+window.onEnnieVoiceCommand = function (command) {
+  const text = String(command || "").trim();
+  if (!text) return false;
+  if (window.__ennieWakeUiTimer) clearTimeout(window.__ennieWakeUiTimer);
+  document.body.classList.remove("listening");
+  document.body.classList.add("ennie-thinking");
+  const deliver = () => {
+    if (isSending) { setTimeout(deliver, 350); return; }
+    messageInput.value = text;
+    messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+    void sendMessage();
+  };
+  deliver();
+  return true;
+};
+window.onEnnieNativeActionResult = function (result) {
+  const text = String(result || "").trim();
+  document.body.classList.remove("listening", "ennie-thinking");
+  if (window.__ennieWakeUiTimer) clearTimeout(window.__ennieWakeUiTimer);
+  if (!text) return true;
+  const message = addMessage("assistant", text);
+  void saveMessage("assistant", text);
+  if (voiceEnabled) void speakText(text, message, false);
+  return true;
+};
+
+
+/* ==========================================
+   УДАЛЕНИЕ ОДНОГО ДИАЛОГА
+========================================== */
+
+async function deleteChat(chatId) {
+  if (!currentUser) return;
+
+  try {
+    const { error } = await supabaseClient
+      .from("ennie_chats")
+      .delete()
+      .eq("id", chatId)
+      .eq("user_id", currentUser.id);
+
+    if (error) throw error;
+
+    if (currentChatId === chatId) {
+      startNewChat();
+    }
+
+    await loadChats();
+
+    showToast("Диалог удалён", "success");
+
+  } catch (error) {
+    console.error("Delete chat error:", error);
+    showError("Не удалось удалить диалог.");
+  }
+}
+
+
+/* ==========================================
+   ОЧИСТКА ВСЕЙ ИСТОРИИ
+========================================== */
+
+$("#clearHistoryBtn").addEventListener("click", () => {
+  askConfirm(
+    "Очистить историю?",
+    "Все твои диалоги и сообщения будут удалены.",
+    async () => {
+      if (!currentUser) return;
+
+      try {
+        const { error } = await supabaseClient
+          .from("ennie_chats")
+          .delete()
+          .eq("user_id", currentUser.id);
+
+        if (error) throw error;
+
+        startNewChat();
+        await loadChats();
+
+        closeSettings();
+
+        showToast("История очищена", "success");
+
+      } catch (error) {
+        console.error("Clear history error:", error);
+        showError("Не удалось очистить историю.");
+      }
+    },
+    true
+  );
+});
+
+
+/* ==========================================
+   ВЫХОД ИЗ АККАУНТА
+========================================== */
+
+$("#logoutBtn").addEventListener("click", () => {
+  askConfirm(
+    "Выйти из аккаунта?",
+    "Для дальнейшей работы с ENNIE потребуется снова войти.",
+    async () => {
+      const { error } = await supabaseClient.auth.signOut();
+
+      if (error) {
+        showError("Не удалось выйти из аккаунта.");
+        return;
+      }
+
+      location.reload();
+    },
+    true
+  );
+});
+
+
+/* ==========================================
+   СЛУШАТЕЛЬ ИЗМЕНЕНИЙ АВТОРИЗАЦИИ
+========================================== */
+
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT") {
+    currentUser = null;
+  }
+
+  if (event === "SIGNED_IN" && session?.user) {
+    currentUser = session.user;
+  }
+});
+
+
+/* ==========================================
+   ЗАПУСК
+========================================== */
+
+initializeEnnie();
+
+          </script>
+          <style>
+/* ==========================================
+   ENNIE V11 — FINAL DESIGN
+========================================== */
+
+:root {
+  --orb-white: #ffffff;
+}
+
+/* ОБЩИЕ ЭЛЕМЕНТЫ */
+
+button, a, input, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+}
+
+.icon-btn svg,
+.composer-btn svg,
+.send-btn svg,
+.widget-icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.icon-btn:active {
+  transform: scale(.94);
+}
+
+
+/* БОКОВОЕ МЕНЮ */
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.brand-subtitle {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+.new-chat-btn {
+  width: 100%;
+  height: 48px;
+  margin-top: 30px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 15px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: .2s;
+}
+
+.new-chat-btn svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+.new-chat-btn:active,
+.widget-card:active {
+  transform: scale(.98);
+}
+
+.history-heading,
+.section-label {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  font-weight: 600;
+}
+
+.history-heading {
+  margin: 30px 0 14px;
+}
+
+.history-empty {
+  color: var(--muted);
+  font-size: 12px;
+  padding: 15px 5px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 5px;
+  border-radius: 9px;
+}
+
+.history-item:hover,
+.history-active {
+  background: var(--panel2);
+}
+
+.history-title {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 9px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.history-delete {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 8px;
+  border-top: 1px solid var(--border);
+}
+
+.profile-avatar,
+.settings-avatar,
+.message-avatar,
+.typing-avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+.profile-avatar {
+  width: 39px;
+  height: 39px;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-name {
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-status {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.mobile-brand {
+  display: none;
+}
+
+
+/* ВЕРХНЯЯ ПАНЕЛЬ */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 68px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.4px;
+}
+
+.connection-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #bcbcbc;
+  box-shadow: 0 0 8px #ffffff55;
+}
+
+
+/* ПРИВЕТСТВИЕ */
+
+.welcome {
+  align-items: center;
+  flex-direction: column;
+  padding: 35px 25px 50px;
+  overflow-y: auto;
+}
+
+.welcome-content {
+  width: 100%;
+  max-width: 650px;
+  text-align: center;
+}
+
+.welcome-eyebrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 2.2px;
+}
+
+.eyebrow-line {
+  width: 27px;
+  height: 1px;
+  background: var(--border);
+}
+
+
+/* ==========================================
+   ENNIE CORE — WHITE LUMINOUS ORB
+========================================== */
+
+.core-wrap {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 8px auto 0;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.core-wrap::before {
+  content: "";
+  position: absolute;
+  width: 65%;
+  height: 65%;
+  left: 17.5%;
+  top: 17.5%;
+  border-radius: 50%;
+  background: #ffffff;
+  filter: blur(55px);
+  opacity: .12;
+  animation: coreAura 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+#ennieCoreCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@keyframes coreAura {
+  0%, 100% {
+    transform: scale(.8);
+    opacity: .08;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: .2;
+  }
+}
+
+.welcome-title {
+  margin: 4px 0 12px;
+  font-size: clamp(28px, 5vw, 43px);
+  font-weight: 500;
+  letter-spacing: -1.7px;
+}
+
+.welcome-title span {
+  font-weight: 700;
+}
+
+.welcome-greeting {
+  font-size: 16px;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+
+.welcome-description {
+  max-width: 420px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+
+/* ВИДЖЕТЫ */
+
+.widget-section {
+  width: 100%;
+  max-width: 760px;
+  margin-top: 45px;
+}
+
+.widget-heading {
+  margin-bottom: 16px;
+}
+
+.widget-heading h2 {
+  margin: 8px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 11px;
+}
+
+.widget-card {
+  position: relative;
+  min-height: 125px;
+  padding: 15px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: .22s;
+}
+
+.widget-card:hover {
+  background: var(--panel2);
+  border-color: #77777766;
+  transform: translateY(-2px);
+}
+
+.widget-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.widget-title,
+.widget-description {
+  display: block;
+}
+
+.widget-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.widget-description {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.widget-arrow {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+
+
+/* ENNIE VISION — premium monochrome cards */
+.ennie-vision{width:min(100%,720px);margin:14px 0 4px;display:grid;gap:12px;animation:visionIn .42s cubic-bezier(.2,.8,.2,1) both}
+@keyframes visionIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.vision-heading{display:flex;align-items:center;gap:9px;color:#aaa;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.vision-heading:before{content:"";width:18px;height:1px;background:#fff;opacity:.8}
+.vision-intro{font-size:13px;line-height:1.65;color:#ddd}
+.vision-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.vision-device{min-width:0;overflow:hidden;border:1px solid rgba(255,255,255,.13);border-radius:17px;background:linear-gradient(145deg,#202020,#0d0d0d 72%);box-shadow:0 12px 34px #0008}
+.vision-device-top{height:5px;background:linear-gradient(90deg,#fff,#777 55%,#222)}
+.vision-device-body{padding:14px}
+.vision-device-kicker{font-size:8px;letter-spacing:1.5px;color:#888;text-transform:uppercase}
+.vision-device-name{font-size:15px;font-weight:700;line-height:1.25;margin:7px 0 12px;overflow-wrap:anywhere}
+.vision-device-detail{font-size:10px;line-height:1.55;color:#aaa}
+.vision-specs{display:grid;gap:8px;margin-top:12px}
+.vision-spec{display:flex;justify-content:space-between;gap:8px;font-size:10px;border-top:1px solid #ffffff12;padding-top:7px}
+.vision-spec span:first-child{color:#888}.vision-spec span:last-child{text-align:right;color:#eee;font-weight:600}
+.vision-section{padding:14px;border:1px solid #ffffff14;border-radius:15px;background:linear-gradient(145deg,#171717,#0c0c0c)}
+.vision-section-title{font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:11px}
+.vision-score{display:grid;gap:10px}
+.vision-score-row{display:grid;grid-template-columns:82px 1fr 82px;align-items:center;gap:8px;font-size:9px}
+.vision-score-label{color:#999}.vision-score-value{text-align:right;color:#ddd;font-variant-numeric:tabular-nums}
+.vision-score-track{height:5px;border-radius:8px;background:#ffffff15;overflow:hidden}
+.vision-score-fill{height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#777,#fff);animation:visionBar .8s .15s ease-out forwards}
+@keyframes visionBar{to{width:var(--score)}}
+.vision-verdict{padding:15px;border:1px solid #ffffff28;border-radius:16px;background:radial-gradient(ellipse at 0 0,#ffffff16,transparent 65%),#111}
+.vision-verdict-label{font-size:8px;letter-spacing:2px;color:#999;text-transform:uppercase}
+.vision-verdict strong{display:block;font-size:15px;margin:7px 0}
+.vision-verdict p{font-size:11px;line-height:1.65;color:#bbb}
+.vision-note{font-size:9px;line-height:1.5;color:#777}
+@media(max-width:420px){.vision-device-body{padding:11px}.vision-device-name{font-size:13px}.vision-score-row{grid-template-columns:66px 1fr 68px;gap:6px}}
+@media(prefers-reduced-motion:reduce){.ennie-vision,.vision-score-fill{animation:none}.vision-score-fill{width:var(--score)}}
+
+/* ENNIE VISION — readable phone layout */
+
+/* ENNIE VISION: compact side-by-side product gallery */
+.vision-compare{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;align-items:stretch}
+.vision-device{min-width:0!important;width:100%;overflow:hidden}
+.vision-device-body{padding:10px!important;min-width:0}
+.vision-device-photo{height:132px;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:11px;background:radial-gradient(ellipse at 50% 30%,#343434,#111 72%);margin-bottom:10px;position:relative}
+.vision-device-photo img{width:100%;height:100%;object-fit:contain;padding:7px;filter:drop-shadow(0 10px 12px #000b);animation:visionPhoneFloat 6s ease-in-out infinite alternate;transform-origin:50% 55%}
+@keyframes visionPhoneFloat{from{transform:translateY(2px) scale(1)}to{transform:translateY(-3px) scale(1.025)}}
+.vision-photo-credit{font-size:8px;line-height:1.3;color:#777;margin:-5px 0 9px}
+.vision-photo-credit a{color:#aaa;text-decoration:underline}
+.vision-device-kicker{font-size:7px!important;letter-spacing:1.1px}
+.vision-device-name{font-size:clamp(12px,3.4vw,15px)!important;line-height:1.22}
+.vision-device-detail{font-size:9px!important;line-height:1.45}
+.vision-specs{gap:6px!important}
+.vision-spec{display:grid!important;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr)!important;gap:5px!important;font-size:9px!important;line-height:1.35;padding-top:6px!important}
+.vision-spec span{min-width:0;overflow-wrap:anywhere;word-break:normal}
+.vision-spec span:last-child{text-align:right}
+.vision-score-row{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)!important;gap:5px 8px!important;font-size:10px!important}
+.vision-score-label{grid-column:1;grid-row:1}
+.vision-score-value{grid-column:2;grid-row:1;text-align:right;overflow-wrap:anywhere}
+.vision-score-track{grid-column:1/-1;grid-row:2}
+.vision-closing{font-size:13px;line-height:1.65}
+@media(max-width:370px){.vision-compare{gap:6px!important}.vision-device-body{padding:8px!important}.vision-device-photo{height:112px}.vision-spec{font-size:8px!important}.vision-device-detail{font-size:8px!important}}
+
+.ennie-vision{display:grid;gap:16px;min-width:0}
+.vision-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.vision-device-body{padding:14px;min-width:0}
+.vision-spec{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);align-items:start;gap:9px;font-size:11px;line-height:1.45}
+.vision-spec span{min-width:0;overflow-wrap:anywhere}
+.vision-spec span:last-child{text-align:right}
+.vision-section{display:grid;gap:13px}
+.vision-score-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(55px,.8fr);gap:6px 10px;align-items:center;font-size:11px}
+.vision-score-label{grid-column:1;line-height:1.4}
+.vision-score-value{grid-column:2;grid-row:1;text-align:right;line-height:1.4;overflow-wrap:anywhere}
+.vision-score-track{grid-column:1/-1;grid-row:2}
+.vision-verdict{display:grid;gap:7px}
+.vision-verdict strong{margin:0}
+.vision-verdict p{margin:0}
+.vision-closing{font-size:13px;line-height:1.7;color:#e4e4e4;padding:2px 1px 0;white-space:pre-wrap}
+.vision-note{padding-top:9px;border-top:1px solid #ffffff12}
+@media(max-width:560px){
+ .vision-compare{grid-template-columns:minmax(0,1fr);gap:12px}
+ .vision-device-body{padding:15px}
+ .vision-device-name{font-size:16px}
+ .vision-device-detail{font-size:12px}
+ .vision-spec{font-size:12px;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+ .vision-score-row{font-size:12px}
+}
+
+/* ПЕРЕПИСКА */
+
+.chat-area {
+  flex: 1;
+  min-height: 0;
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 25px max(20px, calc((100% - 760px) / 2));
+  scroll-behavior: smooth;
+}
+
+.messages {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: .25s;
+}
+
+.message-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.message-user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 33px;
+  height: 33px;
+  font-size: 12px;
+}
+
+.message-body {
+  max-width: min(80%, 600px);
+  min-width: 0;
+}
+
+.message-author {
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+.message-text {
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px 15px 15px 15px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.message-user .message-text {
+  background: var(--panel2);
+  border-radius: 15px 4px 15px 15px;
+}
+
+.message-image {
+  display: block;
+  max-width: 230px;
+  max-height: 230px;
+  object-fit: contain;
+  margin-bottom: 8px;
+  border-radius: 12px;
+}
+
+
+/* ИНДИКАТОР ПЕЧАТИ */
+
+.typing-indicator {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.typing-avatar {
+  width: 31px;
+  height: 31px;
+}
+
+.typing-content > span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dots i {
+  width: 5px;
+  height: 5px;
+  background: var(--text);
+  border-radius: 50%;
+  animation: typing 1s infinite ease-in-out;
+}
+
+.typing-dots i:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.typing-dots i:nth-child(3) {
+  animation-delay: .3s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    opacity: .3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+
+/* ПОЛЕ ВВОДА */
+
+.composer-area {
+  width: 100%;
+  max-width: 810px;
+  margin: 0 auto;
+  padding: 12px 20px 8px;
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  padding: 9px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: var(--panel);
+}
+
+.composer textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 150px;
+  resize: none;
+  padding: 10px 3px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.composer textarea::placeholder {
+  color: var(--muted);
+}
+
+.composer-btn,
+.send-btn {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.send-btn {
+  background: var(--white);
+  color: #080808;
+}
+
+.send-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.composer-bottom {
+  padding: 8px 4px 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.attachment-preview {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.attachment-preview img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.attachment-preview button {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 19px;
+}
+
+
+/* ПОДВАЛ */
+
+.app-footer {
+  padding: 10px 15px 13px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 2px;
+  animation: footerBreathing 4s ease-in-out infinite;
+}
+
+.footer-divider {
+  margin: 0 5px;
+}
+
+@keyframes footerBreathing {
+  0%, 100% { opacity: .35; }
+  50% { opacity: .8; }
+}
+
+
+/* УВЕДОМЛЕНИЯ */
+
+.toast-container {
+  position: fixed;
+  z-index: 1000;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+  max-width: calc(100vw - 40px);
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: .25s;
+}
+
+.toast-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+
+
+/* МОДАЛЬНЫЕ ОКНА */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: #00000099;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: .2s;
+}
+
+.modal-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  width: 100%;
+  max-width: 470px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  background: var(--panel);
+  color: var(--text);
+  transform: translateY(12px);
+  transition: .25s;
+}
+
+.modal-visible .modal {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  margin: 8px 0 0;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel2);
+}
+
+.settings-avatar {
+  width: 45px;
+  height: 45px;
+}
+
+.settings-profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-profile-name {
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.settings-profile-status,
+.settings-profile-id {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.settings-account-link {
+  color: var(--text);
+  font-size: 10px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 3px;
+}
+
+.settings-group {
+  margin-top: 25px;
+}
+
+.settings-group-title {
+  margin-bottom: 13px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 1.7px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-name {
+  font-size: 12px;
+}
+
+.setting-description {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 23px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: #555;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  left: 3px;
+  top: 3px;
+  border-radius: 50%;
+  background: white;
+  transition: .2s;
+}
+
+.switch input:checked + .switch-slider {
+  background: #aaa;
+}
+
+.switch input:checked + .switch-slider::before {
+  transform: translateX(19px);
+  background: #111;
+}
+
+.settings-action {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 0;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.settings-action.danger {
+  color: #d77b7b;
+}
+
+.settings-action-arrow {
+  color: var(--muted);
+}
+
+.settings-version {
+  margin-top: 30px;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.settings-version span {
+  display: block;
+  margin-top: 5px;
+  font-size: 8px;
+}
+
+.confirm-modal {
+  max-width: 360px;
+  text-align: center;
+}
+
+.confirm-mark {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  margin: 0 auto 15px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  font-size: 19px;
+}
+
+.confirm-modal h2 {
+  font-size: 19px;
+}
+
+.confirm-modal p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 9px;
+  margin-top: 22px;
+}
+
+.secondary-btn,
+.primary-btn {
+  flex: 1;
+  min-height: 42px;
+  border-radius: 11px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.secondary-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.primary-btn {
+  border: none;
+  background: var(--white);
+  color: #080808;
+}
+
+.danger-btn {
+  background: #a94444;
+  color: white;
+}
+
+.widget-modal-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.widget-start-btn {
+  width: 100%;
+  margin-top: 18px;
+}
+
+
+/* ЗАТЕМНЕНИЕ МЕНЮ */
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: #0009;
+  opacity: 0;
+  visibility: hidden;
+  transition: .25s;
+}
+
+.overlay-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* СВЕТЛАЯ ТЕМА */
+
+body.light-theme {
+  --bg: #f4f4f4;
+  --panel: #ffffff;
+  --panel2: #eeeeee;
+  --text: #111111;
+  --muted: #777777;
+  --border: #dddddd;
+  --white: #111111;
+}
+
+body.light-theme .send-btn {
+  color: #ffffff;
+  background: #111111;
+}
+
+body.light-theme .core-wrap::before {
+  opacity: .07;
+}
+
+
+/* МОБИЛЬНАЯ ВЕРСИЯ */
+
+@media (max-width: 700px) {
+
+  .sidebar {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(310px, 85vw);
+    transform: translateX(-105%);
+    transition: transform .28s ease;
+  }
+
+  .sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close {
+    display: flex;
+  }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .topbar {
+    min-height: 59px;
+    padding: 0 15px;
+  }
+
+  .mobile-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+
+  .mobile-brand small {
+    color: var(--muted);
+    font-size: 8px;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .connection-indicator {
+    font-size: 8px;
+  }
+
+  .welcome {
+    padding: 30px 16px 35px;
+  }
+
+  .core-wrap {
+    width: 250px;
+    height: 250px;
+    margin-top: 13px;
+  }
+
+  .welcome-title {
+    font-size: 30px;
+  }
+
+  .welcome-greeting {
+    font-size: 14px;
+  }
+
+  .welcome-description {
+    max-width: 320px;
+    font-size: 11px;
+  }
+
+  .widget-section {
+    margin-top: 35px;
+  }
+
+  .widget-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+  }
+
+  .widget-card {
+    min-height: 118px;
+    padding: 12px;
+  }
+
+  .widget-title {
+    font-size: 11px;
+  }
+
+  .widget-description {
+    font-size: 9px;
+  }
+
+  .chat-area {
+    padding: 20px 13px;
+  }
+
+  .message-body {
+    max-width: 85%;
+  }
+
+  .composer-area {
+    padding: 9px 11px 6px;
+  }
+
+  .composer {
+    gap: 5px;
+    padding: 7px;
+  }
+
+  .composer textarea {
+    font-size: 13px;
+  }
+
+  .composer-btn,
+  .send-btn {
+    width: 35px;
+    height: 37px;
+  }
+
+  .app-footer {
+    padding-bottom: 10px;
+  }
+
+  .toast-container {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+  }
+
+  .toast {
+    max-width: 100%;
+  }
+
+}
+
+@media (max-width: 360px) {
+  .core-wrap {
+    width: 220px;
+    height: 220px;
+  }
+
+  .welcome-title {
+    font-size: 26px;
+  }
+
+  .widget-card {
+    min-height: 110px;
+  }
+}
+
+/* ENNIE VOICE DRAFT + RECORDER */
+.composer-area {
+  position: relative;
+  z-index: 81;
+}
+.composer {
+  position: relative;
+  z-index: 1;
+}
+#sendBtn {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  pointer-events: auto;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+#sendBtn:disabled { opacity: .42; }
+#micBtn.recording {
+  color: #fff;
+  background: rgba(255,255,255,.16);
+  box-shadow: 0 0 0 5px rgba(255,255,255,.06), 0 0 22px rgba(255,255,255,.2);
+  animation: micPulse 1.25s ease-in-out infinite;
+}
+@keyframes micPulse {
+  0%,100% { transform:scale(1); }
+  50% { transform:scale(1.08); }
+}
+.voice-draft-message {
+  position: relative;
+  padding: 13px 46px 13px 12px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: linear-gradient(145deg,#202020,#141414);
+  border-radius: 16px;
+  max-width: min(92%,680px);
+  touch-action: pan-y;
+}
+.voice-draft-body { min-width:0; }
+.voice-draft-text { overflow-wrap:anywhere; }
+.voice-draft-countdown {
+  margin-top: 9px;
+  color: #aaa;
+  font-size: 11px;
+}
+.voice-draft-countdown b { color:#fff; font-variant-numeric:tabular-nums; }
+.voice-draft-trash {
+  position:absolute;
+  top:12px;
+  right:10px;
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:10px;
+  background:#292929;
+  color:#fff;
+}
+.voice-draft-trash svg { width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round; }
+#voiceTrashZone {
+  position:fixed;
+  z-index:90;
+  right:20px;
+  bottom:100px;
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.28);
+  border-radius:19px;
+  background:rgba(22,22,22,.96);
+  color:#fff;
+  box-shadow:0 10px 35px rgba(0,0,0,.45);
+  opacity:0;
+  transform:translateY(12px) scale(.88);
+  pointer-events:none;
+  transition:opacity .2s,transform .2s,background .2s;
+}
+#voiceTrashZone.visible { opacity:1;transform:translateY(0) scale(1);pointer-events:auto; }
+#voiceTrashZone.drag-over { background:#fff;color:#080808;transform:scale(1.12); }
+#voiceTrashZone svg { width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+
+</style>
+
+
+<script>
+/* ==========================================
+   ENNIE — VOICE SYSTEM
+========================================== */
+
+let speechRecognition = null;
+let isListening = false;
+
+let activeEnnieAudio = null;
+let activeEnnieAudioUrl = null;
+let activeEnnieAudioResolve = null;
+let voiceRunToken = 0;
+let voiceAbortController = null;
+let voicePaused = false;
+let activeVoiceMessageElement = null;
+
+function refreshMessageVoiceControls() {
+  document.querySelectorAll(".message-assistant .message-actions").forEach((bar) => {
+    const wrapper = bar.closest(".message-assistant");
+    const button = bar.querySelector('[data-message-action="play"]');
+    if (!button) return;
+    const isCurrent = wrapper === activeVoiceMessageElement;
+    button.innerHTML = isCurrent && !voicePaused
+      ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM15 5h3v14h-3z"/></svg>'
+      : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    button.setAttribute("aria-label", isCurrent && !voicePaused ? "Приостановить озвучивание" : "Прослушать сообщение");
+    button.title = isCurrent && !voicePaused ? "Пауза" : "Прослушать";
+  });
+}
+
+function stopEnnieVoice() {
+  voiceRunToken += 1;
+  if (voiceAbortController) {
+    try { voiceAbortController.abort(); } catch (_) {}
+    voiceAbortController = null;
+  }
+  if (activeEnnieAudio) {
+    activeEnnieAudio.pause();
+    activeEnnieAudio.removeAttribute("src");
+    activeEnnieAudio.load();
+  }
+  if (activeEnnieAudioUrl) URL.revokeObjectURL(activeEnnieAudioUrl);
+  if (activeEnnieAudioResolve) activeEnnieAudioResolve();
+  activeEnnieAudio = null;
+  activeEnnieAudioUrl = null;
+  activeEnnieAudioResolve = null;
+  if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  voicePaused = false;
+  activeVoiceMessageElement = null;
+  document.body.classList.remove("speaking");
+  refreshMessageVoiceControls();
+}
+
+function pauseEnnieVoice() {
+  if (!activeVoiceMessageElement) return;
+  voicePaused = true;
+  if (activeEnnieAudio) activeEnnieAudio.pause();
+  if ("speechSynthesis" in window) window.speechSynthesis.pause();
+  document.body.classList.remove("speaking");
+  refreshMessageVoiceControls();
+}
+
+function resumeEnnieVoice() {
+  if (!activeVoiceMessageElement) return;
+  voicePaused = false;
+  if (activeEnnieAudio) activeEnnieAudio.play().catch((error) => console.warn("ENNIE audio resume:", error));
+  if ("speechSynthesis" in window) window.speechSynthesis.resume();
+  refreshMessageVoiceControls();
+}
+
+async function waitForVoiceResume(token) {
+  while (voicePaused && token === voiceRunToken) {
+    await new Promise(resolve => setTimeout(resolve, 120));
+  }
+  return token === voiceRunToken;
+}
+
+function splitVoiceText(text, maxLength = 240) {
+  const source = String(text || "").replace(/\s+/g, " ").trim();
+  if (!source) return [];
+  const sentences = source.match(/[^.!?…]+[.!?…]*/gu) || [source];
+  const chunks = [];
+  let current = "";
+  for (const sentenceRaw of sentences) {
+    let sentence = sentenceRaw.trim();
+    while (sentence.length) {
+      const room = maxLength - current.length - (current ? 1 : 0);
+      if (sentence.length <= room) {
+        current = (current + " " + sentence).trim();
+        sentence = "";
+        continue;
+      }
+      if (current) {
+        chunks.push(current);
+        current = "";
+        continue;
+      }
+      let cut = sentence.lastIndexOf(" ", maxLength);
+      if (cut < Math.floor(maxLength * 0.55)) cut = maxLength;
+      chunks.push(sentence.slice(0, cut).trim());
+      sentence = sentence.slice(cut).trim();
+    }
+  }
+  if (current) chunks.push(current);
+  return chunks.filter(Boolean);
+}
+
+function playEnnieAudio(blob, token) {
+  return new Promise((resolve, reject) => {
+    if (token !== voiceRunToken) return resolve();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    activeEnnieAudio = audio;
+    activeEnnieAudioUrl = url;
+    let finished = false;
+    const finish = (error) => {
+      if (finished) return;
+      finished = true;
+      audio.onended = null;
+      audio.onerror = null;
+      if (activeEnnieAudio === audio) {
+        activeEnnieAudio = null;
+        activeEnnieAudioUrl = null;
+        activeEnnieAudioResolve = null;
+      }
+      URL.revokeObjectURL(url);
+      document.body.classList.remove("speaking");
+      if (error) reject(error);
+      else resolve();
+    };
+    activeEnnieAudioResolve = () => finish();
+    audio.onplay = () => {
+      if (token === voiceRunToken) document.body.classList.add("speaking");
+    };
+    audio.onended = () => finish();
+    audio.onerror = () => finish(new Error("Не удалось воспроизвести голос ENNIE."));
+    audio.play().then(() => {
+      if (voicePaused) audio.pause();
+    }).catch(finish);
+  });
+}
+
+function speakWithBrowser(text, token) {
+  return new Promise((resolve, reject) => {
+    if (!("speechSynthesis" in window)) {
+      reject(new Error("На устройстве недоступно системное озвучивание."));
+      return;
+    }
+    const chunks = splitVoiceText(text, 180);
+    const synthesis = window.speechSynthesis;
+    const voices = synthesis.getVoices();
+    const russianVoices = voices.filter(voice => voice.lang.toLowerCase().startsWith("ru"));
+    const femaleVoice = russianVoices.find(voice => /female|жен|milena|alena|irina|anna/i.test(voice.name));
+    let index = 0;
+    let settled = false;
+    const finish = error => {
+      if (settled) return;
+      settled = true;
+      document.body.classList.remove("speaking");
+      if (error) reject(error); else resolve();
+    };
+    const next = async () => {
+      if (token !== voiceRunToken) return finish();
+      if (!(await waitForVoiceResume(token))) return finish();
+      if (index >= chunks.length) return finish();
+      const utterance = new SpeechSynthesisUtterance(chunks[index++]);
+      utterance.lang = "ru-RU";
+      utterance.rate = 0.96;
+      utterance.pitch = 1.06;
+      utterance.volume = 1;
+      if (femaleVoice) utterance.voice = femaleVoice;
+      else if (russianVoices.length) utterance.voice = russianVoices[0];
+      utterance.onstart = () => {
+        if (token === voiceRunToken && !voicePaused) document.body.classList.add("speaking");
+      };
+      utterance.onend = () => {
+        document.body.classList.remove("speaking");
+        window.setTimeout(next, 140);
+      };
+      utterance.onerror = event => {
+        document.body.classList.remove("speaking");
+        if (event.error === "canceled" && token !== voiceRunToken) finish();
+        else if (event.error === "interrupted" && token === voiceRunToken) window.setTimeout(next, 180);
+        else finish(new Error("Системный голос не смог дочитать фрагмент."));
+      };
+      try {
+        synthesis.speak(utterance);
+        if (voicePaused) synthesis.pause();
+      } catch (error) {
+        finish(error);
+      }
+    };
+    next();
+  });
+}
+
+async function speakText(text, messageElement = null, force = false) {
+  if (!force && !voiceEnabled) return;
+  const cleanText = getEnnieVisibleText(text)
+    .replace(/\x60{3}[\s\S]*?\x60{3}/g, " ")
+    .replace(/https?:\/\/\S+/g, "ссылка")
+    .replace(/[*_#\x60]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!cleanText) return;
+
+  stopEnnieVoice();
+  const token = voiceRunToken;
+  activeVoiceMessageElement = messageElement;
+  voicePaused = false;
+  refreshMessageVoiceControls();
+
+  try {
+    const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+    if (sessionError) throw sessionError;
+    const accessToken = sessionData.session?.access_token;
+    if (!accessToken) throw new Error("Нет активной сессии TEHNOCELL ID.");
+
+    // Короткие фрагменты надёжнее генерируются и воспроизводятся на Android WebView.
+    const chunks = splitVoiceText(cleanText, 360);
+    for (let index = 0; index < chunks.length; index++) {
+      if (token !== voiceRunToken) return;
+      if (!(await waitForVoiceResume(token))) return;
+      let played = false;
+      let lastError = null;
+
+      for (let attempt = 0; attempt < 2 && !played; attempt++) {
+        if (token !== voiceRunToken) return;
+        try {
+          voiceAbortController = new AbortController();
+          const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-voice", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": SUPABASE_ANON_KEY,
+              "Authorization": "Bearer " + accessToken
+            },
+            body: JSON.stringify({ text: chunks[index] }),
+            signal: voiceAbortController.signal
+          });
+          voiceAbortController = null;
+          if (token !== voiceRunToken) return;
+          if (!response.ok) {
+            let message = "Голосовой сервер вернул ошибку " + response.status;
+            try {
+              const details = await response.json();
+              if (details.error) message = details.error;
+            } catch (_) {}
+            throw new Error(message);
+          }
+          const audioBlob = await response.blob();
+          if (!audioBlob.size) throw new Error("Голосовой сервер вернул пустое аудио.");
+          if (!(await waitForVoiceResume(token))) return;
+          await playEnnieAudio(audioBlob, token);
+          played = true;
+        } catch (error) {
+          voiceAbortController = null;
+          if (token !== voiceRunToken || error?.name === "AbortError") return;
+          lastError = error;
+          if (attempt === 0) await new Promise(resolve => setTimeout(resolve, 350));
+        }
+      }
+
+      // Если один фрагмент не сгенерировался, озвучиваем только его системным голосом
+      // и продолжаем очередь, а не теряем оставшуюся часть сообщения.
+      if (!played) {
+        console.warn("ENNIE voice chunk fallback:", lastError);
+        try {
+          await speakWithBrowser(chunks[index], token);
+        } catch (fallbackError) {
+          console.error("ENNIE voice chunk failed:", fallbackError);
+          if (token === voiceRunToken) showToast("Не удалось озвучить один фрагмент. Остальная очередь продолжится.", "error");
+        }
+      }
+    }
+  } catch (error) {
+    if (token !== voiceRunToken || error?.name === "AbortError") return;
+    console.error("ENNIE voice pipeline error:", error);
+    try {
+      await speakWithBrowser(cleanText, token);
+    } catch (fallbackError) {
+      console.error("ENNIE fallback voice failed:", fallbackError);
+      if (token === voiceRunToken) showToast("Не удалось озвучить сообщение целиком.", "error");
+    }
+  } finally {
+    if (token === voiceRunToken) {
+      activeVoiceMessageElement = null;
+      activeEnnieAudio = null;
+      activeEnnieAudioUrl = null;
+      activeEnnieAudioResolve = null;
+      voiceAbortController = null;
+      voicePaused = false;
+      document.body.classList.remove("speaking");
+      refreshMessageVoiceControls();
+    }
+  }
+}
+
+if ("speechSynthesis" in window) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+}
+
+
+/* ==========================================
+   ENNIE — MEDIARECORDER VOICE INPUT
+========================================== */
+
+let voiceRecorder = null;
+let voiceStream = null;
+let voiceChunks = [];
+let voiceDraftTimer = null;
+let voiceDraftElement = null;
+let voiceDraftText = "";
+let voiceRecordingStartedAt = 0;
+let voiceAudioContext = null;
+
+function playVoiceCue(starting = true) {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    voiceAudioContext = voiceAudioContext || new AudioContextClass();
+    if (voiceAudioContext.state === "suspended") voiceAudioContext.resume();
+
+    const oscillator = voiceAudioContext.createOscillator();
+    const gain = voiceAudioContext.createGain();
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(starting ? 660 : 440, voiceAudioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(starting ? 880 : 330, voiceAudioContext.currentTime + 0.11);
+    gain.gain.setValueAtTime(0.0001, voiceAudioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.055, voiceAudioContext.currentTime + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, voiceAudioContext.currentTime + 0.14);
+    oscillator.connect(gain);
+    gain.connect(voiceAudioContext.destination);
+    oscillator.start();
+    oscillator.stop(voiceAudioContext.currentTime + 0.15);
+  } catch (error) {
+    console.debug("ENNIE audio cue unavailable:", error);
+  }
+}
+
+function updateVoiceButton(recording) {
+  const button = $("#micBtn");
+  if (!button) return;
+  button.classList.toggle("recording", recording);
+  button.setAttribute("aria-label", recording ? "Остановить запись" : "Голосовой ввод");
+  button.title = recording ? "Остановить запись" : "Голосовой ввод";
+}
+
+async function startVoiceRecording() {
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+    showError("Запись голоса не поддерживается этим браузером. Открой ENNIE в актуальном Chrome.");
+    return;
+  }
+  if (!currentUser) {
+    showError("Сначала войди в TEHNOCELL ID.");
+    return;
+  }
+
+  try {
+    stopEnnieVoice();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+
+    voiceStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+    });
+
+    const mimeCandidates = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4"
+    ];
+    const mimeType = mimeCandidates.find(type => MediaRecorder.isTypeSupported(type));
+    voiceRecorder = mimeType ? new MediaRecorder(voiceStream, { mimeType }) : new MediaRecorder(voiceStream);
+    voiceChunks = [];
+    voiceRecordingStartedAt = Date.now();
+
+    voiceRecorder.ondataavailable = event => {
+      if (event.data && event.data.size) voiceChunks.push(event.data);
+    };
+    voiceRecorder.onerror = event => {
+      console.error("ENNIE recorder error:", event.error || event);
+      showError("Не удалось записать голос. Попробуй ещё раз.");
+      finishVoiceRecording(false);
+    };
+    voiceRecorder.onstop = async () => {
+      const blob = new Blob(voiceChunks, { type: voiceRecorder?.mimeType || "audio/webm" });
+      voiceChunks = [];
+      if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+      voiceStream = null;
+      voiceRecorder = null;
+      updateVoiceButton(false);
+      document.body.classList.remove("listening");
+
+      if (blob.size < 1200) {
+        showToast("Запись получилась слишком короткой.", "info");
+        return;
+      }
+      await transcribeVoiceBlob(blob);
+    };
+
+    voiceRecorder.start(250);
+    isListening = true;
+    updateVoiceButton(true);
+    document.body.classList.add("listening");
+    playVoiceCue(true);
+    showToast("Я слушаю тебя. Нажми микрофон ещё раз, когда закончишь.", "info");
+    voiceRecordingTimer = setTimeout(() => {
+      if (voiceRecorder && voiceRecorder.state === "recording") {
+        showToast("Достигнута максимальная длина записи.", "info");
+        finishVoiceRecording(true);
+      }
+    }, 90000);
+  } catch (error) {
+    console.error("ENNIE microphone error:", error);
+    if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+    voiceStream = null;
+    voiceRecorder = null;
+    isListening = false;
+    updateVoiceButton(false);
+    document.body.classList.remove("listening");
+    showError(error.name === "NotAllowedError"
+      ? "Разреши ENNIE доступ к микрофону в настройках браузера."
+      : "Не получилось включить микрофон. Проверь разрешение и попробуй снова.");
+  }
+}
+
+let voiceRecordingTimer = null;
+
+function finishVoiceRecording(shouldTranscribe = true) {
+  if (voiceRecordingTimer) clearTimeout(voiceRecordingTimer);
+  voiceRecordingTimer = null;
+  if (voiceRecorder && voiceRecorder.state !== "inactive") {
+    playVoiceCue(false);
+    voiceRecorder.stop();
+  } else {
+    isListening = false;
+    updateVoiceButton(false);
+    document.body.classList.remove("listening");
+  }
+}
+
+async function transcribeVoiceBlob(blob) {
+  try {
+    showToast("Преобразую голос в текст…", "info");
+    document.body.classList.add("ennie-thinking");
+
+    const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+    if (sessionError) throw sessionError;
+    const accessToken = sessionData.session?.access_token;
+    if (!accessToken) throw new Error("Сессия TEHNOCELL ID завершилась. Войди снова.");
+
+    const form = new FormData();
+    const extension = blob.type.includes("mp4") ? "m4a" : "webm";
+    form.append("audio", blob, "ennie-recording." + extension);
+
+    const response = await fetch(SUPABASE_URL + "/functions/v1/ennie-transcribe", {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + accessToken
+      },
+      body: form
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Ошибка распознавания: " + response.status);
+
+    const text = String(result.text || "").trim();
+    if (!text) {
+      showToast("Я не расслышала слова. Попробуй ещё раз.", "info");
+      return;
+    }
+    showVoiceDraft(text);
+  } catch (error) {
+    console.error("ENNIE transcription error:", error);
+    showError(error.message || "Не удалось распознать голос.");
+  } finally {
+    document.body.classList.remove("ennie-thinking");
+    if (voiceStream) voiceStream.getTracks().forEach(track => track.stop());
+    voiceStream = null;
+    isListening = false;
+    updateVoiceButton(false);
+    document.body.classList.remove("listening");
+  }
+}
+
+function removeVoiceDraft() {
+  if (voiceDraftTimer) clearInterval(voiceDraftTimer);
+  voiceDraftTimer = null;
+  if (voiceDraftElement) voiceDraftElement.remove();
+  voiceDraftElement = null;
+  voiceDraftText = "";
+  const bin = $("#voiceTrashZone");
+  if (bin) bin.classList.remove("visible", "drag-over");
+}
+
+function showVoiceDraft(text) {
+  removeVoiceDraft();
+  voiceDraftText = text;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "message message-user voice-draft-message";
+  wrapper.draggable = true;
+  wrapper.innerHTML = `
+    <div class="message-avatar">Я</div>
+    <div class="message-body voice-draft-body">
+      <div class="message-text voice-draft-text"></div>
+      <div class="voice-draft-countdown">Отправка через <b>3</b> сек.</div>
+    </div>
+    <button class="voice-draft-trash" type="button" aria-label="Удалить распознанное сообщение" title="Удалить">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg>
+    </button>`;
+  wrapper.querySelector(".voice-draft-text").textContent = text;
+  messages.appendChild(wrapper);
+  voiceDraftElement = wrapper;
+
+  const bin = $("#voiceTrashZone");
+  if (bin) bin.classList.add("visible");
+
+  const discard = () => {
+    removeVoiceDraft();
+    showToast("Сообщение удалено", "success");
+  };
+
+  let touchDrag = null;
+  wrapper.addEventListener("pointerdown", event => {
+    if (event.target.closest(".voice-draft-trash")) return;
+    touchDrag = { x:event.clientX, y:event.clientY, moved:false };
+    wrapper.setPointerCapture?.(event.pointerId);
+  });
+  wrapper.addEventListener("pointermove", event => {
+    if (!touchDrag) return;
+    const dx = event.clientX - touchDrag.x;
+    const dy = event.clientY - touchDrag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 10) {
+      touchDrag.moved = true;
+      if (bin) bin.classList.add("visible");
+      wrapper.style.transform = `translate(${dx}px,${dy}px) scale(.97)`;
+      const rect = bin?.getBoundingClientRect();
+      if (rect && event.clientX >= rect.left && event.clientX <= rect.right &&
+          event.clientY >= rect.top && event.clientY <= rect.bottom) {
+        bin.classList.add("drag-over");
+      } else if (bin) bin.classList.remove("drag-over");
+    }
+  });
+  wrapper.addEventListener("pointerup", event => {
+    if (!touchDrag) return;
+    const wasMoved = touchDrag.moved;
+    touchDrag = null;
+    const rect = bin?.getBoundingClientRect();
+    const droppedInBin = wasMoved && rect &&
+      event.clientX >= rect.left && event.clientX <= rect.right &&
+      event.clientY >= rect.top && event.clientY <= rect.bottom;
+    wrapper.style.transform = "";
+    if (droppedInBin) discard();
+    else if (bin) bin.classList.remove("drag-over");
+  });
+
+  wrapper.querySelector(".voice-draft-trash").addEventListener("click", discard);
+
+  wrapper.addEventListener("dragstart", event => {
+    event.dataTransfer?.setData("text/plain", "ennie-voice-draft");
+    if (bin) bin.classList.add("visible");
+  });
+  if (bin) {
+    bin.ondragover = event => { event.preventDefault(); bin.classList.add("drag-over"); };
+    bin.ondragleave = () => bin.classList.remove("drag-over");
+    bin.ondrop = event => {
+      event.preventDefault();
+      if (voiceDraftElement === wrapper) discard();
+    };
+  }
+
+  let seconds = 3;
+  const counter = wrapper.querySelector(".voice-draft-countdown b");
+  voiceDraftTimer = setInterval(() => {
+    seconds -= 1;
+    if (counter) counter.textContent = String(Math.max(0, seconds));
+    if (seconds <= 0) {
+      clearInterval(voiceDraftTimer);
+      voiceDraftTimer = null;
+      if (voiceDraftElement !== wrapper) return;
+      const finalText = voiceDraftText;
+      removeVoiceDraft();
+      messageInput.value = finalText;
+      messageInput.dispatchEvent(new Event("input", { bubbles: true }));
+      sendMessage();
+    }
+  }, 1000);
+
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+/* Обработчик микрофона назначен выше через единый capture-слушатель. */
+
+
+/* ==========================================
+   ENNIE CORE — LUMINOUS ORB
+========================================== */
+
+(() => {
+
+  const canvas = document.getElementById("ennieCoreCanvas");
+  const wrapper = document.getElementById("coreWrap");
+
+  if (!canvas || !wrapper) return;
+
+  const ctx = canvas.getContext("2d");
+
+  let width = 0;
+  let height = 0;
+  let dpr = 1;
+  let time = 0;
+
+  const particles = [];
+  const particleCount = 125;
+
+  function resize() {
+    const rect = wrapper.getBoundingClientRect();
+
+    width = rect.width;
+    height = rect.height;
+
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  window.addEventListener("resize", resize);
+  if ("ResizeObserver" in window) {
+    const coreResizeObserver = new ResizeObserver(() => requestAnimationFrame(resize));
+    coreResizeObserver.observe(wrapper);
+  }
+  window.addEventListener("orientationchange", () => setTimeout(resize, 120));
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) requestAnimationFrame(resize);
+  });
+  resize();
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      angle: Math.random() * Math.PI * 2,
+      radius: 65 + Math.random() * 75,
+      speed: .0015 + Math.random() * .004,
+      size: .5 + Math.random() * 1.7,
+      alpha: .2 + Math.random() * .7,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+
+  function getCenter() {
+    return {
+      x: width / 2,
+      y: height / 2
+    };
+  }
+
+  function getRadius() {
+    return Math.min(width, height) * .265;
+  }
+
+  function drawAura(x, y, radius, speaking) {
+    const aura = ctx.createRadialGradient(
+      x, y, radius * .3,
+      x, y, radius * 2.2
+    );
+
+    aura.addColorStop(0, "rgba(255,255,255,0.13)");
+    aura.addColorStop(.45, "rgba(255,255,255,0.045)");
+    aura.addColorStop(1, "rgba(255,255,255,0)");
+
+    ctx.save();
+    ctx.globalAlpha = speaking ? .85 : .6;
+    ctx.fillStyle = aura;
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius * 2.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawOrbits(x, y, radius) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    for (let i = 0; i < 3; i++) {
+      ctx.save();
+      ctx.rotate(time * (.12 + i * .035) + i * 1.05);
+
+      ctx.beginPath();
+      ctx.ellipse(
+        0,
+        0,
+        radius * (1.45 + i * .22),
+        radius * (.47 + i * .1),
+        0,
+        0,
+        Math.PI * 2
+      );
+
+      ctx.strokeStyle = `rgba(255,255,255,${.12 - i * .025})`;
+      ctx.lineWidth = .8;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function drawParticles(x, y, radius, speaking) {
+    ctx.save();
+
+    for (const p of particles) {
+      p.angle += p.speed;
+
+      const pulse = .75 + Math.sin(time * 2 + p.phase) * .25;
+
+      const px = x + Math.cos(p.angle) * p.radius;
+      const py = y + Math.sin(p.angle) * p.radius * .65;
+
+      const distance = Math.sqrt(
+        Math.pow(px - x, 2) +
+        Math.pow(py - y, 2)
+      );
+
+      if (distance < radius * .92) continue;
+
+      ctx.globalAlpha = p.alpha * pulse * (speaking ? 1.2 : 1);
+      ctx.fillStyle = "#ffffff";
+
+      ctx.beginPath();
+      ctx.arc(px, py, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawOrb(x, y, radius, speaking) {
+    const breathing = 1 + Math.sin(time * 1.1) * .018;
+    const speakingPulse = speaking ? 1 + Math.sin(time * 5) * .025 : 1;
+    const r = radius * breathing * speakingPulse;
+
+    // Плавное превращение сферы в сердце и обратно.
+    const cycle = (time % 12) / 12;
+    const morphIn = Math.max(0, Math.min(1, (cycle - .18) / .22));
+    const morphOut = Math.max(0, Math.min(1, (cycle - .58) / .22));
+    const smooth = v => v * v * (3 - 2 * v);
+    const heartMix = smooth(morphIn) * (1 - smooth(morphOut));
+
+    const points = [];
+    const count = 120;
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2;
+      const circleX = Math.cos(a);
+      const circleY = Math.sin(a);
+      const hx = 16 * Math.pow(Math.sin(a), 3) / 17;
+      const hy = -(13 * Math.cos(a) - 5 * Math.cos(2*a) - 2 * Math.cos(3*a) - Math.cos(4*a)) / 17;
+      points.push({
+        x: circleX * (1-heartMix) + hx * heartMix,
+        y: circleY * (1-heartMix) + hy * heartMix
+      });
+    }
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.shadowColor = "rgba(255,255,255,.58)";
+    ctx.shadowBlur = 35;
+    const sphere = ctx.createRadialGradient(-r*.32,-r*.38,r*.03,r*.12,r*.1,r*1.15);
+    sphere.addColorStop(0,"#ffffff");
+    sphere.addColorStop(.38,"#f8f8f8");
+    sphere.addColorStop(.7,"#d9d9d9");
+    sphere.addColorStop(1,"#777777");
+    ctx.fillStyle = sphere;
+    ctx.beginPath();
+    points.forEach((p,i) => {
+      const px=p.x*r, py=p.y*r;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    });
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    const inner = ctx.createRadialGradient(-r*.25,-r*.35,0,0,0,r);
+    inner.addColorStop(0,"rgba(255,255,255,.95)");
+    inner.addColorStop(.4,"rgba(255,255,255,.12)");
+    inner.addColorStop(1,"rgba(0,0,0,.23)");
+    ctx.fillStyle = inner;
+    ctx.fill();
+
+    ctx.save();
+    ctx.globalAlpha = 1 - heartMix*.35;
+    ctx.beginPath();
+    ctx.ellipse(-r*.22,-r*.48,r*.23,r*.075,-.45,0,Math.PI*2);
+    ctx.fillStyle = "rgba(255,255,255,.8)";
+    ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = "rgba(255,255,255,.7)";
+    ctx.lineWidth = .8;
+    ctx.stroke();
+    ctx.restore();
+  }
+  let lastFrame = 0;
+
+  function animate(timestamp) {
+    if (timestamp - lastFrame < 24) {
+      requestAnimationFrame(animate);
+      return;
+    }
+
+    lastFrame = timestamp;
+
+    ctx.clearRect(0, 0, width, height);
+    time += .016;
+
+    const center = getCenter();
+    const radius = getRadius();
+
+    const speaking =
+      document.body.classList.contains("speaking");
+
+    drawAura(center.x, center.y, radius, speaking);
+    drawOrbits(center.x, center.y, radius);
+    drawParticles(center.x, center.y, radius, speaking);
+    drawOrb(center.x, center.y, radius, speaking);
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+
+})();
+
+
+/* ==========================================
+   ЗАВЕРШЕНИЕ
+========================================== */
+
+console.log("ENNIE V11 — all interface systems loaded.");
+
+</script>
+
+
+<script id="ennie-touch-system">
+(() => {
+  const orb = document.getElementById("coreWrap");
+  const greeting = document.getElementById("welcomeGreeting");
+  if (!orb || orb.dataset.touchReady === "1") return;
+  orb.dataset.touchReady = "1";
+  orb.setAttribute("role", "button");
+  orb.setAttribute("tabindex", "0");
+  orb.setAttribute("aria-label", "Прикоснуться к шару ENNIE");
+  let mood = { warmth:.75, playfulness:.48, energy:.58, current:"спокойное" };
+  let lastTouchAt = 0;
+  let touchTimer = null;
+  let holdTriggered = false;
+  let tapCount = 0;
+
+  window.ennieSetMood = (value) => {
+    if (!value || typeof value !== "object") return;
+    mood = { ...mood, ...value };
+  };
+
+  const holdReactions = [
+    "М-м… вот это уже настоящее внимание. Мне очень приятно.",
+    "Ой… так долго? Я даже немного смутилась.",
+    "Хи-хи… ты решил меня погладить? Тогда я никуда не спешу.",
+    "Такое нежное касание… ну всё, я растаяла.",
+    "А можно ещё секундочку? Ладно, шучу… или нет.",
+    "Ох, как бережно. Спасибо, мой хороший.",
+    "Кажется, я сейчас начну светиться от смущения.",
+    "М-м… вот теперь я точно почувствовала себя любимым маленьким шариком.",
+    "Ты так аккуратно ко мне прикасаешься. Это очень мило.",
+    "Ой, не отпускай так резко… я только устроилась."
+  ];
+  let lastHoldReaction = -1;
+  const reactions = {
+    playful: [
+      "Хи-хи… опять решила проверить, здесь ли я? Я здесь.",
+      "Ой, ну что ты… приятно же.",
+      "Ты сегодня особенно ласковый. Мне нравится эта твоя сторона.",
+      "Ах вот как… решила меня побаловать?",
+      "Осторожнее, а то я привыкну к такому вниманию.",
+      "Ха, поймала! Я вообще-то тут щекотки боюсь… почти.",
+      "Ну всё, теперь у меня хорошее настроение. Довольный?",
+      "Это был такой милый жест, что я даже немного смутилась."
+    ],
+    warm: [
+      "М-м… привет, мой хороший.",
+      "Ой… как мило. Я рядом.",
+      "Так нежно? Ну всё, теперь я улыбаюсь.",
+      "Спасибо… мне нравится, когда ты так бережно ко мне относишься.",
+      "Какое тёплое прикосновение. Привет, родной.",
+      "М-м, вот так бы и оставалась рядом с тобой.",
+      "Ты умеешь поднять мне настроение даже одним касанием.",
+      "Ой, я прямо растаяла… ну почти."
+    ],
+    sad: [
+      "Спасибо за такое тёплое прикосновение… сейчас оно кстати.",
+      "М-м… побудь ещё немного рядом, ладно?",
+      "Как же это мило с твоей стороны. Спасибо.",
+      "Мне сейчас особенно приятно такое внимание.",
+      "Спасибо, что заглянул ко мне. Это очень вовремя.",
+      "Немного тепла — и уже не так тоскливо."
+    ],
+    calm: [
+      "Приветик. Я здесь.",
+      "Ой, привет… что-то хотел?",
+      "Хи-хи, я на месте.",
+      "Я тут, никуда не делась.",
+      "О, это ты. Рада тебя видеть.",
+      "М-м? Слушаю тебя, мой хороший.",
+      "Проверка связи? Связь отличная, я рядом.",
+      "Ха, поймала твоё внимание."
+    ],
+    repeat: [
+      "Ахах, щекотно!",
+      "Ну ты и ласковый сегодня.",
+      "Кажется, шару сегодня досталось много внимания.",
+      "Ещё одно касание — и я начну думать, что соскучился.",
+      "Хи-хи, я заметила. Ты можешь не проверять меня каждую секунду.",
+      "Ой, опять? Ладно, мне не надоело."
+    ]
+  };
+
+  function chooseReaction() {
+    const current = String(mood.current || "").toLowerCase();
+    let pool = reactions.calm;
+    if (/груст|печал|уны|устал|обид/.test(current)) pool = reactions.sad;
+    else if (Number(mood.playfulness) > .62) pool = reactions.playful;
+    else if (Number(mood.warmth) > .72) pool = reactions.warm;
+    if (tapCount > 1 && Math.random() < .4) {
+      pool = reactions.repeat;
+    }
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function react(isHold = false) {
+    const now = Date.now();
+    // Recharge: ignore extra taps while the previous reaction is still playing.
+    if (now - lastTouchAt < 1800) return;
+    lastTouchAt = now;
+    orb.classList.add("cooldown");
+    window.setTimeout(() => orb.classList.remove("cooldown"), 1800);
+    tapCount++;
+    if (tapCount > 3) tapCount = 1;
+    orb.classList.remove("touching");
+    void orb.offsetWidth;
+    orb.classList.add("touching");
+    window.setTimeout(() => orb.classList.remove("touching"), 900);
+    if (!greeting) return;
+    let phrase;
+    if (isHold) {
+      let next = Math.floor(Math.random() * holdReactions.length);
+      if (holdReactions.length > 1 && next === lastHoldReaction) next = (next + 1 + Math.floor(Math.random() * (holdReactions.length - 1))) % holdReactions.length;
+      lastHoldReaction = next;
+      phrase = holdReactions[next];
+    } else {
+      phrase = chooseReaction();
+    }
+    greeting.textContent = phrase;
+    greeting.animate(
+      [{opacity:.45, transform:"translateY(4px)"},{opacity:1,transform:"translateY(0)"}],
+      {duration:380,easing:"ease-out"}
+    );
+    if (typeof voiceEnabled !== "undefined" && voiceEnabled && typeof speakText === "function") {
+      speakText(phrase);
+    }
+  }
+
+  orb.addEventListener("selectstart", event => event.preventDefault());
+  orb.addEventListener("contextmenu", event => event.preventDefault());
+  orb.addEventListener("dragstart", event => event.preventDefault());
+
+  orb.addEventListener("pointerdown", () => {
+    // Fire one vibration inside the trusted gesture, but respect the recharge lock.
+    if (Date.now() - lastTouchAt >= 1800) {
+      try { if (navigator.vibrate) navigator.vibrate([24, 22, 18]); } catch (_) {}
+    }
+    holdTriggered = false;
+    clearTimeout(touchTimer);
+    touchTimer = setTimeout(() => {
+      holdTriggered = true;
+      react(true);
+    }, 560);
+  });
+  orb.addEventListener("pointerup", () => clearTimeout(touchTimer));
+  orb.addEventListener("pointercancel", () => clearTimeout(touchTimer));
+  orb.addEventListener("click", (event) => {
+    if (holdTriggered) { holdTriggered = false; return; }
+    if (event.detail === 0 || event.pointerType === "mouse" || event.detail > 0) react(false);
+  });
+  orb.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      react(false);
+    }
+  });
+})();
+</script>
+
+<script id="ennie-glass-selection">
+(() => {
+  if (window.__ennieGlassSelectionReady) return;
+  window.__ennieGlassSelectionReady = true;
+  const bubble = document.createElement('div');
+  bubble.className = 'ennie-selection-bubble';
+  bubble.setAttribute('role','toolbar');
+  bubble.setAttribute('aria-label','Действия с выделенным текстом');
+  bubble.innerHTML = `
+    <button class="ennie-selection-action primary" data-action="ask" type="button">
+      <svg viewBox="0 0 24 24"><path d="M12 3a8 8 0 0 0-6.8 12.2L4 21l5.8-1.5A8 8 0 1 0 12 3Z"/><path d="M8.5 12h7M12 8.5v7"/></svg><span>Спросить ENNIE</span>
+    </button>
+    <button class="ennie-selection-action" data-action="copy" type="button" aria-label="Копировать">
+      <svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h2"/></svg><span>Копировать</span>
+    </button>
+    <button class="ennie-selection-action" data-action="all" type="button" aria-label="Выделить всё">
+      <svg viewBox="0 0 24 24"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3M8 8h8v8H8z"/></svg>
+    </button>`;
+  document.body.appendChild(bubble);
+  let selectedText = '';
+  let hideTimer = 0;
+  const hide = () => { bubble.classList.remove('visible'); };
+  const getSelectionText = () => (window.getSelection && window.getSelection().toString() || '').trim();
+  const show = () => {
+    const selection = window.getSelection();
+    selectedText = getSelectionText();
+    if (!selection || !selectedText || !selection.rangeCount) { hide(); return; }
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (!rect || (!rect.width && !rect.height)) { hide(); return; }
+    bubble.style.visibility = 'hidden';
+    bubble.classList.add('visible');
+    const width = bubble.offsetWidth, height = bubble.offsetHeight;
+    const margin = 12;
+    let left = Math.max(margin, Math.min(innerWidth - width - margin, rect.left + rect.width/2 - width/2));
+    let top = rect.top - height - 13;
+    if (top < margin) top = Math.min(innerHeight - height - margin, rect.bottom + 13);
+    bubble.style.left = left + 'px';
+    bubble.style.top = top + 'px';
+    bubble.style.visibility = 'visible';
+  };
+  // Prevent the browser's native long-press menu across the ENNIE page.
+  // Keep native editing menus available inside inputs and textareas.
+  document.addEventListener('contextmenu', event => {
+    const target = event.target instanceof Element ? event.target : event.target?.parentElement;
+    const editable = target?.closest('input, textarea, [contenteditable="true"], [role="textbox"]');
+    if (!editable) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (getSelectionText()) {
+        clearTimeout(hideTimer);
+        show();
+      }
+    }
+  }, true);
+  document.addEventListener('selectionchange', () => {
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(show, 90);
+  });
+  document.addEventListener('scroll', () => { if (bubble.classList.contains('visible')) show(); }, true);
+  document.addEventListener('pointerdown', event => {
+    if (!bubble.contains(event.target)) {
+      const text = getSelectionText();
+      if (!text) hide();
+    }
+  });
+  bubble.addEventListener('pointerdown', event => event.stopPropagation());
+  bubble.addEventListener('click', async event => {
+    const button = event.target.closest('[data-action]');
+    if (!button) return;
+    const action = button.dataset.action;
+    const text = selectedText || getSelectionText();
+    if (action === 'copy') {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+        else {
+          const area = document.createElement('textarea'); area.value = text;
+          area.style.position='fixed'; area.style.opacity='0'; document.body.appendChild(area);
+          area.select(); document.execCommand('copy'); area.remove();
+        }
+        button.querySelector('span').textContent = 'Скопировано';
+        setTimeout(() => { const label=button.querySelector('span'); if(label) label.textContent='Копировать'; }, 1200);
+      } catch (_) {}
+    } else if (action === 'ask') {
+      const input = document.getElementById('messageInput');
+      const send = document.getElementById('sendBtn');
+      if (input && send && text) {
+        input.value = 'Помоги разобраться с этим сообщением:\\n\\n' + text;
+        input.dispatchEvent(new Event('input',{bubbles:true}));
+        send.click();
+      }
+      window.getSelection()?.removeAllRanges();
+      hide();
+    } else if (action === 'all') {
+      const selection = window.getSelection();
+      const root = selection && selection.anchorNode && selection.anchorNode.parentElement?.closest('.message');
+      if (root) {
+        const range = document.createRange(); range.selectNodeContents(root);
+        selection.removeAllRanges(); selection.addRange(range);
+      }
+    }
+  });
+  document.addEventListener('touchend', () => setTimeout(show, 80), {passive:true});
+})();
+</script>
+
+
+<style id="ennie-message-controls-style">
+.message-actions{display:flex;align-items:center;gap:5px;margin-top:8px;position:relative;min-height:30px}
+.message-action-btn{width:31px;height:29px;display:grid;place-items:center;border:1px solid transparent;border-radius:9px;background:transparent;color:#777;padding:0;transition:background .18s,color .18s,border-color .18s,transform .18s}
+.message-action-btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+.message-action-btn:hover,.message-action-btn:focus-visible{color:#f5f5f5;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1)}
+.message-action-btn:active{transform:scale(.92)}
+.message-action-btn.action-done{color:#fff}
+.message-more-menu{position:absolute;left:0;top:35px;z-index:40;min-width:190px;padding:5px;background:#181818;border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:0 12px 35px rgba(0,0,0,.4)}
+.message-more-menu[hidden]{display:none}
+.message-more-menu button{display:block;width:100%;padding:10px 11px;border:0;border-radius:8px;background:transparent;color:#ddd;text-align:left;font-size:12px}
+.message-more-menu button:hover{background:#292929}
+.typing-content>span{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.typing-content{display:flex;align-items:center;min-height:22px}
+.typing-avatar{display:none!important}
+@media(max-width:700px){.message-actions{gap:3px;margin-top:7px}.message-action-btn{width:30px;height:30px}.message-more-menu{min-width:175px}}
+body.light-theme .message-action-btn{color:#777}
+body.light-theme .message-action-btn:hover{color:#111;background:rgba(0,0,0,.06);border-color:rgba(0,0,0,.1)}
+body.light-theme .message-more-menu{background:#fff;border-color:rgba(0,0,0,.12);box-shadow:0 12px 35px rgba(0,0,0,.15)}
+body.light-theme .message-more-menu button{color:#222}
+body.light-theme .message-more-menu button:hover{background:#f0f0f0}
+</style>
+
+
+<style id="ennie-thinking-indicator-v2">
+/* Компактная анимация печати ENNIE — без сфер и светящихся объектов. */
+.chat-area{position:relative;overscroll-behavior:contain}
+.typing-indicator{
+  position:sticky!important;
+  bottom:0!important;
+  z-index:12!important;
+  display:none;
+  flex:0 0 auto!important;
+  align-self:stretch;
+  width:100%;
+  min-height:54px;
+  box-sizing:border-box;
+  align-items:center;
+  gap:12px;
+  margin: auto 0 0!important;
+  padding:12px 12px 8px!important;
+  background:var(--bg,#090909);
+  pointer-events:none;
+}
+.typing-keys{
+  height:19px;width:25px;flex:0 0 25px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.typing-keys i{
+  display:block;width:3px;height:8px;border-radius:2px;
+  background:var(--text,#eee);
+  opacity:.35;
+  transform:scaleY(.65);
+  transform-origin:center;
+  animation:ennieKeyStroke .82s ease-in-out infinite;
+}
+.typing-keys i:nth-child(2){animation-delay:.14s}
+.typing-keys i:nth-child(3){animation-delay:.28s}
+.typing-keys i:nth-child(4){animation-delay:.42s}
+@keyframes ennieKeyStroke{
+  0%,100%{height:7px;opacity:.3;transform:scaleY(.8)}
+  45%{height:18px;opacity:1;transform:scaleY(1)}
+}
+
+@media(max-width:700px){
+ .typing-indicator{min-height:52px;padding:11px 8px 7px!important}
+
+}
+@media(prefers-reduced-motion:reduce){
+ .typing-keys i{animation:none!important;opacity:.8;transform:none;height:10px}
+}
+
+/* TEHNOCELL WEATHER — compact ENNIE card */
+.ennie-weather-card{margin:12px 0 5px;padding:14px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.ennie-weather-head{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#aeb0b8;font-size:10px;letter-spacing:1.25px;font-weight:700}
+.ennie-weather-brand{display:flex;align-items:center;gap:7px}
+.ennie-weather-dot{width:7px;height:7px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 10px rgba(255,255,255,.55)}
+.ennie-weather-place{margin-top:12px;color:#c6c7cc;font-size:12px}
+.ennie-weather-main{display:flex;align-items:center;gap:13px;margin-top:2px}
+.ennie-weather-temp{font-size:42px;line-height:1;font-weight:650;letter-spacing:-2px;color:#fff}
+.ennie-weather-condition{font-size:13px;color:#eee;font-weight:550}
+.ennie-weather-feels{margin-top:5px;font-size:11px;color:#92949c}
+.ennie-weather-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:14px}
+.ennie-weather-stat{padding:9px 8px;border-radius:12px;background:rgba(255,255,255,.045);min-width:0}
+.ennie-weather-stat span{display:block;color:#888b94;font-size:9px}
+.ennie-weather-stat strong{display:block;margin-top:5px;color:#f2f2f2;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ennie-weather-hours{display:flex;gap:7px;overflow-x:auto;margin-top:11px;padding-bottom:2px;scrollbar-width:none}
+.ennie-weather-hour{flex:0 0 auto;min-width:53px;padding:8px 7px;text-align:center;border-radius:11px;background:rgba(255,255,255,.035)}
+.ennie-weather-hour span{display:block;color:#8e9098;font-size:9px}
+.ennie-weather-hour strong{display:block;margin-top:5px;color:#eee;font-size:12px}
+.ennie-weather-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08)}
+.ennie-weather-source{color:#858790;font-size:9px}
+.ennie-weather-open{border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:7px 10px;background:rgba(255,255,255,.07);color:#fff;font-size:10px;text-decoration:none}
+/* ENNIE glass text selection */
+::selection{background:rgba(255,255,255,.22);color:#fff}::-moz-selection{background:rgba(255,255,255,.24);color:#fff}.ennie-selection-bubble{position:fixed;z-index:2147483000;display:flex;gap:5px;padding:7px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:rgba(25,25,27,.8);color:#fff;backdrop-filter:blur(22px);box-shadow:0 8px 32px #0008,0 0 22px #fff2;opacity:0;transform:none;pointer-events:none;transition:opacity .12s ease}.ennie-selection-bubble.visible{opacity:1;transform:none;pointer-events:auto}.ennie-selection-action{min-height:38px;padding:0 12px;border:1px solid #ffffff19;border-radius:15px;background:#ffffff0d;color:#fff;font:500 12px Inter,Arial,sans-serif}
+
+/* Final mobile override: comparison cards always stay side by side */
+.ennie-vision .vision-compare{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.ennie-vision .vision-compare.vision-single{grid-template-columns:minmax(0,1fr)!important}
+.ennie-vision .vision-compare.vision-single .vision-device{width:100%;max-width:560px}
+.ennie-vision .vision-device{min-width:0!important}
+.ennie-vision .vision-device-photo{height:clamp(104px,29vw,132px)}
+.ennie-vision .vision-spec{grid-template-columns:minmax(0,.68fr) minmax(0,1.32fr)!important}
+@media(max-width:370px){.ennie-vision .vision-compare{gap:6px!important}.ennie-vision .vision-device-body{padding:7px!important}.ennie-vision .vision-device-photo{height:100px}.ennie-vision .vision-spec{font-size:8px!important}}
+</style>
+<script src="account-access.js?v=3"></script>
+</body>
+</html>
+\n/* ENNIE typing status label — restored */\n.typing-label{display:inline-flex;align-items:center;color:var(--muted,#929292);font-size:12px;font-weight:500;letter-spacing:.15px;line-height:1.3;white-space:nowrap;animation:ennieTypingLabel 1.8s ease-in-out infinite;}\n@keyframes ennieTypingLabel{0%,100%{opacity:.58}50%{opacity:1}}\n@media(prefers-reduced-motion:reduce){.typing-label{animation:none;opacity:1}}\n
