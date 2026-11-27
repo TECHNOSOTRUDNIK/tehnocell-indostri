@@ -576,6 +576,64 @@
 #publicProfileContent[data-theme="plum"] .person-profile-status,
 #publicProfileContent[data-theme="sand"] .person-profile-status{background:#0003;border-color:#ffffff22}
 
+
+/* TEHNOCELL profile effects: visible animated light, glow and moving gradients */
+#publicProfileContent[data-theme$="-glow"],
+#publicProfileContent[data-theme="neon-violet"],
+#publicProfileContent[data-theme="electric-blue"],
+#publicProfileContent[data-theme="emerald-aura"],
+#publicProfileContent[data-theme="golden-pulse"],
+#publicProfileContent[data-theme="rose-nebula"]{
+ position:relative;isolation:isolate;overflow:hidden;padding:15px;border-radius:19px;
+ background-size:240% 240%;animation:tcAtmosphereFlow 9s ease-in-out infinite;
+}
+#publicProfileContent[data-theme="crimson-glow"]{background-image:linear-gradient(125deg,#31070d,#790d20,#21060c,#4c0a17);border:1px solid #ff365a99;box-shadow:0 0 18px #ff173b88,0 0 48px #d400343d;animation:tcAtmosphereFlow 5s ease-in-out infinite,tcRedAura 2.8s ease-in-out infinite}
+#publicProfileContent[data-theme="neon-violet"]{background-image:linear-gradient(125deg,#160923,#54127c,#170c30,#35104e);border:1px solid #d36bff;box-shadow:0 0 22px #b52cff99,0 0 55px #8425ff55;animation:tcAtmosphereFlow 7s ease-in-out infinite,tcVioletAura 3s ease-in-out infinite}
+#publicProfileContent[data-theme="electric-blue"]{background-image:linear-gradient(125deg,#061323,#07518b,#071b38,#123d69);border:1px solid #48baff;box-shadow:0 0 22px #159dff99,0 0 55px #168bff55;animation:tcAtmosphereFlow 6s ease-in-out infinite,tcBlueAura 2.6s ease-in-out infinite}
+#publicProfileContent[data-theme="emerald-aura"]{background-image:linear-gradient(125deg,#061b12,#075c38,#092719,#123e2a);border:1px solid #48e99a;box-shadow:0 0 22px #16d77b99,0 0 55px #0aa65b55;animation:tcAtmosphereFlow 8s ease-in-out infinite,tcGreenAura 3.2s ease-in-out infinite}
+#publicProfileContent[data-theme="golden-pulse"]{background-image:linear-gradient(125deg,#211506,#79500c,#2d1c07,#60400b);border:1px solid #ffd36a;box-shadow:0 0 22px #ffb52b99,0 0 55px #d78a1b55;animation:tcAtmosphereFlow 7s ease-in-out infinite,tcGoldAura 2.8s ease-in-out infinite}
+#publicProfileContent[data-theme="rose-nebula"]{background-image:linear-gradient(125deg,#260b20,#76204d,#35102e,#57123d);border:1px solid #ff78c4;box-shadow:0 0 22px #f23b9d99,0 0 55px #c4267755;animation:tcAtmosphereFlow 8s ease-in-out infinite,tcRoseAura 3s ease-in-out infinite}
+#publicProfileContent[data-theme="crimson-glow"] .tc-public-banner,
+#publicProfileContent[data-theme="neon-violet"] .tc-public-banner,
+#publicProfileContent[data-theme="electric-blue"] .tc-public-banner,
+#publicProfileContent[data-theme="emerald-aura"] .tc-public-banner,
+#publicProfileContent[data-theme="golden-pulse"] .tc-public-banner,
+#publicProfileContent[data-theme="rose-nebula"] .tc-public-banner{position:relative;border-color:#ffffff77;box-shadow:0 0 22px currentColor}
+#publicProfileContent[data-theme="crimson-glow"] .tc-public-banner:after,
+#publicProfileContent[data-theme="neon-violet"] .tc-public-banner:after,
+#publicProfileContent[data-theme="electric-blue"] .tc-public-banner:after,
+#publicProfileContent[data-theme="emerald-aura"] .tc-public-banner:after,
+#publicProfileContent[data-theme="golden-pulse"] .tc-public-banner:after,
+#publicProfileContent[data-theme="rose-nebula"] .tc-public-banner:after{content:"";position:absolute;inset:-30% -70%;pointer-events:none;background:linear-gradient(105deg,transparent 40%,#ffffff08 46%,#ffffff9c 50%,#ffffff10 54%,transparent 60%);animation:tcBannerLightSweep 4.2s ease-in-out infinite}
+#publicProfileContent[data-theme="crimson-glow"] .person-profile-head .search-person-avatar,
+#publicProfileContent[data-theme="neon-violet"] .person-profile-head .search-person-avatar,
+#publicProfileContent[data-theme="electric-blue"] .person-profile-head .search-person-avatar,
+#publicProfileContent[data-theme="emerald-aura"] .person-profile-head .search-person-avatar,
+#publicProfileContent[data-theme="golden-pulse"] .person-profile-head .search-person-avatar,
+#publicProfileContent[data-theme="rose-nebula"] .person-profile-head .search-person-avatar{animation:tcAvatarEnergy 2.4s ease-in-out infinite}
+#publicProfileContent[data-theme="crimson-glow"] .person-profile-head .search-person-avatar{box-shadow:0 0 0 2px #ff9aaa,0 0 0 5px #a90d2e,0 0 28px #ff174f}
+#publicProfileContent[data-theme="neon-violet"] .person-profile-head .search-person-avatar{box-shadow:0 0 0 2px #f0b0ff,0 0 0 5px #8422bf,0 0 28px #d52cff}
+#publicProfileContent[data-theme="electric-blue"] .person-profile-head .search-person-avatar{box-shadow:0 0 0 2px #b3e9ff,0 0 0 5px #1265a8,0 0 28px #16aaff}
+#publicProfileContent[data-theme="emerald-aura"] .person-profile-head .search-person-avatar{box-shadow:0 0 0 2px #b4ffda,0 0 0 5px #087447,0 0 28px #19e88a}
+#publicProfileContent[data-theme="golden-pulse"] .person-profile-head .search-person-avatar{box-shadow:0 0 0 2px #fff0b0,0 0 0 5px #9c6b13,0 0 28px #ffc43d}
+#publicProfileContent[data-theme="rose-nebula"] .person-profile-head .search-person-avatar{box-shadow:0 0 0 2px #ffd0eb,0 0 0 5px #9e2868,0 0 28px #ff55b7}
+#publicProfileContent[data-theme="crimson-glow"] .person-profile-status,
+#publicProfileContent[data-theme="neon-violet"] .person-profile-status,
+#publicProfileContent[data-theme="electric-blue"] .person-profile-status,
+#publicProfileContent[data-theme="emerald-aura"] .person-profile-status,
+#publicProfileContent[data-theme="golden-pulse"] .person-profile-status,
+#publicProfileContent[data-theme="rose-nebula"] .person-profile-status{background:#05050555;border-color:#ffffff55;backdrop-filter:blur(8px)}
+@keyframes tcAtmosphereFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes tcRedAura{0%,100%{box-shadow:0 0 15px #ff173b66,0 0 36px #d4003433}50%{box-shadow:0 0 30px #ff174fdd,0 0 75px #d4003488}}
+@keyframes tcVioletAura{0%,100%{box-shadow:0 0 15px #b52cff66,0 0 36px #8425ff33}50%{box-shadow:0 0 32px #d52cffdd,0 0 78px #8425ff88}}
+@keyframes tcBlueAura{0%,100%{box-shadow:0 0 15px #159dff66,0 0 36px #168bff33}50%{box-shadow:0 0 32px #16aaffdd,0 0 78px #168bff88}}
+@keyframes tcGreenAura{0%,100%{box-shadow:0 0 15px #16d77b66,0 0 36px #0aa65b33}50%{box-shadow:0 0 32px #19e88add,0 0 78px #0aa65b88}}
+@keyframes tcGoldAura{0%,100%{box-shadow:0 0 15px #ffb52b66,0 0 36px #d78a1b33}50%{box-shadow:0 0 32px #ffc43ddd,0 0 78px #d78a1b88}}
+@keyframes tcRoseAura{0%,100%{box-shadow:0 0 15px #f23b9d66,0 0 36px #c4267733}50%{box-shadow:0 0 32px #ff55b7dd,0 0 78px #c4267788}}
+@keyframes tcBannerLightSweep{0%,15%{transform:translateX(-65%);opacity:0}45%{opacity:1}85%,100%{transform:translateX(65%);opacity:0}}
+@keyframes tcAvatarEnergy{0%,100%{filter:brightness(1) saturate(1);transform:scale(1)}50%{filter:brightness(1.28) saturate(1.25);transform:scale(1.035)}}
+@media(prefers-reduced-motion:reduce){#publicProfileContent[data-theme="crimson-glow"],#publicProfileContent[data-theme="neon-violet"],#publicProfileContent[data-theme="electric-blue"],#publicProfileContent[data-theme="emerald-aura"],#publicProfileContent[data-theme="golden-pulse"],#publicProfileContent[data-theme="rose-nebula"],#publicProfileContent[data-theme="crimson-glow"] *,#publicProfileContent[data-theme="neon-violet"] *,#publicProfileContent[data-theme="electric-blue"] *,#publicProfileContent[data-theme="emerald-aura"] *,#publicProfileContent[data-theme="golden-pulse"] *,#publicProfileContent[data-theme="rose-nebula"] *{animation:none!important}}
+
 </style>
 
 <style id="tc-chat-list-layout-fix">
