@@ -1891,173 +1891,113 @@ $("choosePhoto").addEventListener("click", () => {
 ===================================== */
 
 $("photoInput").addEventListener("change", async event => {
-
-    const file = event.target.files[0];
-
+    const file = event.target.files?.[0];
     if (!file || !currentUser) return;
 
-    const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp"
-    ];
-
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-
         showMessage("Поддерживаются только JPG, PNG и WEBP.");
         event.target.value = "";
         return;
-
     }
-
     if (file.size > 5 * 1024 * 1024) {
-
         showMessage("Размер фотографии не должен превышать 5 МБ.");
         event.target.value = "";
         return;
-
     }
 
-    $("choosePhoto").disabled = true;
-
+    const button = $("choosePhoto");
+    button.disabled = true;
     showMessage("Загрузка фотографии...");
 
+    const { data: previousProfile } = await db.from("profiles")
+        .select("avatar_path")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+    const oldPath = previousProfile?.avatar_path || currentUser.user_metadata?.avatar_path || null;
     const extension = file.name.split(".").pop().toLowerCase();
+    const path = currentUser.id + "/avatar-" + Date.now() + "." + extension;
 
-    const path =
-        currentUser.id +
-        "/avatar-" +
-        Date.now() +
-        "." +
-        extension;
-
-
-    const { error: uploadError } = await db.storage
-        .from(AVATAR_BUCKET)
-        .upload(path, file, {
+    try {
+        const { error: uploadError } = await db.storage.from(AVATAR_BUCKET).upload(path, file, {
             upsert: false,
-            contentType: file.type
+            contentType: file.type,
+            cacheControl: "3600"
         });
+        if (uploadError) throw uploadError;
 
+        // profiles.avatar_path — основной источник аватара на сайте.
+        // Раньше обновлялись только user_metadata, поэтому старый путь из profiles
+        // перекрывал новую фотографию после перезагрузки страницы.
+        const { error: profileError } = await db.from("profiles").upsert(
+            { id: currentUser.id, avatar_path: path },
+            { onConflict: "id" }
+        );
+        if (profileError) throw profileError;
 
-    if (uploadError) {
-
-        $("choosePhoto").disabled = false;
-
-        showMessage("Ошибка загрузки: " + uploadError.message);
-
-        event.target.value = "";
-
-        return;
-
-    }
-
-
-    const oldPath =
-        currentUser.user_metadata?.avatar_path;
-
-
-    const { error: updateError } = await db.auth.updateUser({
-
-        data: {
-            avatar_path: path
+        const { error: metadataError } = await db.auth.updateUser({
+            data: { avatar_path: path }
+        });
+        if (metadataError) {
+            await db.from("profiles").upsert(
+                { id: currentUser.id, avatar_path: oldPath },
+                { onConflict: "id" }
+            );
+            throw metadataError;
         }
 
-    });
-
-
-    if (updateError) {
-
-        await db.storage
-            .from(AVATAR_BUCKET)
-            .remove([path]);
-
-        $("choosePhoto").disabled = false;
-
-        showMessage("Ошибка сохранения фотографии.");
+        if (oldPath && oldPath !== path && oldPath.startsWith(currentUser.id + "/")) {
+            await db.storage.from(AVATAR_BUCKET).remove([oldPath]);
+        }
 
         event.target.value = "";
-
-        return;
-
+        showMessage("Фотография обновлена.", "#22a06b");
+        await loadAccount();
+    } catch (error) {
+        await db.storage.from(AVATAR_BUCKET).remove([path]);
+        event.target.value = "";
+        showMessage("Не удалось обновить фотографию: " + (error?.message || "неизвестная ошибка"));
+    } finally {
+        button.disabled = false;
     }
-
-
-    if (oldPath && oldPath.startsWith(currentUser.id + "/")) {
-
-        await db.storage
-            .from(AVATAR_BUCKET)
-            .remove([oldPath]);
-
-    }
-
-
-    $("choosePhoto").disabled = false;
-
-    event.target.value = "";
-
-    showMessage("Фотография обновлена.", "#22a06b");
-
-    await loadAccount();
-
 });
 
 
-/* =====================================
-   УДАЛЕНИЕ ФОТОГРАФИИ
-===================================== */
-
 $("removePhoto").addEventListener("click", async () => {
-
     if (!currentUser) return;
 
-    const oldPath =
-        currentUser.user_metadata?.avatar_path;
+    const button = $("removePhoto");
+    button.disabled = true;
 
-    if (!oldPath) {
+    try {
+        const { data: profile } = await db.from("profiles")
+            .select("avatar_path")
+            .eq("id", currentUser.id)
+            .maybeSingle();
+        const oldPath = profile?.avatar_path || currentUser.user_metadata?.avatar_path || null;
 
-        showMessage("У вас уже нет фотографии.");
-        return;
+        const { error: profileError } = await db.from("profiles").upsert(
+            { id: currentUser.id, avatar_path: null },
+            { onConflict: "id" }
+        );
+        if (profileError) throw profileError;
 
-    }
+        const { error: metadataError } = await db.auth.updateUser({
+            data: { avatar_path: null }
+        });
+        if (metadataError) throw metadataError;
 
-    $("removePhoto").disabled = true;
-
-    const { error } = await db.auth.updateUser({
-
-        data: {
-            avatar_path: null
+        if (oldPath && oldPath.startsWith(currentUser.id + "/")) {
+            await db.storage.from(AVATAR_BUCKET).remove([oldPath]);
         }
 
-    });
-
-
-    if (error) {
-
-        $("removePhoto").disabled = false;
-
-        showMessage("Не удалось удалить фотографию.");
-
-        return;
-
+        showMessage("Фотография удалена.", "#22a06b");
+        await loadAccount();
+    } catch (error) {
+        showMessage("Не удалось удалить фотографию: " + (error?.message || "неизвестная ошибка"));
+    } finally {
+        button.disabled = false;
     }
-
-
-    if (oldPath.startsWith(currentUser.id + "/")) {
-
-        await db.storage
-            .from(AVATAR_BUCKET)
-            .remove([oldPath]);
-
-    }
-
-
-    $("removePhoto").disabled = false;
-
-    showMessage("Фотография удалена.", "#22a06b");
-
-    await loadAccount();
-
 });
 
 
