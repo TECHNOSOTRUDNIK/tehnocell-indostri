@@ -2349,4 +2349,32 @@ if ("serviceWorker" in navigator) {
 @media(prefers-reduced-motion:reduce){#publicProfileContent[data-flow]{animation:none!important}}
 </style>
 
+
+<style id="tc-mobile-performance">
+/* Mobile GPU budget: keep the profile look, but stop large animated glow repaints. */
+@media(max-width:760px){
+  #publicProfileContent[data-flow],
+  #publicProfileContent[data-theme],
+  #page-person .person-page-card:has(#publicProfileContent[data-theme]){
+    animation:none!important;
+  }
+  #publicProfileContent[data-theme]{
+    background-size:100% 100%!important;
+    box-shadow:0 8px 24px #0005!important;
+  }
+  #publicProfileContent .tc-profile-hero,
+  #publicProfileContent .person-profile-body{box-shadow:none!important}
+  #publicProfileContent .tc-profile-hero-shade{
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #publicProfileContent[data-flow],
+  #publicProfileContent[data-theme],
+  #page-person .person-page-card:has(#publicProfileContent[data-theme]){
+    animation:none!important;
+  }
+}
+</style>
+
 </body></html>
