@@ -1184,10 +1184,27 @@ async function openPersonProfile(id){
   const memberRole=isVerified(data.id)?"Команда TEHNOCELL":"Участник сообщества";
   const presenceLabel=isOnline(data.id)?"Сейчас в сети":"Не в сети";
   const joinedDate=new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
+  const [targetFriendsResult,myFriendsResult,postsCountResult]=await Promise.all([
+   db.from("tc_friend_requests").select("sender_id,receiver_id").eq("status","accepted").or("sender_id.eq."+id+",receiver_id.eq."+id),
+   id===currentUser.id?Promise.resolve({data:[]}):db.from("tc_friend_requests").select("sender_id,receiver_id").eq("status","accepted").or("sender_id.eq."+currentUser.id+",receiver_id.eq."+currentUser.id),
+   db.from("tc_posts").select("id",{count:"exact",head:true}).eq("author_id",id)
+  ]);
+  const targetFriendIds=[...new Set((targetFriendsResult.data||[]).map(r=>r.sender_id===id?r.receiver_id:r.sender_id))];
+  const myFriendIds=new Set((myFriendsResult.data||[]).map(r=>r.sender_id===currentUser.id?r.receiver_id:r.sender_id));
+  const mutualIds=targetFriendIds.filter(fid=>myFriendIds.has(fid));
+  const visibleFriendIds=targetFriendIds.slice(0,8);
+  const cardProfilesIds=[...new Set([...visibleFriendIds,...mutualIds])];
+  const {data:friendProfiles}=cardProfilesIds.length?await db.from("profiles").select("id,display_name,username,avatar_path").in("id",cardProfilesIds):{data:[]};
+  const friendMap=new Map((friendProfiles||[]).map(p=>[p.id,p]));
+  const friendTile=(fid)=>{const p=friendMap.get(fid)||{};return '<button type="button" class="tc-social-person" data-profile="'+escapeHtml(fid)+'"><span class="search-person-avatar">'+avatarMarkup(p.display_name||"Участник",p.avatar_path)+'</span><span>'+escapeHtml(p.display_name||"Участник")+'</span></button>';};
+  const friendsMarkup='<section class="tc-profile-social"><div class="tc-profile-section-head"><div><span class="tc-profile-kicker">СВЯЗИ</span><h3>Друзья <small>'+targetFriendIds.length+'</small></h3></div><span class="tc-profile-section-note">'+(mutualIds.length?'Общих: '+mutualIds.length:'Сообщество TEHNOCELL')+'</span></div>'+(targetFriendIds.length?'<div class="tc-profile-friend-grid">'+visibleFriendIds.map(friendTile).join("")+'</div>':'<div class="tc-profile-empty">Пока нет друзей. Здесь появятся люди, с которыми пользователь взаимно добавился в друзья.</div>')+(mutualIds.length?'<div class="tc-profile-mutual"><strong>Общие друзья · '+mutualIds.length+'</strong><div class="tc-profile-friend-grid">'+mutualIds.slice(0,6).map(friendTile).join("")+'</div></div>':'')+'</section>';
+  const postCount=postsCountResult.count||0;
+  const idCardMarkup='<button type="button" class="tc-id-card-trigger" data-open-id-card><span class="tc-id-card-mark">TC</span><span class="tc-id-card-copy"><small>TEHNOCELL IDENTITY</small><strong>'+escapeHtml(accountCode)+'</strong><em>Цифровая карта участника</em></span><span class="tc-id-card-arrow">↗</span></button>';
+  const idCardModal='<div class="tc-id-modal" data-id-modal hidden><div class="tc-id-modal-backdrop" data-close-id-card></div><section class="tc-id-modal-panel" role="dialog" aria-modal="true" aria-label="TEHNOCELL ID-карта"><button type="button" class="tc-id-modal-close" data-close-id-card aria-label="Закрыть">×</button><div class="tc-id-modal-top"><span class="tc-profile-kicker">DIGITAL IDENTITY</span><span class="tc-id-live-mark">TEHNOCELL</span></div><div class="tc-id-card-large"><div class="tc-id-card-large-head"><span>TC / IDENTITY</span><span>'+ (isVerified(data.id)?"VERIFIED":"COMMUNITY")+'</span></div><div class="tc-id-card-large-user">'+personAvatar(data)+'<div><strong>'+escapeHtml(name)+'</strong><span>'+(username?"@"+escapeHtml(username):"Участник TEHNOCELL")+'</span></div></div><div class="tc-id-card-large-code">'+escapeHtml(accountCode)+'</div><div class="tc-id-card-large-foot"><span>СООБЩЕСТВО С<br><b>'+escapeHtml(joinedDate)+'</b></span><span>СТАТУС<br><b>'+(isOnline(data.id)?"В СЕТИ":"УЧАСТНИК")+'</b></span></div></div><div class="tc-id-modal-stats"><div><strong>'+targetFriendIds.length+'</strong><span>Друзья</span></div><div><strong>'+postCount+'</strong><span>Публикации</span></div><div><strong>'+mutualIds.length+'</strong><span>Общие</span></div></div><div class="tc-id-qr-wrap"><img class="tc-id-qr" alt="QR-код публичного профиля" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=8&data='+encodeURIComponent(location.origin+location.pathname+"#person-"+id)+'"><span>Отсканируйте, чтобы открыть профиль</span></div><div class="tc-id-modal-actions"><button type="button" class="primary-btn" data-share-profile>Поделиться профилем</button><button type="button" class="secondary-btn" data-copy-tc-id>Скопировать TC ID</button></div><p class="tc-id-privacy-note">QR-код содержит только ссылку на публичный профиль. Личные данные и данные для входа не передаются.</p></section></div>';
   const bannerMarkup='<section class="tc-profile-hero">'+(bannerUrl?'<img class="tc-profile-banner-image" src="'+escapeHtml(bannerUrl)+'" alt="Баннер профиля" loading="eager" referrerpolicy="no-referrer">':'<div class="tc-profile-banner-empty"></div>')+'<div class="tc-profile-hero-shade"></div><div class="tc-profile-hero-identity">'+personAvatar(data)+'<div class="tc-profile-hero-copy"><h2>'+escapeHtml(name)+(stickerMarkup?'<span class="tc-profile-name-media">'+stickerMarkup+'</span>':"")+verifiedBadge(data.id)+onlineBadge(data.id)+'</h2><div class="tc-profile-handle">'+(username?"@"+escapeHtml(username):"Участник TEHNOCELL")+'</div><div class="tc-profile-identity-tags"><span class="tc-profile-presence '+(isOnline(data.id)?"is-online":"")+'"><i></i>'+presenceLabel+'</span><span class="tc-profile-role">'+memberRole+'</span></div></div></div></section>';
- const profileBody='<div class="person-profile-body">'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" crossorigin="anonymous" referrerpolicy="no-referrer" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div><audio class="tc-sound-audio" controls preload="metadata" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_path).data.publicUrl)+'">Ваш браузер не поддерживает аудио.</audio><div class="tc-sound-visualizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<section class="tc-profile-facts"><div class="tc-profile-fact"><span>ИДЕНТИФИКАТОР</span><strong>'+accountCode+'</strong></div><div class="tc-profile-fact"><span>В СООБЩЕСТВЕ С</span><strong>'+joinedDate+'</strong></div></section><div class="person-profile-actions">'+action+'</div></div>';
+ const profileBody=friendsMarkup+idCardMarkup+'<div class="person-profile-body">'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" crossorigin="anonymous" referrerpolicy="no-referrer" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div><audio class="tc-sound-audio" controls preload="metadata" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_path).data.publicUrl)+'">Ваш браузер не поддерживает аудио.</audio><div class="tc-sound-visualizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<section class="tc-profile-facts"><div class="tc-profile-fact"><span>ИДЕНТИФИКАТОР</span><strong>'+accountCode+'</strong></div><div class="tc-profile-fact"><span>В СООБЩЕСТВЕ С</span><strong>'+joinedDate+'</strong></div></section><div class="person-profile-actions">'+action+'</div></div>';
  $("publicProfileContent").dataset.flow=String((data.id||"0").charCodeAt(0)%4);
- $("publicProfileContent").innerHTML=bannerMarkup+profileBody;
+ $("publicProfileContent").innerHTML=bannerMarkup+profileBody+idCardModal;
  const identitySound=$("publicProfileContent").querySelector(".tc-identity-sound");
  if(identitySound){
  const identityAudio=identitySound.querySelector("audio");
@@ -1208,6 +1225,13 @@ async function openPersonProfile(id){
  if(coverImage){if(coverImage.complete&&coverImage.naturalWidth)applyCoverPalette();else coverImage.addEventListener("load",applyCoverPalette,{once:true});coverImage.addEventListener("error",()=>{identitySound.style.setProperty("--sound-rgb","105,105,105");identitySound.style.setProperty("--sound-rgb2","25,25,25");},{once:true});}
  if(identityAudio){identityAudio.addEventListener("play",()=>identitySound.classList.add("is-playing"));identityAudio.addEventListener("pause",()=>identitySound.classList.remove("is-playing"));identityAudio.addEventListener("ended",()=>identitySound.classList.remove("is-playing"));}
 }
+ const profileRoot=$("publicProfileContent");
+ profileRoot.querySelectorAll("[data-open-id-card]").forEach(b=>b.addEventListener("click",()=>{const modal=profileRoot.querySelector("[data-id-modal]");if(modal){modal.hidden=false;document.body.style.overflow="hidden";}}));
+ profileRoot.querySelectorAll("[data-close-id-card]").forEach(b=>b.addEventListener("click",()=>{const modal=profileRoot.querySelector("[data-id-modal]");if(modal)modal.hidden=true;document.body.style.overflow="";}));
+ profileRoot.querySelectorAll("[data-copy-tc-id]").forEach(b=>b.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(accountCode);showNotice("TC ID скопирован.");}catch(e){showNotice("Не удалось скопировать ID.");}}));
+ profileRoot.querySelectorAll("[data-share-profile]").forEach(b=>b.addEventListener("click",async()=>{const url=location.origin+location.pathname+"#person-"+id;try{if(navigator.share)await navigator.share({title:name+" · TEHNOCELL",url});else{await navigator.clipboard.writeText(url);showNotice("Ссылка на профиль скопирована.");}}catch(e){if(e.name!=="AbortError")showNotice("Не удалось поделиться профилем.");}}));
+ profileRoot.querySelectorAll(".tc-social-person[data-profile]").forEach(b=>b.addEventListener("click",()=>openPersonProfile(b.dataset.profile)));
+ document.addEventListener("keydown",function tcIdEscape(e){if(e.key==="Escape"){const modal=profileRoot.querySelector("[data-id-modal]");if(modal&&!modal.hidden){modal.hidden=true;document.body.style.overflow="";}}},{once:true});
  const publicBanner=$("publicProfileContent").querySelector(".tc-public-banner img");
   if(publicBanner)publicBanner.addEventListener("error",()=>publicBanner.parentElement.classList.add("is-unavailable"),{once:true});
   $("publicProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
@@ -2675,4 +2699,60 @@ html body #page-person #publicProfileContent[data-theme]{
 .tc-profile-fact strong{font-size:12px;color:#eee;font-weight:750}
 @media(max-width:520px){.tc-profile-identity-tags{gap:5px;margin-top:7px}.tc-profile-presence,.tc-profile-role{font-size:8px;min-height:21px;padding:4px 7px}.tc-profile-facts{gap:7px;margin-top:15px}.tc-profile-fact{padding:11px 10px}.tc-profile-fact strong{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.tc-profile-presence i{box-shadow:none!important}}
+</style>
+
+<style id="tc-profile-social-idcard">
+.tc-profile-social{margin-top:25px;padding-top:21px;border-top:1px solid #ffffff1c}
+.tc-profile-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.tc-profile-kicker{display:block;font-size:8px;letter-spacing:1.8px;color:#858585;font-weight:800}
+.tc-profile-section-head h3{margin:5px 0 0;font-size:19px;letter-spacing:-.5px}
+.tc-profile-section-head h3 small{font-size:12px;color:#999;font-weight:600}
+.tc-profile-section-note{font-size:10px;color:#aaa}
+.tc-profile-friend-grid{display:flex;flex-wrap:wrap;gap:10px}
+.tc-social-person{width:76px;display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:transparent;color:#ddd;font-size:10px;text-align:center;overflow:hidden;cursor:pointer}
+.tc-social-person .search-person-avatar{width:48px;height:48px;flex:0 0 48px;border:1px solid #ffffff25;border-radius:16px;overflow:hidden}
+.tc-social-person .search-person-avatar img{width:100%;height:100%;object-fit:cover}
+.tc-social-person>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-profile-empty{padding:17px;border:1px dashed #ffffff25;border-radius:13px;color:#999;font-size:11px;line-height:1.6}
+.tc-profile-mutual{margin-top:18px;padding-top:15px;border-top:1px solid #ffffff13}
+.tc-profile-mutual>strong{display:block;font-size:11px;margin-bottom:12px;color:#eee}
+.tc-id-card-trigger{width:100%;display:flex;align-items:center;gap:15px;margin-top:19px;padding:17px 18px;border:1px solid #ffffff27;border-radius:16px;background:linear-gradient(115deg,#ffffff12,#ffffff04 55%,#00000025);color:#fff;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.tc-id-card-trigger:hover{transform:translateY(-2px);border-color:#ffffff65;background:linear-gradient(115deg,#ffffff1c,#ffffff07 55%,#00000025)}
+.tc-id-card-mark{width:48px;height:48px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:14px;font-size:18px;font-weight:900;letter-spacing:-2px;background:#ffffff0d}
+.tc-id-card-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.tc-id-card-copy small{font-size:8px;letter-spacing:1.6px;color:#999}
+.tc-id-card-copy strong{font-size:16px;letter-spacing:.5px}
+.tc-id-card-copy em{font-size:10px;color:#aaa;font-style:normal}
+.tc-id-card-arrow{font-size:22px;color:#aaa}
+.tc-id-modal[hidden]{display:none!important}
+.tc-id-modal{position:fixed;z-index:99999;inset:0;display:grid;place-items:center;padding:18px}
+.tc-id-modal-backdrop{position:absolute;inset:0;background:#000c;backdrop-filter:blur(12px)}
+.tc-id-modal-panel{position:relative;width:min(100%,480px);max-height:min(92dvh,850px);overflow:auto;padding:23px;border:1px solid #ffffff2a;border-radius:22px;background:linear-gradient(145deg,#202020,#090909 70%);box-shadow:0 28px 100px #000c;color:#fff;animation:tcIdModalIn .24s ease-out}
+@keyframes tcIdModalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.tc-id-modal-close{position:absolute;right:15px;top:13px;width:34px;height:34px;border:1px solid #ffffff25;border-radius:11px;background:#ffffff0b;color:#fff;font-size:22px;cursor:pointer}
+.tc-id-modal-top{display:flex;align-items:center;justify-content:space-between;margin:2px 45px 16px 0}
+.tc-id-live-mark{font-size:9px;letter-spacing:2px;font-weight:900}
+.tc-id-card-large{padding:20px;border:1px solid #ffffff35;border-radius:18px;background:radial-gradient(ellipse at 90% 0%,#ffffff18,transparent 45%),linear-gradient(135deg,#252525,#0d0d0d 70%);box-shadow:inset 0 1px #ffffff12,0 15px 35px #0007}
+.tc-id-card-large-head,.tc-id-card-large-foot{display:flex;justify-content:space-between;gap:10px;font-size:8px;letter-spacing:1.3px;color:#999}
+.tc-id-card-large-user{display:flex;align-items:center;gap:12px;margin:27px 0 17px}
+.tc-id-card-large-user .search-person-avatar{width:54px;height:54px;flex:0 0 54px;border-radius:15px;overflow:hidden;border:1px solid #ffffff44}
+.tc-id-card-large-user .search-person-avatar img{width:100%;height:100%;object-fit:cover}
+.tc-id-card-large-user>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.tc-id-card-large-user strong{font-size:17px;overflow-wrap:anywhere}
+.tc-id-card-large-user span{font-size:10px;color:#aaa}
+.tc-id-card-large-code{padding:12px 0 17px;border-bottom:1px solid #ffffff1b;font-size:22px;font-weight:850;letter-spacing:2px}
+.tc-id-card-large-foot{padding-top:14px;line-height:1.8}
+.tc-id-card-large-foot b{color:#eee;font-size:9px;letter-spacing:.3px}
+.tc-id-modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.tc-id-modal-stats>div{padding:12px 8px;border:1px solid #ffffff19;border-radius:12px;background:#ffffff08;text-align:center}
+.tc-id-modal-stats strong,.tc-id-modal-stats span{display:block}
+.tc-id-modal-stats strong{font-size:19px}.tc-id-modal-stats span{font-size:9px;color:#999;margin-top:4px}
+.tc-id-qr-wrap{display:flex;flex-direction:column;align-items:center;gap:9px;padding:15px;border:1px solid #ffffff1a;border-radius:14px;background:#fff;color:#111}
+.tc-id-qr{width:150px;height:150px;object-fit:contain}
+.tc-id-qr-wrap span{font-size:10px;color:#333}
+.tc-id-modal-actions{display:flex;gap:8px;margin-top:13px}
+.tc-id-modal-actions button{flex:1;min-width:0;font-size:11px}
+.tc-id-privacy-note{margin:12px 0 0;color:#858585;font-size:9px;line-height:1.55}
+@media(max-width:520px){.tc-profile-section-head h3{font-size:17px}.tc-profile-friend-grid{gap:7px}.tc-social-person{width:67px}.tc-id-modal{padding:10px}.tc-id-modal-panel{padding:18px;border-radius:18px}.tc-id-card-large{padding:16px}.tc-id-modal-actions{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.tc-id-modal-panel{animation:none}.tc-id-card-trigger{transition:none}}
 </style>
