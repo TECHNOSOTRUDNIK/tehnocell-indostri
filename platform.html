@@ -2377,5 +2377,75 @@ if ("serviceWorker" in navigator) {
 }
 </style>
 
+
+<style id="tc-profile-interaction-feedback">
+/* Единая обратная связь для всех интерактивных элементов публичного профиля */
+#publicProfileContent button,
+#publicProfileContent a,
+#publicProfileContent [role="button"]{
+  -webkit-tap-highlight-color:transparent;
+  transition:
+    color .18s ease,
+    background-color .18s ease,
+    border-color .18s ease,
+    box-shadow .2s ease,
+    transform .16s ease,
+    opacity .18s ease;
+}
+@media (hover:hover) and (pointer:fine){
+  #publicProfileContent button:not(:disabled):hover,
+  #publicProfileContent a:hover,
+  #publicProfileContent [role="button"]:hover{
+    color:#fff!important;
+    border-color:#ffffff9c!important;
+    background-color:#ffffff12!important;
+    box-shadow:0 0 0 1px #ffffff18,0 5px 20px #ffffff18,0 0 18px #ffffff12!important;
+    filter:brightness(1.16);
+  }
+}
+#publicProfileContent button:not(:disabled):focus,
+#publicProfileContent a:focus,
+#publicProfileContent [role="button"]:focus{
+  outline:none;
+  color:#fff!important;
+  border-color:#ffffffb8!important;
+  box-shadow:0 0 0 2px #ffffff20,0 0 18px #ffffff24!important;
+}
+#publicProfileContent button:not(:disabled):active,
+#publicProfileContent a:active,
+#publicProfileContent [role="button"]:active{
+  color:#fff!important;
+  background-color:#ffffff20!important;
+  border-color:#fff!important;
+  box-shadow:0 0 0 2px #ffffff20,0 0 22px #ffffff2b!important;
+  transform:scale(.975);
+}
+#publicProfileContent button:disabled{
+  cursor:not-allowed;
+  filter:saturate(.35);
+  opacity:.48;
+  box-shadow:none!important;
+}
+/* Состояния, которые должны оставаться подсвеченными после нажатия */
+#publicProfileContent button.active,
+#publicProfileContent button.liked,
+#publicProfileContent button[aria-pressed="true"],
+#publicProfileContent button[aria-selected="true"],
+#publicProfileContent [role="button"].active,
+#publicProfileContent [role="button"][aria-pressed="true"]{
+  color:#fff!important;
+  border-color:#ffffffa8!important;
+  background-color:#ffffff18!important;
+  box-shadow:inset 0 0 0 1px #ffffff18,0 0 16px #ffffff18!important;
+}
+#publicProfileContent button:focus:not(:focus-visible){
+  outline:none;
+}
+@media(prefers-reduced-motion:reduce){
+  #publicProfileContent button,
+  #publicProfileContent a,
+  #publicProfileContent [role="button"]{transition:none!important}
+}
+</style>
 </body></html>
 <style id="tc-global-search-avatar-refinement">.global-search-results .search-person-avatar{width:35px!important;height:35px!important;min-width:35px!important;flex:0 0 35px!important;font-size:12px!important}.global-search-results .search-person-avatar img{width:100%;height:100%;object-fit:cover}</style>
