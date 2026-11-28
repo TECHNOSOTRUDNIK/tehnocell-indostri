@@ -1160,17 +1160,17 @@ async function openPersonProfile(id){
  if(error||!data){$("publicProfileContent").innerHTML='<div class="empty">Не удалось открыть профиль.</div>';return;}
  const name=data.display_name||"Пользователь";
   const username=safeUsername(data.username);
- let action="";
- if(id===currentUser.id){action='<a class="secondary-btn" href="'+(isVerified(id)?"account.html":"account-user.html")+'">Настройки профиля</a>';}
+ let action="",moreAction="";
+ if(id===currentUser.id){action='<a class="primary-btn" href="'+(isVerified(id)?"account.html":"account-user.html")+'">Настроить профиль</a>';}
  else{
   const [sent,received]=await Promise.all([
    db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").eq("sender_id",currentUser.id).eq("receiver_id",id).in("status",["pending","accepted"]).maybeSingle(),
    db.from("tc_friend_requests").select("id,sender_id,receiver_id,status").eq("sender_id",id).eq("receiver_id",currentUser.id).in("status",["pending","accepted"]).maybeSingle()
   ]);
   const relation=sent.data||received.data;
-  if(relation?.status==="accepted") action='<button class="primary-btn" data-open-chat="'+id+'">Написать</button><button class="secondary-btn" data-remove-friend="'+relation.id+'">Удалить из друзей</button><span class="tiny">Вы друзья</span>';
-  else if(relation?.status==="pending"&&relation.sender_id===currentUser.id) action='<button class="secondary-btn" disabled>Заявка отправлена</button><button class="secondary-btn" data-cancel-request="'+relation.id+'">Отменить</button>';
-  else if(relation?.status==="pending") action='<button class="primary-btn" data-accept-request="'+relation.id+'">Принять заявку</button><button class="secondary-btn" data-decline-request="'+relation.id+'">Отклонить</button>';
+  if(relation?.status==="accepted"){action='<button class="primary-btn" data-open-chat="'+id+'">Написать</button>';moreAction='<button type="button" data-remove-friend="'+relation.id+'">Удалить из друзей</button>';}
+  else if(relation?.status==="pending"&&relation.sender_id===currentUser.id){action='<button class="secondary-btn" disabled>Заявка отправлена</button>';moreAction='<button type="button" data-cancel-request="'+relation.id+'">Отменить заявку</button>';}
+  else if(relation?.status==="pending"){action='<button class="primary-btn" data-accept-friend="'+relation.id+'">Принять заявку</button>';moreAction='<button type="button" data-decline-request="'+relation.id+'">Отклонить заявку</button>';}
   else action='<button class="primary-btn" data-send-friend="'+id+'">＋ Добавить в друзья</button>';
  }
  currentProfileId=id;
@@ -1180,8 +1180,10 @@ async function openPersonProfile(id){
  const stickerType=data.profile_nickname_sticker_type||"image";
  const stickerUrl=stickerPath?db.storage.from("profile-avatars").getPublicUrl(stickerPath).data.publicUrl:null;
  const stickerMarkup=stickerUrl?(stickerType==="video"?'<video class="tc-public-nickname-media" src="'+escapeHtml(stickerUrl)+'" muted autoplay loop playsinline preload="metadata" style="object-position:'+escapeHtml(data.profile_nickname_sticker_position||"50,50").replace(",", "% ")+'%"></video>':'<img class="tc-public-nickname-media" src="'+escapeHtml(stickerUrl)+'" alt="Значок профиля" style="object-position:'+escapeHtml(data.profile_nickname_sticker_position||"50,50").replace(",", "% ")+'%">'):"";
- const bannerMarkup='<section class="tc-profile-hero">'+(bannerUrl?'<img class="tc-profile-banner-image" src="'+escapeHtml(bannerUrl)+'" alt="Баннер профиля" loading="eager" referrerpolicy="no-referrer">':'<div class="tc-profile-banner-empty"></div>')+'<div class="tc-profile-hero-shade"></div><div class="tc-profile-hero-identity">'+personAvatar(data)+'<div class="tc-profile-hero-copy"><h2>'+escapeHtml(name)+(stickerMarkup?'<span class="tc-profile-name-media">'+stickerMarkup+'</span>':"")+verifiedBadge(data.id)+onlineBadge(data.id)+'</h2><div>'+(username?"@"+escapeHtml(username):"Участник TEHNOCELL")+'</div></div></div></section>';
- const profileBody='<div class="person-profile-body">'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" crossorigin="anonymous" referrerpolicy="no-referrer" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div><audio class="tc-sound-audio" controls preload="metadata" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_path).data.publicUrl)+'">Ваш браузер не поддерживает аудио.</audio><div class="tc-sound-visualizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div></div>';
+ const onlineInfo=onlineUsers.get(id),onlineLabel=onlineInfo?("В сети"+(onlineInfo.onlineAt?" · с "+new Date(onlineInfo.onlineAt).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"")):"Не в сети";
+ const profileLink=location.origin+location.pathname+"#person-"+encodeURIComponent(id);
+ const bannerMarkup='<section class="tc-profile-hero">'+(bannerUrl?'<img class="tc-profile-banner-image" src="'+escapeHtml(bannerUrl)+'" alt="Баннер профиля" loading="eager" referrerpolicy="no-referrer">':'<div class="tc-profile-banner-empty"></div>')+'<div class="tc-profile-hero-shade"></div><div class="tc-profile-hero-identity">'+personAvatar(data)+'<div class="tc-profile-hero-copy"><h2>'+escapeHtml(name)+(stickerMarkup?'<span class="tc-profile-name-media">'+stickerMarkup+'</span>':"")+verifiedBadge(data.id)+'</h2><div class="tc-profile-meta"><span>'+(username?"@"+escapeHtml(username):"Пользователь TEHNOCELL")+'</span><span class="tc-profile-online '+(onlineInfo?"is-online":"")+'"><i></i>'+escapeHtml(onlineLabel)+'</span></div></div></div></section>';
+ const profileBody='<div class="person-profile-body"><div class="tc-profile-toolbar"><div class="person-profile-actions">'+action+'<div class="tc-profile-more-wrap"><button type="button" class="tc-profile-more" aria-label="Дополнительные действия" aria-expanded="false">⋯</button><div class="tc-profile-more-menu" hidden><button type="button" data-copy-profile>Скопировать ссылку</button><button type="button" data-share-profile>Поделиться профилем</button>'+moreAction+'</div></div></div></div>'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+(data.profile_game?'<div class="person-profile-status">🎮 '+escapeHtml(data.profile_game)+'</div>':'')+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" crossorigin="anonymous" referrerpolicy="no-referrer" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div><audio class="tc-sound-audio" controls preload="metadata" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_path).data.publicUrl)+'">Ваш браузер не поддерживает аудио.</audio><div class="tc-sound-visualizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<div class="person-profile-date">В TEHNOCELL с '+new Date(data.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"})+'</div><div class="person-profile-actions">'+action+'</div></div>';
  $("publicProfileContent").dataset.flow=String((data.id||"0").charCodeAt(0)%4);
  $("publicProfileContent").innerHTML=bannerMarkup+profileBody;
  const identitySound=$("publicProfileContent").querySelector(".tc-identity-sound");
@@ -1207,6 +1209,11 @@ async function openPersonProfile(id){
  const publicBanner=$("publicProfileContent").querySelector(".tc-public-banner img");
   if(publicBanner)publicBanner.addEventListener("error",()=>publicBanner.parentElement.classList.add("is-unavailable"),{once:true});
   $("publicProfileContent").querySelectorAll("[data-send-friend]").forEach(b=>b.addEventListener("click",()=>sendFriendRequest(b.dataset.sendFriend)));
+ $("publicProfileContent").querySelectorAll("[data-accept-friend]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.acceptFriend,"accepted",id)));
+ $("publicProfileContent").querySelectorAll("[data-copy-profile]").forEach(b=>b.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(profileLink);showNotice("Ссылка на профиль скопирована.");}catch(e){showNotice("Не удалось скопировать ссылку.");}}));
+ $("publicProfileContent").querySelectorAll("[data-share-profile]").forEach(b=>b.addEventListener("click",async()=>{try{if(navigator.share)await navigator.share({title:name+" — TEHNOCELL",url:profileLink});else{await navigator.clipboard.writeText(profileLink);showNotice("Ссылка на профиль скопирована.");}}catch(e){if(e?.name!=="AbortError")showNotice("Не удалось поделиться профилем.");}}));
+ const moreButton=$("publicProfileContent").querySelector(".tc-profile-more"),moreMenu=$("publicProfileContent").querySelector(".tc-profile-more-menu");
+ if(moreButton&&moreMenu){moreButton.addEventListener("click",()=>{const opening=moreMenu.hidden;moreMenu.hidden=!opening;moreButton.setAttribute("aria-expanded",String(opening));});document.addEventListener("click",e=>{if(!e.target.closest(".tc-profile-more-wrap")){moreMenu.hidden=true;moreButton.setAttribute("aria-expanded","false");}},{once:false});}
  $("publicProfileContent").querySelectorAll("[data-accept-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.acceptRequest,"accepted",id)));
  $("publicProfileContent").querySelectorAll("[data-decline-request]").forEach(b=>b.addEventListener("click",()=>updateFriendRequest(b.dataset.declineRequest,"declined",id)));
  $("publicProfileContent").querySelectorAll("[data-cancel-request]").forEach(b=>b.addEventListener("click",()=>cancelFriendRequest(b.dataset.cancelRequest,id)));
@@ -2738,4 +2745,37 @@ if ("serviceWorker" in navigator) {
  #publicProfileContent .person-profile-actions>*{font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){#publicProfileContent *{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<style id="tc-profile-reference-header-v3">
+#publicProfileContent .tc-profile-hero-copy h2{margin-bottom:9px}
+#publicProfileContent .tc-profile-meta{display:flex;align-items:center;flex-wrap:wrap;gap:9px 14px;font-size:12px!important;color:#e4e5e9!important;text-shadow:0 1px 8px #000}
+#publicProfileContent .tc-profile-meta>span:first-child{color:#ffffffd9;font-weight:650}
+#publicProfileContent .tc-profile-online{display:inline-flex;align-items:center;gap:6px;color:#c4c6cc}
+#publicProfileContent .tc-profile-online i{width:7px;height:7px;border-radius:50%;background:#777;box-shadow:0 0 0 3px #ffffff14}
+#publicProfileContent .tc-profile-online.is-online i{background:#f5f5f5;box-shadow:0 0 0 3px #ffffff20,0 0 10px #fff8}
+#publicProfileContent .tc-profile-toolbar{display:flex;align-items:center;justify-content:flex-end;margin:0 0 22px}
+#publicProfileContent .person-profile-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;margin:0!important}
+#publicProfileContent .person-profile-actions>.primary-btn{min-width:150px;min-height:46px;display:inline-flex;align-items:center;justify-content:center;background:#f3f3f3!important;color:#101010!important;border:1px solid #fff!important;font-weight:800;box-shadow:0 6px 22px #0004}
+#publicProfileContent .person-profile-actions>.secondary-btn{min-height:44px}
+#publicProfileContent .tc-profile-more-wrap{position:relative}
+#publicProfileContent .tc-profile-more{width:46px;height:46px;border:1px solid #ffffff24;border-radius:12px;background:#ffffff0a;color:#fff;font-size:25px;line-height:1;cursor:pointer}
+#publicProfileContent .tc-profile-more:hover{background:#ffffff16;border-color:#ffffff55}
+#publicProfileContent .tc-profile-more-menu{position:absolute;z-index:30;right:0;top:calc(100% + 8px);width:220px;padding:6px;border:1px solid #ffffff22;border-radius:13px;background:#141519;box-shadow:0 18px 45px #000b}
+#publicProfileContent .tc-profile-more-menu[hidden]{display:none}
+#publicProfileContent .tc-profile-more-menu button{display:block;width:100%;padding:12px 11px;border:0;border-radius:8px;background:transparent;color:#e8e8eb;text-align:left;font-size:12px;cursor:pointer}
+#publicProfileContent .tc-profile-more-menu button:hover{background:#ffffff12}
+#publicProfileContent .person-profile-bio{margin-top:0!important;padding:18px 0 2px;border-top:1px solid #ffffff14;max-width:900px}
+@media(max-width:600px){
+ #publicProfileContent .tc-profile-hero{height:270px!important}
+ #publicProfileContent .tc-profile-hero-identity{align-items:flex-end;gap:11px;bottom:17px}
+ #publicProfileContent .tc-profile-hero-copy h2{font-size:clamp(18px,5vw,23px);gap:6px}
+ #publicProfileContent .tc-profile-meta{font-size:10px!important;gap:6px 10px}
+ #publicProfileContent .tc-profile-toolbar{justify-content:stretch;margin-bottom:18px}
+ #publicProfileContent .person-profile-actions{width:100%;display:flex;justify-content:stretch;gap:8px}
+ #publicProfileContent .person-profile-actions>.primary-btn{flex:1;min-width:0;min-height:44px}
+ #publicProfileContent .tc-profile-more{width:44px;height:44px}
+ #publicProfileContent .tc-profile-more-menu{width:min(220px,calc(100vw - 70px))}
+ #publicProfileContent .person-profile-bio{padding-top:15px}
+}
+@media(max-width:380px){#publicProfileContent .tc-profile-hero{height:245px!important}#publicProfileContent .tc-profile-meta{font-size:9px!important}}
 </style>
