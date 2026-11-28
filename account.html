@@ -1639,7 +1639,7 @@ function renderPublicProfilePreview(profile,user){
  $("tcPreviewAvatar").innerHTML=avatar?'<img src="'+avatar.replace(/"/g,"%22")+'" alt="">':(name.trim()[0]||"T").toUpperCase();
  const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const facts=[];
- if(profile?.profile_game)facts.push('<div class="tc-preview-fact"><small>Сейчас играет</small><strong>'+esc(profile.profile_game)+'</strong></div>');
+ const gamePreview=$("profileGameInput")?.value?.trim()||profile?.profile_game;if(gamePreview)facts.push('<div class="tc-preview-fact"><small>Любимая игра</small><strong>'+esc(gamePreview)+'</strong></div>');
  
  $("tcPreviewFacts").innerHTML=facts.join("");
  $("tcPreviewDate").textContent="В TEHNOCELL с "+new Date(user.created_at).toLocaleDateString("ru-RU",{day:"numeric",month:"long",year:"numeric"});
