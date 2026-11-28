@@ -2862,3 +2862,37 @@ if ("serviceWorker" in navigator) {
 }
 @media(max-width:390px){#publicProfileContent .tc-profile-hero{height:205px!important;min-height:205px!important;max-height:205px!important}#publicProfileContent .tc-profile-hero-copy h2{font-size:16px!important}}
 </style>
+
+
+<style id="tc-profile-layout-hotfix-20261128">
+/* Исправление меню: шапка обрезает всё, что выходит за её границы,
+   поэтому меню трёх точек должно раскрываться вверх, а не вниз. */
+#publicProfileContent .tc-profile-hero-actions .tc-profile-more-wrap{position:relative;z-index:20}
+#publicProfileContent .tc-profile-hero-actions .tc-profile-more-menu{
+  top:auto!important;
+  bottom:calc(100% + 8px)!important;
+  right:0!important;
+  z-index:50!important;
+  max-height:min(58vh,340px);
+  overflow-y:auto;
+}
+#publicProfileContent .tc-profile-hero{position:relative!important}
+#publicProfileContent .tc-profile-hero-actions{z-index:12!important}
+#publicProfileContent .tc-profile-hero-identity{z-index:2}
+#publicProfileContent .tc-profile-stats>div{min-width:0}
+#publicProfileContent .tc-profile-stats strong{max-width:100%;overflow-wrap:anywhere;text-align:center}
+@media(max-width:700px){
+  #publicProfileContent .tc-profile-hero{height:215px!important;min-height:215px!important;max-height:215px!important}
+  #publicProfileContent .tc-profile-hero-identity{right:12px!important;bottom:62px!important}
+  #publicProfileContent .tc-profile-hero-actions{left:12px!important;right:12px!important;bottom:10px!important;justify-content:flex-end!important}
+  #publicProfileContent .tc-profile-hero-actions .person-profile-actions{width:auto!important;max-width:100%;gap:6px!important}
+  #publicProfileContent .tc-profile-hero-actions .person-profile-actions>.primary-btn,
+  #publicProfileContent .tc-profile-hero-actions .person-profile-actions>.secondary-btn{min-width:0!important;padding:7px 9px!important;font-size:10px!important}
+  #publicProfileContent .tc-profile-more{width:35px!important;height:35px!important}
+  #publicProfileContent .tc-profile-more-menu{width:min(220px,calc(100vw - 52px))!important}
+}
+@media(max-width:390px){
+  #publicProfileContent .tc-profile-hero{height:205px!important;min-height:205px!important;max-height:205px!important}
+  #publicProfileContent .tc-profile-hero-identity{bottom:62px!important}
+}
+</style>
