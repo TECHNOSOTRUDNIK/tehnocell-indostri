@@ -2514,6 +2514,87 @@ if ("serviceWorker" in navigator) {
  #publicProfileContent .post-action{transition:none!important}
 }
 </style>
+
+<style id="tc-public-profile-fullscreen">
+/* Публичный профиль — самостоятельная полноширинная страница, без внешней карточки. */
+.main:has(#page-person.active){
+  width:100%;max-width:none;margin:0;padding:0 0 64px;min-width:0;
+}
+.main:has(#page-person.active)>.topbar{display:none!important}
+#page-person{width:100%;max-width:none;min-width:0;margin:0;padding:0}
+#page-person .person-page-top{
+  width:100%;margin:0;padding:22px clamp(18px,3.2vw,48px) 14px;
+  background:linear-gradient(180deg,#111 0%,#090909 100%);
+}
+#page-person .person-page-card{
+  display:block;width:100%;max-width:none;margin:0;padding:0!important;
+  border:0!important;border-radius:0!important;outline:0!important;
+  background:transparent!important;box-shadow:none!important;overflow:visible;
+}
+html body #page-person #publicProfileContent,
+html body #page-person #publicProfileContent[data-theme]{
+  display:block;width:100%;max-width:none;min-height:calc(100vh - 100px);
+  margin:0;padding:0!important;border:0!important;border-radius:0!important;
+  outline:0!important;box-shadow:none!important;overflow:hidden;
+}
+#publicProfileContent .tc-profile-hero{
+  width:100%;height:clamp(340px,36vw,470px);border-radius:0;
+  isolation:isolate;
+}
+#publicProfileContent .tc-profile-hero:before{
+  content:"";position:absolute;z-index:1;inset:0;pointer-events:none;
+  background:linear-gradient(112deg,transparent 25%,#ffffff0a 46%,transparent 65%);
+  background-size:220% 100%;animation:tcProfileLightSweep 16s ease-in-out infinite;
+}
+@keyframes tcProfileLightSweep{
+  0%,100%{background-position:130% 0}
+  50%{background-position:-130% 0}
+}
+#publicProfileContent .tc-profile-hero-shade{z-index:1}
+#publicProfileContent .tc-profile-hero-identity{z-index:2;left:clamp(22px,4vw,64px);right:clamp(18px,4vw,64px);bottom:clamp(22px,3vw,38px)}
+#publicProfileContent .tc-profile-hero-identity .search-person-avatar{
+  box-shadow:0 14px 42px #000b,0 0 0 1px #ffffff55;
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+#publicProfileContent .tc-profile-hero-identity .search-person-avatar:hover{
+  transform:translateY(-3px);box-shadow:0 18px 48px #000c,0 0 0 2px #ffffff88;
+}
+#publicProfileContent .person-profile-body{
+  min-height:300px;padding:clamp(24px,3.5vw,48px) clamp(22px,4vw,64px) 50px;
+  background:linear-gradient(180deg,#0b0d11 0%,#090909 100%);
+}
+#publicProfileContent .person-profile-bio{max-width:900px;font-size:14px;line-height:1.85}
+#publicProfileContent .tc-profile-facts{max-width:760px}
+#publicProfileContent .tc-profile-fact{
+  border-color:#ffffff20;background:linear-gradient(135deg,#ffffff0c,#ffffff03);
+  transition:transform .22s ease,border-color .22s ease,background .22s ease;
+}
+#publicProfileContent .tc-profile-fact:hover{
+  transform:translateY(-2px);border-color:#ffffff50;background:#ffffff0c;
+}
+#publicProfileContent .person-profile-actions{padding-top:5px}
+@media(max-width:760px){
+  .main:has(#page-person.active){padding:0 0 calc(88px + env(safe-area-inset-bottom))}
+  #page-person .person-page-top{padding:15px 14px 11px;margin:0}
+  #page-person .person-page-card{padding:0!important}
+  html body #page-person #publicProfileContent,
+  html body #page-person #publicProfileContent[data-theme]{
+    min-height:calc(100dvh - 130px);border-radius:0!important;
+  }
+  #publicProfileContent .tc-profile-hero{border-radius:0;height:178px!important;min-height:178px;max-height:178px}
+  #publicProfileContent .person-profile-body{padding:17px 14px 28px}
+  #publicProfileContent .tc-profile-hero-identity{left:12px;right:10px;bottom:12px}
+  #publicProfileContent .tc-profile-facts{max-width:none}
+}
+@media(max-width:380px){
+  #publicProfileContent .tc-profile-hero{height:168px!important;min-height:168px;max-height:168px}
+}
+@media(prefers-reduced-motion:reduce){
+  #publicProfileContent .tc-profile-hero:before{animation:none}
+  #publicProfileContent .tc-profile-fact,
+  #publicProfileContent .tc-profile-hero-identity .search-person-avatar{transition:none}
+}
+</style>
 </body></html>
 <style id="tc-global-search-identity-refinement">
 /* Keep people-search portraits at their original size; compact only the badges beside names. */
