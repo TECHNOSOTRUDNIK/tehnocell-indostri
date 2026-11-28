@@ -2486,3 +2486,184 @@ if ("serviceWorker" in navigator) {
 </style>
 </body></html>
 <style id="tc-global-search-avatar-refinement">.global-search-results .search-person-avatar{width:35px!important;height:35px!important;min-width:35px!important;flex:0 0 35px!important;font-size:12px!important}.global-search-results .search-person-avatar img{width:100%;height:100%;object-fit:cover}</style>
+
+
+<style id="tc-profile-responsive-redesign">
+/* TEHNOCELL profile — desktop composition + deliberate mobile adaptation */
+#page-person{max-width:100%;min-width:0}
+#page-person .person-page-top{max-width:1120px;margin:0 auto 18px;padding:0 2px}
+#page-person .person-page-top .eyebrow{color:#aaa;letter-spacing:2.2px}
+#page-person .person-page-card{
+  width:100%;max-width:1120px;margin:0 auto;padding:0;
+  overflow:hidden;border:1px solid #292929;border-radius:22px;
+  background:#090909;box-shadow:0 22px 70px #0008;
+}
+#publicProfileContent{
+  width:100%;max-width:none;min-width:0;overflow:hidden;
+  border-radius:0;background:#0b0b0b!important;
+  border:0!important;box-shadow:none!important;
+}
+#publicProfileContent .tc-profile-hero{
+  height:clamp(270px,31vw,370px)!important;min-height:270px;
+  border:0;border-bottom:1px solid #ffffff16;border-radius:0;
+  background:
+    radial-gradient(ellipse at 72% 12%,#ffffff1b,transparent 30%),
+    radial-gradient(ellipse at 15% 90%,#ffffff12,transparent 38%),
+    linear-gradient(125deg,#242424,#101010 52%,#1c1c1c);
+}
+#publicProfileContent .tc-profile-banner-image{object-position:center 43%;filter:saturate(.25) contrast(1.08)}
+#publicProfileContent .tc-profile-banner-empty{
+  background:
+    radial-gradient(ellipse at 72% 18%,#ffffff20,transparent 28%),
+    radial-gradient(ellipse at 16% 85%,#ffffff13,transparent 32%),
+    repeating-linear-gradient(135deg,transparent 0 44px,#ffffff05 45px 46px),
+    linear-gradient(125deg,#242424,#090909 58%,#1d1d1d);
+}
+#publicProfileContent .tc-profile-hero-shade{
+  background:linear-gradient(180deg,#0001 5%,#0003 42%,#050505e8 100%);
+}
+#publicProfileContent .tc-profile-hero-identity{
+  left:clamp(24px,4vw,48px);right:clamp(24px,4vw,48px);bottom:25px;gap:22px;
+}
+#publicProfileContent .tc-profile-hero-identity .search-person-avatar{
+  width:132px;height:132px;flex:0 0 132px;border-radius:25px;
+  border:2px solid #ffffffd9;background:#111;
+  box-shadow:0 14px 42px #000b,0 0 0 7px #ffffff0b;
+}
+#publicProfileContent .tc-profile-hero-copy{padding-bottom:7px}
+#publicProfileContent .tc-profile-hero-copy h2{font-size:clamp(27px,3.1vw,38px);letter-spacing:-1.2px;gap:9px}
+#publicProfileContent .tc-profile-hero-copy>div{font-size:12px}
+#publicProfileContent .person-profile-body{
+  display:grid;grid-template-columns:minmax(0,1.45fr) minmax(250px,.75fr);
+  gap:14px 22px;padding:27px clamp(24px,4vw,48px) 30px;
+  background:
+    radial-gradient(ellipse at 8% 0%,#ffffff0a,transparent 35%),
+    linear-gradient(180deg,#111 0%,#0a0a0a 100%);
+}
+#publicProfileContent .person-profile-body::before{
+  grid-column:1/-1;margin:0 0 2px;padding:7px 10px;
+  color:#aaa;letter-spacing:2.4px;background:#ffffff06;
+}
+#publicProfileContent .person-profile-body>.person-profile-status:first-child{
+  grid-column:1/-1;margin:0;padding:14px 16px 14px 42px;
+  min-height:50px;display:flex;align-items:center;
+}
+#publicProfileContent .person-profile-body .person-profile-bio{
+  grid-column:1;align-self:start;margin:0;padding:6px 0 20px;
+  font-size:14px;line-height:1.9;
+}
+#publicProfileContent .person-profile-body>.person-profile-status:not(:first-child){
+  grid-column:2;align-self:start;margin:0;padding:13px 14px;
+  min-height:44px;
+}
+#publicProfileContent .person-profile-body .tc-identity-sound{
+  grid-column:1;align-self:start;margin:0;min-width:0;
+}
+#publicProfileContent .person-profile-date{
+  grid-column:2;align-self:end;margin:0;padding:16px 0 0;
+}
+#publicProfileContent .person-profile-actions{
+  grid-column:2;align-self:start;display:flex;flex-wrap:wrap;gap:9px;
+  margin:0;padding:0;
+}
+#publicProfileContent .person-profile-actions button,
+#publicProfileContent .person-profile-actions a{
+  min-height:43px;padding:11px 16px;border-radius:10px;
+}
+#publicProfileContent .profile-posts{
+  margin:0;padding:24px clamp(24px,4vw,48px) 34px;
+  border-top:1px solid #ffffff12;background:#0b0b0b;
+}
+#publicProfileContent .profile-posts-title{
+  display:flex;align-items:center;gap:12px;margin:0 0 16px;
+  font-size:15px;letter-spacing:-.2px;
+}
+#publicProfileContent .profile-posts-title::after{
+  content:"";height:1px;flex:1;background:linear-gradient(90deg,#ffffff25,transparent);
+}
+#publicProfileContent .profile-posts .post-card{
+  padding:18px;border:1px solid #292929;border-radius:15px;
+  background:linear-gradient(145deg,#151515,#0e0e0e);
+}
+#publicProfileContent .profile-posts .post-body{font-size:13px;line-height:1.8}
+#publicProfileContent .profile-posts .post-gallery img{border-radius:11px}
+@media(max-width:900px){
+  #page-person .person-page-card{max-width:100%}
+  #publicProfileContent .tc-profile-hero{height:285px!important;min-height:285px}
+  #publicProfileContent .person-profile-body{grid-template-columns:minmax(0,1.2fr) minmax(210px,.8fr);padding:23px}
+}
+@media(max-width:650px){
+  #page-person .person-page-top{margin-bottom:12px}
+  #page-person .person-page-card{border-radius:16px}
+  #publicProfileContent{border-radius:0}
+  #publicProfileContent .tc-profile-hero{
+    height:205px!important;min-height:205px;max-height:205px;
+    border-radius:0;aspect-ratio:auto;
+  }
+  #publicProfileContent .tc-profile-banner-image,
+  #publicProfileContent .tc-profile-banner-empty{object-position:center 42%}
+  #publicProfileContent .tc-profile-hero-identity{
+    left:14px;right:12px;bottom:14px;gap:12px;align-items:flex-end;
+  }
+  #publicProfileContent .tc-profile-hero-identity .search-person-avatar{
+    width:76px!important;height:76px!important;min-width:76px;
+    flex:0 0 76px!important;border-radius:18px!important;
+    border:2px solid #fff;box-shadow:0 8px 22px #000b;
+  }
+  #publicProfileContent .tc-profile-hero-copy{max-width:calc(100% - 88px);padding:0 0 2px}
+  #publicProfileContent .tc-profile-hero-copy h2{
+    font-size:clamp(18px,5.5vw,23px);line-height:1.12;gap:5px;
+    margin:0 0 5px;letter-spacing:-.5px;
+  }
+  #publicProfileContent .tc-profile-hero-copy>div{
+    min-height:21px;padding:3px 7px;font-size:9px;
+    max-width:100%;overflow-wrap:anywhere;
+  }
+  #publicProfileContent .person-profile-body{
+    display:flex;flex-direction:column;gap:12px;
+    padding:17px 14px 20px;
+  }
+  #publicProfileContent .person-profile-body::before{
+    order:0;margin:0 0 2px;font-size:8px;letter-spacing:2px;
+  }
+  #publicProfileContent .person-profile-body>.person-profile-status:first-child{
+    order:1;margin:0;padding:12px 12px 12px 35px;min-height:0;
+    font-size:11px;line-height:1.5;
+  }
+  #publicProfileContent .person-profile-body>.person-profile-status:first-child::before{left:13px;top:16px}
+  #publicProfileContent .person-profile-bio{
+    order:2;margin:0;padding:2px 0 14px;font-size:12px;line-height:1.75;
+  }
+  #publicProfileContent .person-profile-body>.person-profile-status:not(:first-child){
+    order:3;margin:0;width:max-content;max-width:100%;font-size:10px;
+  }
+  #publicProfileContent .person-profile-body .tc-identity-sound{order:4;margin:0;min-width:0}
+  #publicProfileContent .person-profile-date{order:5;margin:2px 0 0;padding-top:13px;font-size:9px}
+  #publicProfileContent .person-profile-actions{
+    order:6;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;margin:0;padding:0;
+  }
+  #publicProfileContent .person-profile-actions button,
+  #publicProfileContent .person-profile-actions a{
+    width:100%;min-width:0;min-height:43px;padding:9px 7px;
+    font-size:10px;text-align:center;white-space:normal;
+  }
+  #publicProfileContent .profile-posts{padding:19px 14px 24px;margin:0}
+  #publicProfileContent .profile-posts-title{font-size:13px;margin-bottom:12px}
+  #publicProfileContent .profile-posts .post-card{padding:13px;border-radius:13px}
+  #publicProfileContent .profile-posts .post-body{font-size:12px;line-height:1.7}
+  #publicProfileContent .profile-posts .post-gallery{gap:5px}
+  #publicProfileContent .profile-posts .post-gallery img{max-height:260px;border-radius:9px}
+  #publicProfileContent .tc-identity-sound audio{width:100%;max-width:100%}
+}
+@media(max-width:380px){
+  #publicProfileContent .tc-profile-hero{height:190px!important;min-height:190px;max-height:190px}
+  #publicProfileContent .tc-profile-hero-identity .search-person-avatar{width:66px!important;height:66px!important;min-width:66px;flex-basis:66px!important}
+  #publicProfileContent .tc-profile-hero-copy{max-width:calc(100% - 76px)}
+  #publicProfileContent .tc-profile-hero-copy h2{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){
+  #publicProfileContent .person-profile-actions button,
+  #publicProfileContent .person-profile-actions a{transition:none}
+}
+</style>
