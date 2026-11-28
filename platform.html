@@ -2377,5 +2377,112 @@ if ("serviceWorker" in navigator) {
 }
 </style>
 
+
+<style id="tc-profile-polish-2026">
+/* Поисковая выдача: значок подтверждения точно по высоте строки имени. */
+.global-search-results .search-person-name .verified-badge{
+  display:inline-flex!important;align-items:center;justify-content:center;
+  width:11px!important;height:11px!important;min-width:11px!important;
+  margin:0 0 0 4px!important;flex:0 0 11px!important;
+  border-radius:50%!important;font-size:7px!important;line-height:1!important;
+  vertical-align:middle!important;box-shadow:none!important;
+}
+.global-search-results .search-person-name{line-height:1.25}
+.global-search-results .search-person-name .tc-profile-name-media{
+  width:15px;height:15px;flex:0 0 15px;border-radius:4px;margin-left:2px;
+}
+/* Публичный профиль: больше глубины и деталей, без тяжёлых постоянных эффектов. */
+#publicProfileContent{isolation:isolate}
+#publicProfileContent .tc-profile-hero{
+  border:1px solid #ffffff12;
+  background-color:#111;
+}
+#publicProfileContent .tc-profile-hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:
+    radial-gradient(ellipse at 12% 12%,#ffffff18,transparent 34%),
+    linear-gradient(125deg,transparent 35%,#ffffff08 52%,transparent 68%);
+}
+#publicProfileContent .tc-profile-hero-identity{z-index:2}
+#publicProfileContent .tc-profile-hero-copy h2{
+  text-wrap:balance;text-shadow:0 2px 16px #000,0 0 28px #0009;
+}
+#publicProfileContent .tc-profile-hero-copy>div{
+  display:inline-flex;align-items:center;min-height:23px;
+  padding:4px 9px;border:1px solid #ffffff28;border-radius:7px;
+  background:#08090b88;color:#e7e7e7;font-size:10px;letter-spacing:.2px;
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+#publicProfileContent .tc-profile-hero-copy .verified-badge{
+  width:15px;height:15px;font-size:9px;margin-left:1px;
+  box-shadow:0 0 0 2px #111,0 0 12px #2588ff66;
+}
+#publicProfileContent .person-profile-body{
+  overflow:hidden;
+  background:
+    radial-gradient(ellipse at 0% 0%,#ffffff0a,transparent 42%),
+    linear-gradient(180deg,#111 0%,#0b0b0b 100%);
+}
+#publicProfileContent .person-profile-body::before{
+  content:"TEHNOCELL IDENTITY";display:block;width:max-content;
+  margin:0 0 16px;padding:6px 9px;border:1px solid #ffffff18;
+  border-radius:6px;color:#8e8e8e;background:#ffffff05;
+  font-size:8px;font-weight:800;letter-spacing:2px;
+}
+#publicProfileContent .person-profile-body>.person-profile-status:first-child{
+  position:relative;margin:0 0 17px;padding:13px 14px 13px 38px;
+  border:1px solid #ffffff20;border-radius:12px;
+  background:linear-gradient(110deg,#ffffff0d,#ffffff04);
+  color:#f1f1f1;font-size:12px;line-height:1.55;
+}
+#publicProfileContent .person-profile-body>.person-profile-status:first-child::before{
+  content:"";position:absolute;left:15px;top:17px;width:8px;height:8px;
+  border-radius:50%;background:#f2f2f2;box-shadow:0 0 0 4px #ffffff12;
+}
+#publicProfileContent .person-profile-bio{
+  position:relative;margin:0;padding:3px 0 18px;
+  color:#d8d8d8;font-size:13px;line-height:1.8;
+  border-bottom:1px solid #ffffff12;
+}
+#publicProfileContent .person-profile-body>.person-profile-status:not(:first-child){
+  display:inline-flex;align-items:center;gap:7px;
+  margin:16px 7px 0 0;padding:9px 12px;
+  border:1px solid #ffffff19;border-radius:9px;
+  background:linear-gradient(135deg,#ffffff0c,#ffffff04);
+  color:#ddd;font-size:10px;line-height:1.4;
+}
+#publicProfileContent .person-profile-date{
+  display:flex;align-items:center;gap:9px;
+  margin-top:20px;padding:15px 0 0;border-top:1px solid #ffffff14;
+  color:#888;font-size:10px;
+}
+#publicProfileContent .person-profile-date::before{
+  content:"";width:6px;height:6px;flex:0 0 6px;
+  border-radius:50%;background:#aaa;box-shadow:0 0 0 3px #ffffff0d;
+}
+#publicProfileContent .person-profile-actions{
+  padding-top:2px;
+}
+#publicProfileContent .person-profile-actions .primary-btn{
+  box-shadow:0 5px 18px #ffffff12;
+}
+#publicProfileContent .person-profile-actions button,
+#publicProfileContent .person-profile-actions a{
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+#publicProfileContent .person-profile-actions button:active,
+#publicProfileContent .person-profile-actions a:active{transform:scale(.98)}
+@media(max-width:600px){
+  #publicProfileContent .person-profile-body{padding:15px 13px}
+  #publicProfileContent .person-profile-body::before{margin-bottom:13px}
+  #publicProfileContent .tc-profile-hero::after{background:radial-gradient(ellipse at 12% 12%,#ffffff12,transparent 36%)}
+  #publicProfileContent .tc-profile-hero-copy>div{min-height:21px;padding:3px 7px;font-size:9px}
+  #publicProfileContent .person-profile-bio{font-size:12px;line-height:1.7}
+}
+@media(prefers-reduced-motion:reduce){
+  #publicProfileContent .person-profile-actions button,
+  #publicProfileContent .person-profile-actions a{transition:none}
+}
+</style>
 </body></html>
 <style id="tc-global-search-avatar-refinement">.global-search-results .search-person-avatar{width:35px!important;height:35px!important;min-width:35px!important;flex:0 0 35px!important;font-size:12px!important}.global-search-results .search-person-avatar img{width:100%;height:100%;object-fit:cover}</style>
