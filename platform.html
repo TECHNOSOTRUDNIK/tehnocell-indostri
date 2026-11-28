@@ -1023,6 +1023,122 @@ button,a,[role="button"],input,select,textarea,label,[tabindex]{-webkit-tap-high
 #storyViewerModal .tc-story-viewer{position:relative;z-index:1}
 </style>
 
+<style id="tc-global-search-identity-refinement">
+/* Keep people-search portraits at their original size; compact only the badges beside names. */
+.global-search-results .search-person-avatar{width:43px!important;height:43px!important;min-width:43px!important;flex:0 0 43px!important;font-size:15px!important}
+.global-search-results .search-person-avatar img{width:100%;height:100%;object-fit:cover}
+.global-search-results .verified-badge{width:12px;height:12px;margin-left:4px;font-size:8px;box-shadow:0 0 0 1px #111}
+.global-search-results .online-dot{width:6px;height:6px;box-shadow:0 0 0 2px #ffffff12}
+.tc-profile-hero-copy .tc-profile-handle{font-size:10px;color:#d0d0d0;line-height:1.35}
+.tc-profile-identity-tags{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tc-profile-presence,.tc-profile-role{display:inline-flex;align-items:center;gap:6px;min-height:23px;padding:4px 8px;border:1px solid #ffffff24;border-radius:20px;background:#09090988;color:#d5d5d5;font-size:9px;line-height:1.2;backdrop-filter:blur(8px)}
+.tc-profile-presence i{width:6px;height:6px;border-radius:50%;background:#777;box-shadow:0 0 0 3px #ffffff10}
+.tc-profile-presence.is-online i{background:#fff;box-shadow:0 0 0 3px #ffffff20,0 0 9px #fff9}
+.tc-profile-role{color:#fff;background:#ffffff12}
+.tc-profile-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:18px}
+.tc-profile-fact{min-width:0;padding:13px 14px;border:1px solid #ffffff1c;border-radius:12px;background:linear-gradient(145deg,#ffffff0c,#00000018)}
+.tc-profile-fact span,.tc-profile-fact strong{display:block;overflow-wrap:anywhere}
+.tc-profile-fact span{font-size:8px;letter-spacing:1.25px;color:#888;font-weight:800;margin-bottom:7px}
+.tc-profile-fact strong{font-size:12px;color:#eee;font-weight:750}
+@media(max-width:520px){.tc-profile-identity-tags{gap:5px;margin-top:7px}.tc-profile-presence,.tc-profile-role{font-size:8px;min-height:21px;padding:4px 7px}.tc-profile-facts{gap:7px;margin-top:15px}.tc-profile-fact{padding:11px 10px}.tc-profile-fact strong{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.tc-profile-presence i{box-shadow:none!important}}
+</style>
+<style id="tc-profile-social-idcard">
+.tc-profile-social{margin-top:25px;padding-top:21px;border-top:1px solid #ffffff1c}
+.tc-profile-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.tc-profile-kicker{display:block;font-size:8px;letter-spacing:1.8px;color:#858585;font-weight:800}
+.tc-profile-section-head h3{margin:5px 0 0;font-size:19px;letter-spacing:-.5px}
+.tc-profile-section-head h3 small{font-size:12px;color:#999;font-weight:600}
+.tc-profile-section-note{font-size:10px;color:#aaa}
+.tc-profile-friend-grid{display:flex;flex-wrap:wrap;gap:10px}
+.tc-social-person{width:76px;display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:transparent;color:#ddd;font-size:10px;text-align:center;overflow:hidden;cursor:pointer}
+.tc-social-person .search-person-avatar{width:48px;height:48px;flex:0 0 48px;border:1px solid #ffffff25;border-radius:16px;overflow:hidden}
+.tc-social-person .search-person-avatar img{width:100%;height:100%;object-fit:cover}
+.tc-social-person>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tc-profile-empty{padding:17px;border:1px dashed #ffffff25;border-radius:13px;color:#999;font-size:11px;line-height:1.6}
+.tc-profile-mutual{margin-top:18px;padding-top:15px;border-top:1px solid #ffffff13}
+.tc-profile-mutual>strong{display:block;font-size:11px;margin-bottom:12px;color:#eee}
+.tc-id-card-trigger{width:100%;display:flex;align-items:center;gap:15px;margin-top:19px;padding:17px 18px;border:1px solid #ffffff27;border-radius:16px;background:linear-gradient(115deg,#ffffff12,#ffffff04 55%,#00000025);color:#fff;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.tc-id-card-trigger:hover{transform:translateY(-2px);border-color:#ffffff65;background:linear-gradient(115deg,#ffffff1c,#ffffff07 55%,#00000025)}
+.tc-id-card-mark{width:48px;height:48px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:14px;font-size:18px;font-weight:900;letter-spacing:-2px;background:#ffffff0d}
+.tc-id-card-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.tc-id-card-copy small{font-size:8px;letter-spacing:1.6px;color:#999}
+.tc-id-card-copy strong{font-size:16px;letter-spacing:.5px}
+.tc-id-card-copy em{font-size:10px;color:#aaa;font-style:normal}
+.tc-id-card-arrow{font-size:22px;color:#aaa}
+.tc-id-modal[hidden]{display:none!important}
+.tc-id-modal{position:fixed;z-index:99999;inset:0;display:grid;place-items:center;padding:18px}
+.tc-id-modal-backdrop{position:absolute;inset:0;background:#000c;backdrop-filter:blur(12px)}
+.tc-id-modal-panel{position:relative;width:min(100%,480px);max-height:min(92dvh,850px);overflow:auto;padding:23px;border:1px solid #ffffff2a;border-radius:22px;background:linear-gradient(145deg,#202020,#090909 70%);box-shadow:0 28px 100px #000c;color:#fff;animation:tcIdModalIn .24s ease-out}
+@keyframes tcIdModalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.tc-id-modal-close{position:absolute;right:15px;top:13px;width:34px;height:34px;border:1px solid #ffffff25;border-radius:11px;background:#ffffff0b;color:#fff;font-size:22px;cursor:pointer}
+.tc-id-modal-top{display:flex;align-items:center;justify-content:space-between;margin:2px 45px 16px 0}
+.tc-id-live-mark{font-size:9px;letter-spacing:2px;font-weight:900}
+.tc-id-card-large{padding:20px;border:1px solid #ffffff35;border-radius:18px;background:radial-gradient(ellipse at 90% 0%,#ffffff18,transparent 45%),linear-gradient(135deg,#252525,#0d0d0d 70%);box-shadow:inset 0 1px #ffffff12,0 15px 35px #0007}
+.tc-id-card-large-head,.tc-id-card-large-foot{display:flex;justify-content:space-between;gap:10px;font-size:8px;letter-spacing:1.3px;color:#999}
+.tc-id-card-large-user{display:flex;align-items:center;gap:12px;margin:27px 0 17px}
+.tc-id-card-large-user .search-person-avatar{width:54px;height:54px;flex:0 0 54px;border-radius:15px;overflow:hidden;border:1px solid #ffffff44}
+.tc-id-card-large-user .search-person-avatar img{width:100%;height:100%;object-fit:cover}
+.tc-id-card-large-user>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.tc-id-card-large-user strong{font-size:17px;overflow-wrap:anywhere}
+.tc-id-card-large-user span{font-size:10px;color:#aaa}
+.tc-id-card-large-code{padding:12px 0 17px;border-bottom:1px solid #ffffff1b;font-size:22px;font-weight:850;letter-spacing:2px}
+.tc-id-card-large-foot{padding-top:14px;line-height:1.8}
+.tc-id-card-large-foot b{color:#eee;font-size:9px;letter-spacing:.3px}
+.tc-id-modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.tc-id-modal-stats>div{padding:12px 8px;border:1px solid #ffffff19;border-radius:12px;background:#ffffff08;text-align:center}
+.tc-id-modal-stats strong,.tc-id-modal-stats span{display:block}
+.tc-id-modal-stats strong{font-size:19px}.tc-id-modal-stats span{font-size:9px;color:#999;margin-top:4px}
+.tc-id-qr-wrap{display:flex;flex-direction:column;align-items:center;gap:9px;padding:15px;border:1px solid #ffffff1a;border-radius:14px;background:#fff;color:#111}
+.tc-id-qr{width:150px;height:150px;object-fit:contain}
+.tc-id-qr-wrap span{font-size:10px;color:#333}
+.tc-id-modal-actions{display:flex;gap:8px;margin-top:13px}
+.tc-id-modal-actions button{flex:1;min-width:0;font-size:11px}
+.tc-id-privacy-note{margin:12px 0 0;color:#858585;font-size:9px;line-height:1.55}
+@media(max-width:520px){.tc-profile-section-head h3{font-size:17px}.tc-profile-friend-grid{gap:7px}.tc-social-person{width:67px}.tc-id-modal{padding:10px}.tc-id-modal-panel{padding:18px;border-radius:18px}.tc-id-card-large{padding:16px}.tc-id-modal-actions{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.tc-id-modal-panel{animation:none}.tc-id-card-trigger{transition:none}}
+</style>
+<style id="tc-profile-mobile-idcard-audio-gyro">
+#publicProfileContent,.tc-profile-social,.tc-profile-friend-grid,.tc-profile-section-head{box-sizing:border-box;min-width:0;max-width:100%}
+.tc-profile-friend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:10px;width:100%;overflow:hidden}
+.tc-social-person{width:100%;min-width:0;max-width:100%;padding:0 2px;box-sizing:border-box}
+.tc-profile-section-head h3,.tc-profile-section-note{min-width:0;overflow-wrap:anywhere}.tc-profile-section-note{text-align:right}
+.tc-id-card-trigger{display:none!important}
+.tc-profile-hero-copy h2[data-open-id-card]{cursor:pointer}
+.tc-profile-hero-copy h2[data-open-id-card]::after{content:"↗";display:inline-grid;place-items:center;width:23px;height:23px;border:1px solid #ffffff55;border-radius:8px;font-size:12px;color:#ddd;opacity:.8}
+.tc-id-card-large{position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform;transition:box-shadow .25s ease;touch-action:none;user-select:none;-webkit-user-select:none}.tc-id-card-large:active{cursor:grabbing}
+.tc-id-card-large::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at var(--tc-card-glare-x,50%) var(--tc-card-glare-y,50%),#ffffff30,transparent 38%);mix-blend-mode:screen}
+.tc-id-card-large>*{position:relative;z-index:1}
+.tc-id-qr-wrap{position:relative;overflow:hidden;border:1px solid #ffffff26;border-radius:18px;padding:18px;background:radial-gradient(ellipse at 50% 0%,#ffffff12,transparent 65%),linear-gradient(145deg,#171717,#050505);color:#fff;box-shadow:inset 0 1px #ffffff18,0 12px 30px #0005}
+.tc-id-qr-wrap::before{content:"";position:absolute;inset:7px;border:1px solid #ffffff14;border-radius:12px;pointer-events:none}
+.tc-id-qr{width:154px;height:154px;padding:8px;border-radius:12px;background:#080808;filter:drop-shadow(0 0 14px #ffffff18);animation:tcQrAppear .55s ease both}
+.tc-id-qr-wrap span{font-size:10px;color:#aaa;letter-spacing:.2px}
+@keyframes tcQrAppear{from{opacity:0;transform:scale(.88);filter:blur(5px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
+.tc-profile-audio-ui{display:flex;align-items:center;gap:12px;margin-top:15px;padding:12px 13px;border:1px solid #ffffff25;border-radius:14px;background:linear-gradient(120deg,#ffffff12,#00000020);min-width:0}
+.tc-sound-audio{display:none!important}.tc-profile-audio-play{width:42px;height:42px;flex:0 0 42px;border:1px solid #ffffff55;border-radius:50%;background:#ffffff12;color:#fff;font-size:15px}
+.tc-profile-audio-main{flex:1;min-width:0}.tc-profile-audio-track{display:flex;align-items:center;gap:8px;min-width:0}
+.tc-profile-audio-track span{font-size:9px;color:#aaa;font-variant-numeric:tabular-nums}.tc-profile-audio-seek{flex:1;min-width:0;width:100%;height:3px;accent-color:#fff}
+.tc-profile-audio-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.tc-profile-audio-bottom>span{font-size:7px;letter-spacing:1.5px;color:#888}
+.tc-profile-audio-mute{border:0;background:transparent;color:#ddd;font-size:15px}
+.tc-identity-sound.is-playing .tc-sound-visualizer i{animation:tcSoundPulse .65s ease-in-out infinite alternate}
+@media(max-width:520px){.tc-profile-friend-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 5px}.tc-social-person{font-size:9px}.tc-profile-section-head{align-items:flex-start;flex-wrap:wrap;gap:6px}.tc-profile-section-note{max-width:100%;font-size:9px}.tc-id-modal-panel{width:100%;max-width:100%;min-width:0;overflow-x:hidden}.tc-id-modal-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.tc-id-modal-stats>div{min-width:0;padding:10px 4px}.tc-id-modal-stats strong{font-size:17px}.tc-id-card-large-code{font-size:clamp(17px,5vw,22px);letter-spacing:1.5px;overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.tc-id-qr,.tc-id-card-large{animation:none!important;transition:none!important}}
+</style>
+<style id="tc-profile-story-player-click-fix">
+#publicProfileContent .tc-profile-hero-shade{z-index:1;pointer-events:none}
+#publicProfileContent .tc-profile-hero-identity{z-index:2;pointer-events:none}
+#publicProfileContent .tc-profile-hero-identity .search-person-avatar{pointer-events:auto}
+#publicProfileContent .tc-profile-hero-copy{position:relative;z-index:3;pointer-events:auto}
+#publicProfileContent .tc-profile-hero-copy h2[data-open-id-card]{position:relative;z-index:4;display:flex;align-items:center;gap:7px;width:max-content;max-width:100%;cursor:pointer;pointer-events:auto;touch-action:manipulation}
+#publicProfileContent .tc-profile-story-player{position:relative;z-index:5;pointer-events:auto}
+#publicProfileContent .tc-profile-story-player .tc-story-music-disc{width:37px;height:37px;flex:0 0 37px;border-radius:6px;overflow:hidden;display:grid;place-items:center;background:#242424;color:#fff}
+#publicProfileContent .tc-profile-story-player .tc-story-music-disc img{width:100%;height:100%;object-fit:cover}
+#publicProfileContent .tc-profile-story-player>span{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;white-space:normal}
+#publicProfileContent .tc-profile-story-player>span small{font-size:7px;letter-spacing:1.2px;color:#999}
+#publicProfileContent .tc-profile-story-player>span strong,#publicProfileContent .tc-profile-story-player>span em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-style:normal}
+#publicProfileContent .tc-profile-story-player>span em{font-size:9px;color:#aaa}
+#publicProfileContent .tc-profile-story-player button{flex:0 0 31px;min-width:31px;min-height:31px;cursor:pointer;touch-action:manipulation}
+</style>
 </head>
 <body>
 <div class="tc-ny-overlay tc-ny-platform" aria-hidden="true"></div>
@@ -1204,13 +1320,13 @@ async function openPersonProfile(id){
   const bannerMarkup='<section class="tc-profile-hero">'+(bannerUrl?'<img class="tc-profile-banner-image" src="'+escapeHtml(bannerUrl)+'" alt="Баннер профиля" loading="eager" referrerpolicy="no-referrer">':'<div class="tc-profile-banner-empty"></div>')+'<div class="tc-profile-hero-shade"></div><div class="tc-profile-hero-identity">'+personAvatar(data)+'<div class="tc-profile-hero-copy"><h2 data-open-id-card role="button" tabindex="0" aria-label="Открыть TEHNOCELL ID-карту">'+escapeHtml(name)+(stickerMarkup?'<span class="tc-profile-name-media">'+stickerMarkup+'</span>':"")+verifiedBadge(data.id)+onlineBadge(data.id)+'</h2><div class="tc-profile-handle">'+(username?"@"+escapeHtml(username):"Участник TEHNOCELL")+'</div><div class="tc-profile-identity-tags"><span class="tc-profile-presence '+(isOnline(data.id)?"is-online":"")+'"><i></i>'+presenceLabel+'</span><span class="tc-profile-role">'+memberRole+'</span></div></div></div></section>';
  const [gameLibraryResult,gameSessionsResult]=await Promise.all([db.from("tc_game_library").select("*").eq("user_id",id).order("is_favorite",{ascending:false}),db.from("tc_game_sessions").select("id,game_key,game_name,activity_text,platform,player_tag,visibility,started_at,last_seen_at,ended_at").eq("user_id",id).order("started_at",{ascending:false}).limit(1000)]);
    const allGameLibrary=gameLibraryResult.data||[],gameCard=allGameLibrary.find(x=>x.is_favorite)||null,gameSessions=gameSessionsResult.data||[],nowGame=Date.now(),staleLimit=10*60*1000;
-   const activeGameSession=gameSessions.find(x=>!x.ended_at&&nowGame-new Date(x.last_seen_at||0).getTime()<=staleLimit)||null,displayGameKey=activeGameSession?.game_key||gameCard?.game_key,displayGameCard=allGameLibrary.find(x=>x.game_key===displayGameKey)||(activeGameSession?null:gameCard),displayGameName=activeGameSession?.game_name||displayGameCard?.game_name||"Любимая игра",displayGameSessions=gameSessions.filter(x=>x.game_key===displayGameKey),lastGameSession=displayGameSessions[0]||null;
+   const activeGameSession=gameSessions.find(x=>!x.ended_at&&nowGame-new Date(x.last_seen_at||0).getTime()<=staleLimit)||null,latestGameSession=gameSessions[0]||null,displayGameKey=activeGameSession?.game_key||latestGameSession?.game_key||gameCard?.game_key,displayGameCard=allGameLibrary.find(x=>x.game_key===displayGameKey)||((activeGameSession||latestGameSession)?null:gameCard),displayGameName=activeGameSession?.game_name||latestGameSession?.game_name||displayGameCard?.game_name||"Любимая игра",displayGameSessions=gameSessions.filter(x=>x.game_key===displayGameKey),lastGameSession=displayGameSessions[0]||null;
    const gameTotalsResult=displayGameKey?await db.from("tc_game_session_totals").select("total_seconds,last_activity_at").eq("user_id",id).eq("game_key",displayGameKey).maybeSingle():{data:null},gameLastSeen=gameTotalsResult.data?.last_activity_at||(lastGameSession?(lastGameSession.ended_at||lastGameSession.last_seen_at||lastGameSession.started_at):null);
    const gameSessionSeconds=Number(gameTotalsResult.data?.total_seconds??(displayGameSessions.reduce((sum,x)=>{const start=new Date(x.started_at).getTime();if(!Number.isFinite(start))return sum;const lastSeen=new Date(x.last_seen_at||x.started_at).getTime(),end=x.ended_at?new Date(x.ended_at).getTime():(nowGame-lastSeen<=staleLimit?nowGame:lastSeen);return sum+Math.max(0,Math.floor((end-start)/1000));},0)));
    const gameAgo=value=>{if(!value)return "Активность ещё не записана";const mins=Math.max(0,Math.floor((Date.now()-new Date(value).getTime())/60000));if(mins<1)return "только что";if(mins<60)return mins+" мин. назад";const hours=Math.floor(mins/60);if(hours<24)return hours+" ч. назад";const days=Math.floor(hours/24);return days<30?days+" дн. назад":new Date(value).toLocaleDateString("ru-RU",{day:"numeric",month:"long"});};
    const gameHours=Math.floor(gameSessionSeconds/3600),gameMinutes=Math.floor((gameSessionSeconds%3600)/60);
    let sharedGameCount=null;if(currentUser&&currentUser.id===id)sharedGameCount=-1;else if(currentUser){const ownGames=await db.from("tc_game_library").select("game_key").eq("user_id",currentUser.id),ownKeys=new Set((ownGames.data||[]).map(x=>x.game_key));sharedGameCount=allGameLibrary.filter(x=>ownKeys.has(x.game_key)).length;}
-   const gamePresenceMarkup=(gameCard||activeGameSession)?(()=>{const gameName=displayGameName,cover=displayGameCard?.cover_url||"",rank=[displayGameCard?.rank_label,displayGameCard?.level_label].filter(Boolean).join(" · ")||"Не указан",achievementText=(Number(displayGameCard?.achievements_unlocked)||0)+" / "+(Number(displayGameCard?.achievements_total)||0),statusText=activeGameSession?(activeGameSession.activity_text||"В игровой сессии"):"Недавняя активность",tag=displayGameCard?.player_tag||activeGameSession?.player_tag||"",commonText=sharedGameCount===-1?"Ваш игровой профиль":sharedGameCount===null?"Войдите, чтобы сравнить":sharedGameCount===0?"Пока нет общих игр":"У вас "+sharedGameCount+" общих игр",inviteAllowed=!!(currentUser&&currentUser.id!==id&&targetFriendIds.includes(currentUser.id));return '<section class="tc-game-presence '+(activeGameSession?"is-live":"is-recent")+'" data-game-presence><button type="button" class="tc-game-presence-head" data-game-expand aria-expanded="false">'+(cover?'<span class="tc-game-presence-cover"><img src="'+escapeHtml(cover)+'" alt="" loading="lazy"></span>':'<span class="tc-game-presence-cover tc-game-presence-cover-empty">G</span>')+'<span class="tc-game-presence-main"><small>TEHNOCELL GAME PRESENCE</small><strong>'+escapeHtml(gameName)+'</strong><em>'+(activeGameSession?'<i class="tc-game-live-dot"></i>В игре · '+Math.floor((Date.now()-new Date(activeGameSession.started_at).getTime())/3600000)+' ч. '+Math.floor((Date.now()-new Date(activeGameSession.started_at).getTime())/60000)%60+' мин.':'<i class="tc-game-idle-dot"></i>Недавняя активность · '+escapeHtml(gameAgo(gameLastSeen)))+'</em><span class="tc-game-presence-sub">'+escapeHtml(statusText)+'</span></span><span class="tc-game-expand-mark">⌄</span></button><div class="tc-game-presence-details" hidden><div class="tc-game-presence-art" style="'+(cover?'--tc-game-art:url(&quot;'+escapeHtml(cover)+'&quot;)':'')+'"><div><small>PLAYER ACTIVITY</small><strong>'+escapeHtml(gameName)+'</strong><span>'+(activeGameSession?'СЕССИЯ АКТИВНА':'ПОСЛЕДНЯЯ АКТИВНОСТЬ')+'</span></div></div><div class="tc-game-presence-metrics"><div><small>НАИГРАНО</small><strong>'+gameHours+' ч. '+gameMinutes+' мин.</strong></div><div><small>РАНГ / ДОСТИЖЕНИЯ</small><strong>'+escapeHtml(rank)+' · '+escapeHtml(achievementText)+'</strong></div><div><small>СОВМЕСТИМОСТЬ</small><strong>'+escapeHtml(commonText)+'</strong></div></div><div class="tc-game-presence-library"><small>ИГРЫ В ПРОФИЛЕ</small><div>'+allGameLibrary.map(x=>'<span>'+escapeHtml(x.game_name)+'</span>').join("")+'</div></div><div class="tc-game-presence-meta">'+(activeGameSession?'В игре с '+new Date(activeGameSession.started_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):'Последний раз: '+escapeHtml(gameAgo(gameLastSeen)))+(displayGameCard?.platform?' · '+escapeHtml(displayGameCard.platform):"")+'</div><div class="tc-game-presence-actions">'+(tag?'<button type="button" class="tc-game-copy-tag" data-copy-game-tag="'+escapeHtml(tag)+'">Скопировать игровой ID</button>':"")+(inviteAllowed?'<button type="button" class="tc-game-invite" data-game-invite="'+id+'" data-game-name="'+escapeHtml(gameName)+'">'+(activeGameSession?'Позвать в чат':'Предложить сыграть')+'</button>':(currentUser&&currentUser.id!==id?'<span class="tc-game-invite-hint">Для приглашения добавьте участника в друзья.</span>':""))+'</div></div></section>';})():"";
+   const gamePresenceMarkup=(gameCard||activeGameSession||lastGameSession)?(()=>{const gameName=displayGameName,cover=displayGameCard?.cover_url||"",rank=[displayGameCard?.rank_label,displayGameCard?.level_label].filter(Boolean).join(" · ")||"Не указан",achievementText=(Number(displayGameCard?.achievements_unlocked)||0)+" / "+(Number(displayGameCard?.achievements_total)||0),statusText=activeGameSession?(activeGameSession.activity_text||"В игровой сессии"):"Недавняя активность",tag=displayGameCard?.player_tag||activeGameSession?.player_tag||"",commonText=sharedGameCount===-1?"Ваш игровой профиль":sharedGameCount===null?"Войдите, чтобы сравнить":sharedGameCount===0?"Пока нет общих игр":"У вас "+sharedGameCount+" общих игр",inviteAllowed=!!(currentUser&&currentUser.id!==id&&targetFriendIds.includes(currentUser.id));return '<section class="tc-game-presence '+(activeGameSession?"is-live":"is-recent")+'" data-game-presence><button type="button" class="tc-game-presence-head" data-game-expand aria-expanded="false">'+(cover?'<span class="tc-game-presence-cover"><img src="'+escapeHtml(cover)+'" alt="" loading="lazy"></span>':'<span class="tc-game-presence-cover tc-game-presence-cover-empty">G</span>')+'<span class="tc-game-presence-main"><small>TEHNOCELL GAME PRESENCE</small><strong>'+escapeHtml(gameName)+'</strong><em>'+(activeGameSession?'<i class="tc-game-live-dot"></i>В игре · '+Math.floor((Date.now()-new Date(activeGameSession.started_at).getTime())/3600000)+' ч. '+Math.floor((Date.now()-new Date(activeGameSession.started_at).getTime())/60000)%60+' мин.':'<i class="tc-game-idle-dot"></i>Недавняя активность · '+escapeHtml(gameAgo(gameLastSeen)))+'</em><span class="tc-game-presence-sub">'+escapeHtml(statusText)+'</span></span><span class="tc-game-expand-mark">⌄</span></button><div class="tc-game-presence-details" hidden><div class="tc-game-presence-art" style="'+(cover?'--tc-game-art:url(&quot;'+escapeHtml(cover)+'&quot;)':'')+'"><div><small>PLAYER ACTIVITY</small><strong>'+escapeHtml(gameName)+'</strong><span>'+(activeGameSession?'СЕССИЯ АКТИВНА':'ПОСЛЕДНЯЯ АКТИВНОСТЬ')+'</span></div></div><div class="tc-game-presence-metrics"><div><small>НАИГРАНО</small><strong>'+gameHours+' ч. '+gameMinutes+' мин.</strong></div><div><small>РАНГ / ДОСТИЖЕНИЯ</small><strong>'+escapeHtml(rank)+' · '+escapeHtml(achievementText)+'</strong></div><div><small>СОВМЕСТИМОСТЬ</small><strong>'+escapeHtml(commonText)+'</strong></div></div><div class="tc-game-presence-library"><small>ИГРЫ В ПРОФИЛЕ</small><div>'+allGameLibrary.map(x=>'<span>'+escapeHtml(x.game_name)+'</span>').join("")+'</div></div><div class="tc-game-presence-meta">'+(activeGameSession?'В игре с '+new Date(activeGameSession.started_at).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):'Последний раз: '+escapeHtml(gameAgo(gameLastSeen)))+(displayGameCard?.platform?' · '+escapeHtml(displayGameCard.platform):"")+'</div><div class="tc-game-presence-actions">'+(tag?'<button type="button" class="tc-game-copy-tag" data-copy-game-tag="'+escapeHtml(tag)+'">Скопировать игровой ID</button>':"")+(inviteAllowed?'<button type="button" class="tc-game-invite" data-game-invite="'+id+'" data-game-name="'+escapeHtml(gameName)+'">'+(activeGameSession?'Позвать в чат':'Предложить сыграть')+'</button>':(currentUser&&currentUser.id!==id?'<span class="tc-game-invite-hint">Для приглашения добавьте участника в друзья.</span>':""))+'</div></div></section>';})():"";
    const profileBody='<div class="person-profile-body">'+(data.profile_status?'<div class="person-profile-status">'+escapeHtml(data.profile_status)+'</div>':data.status_text?'<div class="person-profile-status">'+escapeHtml(data.status_text)+'</div>':'')+'<div class="person-profile-bio">'+(data.bio?escapeHtml(data.bio):"Пользователь пока ничего не рассказал о себе.")+'</div>'+gamePresenceMarkup+(data.profile_sound_path?'<section class="tc-identity-sound"><div class="tc-sound-label">TEHNOCELL IDENTITY SOUND</div><div class="tc-sound-row">'+(data.profile_sound_cover_path?'<img class="tc-sound-cover" crossorigin="anonymous" referrerpolicy="no-referrer" src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':'<div class="tc-sound-cover tc-sound-cover-empty">♫</div>')+'<div class="tc-sound-info"><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><span>'+escapeHtml(data.profile_sound_artist||name)+'</span></div></div>'+'<div class="tc-story-viewer-music tc-profile-story-player"><div class="tc-story-music-disc">'+(data.profile_sound_cover_path?'<img src="'+escapeHtml(db.storage.from("profile-avatars").getPublicUrl(data.profile_sound_cover_path).data.publicUrl)+'" alt="">':"♫")+'</div><span><small>TEHNOCELL MOMENTS · PLAYER</small><strong>'+escapeHtml(data.profile_sound_title||"Без названия")+'</strong><em>'+escapeHtml(data.profile_sound_artist||name)+'</em></span><button type="button" class="tc-profile-story-play" aria-label="Воспроизвести">▶</button></div>'+'<div class="tc-sound-impact" aria-hidden="true"></div><div class="tc-profile-audio-progress"><span class="tc-profile-audio-current">0:00</span><input class="tc-profile-audio-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Позиция воспроизведения"><span class="tc-profile-audio-duration">0:00</span></div><div class="tc-sound-visualizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="tc-sound-foot">Музыка профиля · воспроизведение по нажатию</div></section>':"")+'<section class="tc-profile-facts"><div class="tc-profile-fact"><span>ИДЕНТИФИКАТОР</span><strong>'+accountCode+'</strong></div><div class="tc-profile-fact"><span>В СООБЩЕСТВЕ С</span><strong>'+joinedDate+'</strong></div></section><div class="person-profile-actions">'+action+'</div></div>'+friendsMarkup;$("publicProfileContent").dataset.flow=String((data.id||"0").charCodeAt(0)%4);
  $("publicProfileContent").innerHTML=bannerMarkup+profileBody+idCardModal;
  const profileRoot=$("publicProfileContent");
@@ -2782,119 +2898,3 @@ html body #page-person #publicProfileContent[data-theme]{
 </style><style id="tc-game-invite-chat-style">.tc-chat-game-invite{min-width:190px;padding:12px;border:1px solid #ffffff24;border-radius:13px;background:linear-gradient(145deg,#202020,#0b0b0b);display:flex;flex-direction:column;gap:6px}.tc-chat-game-invite-kicker{font-size:8px;letter-spacing:1.4px;color:#aaa;font-weight:900}.tc-chat-game-invite strong{font-size:13px}.tc-chat-game-invite span{font-size:12px;color:#fff}.tc-chat-game-invite small,.tc-chat-game-invite em{font-size:10px;color:#999;font-style:normal;line-height:1.4}</style><script id="tc-game-presence-heartbeat">
 (function(){let timer=null,boot=null;async function beat(){if(!currentUser)return;const q=await db.from("tc_game_sessions").select("id,last_seen_at,started_at").eq("user_id",currentUser.id).is("ended_at",null).order("started_at",{ascending:false}).limit(1).maybeSingle();if(q.error||!q.data)return;const now=new Date(),last=new Date(q.data.last_seen_at||q.data.started_at);if(now-last>600000){await db.from("tc_game_sessions").update({ended_at:last.toISOString()}).eq("id",q.data.id).eq("user_id",currentUser.id).is("ended_at",null);return;}const r=await db.from("tc_game_sessions").update({last_seen_at:now.toISOString()}).eq("id",q.data.id).eq("user_id",currentUser.id).is("ended_at",null);if(r.error)console.warn("[GAME PRESENCE] heartbeat:",r.error.message);}function init(){if(!currentUser){boot=setTimeout(init,500);return;}beat();timer=setInterval(beat,60000);document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")beat();});}init();window.addEventListener("beforeunload",()=>{clearInterval(timer);clearTimeout(boot);});})();
 </script></body></html>
-<style id="tc-global-search-identity-refinement">
-/* Keep people-search portraits at their original size; compact only the badges beside names. */
-.global-search-results .search-person-avatar{width:43px!important;height:43px!important;min-width:43px!important;flex:0 0 43px!important;font-size:15px!important}
-.global-search-results .search-person-avatar img{width:100%;height:100%;object-fit:cover}
-.global-search-results .verified-badge{width:12px;height:12px;margin-left:4px;font-size:8px;box-shadow:0 0 0 1px #111}
-.global-search-results .online-dot{width:6px;height:6px;box-shadow:0 0 0 2px #ffffff12}
-.tc-profile-hero-copy .tc-profile-handle{font-size:10px;color:#d0d0d0;line-height:1.35}
-.tc-profile-identity-tags{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:8px}
-.tc-profile-presence,.tc-profile-role{display:inline-flex;align-items:center;gap:6px;min-height:23px;padding:4px 8px;border:1px solid #ffffff24;border-radius:20px;background:#09090988;color:#d5d5d5;font-size:9px;line-height:1.2;backdrop-filter:blur(8px)}
-.tc-profile-presence i{width:6px;height:6px;border-radius:50%;background:#777;box-shadow:0 0 0 3px #ffffff10}
-.tc-profile-presence.is-online i{background:#fff;box-shadow:0 0 0 3px #ffffff20,0 0 9px #fff9}
-.tc-profile-role{color:#fff;background:#ffffff12}
-.tc-profile-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:18px}
-.tc-profile-fact{min-width:0;padding:13px 14px;border:1px solid #ffffff1c;border-radius:12px;background:linear-gradient(145deg,#ffffff0c,#00000018)}
-.tc-profile-fact span,.tc-profile-fact strong{display:block;overflow-wrap:anywhere}
-.tc-profile-fact span{font-size:8px;letter-spacing:1.25px;color:#888;font-weight:800;margin-bottom:7px}
-.tc-profile-fact strong{font-size:12px;color:#eee;font-weight:750}
-@media(max-width:520px){.tc-profile-identity-tags{gap:5px;margin-top:7px}.tc-profile-presence,.tc-profile-role{font-size:8px;min-height:21px;padding:4px 7px}.tc-profile-facts{gap:7px;margin-top:15px}.tc-profile-fact{padding:11px 10px}.tc-profile-fact strong{font-size:11px}}
-@media(prefers-reduced-motion:reduce){.tc-profile-presence i{box-shadow:none!important}}
-</style>
-
-<style id="tc-profile-social-idcard">
-.tc-profile-social{margin-top:25px;padding-top:21px;border-top:1px solid #ffffff1c}
-.tc-profile-section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
-.tc-profile-kicker{display:block;font-size:8px;letter-spacing:1.8px;color:#858585;font-weight:800}
-.tc-profile-section-head h3{margin:5px 0 0;font-size:19px;letter-spacing:-.5px}
-.tc-profile-section-head h3 small{font-size:12px;color:#999;font-weight:600}
-.tc-profile-section-note{font-size:10px;color:#aaa}
-.tc-profile-friend-grid{display:flex;flex-wrap:wrap;gap:10px}
-.tc-social-person{width:76px;display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:transparent;color:#ddd;font-size:10px;text-align:center;overflow:hidden;cursor:pointer}
-.tc-social-person .search-person-avatar{width:48px;height:48px;flex:0 0 48px;border:1px solid #ffffff25;border-radius:16px;overflow:hidden}
-.tc-social-person .search-person-avatar img{width:100%;height:100%;object-fit:cover}
-.tc-social-person>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tc-profile-empty{padding:17px;border:1px dashed #ffffff25;border-radius:13px;color:#999;font-size:11px;line-height:1.6}
-.tc-profile-mutual{margin-top:18px;padding-top:15px;border-top:1px solid #ffffff13}
-.tc-profile-mutual>strong{display:block;font-size:11px;margin-bottom:12px;color:#eee}
-.tc-id-card-trigger{width:100%;display:flex;align-items:center;gap:15px;margin-top:19px;padding:17px 18px;border:1px solid #ffffff27;border-radius:16px;background:linear-gradient(115deg,#ffffff12,#ffffff04 55%,#00000025);color:#fff;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
-.tc-id-card-trigger:hover{transform:translateY(-2px);border-color:#ffffff65;background:linear-gradient(115deg,#ffffff1c,#ffffff07 55%,#00000025)}
-.tc-id-card-mark{width:48px;height:48px;display:grid;place-items:center;border:1px solid #ffffff55;border-radius:14px;font-size:18px;font-weight:900;letter-spacing:-2px;background:#ffffff0d}
-.tc-id-card-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
-.tc-id-card-copy small{font-size:8px;letter-spacing:1.6px;color:#999}
-.tc-id-card-copy strong{font-size:16px;letter-spacing:.5px}
-.tc-id-card-copy em{font-size:10px;color:#aaa;font-style:normal}
-.tc-id-card-arrow{font-size:22px;color:#aaa}
-.tc-id-modal[hidden]{display:none!important}
-.tc-id-modal{position:fixed;z-index:99999;inset:0;display:grid;place-items:center;padding:18px}
-.tc-id-modal-backdrop{position:absolute;inset:0;background:#000c;backdrop-filter:blur(12px)}
-.tc-id-modal-panel{position:relative;width:min(100%,480px);max-height:min(92dvh,850px);overflow:auto;padding:23px;border:1px solid #ffffff2a;border-radius:22px;background:linear-gradient(145deg,#202020,#090909 70%);box-shadow:0 28px 100px #000c;color:#fff;animation:tcIdModalIn .24s ease-out}
-@keyframes tcIdModalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
-.tc-id-modal-close{position:absolute;right:15px;top:13px;width:34px;height:34px;border:1px solid #ffffff25;border-radius:11px;background:#ffffff0b;color:#fff;font-size:22px;cursor:pointer}
-.tc-id-modal-top{display:flex;align-items:center;justify-content:space-between;margin:2px 45px 16px 0}
-.tc-id-live-mark{font-size:9px;letter-spacing:2px;font-weight:900}
-.tc-id-card-large{padding:20px;border:1px solid #ffffff35;border-radius:18px;background:radial-gradient(ellipse at 90% 0%,#ffffff18,transparent 45%),linear-gradient(135deg,#252525,#0d0d0d 70%);box-shadow:inset 0 1px #ffffff12,0 15px 35px #0007}
-.tc-id-card-large-head,.tc-id-card-large-foot{display:flex;justify-content:space-between;gap:10px;font-size:8px;letter-spacing:1.3px;color:#999}
-.tc-id-card-large-user{display:flex;align-items:center;gap:12px;margin:27px 0 17px}
-.tc-id-card-large-user .search-person-avatar{width:54px;height:54px;flex:0 0 54px;border-radius:15px;overflow:hidden;border:1px solid #ffffff44}
-.tc-id-card-large-user .search-person-avatar img{width:100%;height:100%;object-fit:cover}
-.tc-id-card-large-user>div{display:flex;flex-direction:column;gap:5px;min-width:0}
-.tc-id-card-large-user strong{font-size:17px;overflow-wrap:anywhere}
-.tc-id-card-large-user span{font-size:10px;color:#aaa}
-.tc-id-card-large-code{padding:12px 0 17px;border-bottom:1px solid #ffffff1b;font-size:22px;font-weight:850;letter-spacing:2px}
-.tc-id-card-large-foot{padding-top:14px;line-height:1.8}
-.tc-id-card-large-foot b{color:#eee;font-size:9px;letter-spacing:.3px}
-.tc-id-modal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
-.tc-id-modal-stats>div{padding:12px 8px;border:1px solid #ffffff19;border-radius:12px;background:#ffffff08;text-align:center}
-.tc-id-modal-stats strong,.tc-id-modal-stats span{display:block}
-.tc-id-modal-stats strong{font-size:19px}.tc-id-modal-stats span{font-size:9px;color:#999;margin-top:4px}
-.tc-id-qr-wrap{display:flex;flex-direction:column;align-items:center;gap:9px;padding:15px;border:1px solid #ffffff1a;border-radius:14px;background:#fff;color:#111}
-.tc-id-qr{width:150px;height:150px;object-fit:contain}
-.tc-id-qr-wrap span{font-size:10px;color:#333}
-.tc-id-modal-actions{display:flex;gap:8px;margin-top:13px}
-.tc-id-modal-actions button{flex:1;min-width:0;font-size:11px}
-.tc-id-privacy-note{margin:12px 0 0;color:#858585;font-size:9px;line-height:1.55}
-@media(max-width:520px){.tc-profile-section-head h3{font-size:17px}.tc-profile-friend-grid{gap:7px}.tc-social-person{width:67px}.tc-id-modal{padding:10px}.tc-id-modal-panel{padding:18px;border-radius:18px}.tc-id-card-large{padding:16px}.tc-id-modal-actions{flex-direction:column}}
-@media(prefers-reduced-motion:reduce){.tc-id-modal-panel{animation:none}.tc-id-card-trigger{transition:none}}
-</style><style id="tc-profile-mobile-idcard-audio-gyro">
-#publicProfileContent,.tc-profile-social,.tc-profile-friend-grid,.tc-profile-section-head{box-sizing:border-box;min-width:0;max-width:100%}
-.tc-profile-friend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:10px;width:100%;overflow:hidden}
-.tc-social-person{width:100%;min-width:0;max-width:100%;padding:0 2px;box-sizing:border-box}
-.tc-profile-section-head h3,.tc-profile-section-note{min-width:0;overflow-wrap:anywhere}.tc-profile-section-note{text-align:right}
-.tc-id-card-trigger{display:none!important}
-.tc-profile-hero-copy h2[data-open-id-card]{cursor:pointer}
-.tc-profile-hero-copy h2[data-open-id-card]::after{content:"↗";display:inline-grid;place-items:center;width:23px;height:23px;border:1px solid #ffffff55;border-radius:8px;font-size:12px;color:#ddd;opacity:.8}
-.tc-id-card-large{position:relative;overflow:hidden;transform-style:preserve-3d;will-change:transform;transition:box-shadow .25s ease;touch-action:none;user-select:none;-webkit-user-select:none}.tc-id-card-large:active{cursor:grabbing}
-.tc-id-card-large::before{content:"";position:absolute;inset:-1px;pointer-events:none;background:radial-gradient(circle at var(--tc-card-glare-x,50%) var(--tc-card-glare-y,50%),#ffffff30,transparent 38%);mix-blend-mode:screen}
-.tc-id-card-large>*{position:relative;z-index:1}
-.tc-id-qr-wrap{position:relative;overflow:hidden;border:1px solid #ffffff26;border-radius:18px;padding:18px;background:radial-gradient(ellipse at 50% 0%,#ffffff12,transparent 65%),linear-gradient(145deg,#171717,#050505);color:#fff;box-shadow:inset 0 1px #ffffff18,0 12px 30px #0005}
-.tc-id-qr-wrap::before{content:"";position:absolute;inset:7px;border:1px solid #ffffff14;border-radius:12px;pointer-events:none}
-.tc-id-qr{width:154px;height:154px;padding:8px;border-radius:12px;background:#080808;filter:drop-shadow(0 0 14px #ffffff18);animation:tcQrAppear .55s ease both}
-.tc-id-qr-wrap span{font-size:10px;color:#aaa;letter-spacing:.2px}
-@keyframes tcQrAppear{from{opacity:0;transform:scale(.88);filter:blur(5px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
-.tc-profile-audio-ui{display:flex;align-items:center;gap:12px;margin-top:15px;padding:12px 13px;border:1px solid #ffffff25;border-radius:14px;background:linear-gradient(120deg,#ffffff12,#00000020);min-width:0}
-.tc-sound-audio{display:none!important}.tc-profile-audio-play{width:42px;height:42px;flex:0 0 42px;border:1px solid #ffffff55;border-radius:50%;background:#ffffff12;color:#fff;font-size:15px}
-.tc-profile-audio-main{flex:1;min-width:0}.tc-profile-audio-track{display:flex;align-items:center;gap:8px;min-width:0}
-.tc-profile-audio-track span{font-size:9px;color:#aaa;font-variant-numeric:tabular-nums}.tc-profile-audio-seek{flex:1;min-width:0;width:100%;height:3px;accent-color:#fff}
-.tc-profile-audio-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.tc-profile-audio-bottom>span{font-size:7px;letter-spacing:1.5px;color:#888}
-.tc-profile-audio-mute{border:0;background:transparent;color:#ddd;font-size:15px}
-.tc-identity-sound.is-playing .tc-sound-visualizer i{animation:tcSoundPulse .65s ease-in-out infinite alternate}
-@media(max-width:520px){.tc-profile-friend-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px 5px}.tc-social-person{font-size:9px}.tc-profile-section-head{align-items:flex-start;flex-wrap:wrap;gap:6px}.tc-profile-section-note{max-width:100%;font-size:9px}.tc-id-modal-panel{width:100%;max-width:100%;min-width:0;overflow-x:hidden}.tc-id-modal-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.tc-id-modal-stats>div{min-width:0;padding:10px 4px}.tc-id-modal-stats strong{font-size:17px}.tc-id-card-large-code{font-size:clamp(17px,5vw,22px);letter-spacing:1.5px;overflow-wrap:anywhere}}
-@media(prefers-reduced-motion:reduce){.tc-id-qr,.tc-id-card-large{animation:none!important;transition:none!important}}
-</style>
-<style id="tc-profile-story-player-click-fix">
-#publicProfileContent .tc-profile-hero-shade{z-index:1;pointer-events:none}
-#publicProfileContent .tc-profile-hero-identity{z-index:2;pointer-events:none}
-#publicProfileContent .tc-profile-hero-identity .search-person-avatar{pointer-events:auto}
-#publicProfileContent .tc-profile-hero-copy{position:relative;z-index:3;pointer-events:auto}
-#publicProfileContent .tc-profile-hero-copy h2[data-open-id-card]{position:relative;z-index:4;display:flex;align-items:center;gap:7px;width:max-content;max-width:100%;cursor:pointer;pointer-events:auto;touch-action:manipulation}
-#publicProfileContent .tc-profile-story-player{position:relative;z-index:5;pointer-events:auto}
-#publicProfileContent .tc-profile-story-player .tc-story-music-disc{width:37px;height:37px;flex:0 0 37px;border-radius:6px;overflow:hidden;display:grid;place-items:center;background:#242424;color:#fff}
-#publicProfileContent .tc-profile-story-player .tc-story-music-disc img{width:100%;height:100%;object-fit:cover}
-#publicProfileContent .tc-profile-story-player>span{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;white-space:normal}
-#publicProfileContent .tc-profile-story-player>span small{font-size:7px;letter-spacing:1.2px;color:#999}
-#publicProfileContent .tc-profile-story-player>span strong,#publicProfileContent .tc-profile-story-player>span em{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-style:normal}
-#publicProfileContent .tc-profile-story-player>span em{font-size:9px;color:#aaa}
-#publicProfileContent .tc-profile-story-player button{flex:0 0 31px;min-width:31px;min-height:31px;cursor:pointer;touch-action:manipulation}
-</style>
