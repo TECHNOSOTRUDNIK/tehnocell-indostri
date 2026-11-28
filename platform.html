@@ -2595,6 +2595,66 @@ html body #page-person #publicProfileContent[data-theme]{
   #publicProfileContent .tc-profile-hero-identity .search-person-avatar{transition:none}
 }
 </style>
+
+<style id="tc-profile-theme-unified">
+/* Цветовая тема должна окрашивать всю поверхность профиля, а не только низ. */
+#publicProfileContent{
+  --tc-theme-base:#111318;
+  --tc-theme-deep:#090a0d;
+  --tc-theme-mid:#1a1d24;
+  --tc-theme-tint:rgba(35,39,49,.58);
+}
+#publicProfileContent[data-theme="mono"],
+#publicProfileContent[data-theme="graphite"]{--tc-theme-base:#202020;--tc-theme-deep:#090909;--tc-theme-mid:#303030;--tc-theme-tint:rgba(45,45,45,.55)}
+#publicProfileContent[data-theme="ice"]{--tc-theme-base:#202a32;--tc-theme-deep:#101418;--tc-theme-mid:#344956;--tc-theme-tint:rgba(35,65,82,.58)}
+#publicProfileContent[data-theme="violet"],
+#publicProfileContent[data-theme="indigo"]{--tc-theme-base:#292033;--tc-theme-deep:#111020;--tc-theme-mid:#49335f;--tc-theme-tint:rgba(75,40,105,.6)}
+#publicProfileContent[data-theme="burgundy"]{--tc-theme-base:#351017;--tc-theme-deep:#1b080d;--tc-theme-mid:#612832;--tc-theme-tint:rgba(105,15,35,.62)}
+#publicProfileContent[data-theme="ruby"]{--tc-theme-base:#4a1019;--tc-theme-deep:#250910;--tc-theme-mid:#78303b;--tc-theme-tint:rgba(125,20,40,.6)}
+#publicProfileContent[data-theme="ember"]{--tc-theme-base:#3e1b0c;--tc-theme-deep:#211006;--tc-theme-mid:#704022;--tc-theme-tint:rgba(125,55,15,.58)}
+#publicProfileContent[data-theme="amber"]{--tc-theme-base:#38290d;--tc-theme-deep:#211908;--tc-theme-mid:#6a5428;--tc-theme-tint:rgba(125,90,20,.55)}
+#publicProfileContent[data-theme="forest"]{--tc-theme-base:#10291d;--tc-theme-deep:#0b1912;--tc-theme-mid:#315641;--tc-theme-tint:rgba(15,85,50,.58)}
+#publicProfileContent[data-theme="ocean"]{--tc-theme-base:#10283a;--tc-theme-deep:#0b1722;--tc-theme-mid:#2e526b;--tc-theme-tint:rgba(10,75,115,.58)}
+#publicProfileContent[data-theme="rose"]{--tc-theme-base:#3a1c29;--tc-theme-deep:#211018;--tc-theme-mid:#694052;--tc-theme-tint:rgba(125,40,80,.55)}
+#publicProfileContent[data-theme="copper"]{--tc-theme-base:#382116;--tc-theme-deep:#21140e;--tc-theme-mid:#67432f;--tc-theme-tint:rgba(125,65,30,.55)}
+#publicProfileContent[data-theme="plum"]{--tc-theme-base:#301b36;--tc-theme-deep:#1b1020;--tc-theme-mid:#593b63;--tc-theme-tint:rgba(95,35,115,.58)}
+#publicProfileContent[data-theme="sand"]{--tc-theme-base:#393023;--tc-theme-deep:#211b14;--tc-theme-mid:#685a43;--tc-theme-tint:rgba(115,85,45,.52)}
+#publicProfileContent[data-theme="crimson-glow"]{--tc-theme-base:#31070d;--tc-theme-deep:#190509;--tc-theme-mid:#790d20;--tc-theme-tint:rgba(150,5,35,.64)}
+#publicProfileContent[data-theme="neon-violet"]{--tc-theme-base:#160923;--tc-theme-deep:#0b0612;--tc-theme-mid:#54127c;--tc-theme-tint:rgba(105,15,160,.62)}
+#publicProfileContent[data-theme="electric-blue"]{--tc-theme-base:#061323;--tc-theme-deep:#030b16;--tc-theme-mid:#07518b;--tc-theme-tint:rgba(0,75,145,.62)}
+#publicProfileContent[data-theme="emerald-aura"]{--tc-theme-base:#061b12;--tc-theme-deep:#030e09;--tc-theme-mid:#075c38;--tc-theme-tint:rgba(0,105,55,.58)}
+#publicProfileContent[data-theme="golden-pulse"]{--tc-theme-base:#211506;--tc-theme-deep:#100a03;--tc-theme-mid:#79500c;--tc-theme-tint:rgba(145,90,0,.58)}
+#publicProfileContent[data-theme="rose-nebula"]{--tc-theme-base:#260b20;--tc-theme-deep:#10050e;--tc-theme-mid:#76204d;--tc-theme-tint:rgba(145,20,85,.58)}
+#publicProfileContent[data-theme]{
+  background:linear-gradient(135deg,var(--tc-theme-base),var(--tc-theme-deep) 72%)!important;
+  background-size:220% 220%!important;
+}
+#publicProfileContent[data-theme] .tc-profile-hero{
+  background:linear-gradient(125deg,var(--tc-theme-mid),var(--tc-theme-base) 52%,var(--tc-theme-deep))!important;
+}
+#publicProfileContent[data-theme] .tc-profile-banner-empty{
+  background:
+    radial-gradient(ellipse at 18% 22%,var(--tc-theme-tint),transparent 52%),
+    radial-gradient(ellipse at 82% 78%,rgba(255,255,255,.07),transparent 46%),
+    linear-gradient(125deg,var(--tc-theme-mid),var(--tc-theme-base) 55%,var(--tc-theme-deep))!important;
+}
+#publicProfileContent[data-theme] .tc-profile-hero-shade{
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.18) 38%,rgba(0,0,0,.82) 100%),
+    linear-gradient(115deg,var(--tc-theme-tint),transparent 78%)!important;
+}
+#publicProfileContent[data-theme] .person-profile-body{
+  background:
+    radial-gradient(ellipse at 8% 0%,var(--tc-theme-tint),transparent 55%),
+    linear-gradient(180deg,var(--tc-theme-base) 0%,var(--tc-theme-deep) 100%)!important;
+}
+@media(max-width:760px){
+  #publicProfileContent[data-theme]{background-size:100% 100%!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #publicProfileContent[data-theme]{animation:none!important}
+}
+</style>
 </body></html>
 <style id="tc-global-search-identity-refinement">
 /* Keep people-search portraits at their original size; compact only the badges beside names. */
